@@ -1,0 +1,20 @@
+# Undirected graph of Amazon product network
+
+# Nodes are products, edges are co-purchase relationships
+
+# Nodes: 334863 Edges: 925872
+
+# We’ve filtered out ground truth communities with size <20. There are 936 remaining communities.
+
+# Average membership per node: 0.11
+
+# Maximum membership per node: 49
+
+# Average community size: 39
+
+————————————————————————————————————————————————————
+For more information on the dataset, visit http://snap.stanford.edu/data/com-Amazon.html
+
+
+
+
