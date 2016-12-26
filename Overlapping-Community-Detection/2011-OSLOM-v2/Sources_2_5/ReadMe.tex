@@ -1,0 +1,401 @@
+\documentclass[11pt]{article}
+\usepackage{geometry}                % See geometry.pdf to learn the layout options. There are lots.
+\geometry{letterpaper}                   % ... or a4paper or a5paper or ... 
+%\geometry{landscape}                % Activate for for rotated page geometry
+%\usepackage[parfill]{parskip}    % Activate to begin paragraphs with an empty line rather than an indent
+\usepackage{graphicx}
+\usepackage{amssymb}
+\usepackage{epstopdf}
+\usepackage[usenames,dvipsnames]{color}
+\DeclareGraphicsRule{.tif}{png}{.png}{`convert #1 `dirname #1`/`basename #1 .tif`.png}
+
+\title{User's guide for OSLOM (version 2.5)}
+%\date{}                                           % Activate to display a given date or no date
+
+\begin{document}
+\maketitle
+%\section{}
+%\subsection{}
+
+Thanks for downloading the code which implements OSLOM.
+
+
+\section{Compiling}
+
+The program comes along with a file called \textbf{compile\_all.sh}.
+
+Type  
+
+{ \textbf{./compile\_all.sh} }
+
+from a Unix (MAC) terminal. If you are using Windows, you could still run
+the program by installing MinGW
+(Minimalist GNU for Windows, {\tt http://www.mingw.org/}).
+If you see something like \textbf{./compile\_all.sh: Permission denied}, type:
+
+\textbf{chmod 744 compile\_all.sh} 
+
+which makes the script executable and try again with:
+
+\textbf{./compile\_all.sh}. 
+
+\section{What you get}
+
+After compiling, you should see a number of binary
+files. \textbf{oslom\_undir} and \textbf{oslom\_dir} 
+implement OSLOM for undirected and directed networks. The option {\bf
+  -f} introduces the name of the file where the network is stored. Try:
+
+{ \textbf{./oslom\_undir -f example.dat -uw} }
+
+and when the program is done (it takes about 15 seconds on a laptop computer), type: 
+
+{ \textbf{./pajek\_write\_undir example.dat}}
+
+Now look at the folder \textbf{example.dat\_oslo\_files}. You should
+see a few files, described in the coming subsections.
+
+\subsection{The modules}
+\label{sec2.1}
+
+The most important files are \textbf{tp} and \textbf{tp1} (\textbf{tp} is also copied in the main folder, for your convenience).
+
+In \textbf{tp} you find the set of (overlapping) modules at the lowest hierarchical level. The file content looks like this:
+\\
+
+\#module 0 size: 18 bs: 5.69337$e-$101
+
+7 10 13 17 18 22 28 31 33 37 38 41 44 45 47 50 51 56
+
+
+{\footnotesize The line starting with \# says that the module with id 0 has 18
+nodes 
+and score of 5.69337$e-$101, which is an estimation of 
+the probability of finding a module 
+like this one in a random network (very very low in this case). To be specific, this is in fact an upper bound of the real significance. In any case, 
+the program stops when the score is below the $p-$value (note that it can be much much lower). 
+The second line gives the nodes in the module.}
+\\
+
+You should also see something like:
+
+\#module 6 size: 29 bs: 0.756234
+
+
+1 2 3 4 9 15 21 23 27 30 34 43 46 48 49 53 60 63 68 70 72 73 74 78 79 81 83 93 1000 
+
+{\footnotesize The score is higher than the $p-$value because the module contains a node which is non-significant. Running the program with option 
+\textbf{-singlet} will tell that node $1000$ has not been
+  assigned to any module, i.e. it forms a module on its own. In other words, it is a homeless node. We recommend to use this option only if you are interested in detecting noisy nodes.}
+\\
+
+\textbf{tp1} is the analogous for the first hierarchical level. In our example, this is all, there are no other hierarchical levels for the network stored
+in {\it example.dat}. In general, if there are further levels, the
+program will produce other files: {\bf tp2}, {\bf tp3}, etc..
+\\
+
+\subsection{The pajek files}
+
+
+Now open the file called \textbf{pajek\_file\_0.net}. The format of
+this file is the usual pajek format and you can use {\bf Pajek}
+({\tt http://vlado.fmf.uni-lj.si/pub/networks/pajek/}) and/or {\bf Gephi}
+({\tt http://gephi.org/}) to visualize the network. 
+Each module of the lowest level has a different color. Overlapping nodes are
+black, homeless nodes are white. 
+The only difference with \textbf{pajek\_file\_1.net} is that it has different colors to highlight higher level modules.
+
+If the visualization looks too small, try:
+
+{ \textbf{./pajek\_write\_undir example.dat} 2.5 }
+
+You would get another pajek file which would produce a picture twice
+and a half times bigger. Type the command again, 
+to have different visualizations (colors and positions are chosen through a stochastic algorithm).
+\\
+
+
+\textbf{N. B.}: All the output files are stored in the directory called
+\textbf{[network file]\_oslo\_files}. 
+If the directory is not empty it will be cleared, so be careful if you want to save some previous output files.
+
+\subsection{What else?}
+
+This is not fundamental, so if you are impatient, skip this and go to Section \ref{basic_op}.
+\\
+
+ Here is a list of the other output files:
+
+\begin{enumerate}
+  \item \textbf{net1} contains the edge list of the network of
+    communities found at the lowest hierarchical level. For instance,
+  
+0	10	5
+
+  
+  means that there are five links between node 0 and node 10. The
+  labels 0 and 10
+  are the module ids of file \textbf{tp}. 
+Likewise, file  \textbf{net2} stores the network of communities found
+at the second hierarchical level, whose labels are those used
+for the modules in file \textbf{tp1}, etc.. In the case of weighted networks, you would see four numbers like these:
+  
+ 0 10 15.76 5
+ 
+which means that there are five links between node 0 and 10 and the sum of the weights of these links is 15.76.
+     
+  
+  \item  \textbf{short\_tp1} ({\bf short\_tp2}) gives the modules of
+    the community
+    network \textbf{net1} ({\bf net2}, {\bf net3}, ...) using its
+    labels, which refer to the ids of the modules listed in
+    \textbf{tp} ({\bf tp1}, {\bf tp2}, ...).
+     
+  
+  \item \textbf{partitions\_level\_0(1)}  contains the pruned modules the program found at the end of each run. 
+  
+  \item \textbf{statistics\_level\_0(1)}  contains some basic statistics of the modules found for each hierarchical level.
+
+  
+  \item \textbf{pos\_0} is written by \textbf{pajek\_write\_undir}. It
+    gives the position of the nodes of \textbf{example.dat}, the
+    format is \textbf{x y node}. \textbf{pos\_1} is the analogous for the
+    nodes in \textbf{net1}, \textbf{pos\_2} for the nodes in
+    \textbf{net2}, etc..
+  
+  
+\end{enumerate}
+
+
+\section{OSLOM's Options}
+
+
+  \subsection{Basic Options}
+\label{basic_op}
+
+
+\begin{enumerate}
+  \item \textbf{Directed vs Undirected}. First of all, you need to choose between 
+  
+  \textbf{./oslom\_undir} 
+  
+  and  
+  
+  \textbf{./oslom\_dir}. 
+  
+  As you can easily guess, the former is for the undirected networks,
+  the latter for directed ones. 
+The same holds for \textbf{pajek\_write\_undir} and  \textbf{pajek\_write\_dir}.
+If you have a directed network, the format of the input file is
+\textbf{node1 node2}, meaning that there is a link from 
+\textbf{node1} to  \textbf{node2}.  Self loops and repetitions are ignored in both cases.
+
+  \item \textbf{-uw (-w)} is the only mandatory flag. 
+  
+  Option \textbf{-uw} is for unweighted networks, or better it is for
+  weighted networks where considering weights as multiple links. 
+This means that it is possible to use a format for the network file like: 
+  
+  \textbf{node1 node2} 
+  
+  or 
+  
+  \textbf{node1 node2 $m_{12}$}
+  
+  
+  but $m_{12}$ must be an integer number! It tells how many links are
+  between the two nodes. In the null model, 
+these links are randomly rewired along with all the links of the network.
+  
+  Option \textbf{-w} is to choose the weighted version of the
+  algorithm. 
+This selects a different null model where the strength of a node is shared between its neighbors. The input file can be: 
+  
+   \textbf{node1 node2 $w_{12}$} 
+  
+  or 
+  
+  \textbf{node1 node2 $w_{12}$ $m_{12}$}
+
+  where $w_{12}$ is the weight between \textbf{node1} and
+  \textbf{node2}. If there are $m_{12}$ multiple links between the two
+  nodes, $w_{12}$ must be the sum of the weights on those links.  
+  
+  About the labels of the nodes, they must be non-negative integer
+  numbers, but they do not have to be consecutive and can start from any number.
+  
+  
+
+\end{enumerate}
+
+
+  \subsection{ {Other Options}}
+  
+   
+  \begin{enumerate}
+  
+ \item \textbf{-r $m$} sets equal to $m$ the number of runs for the first
+      hierarchical level. The default value is 10. 
+This value depends on your patience. The bigger $m$, the more accurate the
+results. We are working to let the program choose the optimal number
+of runs according to the convergence of the results.
+The option {\bf -r 0} has to be employed when OSLOM starts from a
+partition found by other algorithms.  
+  
+   \item \textbf{-hr $m$} sets the number of runs for higher
+     hierarchical level equal to $m$. The default value is 50 (the method
+     should be faster since the aggregated network is usually much
+     smaller). If you are not interested in hierarchies set
+     \textbf{-hr 0} and the method will stop after finding the lowest
+     level partition.
+  
+\item \textbf{-seed $m$}. The program is not deterministic, so it
+  needs a seed for its random number generator. 
+Using this option it will be set equal to $m$, otherwise the seed 
+will be set reading the file \textbf{time\_seed.dat}, which will be updated afterwards. 
+
+
+ \item \textbf{-hint filename}: reads a file with a partition
+    previously found by another algorithm. The file has to be
+    formatted like \textbf{tp}  (lines starting with \# are skipped,
+    so they are optional): it simply has to contain the modules
+    separated by an end of line. All the modules read from the file
+    will be cleaned up by the algorithm, 
+which would retain only the significant ones. Then, the program would
+look for submodules and cleanup all of them. 
+The outcoming clusters will be written in file
+\textbf{partitions\_level\_0}, together with the 
+modules found during the cluster search (unless you set \textbf{-r 0}). This option can be used only for the first hierarchical level.
+
+
+
+\item \textbf{-load filename}: reads a file with a partition
+previously found by OSLOM. The file must have the format of the output
+file \textbf{tp} (see Section~\ref{sec2.1}). 
+In particular, this option can be useful if you want to parallelize
+the program. You have to run 
+OSLOM in different folders with different seeds (option \textbf{-seed}).  
+  
+
+
+
+\item \textbf{-t $l$} sets the $p-$value equal to $l$. The default
+  value is $0.10$. Interestingly, if you increase this value you get
+  more modules. The reason is that submodules are more easily considered significant.
+
+\item \textbf{-singlet}: singletons. The program usually finds a
+  number of nodes which are not assigned to any module. By default, 
+  the  program  assigns ``homeless" nodes to a module
+  according to the score of the node
+  with respect to the existing modules:
+the module with best score will ``accept'' the node (this only applies to the lowest hierarchical level).  
+Setting this flag, instead, homeless nodes are not assigned to any cluster.
+Also, a file called \textbf{tp\_without\_singletons} will be written with all the nodes assigned (as by default). 
+This option should be used if you are interested in filtering nosily nodes (typically low-degree nodes).
+         
+     \item \textbf{-cp $l$} sets the \textit{coverage parameter}  equal to $l$. This parameter is a kind of resolution parameter: it is used to decide between taking some modules or their union. Default value is 0.5. Bigger value leads to bigger clusters. $l$ must be in the interval $(0, 1)$.
+  
+      \item \textbf{-fast}: this flag is to have fast results. It is equivalent to set  \textbf{-r $1$ -hr $1$}, so it enables the fastest possible execution of the program.
+   
+   
+     \item \textbf{-infomap $r$}: the program will call another program
+     (\textbf{infomap}) and will apply OSLOM's cleanup procedure
+     to the modules found by it. $r$ is the number of times \textbf{infomap} will be called, good values are between 1 and 10.
+    
+    
+   \item \textbf{-copra $r$}, \textbf{-louvain $r$} are similar flags
+     for other programs. They can be used simultaneously. The general
+     idea is that the more programs are used, the better the
+     exploration of possible modules will be, but of course more time is needed.
+   
+   
+   
+   
+   
+   \end{enumerate}
+   
+   
+   
+  
+  
+  Examples:
+  \\
+  
+{ \textbf{./oslom\_undir  -f example.dat -uw -infomap 3 -copra 2 -louvain 1 -r 2 } }
+  
+This will run oslom on example.dat using our method to explore the graph (two runs) and the outputs of infomap after 3 iterations, of copra after 2 and of louvain as initial conditions  [Oslom cleans-up afterwards the found modules]. The final output is formed by the best modules found with all these methods.   
+
+  { \textbf{./oslom\_undir -f example.dat -uw -infomap 1 -r 0 -hr 0} }
+  
+OSLOM runs on example.dat using as initial modules the output of infomap. Since $\textrm{r} = 0$ and $\textrm{hr}=0$, our module search technique is not applied.
+\\
+  
+  
+
+
+
+  
+  
+   
+    \textbf{N. B.}: All the external programs have been distributed
+because they are free. However, 
+if you use one or more of them for your research, please cite the
+paper where the method is described.
+
+    
+  
+  
+
+
+\section{References}
+
+
+If you used this program for your research, please cite this paper: (to appear)
+
+\vskip0.3cm
+
+\noindent In addition, please cite the following papers if you used  \textbf{-copra}, \textbf{-louvain} or \textbf{-infomap}.
+
+\begin{enumerate}
+
+  \item if you used \textbf{-copra}, please cite: Steve Gregory,
+    New J. Phys. {\bf 12}, 103018 (2010).
+  \item if you used \textbf{-infomap}, please cite: M. Rosvall and
+    C. T. Bergstrom, Proc. Natl. Acad. Sci. U.S.A {\bf 105}, 1118 (2008).
+\item if you used \textbf{-louvain}, please cite:   V. D. Blondel,
+  J.-L. Guillaume, R. Lambiotte, and E. Lefebvre, J. Stat. Mech. {\bf
+    P10008} (2008).
+\end{enumerate}
+
+Further information and the source codes can be found in the following urls:
+
+\begin{enumerate}
+
+  \item \textbf{copra}: {\tt http://www.cs.bris.ac.uk/$\sim$steve/networks/software/copra.html}
+  \item \textbf{infomap}: {\tt http://www.tp.umu.se/$\sim$rosvall/code.html}
+  \item \textbf{louvain}: {\tt http://sites.google.com/site/findcommunities/}
+  \end{enumerate}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+\end{document}  
+         

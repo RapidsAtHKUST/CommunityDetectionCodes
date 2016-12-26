@@ -1,0 +1,1384 @@
+#LyX 2.0 created this file. For more info see http://www.lyx.org/
+\lyxformat 413
+\begin_document
+\begin_header
+\textclass scrartcl
+\use_default_options true
+\begin_modules
+theorems-ams
+theorems-ams-extended
+\end_modules
+\maintain_unincluded_children false
+\language italian
+\language_package default
+\inputencoding auto
+\fontencoding global
+\font_roman default
+\font_sans default
+\font_typewriter default
+\font_default_family default
+\use_non_tex_fonts false
+\font_sc false
+\font_osf false
+\font_sf_scale 100
+\font_tt_scale 100
+
+\graphics default
+\default_output_format default
+\output_sync 0
+\bibtex_command default
+\index_command default
+\paperfontsize default
+\spacing single
+\use_hyperref false
+\papersize default
+\use_geometry false
+\use_amsmath 1
+\use_esint 1
+\use_mhchem 1
+\use_mathdots 1
+\cite_engine basic
+\use_bibtopic false
+\use_indices false
+\paperorientation portrait
+\suppress_date false
+\use_refstyle 1
+\index Index
+\shortcut idx
+\color #008000
+\end_index
+\secnumdepth 3
+\tocdepth 3
+\paragraph_separation skip
+\defskip smallskip
+\quotes_language english
+\papercolumns 1
+\papersides 1
+\paperpagestyle default
+\tracking_changes false
+\output_changes false
+\html_math_output 0
+\html_css_as_file 0
+\html_be_strict false
+\end_header
+
+\begin_body
+
+\begin_layout Title
+Algoritmo EAGLE: implementazione e valutazione delle performance
+\end_layout
+
+\begin_layout Author
+Asara, Dignani, Mandalà, Rafanelli
+\end_layout
+
+\begin_layout Abstract
+Studi nel campo del clustering hanno dimostrato che le community sono in
+ genere sia overlapping che gerarchiche; EAGLE (agglomerativE hierarchicAl
+ clusterinG based on maximaL cliquE) è un algoritmo di community detection
+ che considera entrambe le proprietà, a differenza di molti altri.
+ In questo documento mostriamo una possibile implementazione di EAGLE, utilizzan
+do una versione appositamente modificata dell'algoritmo per renderlo più
+ veloce.
+ 
+\end_layout
+
+\begin_layout Abstract
+Successivamente eseguiamo gli algoritmi EAGLE e GCE (Greedy Clique Expansion)
+ su un set di grafi e ne confrontiamo i risultati, in termini di performance,
+ numero di community rilevate, la loro dimensione varie altre metriche.
+\end_layout
+
+\begin_layout Section
+Introduzione (andrea)
+\end_layout
+
+\begin_layout Section
+L'algoritmo EAGLE (silvia, federico)
+\end_layout
+
+\begin_layout Subsection
+Descrizione algoritmo e caratteristiche (silvia)
+\end_layout
+
+\begin_layout Subsection
+Versione originale (federico)
+\end_layout
+
+\begin_layout Standard
+È possibile implementare l'algoritmo così come proposto dagli autori in
+ questa maniera (in linguaggio Python-Like):
+\end_layout
+
+\begin_layout Standard
+\begin_inset listings
+lstparams "language=Python,numbers=left"
+inline false
+status open
+
+\begin_layout Plain Layout
+
+def EAGLE(k):
+\end_layout
+
+\begin_layout Plain Layout
+
+	mc = maximal_cliques(minSize = k)
+\end_layout
+
+\begin_layout Plain Layout
+
+	unusedNodes = [nodi che non fanno parte di community]
+\end_layout
+
+\begin_layout Plain Layout
+
+	
+\end_layout
+
+\begin_layout Plain Layout
+
+	for node in unusedNodes:
+\end_layout
+
+\begin_layout Plain Layout
+
+		mc.append([aggiungi una community con solo "node" a mc])
+\end_layout
+
+\begin_layout Plain Layout
+
+	
+\end_layout
+
+\begin_layout Plain Layout
+
+	bestSet = mc
+\end_layout
+
+\begin_layout Plain Layout
+
+	bestEQ  = EQ(bestSet)
+\end_layout
+
+\begin_layout Plain Layout
+
+	
+\end_layout
+
+\begin_layout Plain Layout
+
+	while mc.size > 1:
+\end_layout
+
+\begin_layout Plain Layout
+
+		a, b = [estrai le communities con similarity più alta]
+\end_layout
+
+\begin_layout Plain Layout
+
+		mc.append([unione tra a e b])
+\end_layout
+
+\begin_layout Plain Layout
+
+		
+\end_layout
+
+\begin_layout Plain Layout
+
+		actualEQ = EQ(mc)
+\end_layout
+
+\begin_layout Plain Layout
+
+		if actualEQ > bestEQ:
+\end_layout
+
+\begin_layout Plain Layout
+
+			bestSet = mc
+\end_layout
+
+\begin_layout Plain Layout
+
+			bestEQ = actualEQ
+\end_layout
+
+\begin_layout Plain Layout
+
+	
+\end_layout
+
+\begin_layout Plain Layout
+
+	return bestSet
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+Il codice riportato esegue le seguenti operazioni:
+\end_layout
+
+\begin_layout Enumerate
+calcola il set delle communities iniziali:
+\end_layout
+
+\begin_deeper
+\begin_layout Enumerate
+calcola tutte le clique massimali di dimensione minima k (come già detto,
+ 4 è un buon valore);
+\end_layout
+
+\begin_layout Enumerate
+ogni nodo del grafo che non fa parte di nessuna community viene visto come
+ una community a se stante;
+\end_layout
+
+\end_deeper
+\begin_layout Enumerate
+calcola il valore della modularity estesa per il set iniziale, salva il
+ risultato in bestEQ e una copia del set orignale in bestSet;
+\end_layout
+
+\begin_layout Enumerate
+esegue ciclicamente le seguenti operazioni finché non rimane un'unica community
+ nel set:
+\end_layout
+
+\begin_deeper
+\begin_layout Enumerate
+estrae dal set le communities a e b che assieme danno luogo al più alto
+ valore di similarity;
+\end_layout
+
+\begin_layout Enumerate
+a e b vengono unite in un'unica community, e questa viene inserita nel set;
+\end_layout
+
+\begin_layout Enumerate
+se il set ha un EQ più alto di bestEQ questo viene salvato come nuovo bestSet,
+ e bestEQ prende il valore calcolato;
+\end_layout
+
+\end_deeper
+\begin_layout Enumerate
+bestSet è il set delle communities finale.
+\end_layout
+
+\begin_layout Standard
+Come si può vedere, ci sono tre funzioni a cui si fa riferimento nel listato:
+\end_layout
+
+\begin_layout Description
+maximal_cliques questa funzione restituisce le clique massimali di un grafo;
+ gli autori di EAGLE suggeriscono l'utilizzo dell'algoritmo Bron-Kerbosch.
+ Non si considerano tutte le clique massimali, ma soltanto quelle che hanno
+ un numero di nodi maggiore o uguale ad una certa soglia, indicata come
+ k nell'articolo.
+ La funzione deve quindi accettare questo parametro.
+\end_layout
+
+\begin_layout Description
+EQ questa funzione calcola la modularity estesa, così come proposta dagli
+ autori di EAGLE:
+\begin_inset Formula 
+\[
+EQ=\frac{1}{2m}\sum_{i}\sum_{v,w\in C_{i}}\frac{1}{O_{v}O_{w}}\left[A_{vw}-\frac{k_{v}k_{w}}{2m}\right]
+\]
+
+\end_inset
+
+dove:
+\end_layout
+
+\begin_deeper
+\begin_layout Itemize
+\begin_inset Formula $m$
+\end_inset
+
+ è il numero di archi nel grafo;
+\end_layout
+
+\begin_layout Itemize
+\begin_inset Formula $O_{v}$
+\end_inset
+
+ è il numero di communities a cui il nodo 
+\begin_inset Formula $v$
+\end_inset
+
+ appartiene;
+\end_layout
+
+\begin_layout Itemize
+\begin_inset Formula $k_{v}$
+\end_inset
+
+ è il grado del nodo 
+\begin_inset Formula $v$
+\end_inset
+
+;
+\end_layout
+
+\begin_layout Itemize
+\begin_inset Formula $A_{vw}$
+\end_inset
+
+ è l'elemento 
+\begin_inset Formula $w$
+\end_inset
+
+ della riga 
+\begin_inset Formula $v$
+\end_inset
+
+ della matrice di adiacenza del grafo: assume valore 1 se esiste un arco
+ tra i due nodi, altrimenti vale 0.
+\end_layout
+
+\begin_layout Standard
+Un alto valore di EQ indica una struttura di communities con molte sovrapposizio
+ni.
+ EQ vale 0 quando tutti i nodi appartengono alla stessa community, mentre
+ si riduce alla modularità Q quando ogni nodo appartiene ad una sola community.
+\end_layout
+
+\end_deeper
+\begin_layout Description
+similarity questa funzione, anche se non appare esplicitamente nel listato,
+ valuta la somiglianza tra due communities, siano 
+\begin_inset Formula $C_{1}$
+\end_inset
+
+ e 
+\begin_inset Formula $C_{2}$
+\end_inset
+
+, ed è così definita:
+\begin_inset Formula 
+\[
+M=\frac{1}{2m}\sum_{v\in C_{1},w\in C_{2},v\neq w}\left[A_{vw}-\frac{k_{v}k_{w}}{2m}\right]
+\]
+
+\end_inset
+
+ed assume valore tanto più alto quanto più simili sono le due community
+ considerate.
+ 
+\end_layout
+
+\begin_layout Subsection
+Modifica dell'algoritmo
+\end_layout
+
+\begin_layout Standard
+Indubbiamente nell'algoritmo così come presentato ci sono diversi 
+\emph on
+colli di bottiglia
+\emph default
+, cioè serie di operazioni molto pesanti e ripetute frequentemente, che
+ rallentano notevolmente l'esecuzione dell'algoritmo.
+ Vediamo ora nel dettaglio quali sono:
+\end_layout
+
+\begin_layout Subsubsection
+Similarity
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula 
+\begin{equation}
+M_{C_{1},C_{2}}=\frac{1}{2m}\sum_{v\in C_{1},w\in C_{2},v\neq w}\left[A_{vw}-\frac{k_{v}k_{w}}{2m}\right]\label{eq:similarity}
+\end{equation}
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+La similarity è la funzione che viene calcolata più volte tra tutte quelle
+ presenti nell'algoritmo.
+ Se si dovesse implementare l'algoritmo così come descritto nel listato
+ precedente si avrebbero tantissime chiamate.
+ 
+\end_layout
+
+\begin_layout Standard
+Ad esempio, il grafo IT contiene 611 nodi e 620 communities iniziali; il
+ ciclo while verrà ripetuto 619 volte.
+ Indicando come 
+\begin_inset Formula $N$
+\end_inset
+
+ il numero attuale di communities, ricordando che 
+\begin_inset Formula 
+\[
+620\geq N\geq2
+\]
+
+\end_inset
+
+bisogna calcolare la similarity fra 
+\begin_inset Formula 
+\[
+P=\frac{N(N-1)}{2}
+\]
+
+\end_inset
+
+communities.
+ Allora il numero totale di volte che si calcola la similarity è dato da:
+\begin_inset Formula 
+\[
+\#similarity=\sum_{N=2}^{620}\frac{N(N-1)}{2}=39721230
+\]
+
+\end_inset
+
+che è evidentemente un numero molto alto.
+ Il grafo più grande a nostra disposizione ha 35390 nodi e 36496 communities
+ iniziali; i conti di prima indicano quindi che il calcolo della similarity
+ verrà eseguito un numero di volte pari a 8.101.190.658.480, circa 
+\begin_inset Formula $8\,10^{12}$
+\end_inset
+
+ operazioni.
+ Questa operazione deve essere eseguita velocemente, altrimenti i tempi
+ di attesa saranno molto lunghi.
+\end_layout
+
+\begin_layout Standard
+La funzione similarity, così come riportata sopra non è molto performante,
+ in quanto non consente il precalcolo di alcuni dati.
+ Proponiamo allora una versione modificata della similarity, indicata come
+ 
+\begin_inset Formula $\frac{M_{C_{1},C_{2}}}{f}$
+\end_inset
+
+, dove:
+\begin_inset Formula 
+\[
+f=\frac{1}{2m}\geq0
+\]
+
+\end_inset
+
+viene chiamato fattore di scala.
+ Essendo costante per tutta l'esecuzione di EAGLE (l'algoritmo non modifica
+ le connessioni tra nodi), ed essendo questa strettamente positiva
+\begin_inset Foot
+status collapsed
+
+\begin_layout Plain Layout
+In quanto 
+\begin_inset Formula $m>0$
+\end_inset
+
+; il caso 
+\begin_inset Formula $m=0$
+\end_inset
+
+ non viene analizzato perché giustamente indicherebbe un grafo completamente
+ sconnesso, senza alcun interesse dal punto di vista degli algoritmi di
+ questo tipo.
+\end_layout
+
+\end_inset
+
+ un ordinamento ottenuto con la similarity modificata sarà necessariamente
+ uguale ad uno ottenuto con la similarity originale.
+ La formula proposta per il calcolo della similarity è la seguente:
+\begin_inset Formula 
+\begin{equation}
+\frac{M_{C_{1},C_{2}}}{f}=\left(\sum_{v\in C_{1},w\in C_{2},v\neq w}A_{vw}\right)-f\left(D_{C_{1}}D_{C_{2}}-D_{C_{1}\cap C_{2}}^{2}\right)\label{eq:eSimilarity}
+\end{equation}
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Theorem
+Le equazioni 
+\begin_inset CommandInset ref
+LatexCommand ref
+reference "eq:similarity"
+
+\end_inset
+
+ e 
+\begin_inset CommandInset ref
+LatexCommand ref
+reference "eq:eSimilarity"
+
+\end_inset
+
+ sono equivalenti.
+\end_layout
+
+\begin_layout Proof
+Separiamo ed espandiamo le sommatorie:
+\begin_inset Formula 
+\begin{eqnarray*}
+\frac{M_{C_{1},C_{2}}}{f} & = & \sum_{v\in C_{1},w\in C_{2},v\neq w}\left[A_{vw}-fk_{v}k_{w}\right]=\\
+ & = & \sum_{v\in C_{1},w\in C_{2},v\neq w}A_{vw}-f\sum_{v\in C_{1},w\in C_{2},v\neq w}k_{v}k_{w}=\\
+ & = & \sum_{v\in C_{1},w\in C_{2},v\neq w}A_{vw}-f\left(\sum_{i,j}K_{ij}-D_{C_{1}\cap C_{2}}^{2}\right)
+\end{eqnarray*}
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Proof
+Dove l'ultima sommatoria è stata trasformata in una sommatoria sugli elementi
+ della matrice 
+\begin_inset Formula $K$
+\end_inset
+
+.
+ L'elemento 
+\begin_inset Formula $K_{ij}$
+\end_inset
+
+, cioè alla riga 
+\begin_inset Formula $i$
+\end_inset
+
+ e alla colonna 
+\begin_inset Formula $j$
+\end_inset
+
+, è così definito:
+\begin_inset Formula 
+\[
+K_{ij}=k_{v_{i}}k_{w_{j}}
+\]
+
+\end_inset
+
+dove 
+\begin_inset Formula $k_{v_{i}}$
+\end_inset
+
+ indica il nodo i-esimo della community 
+\begin_inset Formula $C_{1}$
+\end_inset
+
+, e 
+\begin_inset Formula $k_{w_{j}}$
+\end_inset
+
+ il j-esimo nodo della community 
+\begin_inset Formula $C_{2}$
+\end_inset
+
+.
+ Tra le due communities ci possono essere dei nodi a comune
+\begin_inset Foot
+status collapsed
+
+\begin_layout Plain Layout
+Addirittura, perché la similarity assuma valore elevato è necessario che
+ ci siano molti nodi a comune!
+\end_layout
+
+\end_inset
+
+, e questi saranno gli elementi presenti nella diagonale.
+ La sommatoria originale non considera questi nodi, ed è quindi necessario
+ escluderli sottraendo: 
+\begin_inset Formula 
+\[
+D_{C_{1}\cap C_{2}}^{2}=\sum_{u\in C_{1}\cap C_{2}}k_{u}
+\]
+
+\end_inset
+
+al risultato della sommatoria sulla stessa matrice.
+ Il passaggio appena effettuato può sembrare inutile, ma si può fare un
+ notevole raccoglimento nella sommatoria sulla matrice, che ci porta al
+ risultato desiderato:
+\begin_inset Formula 
+\begin{eqnarray*}
+ & \sum_{i,j}K_{ij} & =\\
+= & \sum_{i,j}k_{i}k_{j} & =\\
+= & \sum_{i}\sum_{j}k_{i}k_{j} & =\\
+= & \sum_{i}\left(k_{i}\sum_{j}k_{j}\right) & =\\
+= & \left(\sum_{i}k_{i}\right)\left(\sum_{j}k_{j}\right) & =\\
+= & \left(\sum_{v\in C_{1}}k_{v}\right)\left(\sum_{w\in C_{2}}k_{w}\right) & =\\
+= & D_{C_{1}}D_{C_{2}}
+\end{eqnarray*}
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+La formula modificata 
+\begin_inset CommandInset ref
+LatexCommand ref
+reference "eq:eSimilarity"
+
+\end_inset
+
+ permette di precalcolare 
+\begin_inset Formula $D_{C_{1}}$
+\end_inset
+
+ e 
+\begin_inset Formula $D_{C_{2}}$
+\end_inset
+
+, così da mantenerli almeno per un'iterazione di EAGLE.
+ In realtà questi parametri possono essere mantenuti per tutta la durata
+ di una community, visto che i gradi non cambiano: ogni volta che si crea
+ una community si potrà memorizzare questa quantità, che non cambierà per
+ tutto il tempo di vita di una community
+\begin_inset Foot
+status open
+
+\begin_layout Plain Layout
+Ancora una volta, l'algoritmo non modifica le connessioni tra i nodi, e
+ quindi i gradi non possono cambiare.
+\end_layout
+
+\end_inset
+
+.
+ 
+\end_layout
+
+\begin_layout Subsubsection
+EQ
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula 
+\[
+EQ=\frac{1}{2m}\sum_{i}\sum_{v,w\in C_{i}}\frac{1}{O_{v}O_{w}}\left[A_{vw}-\frac{k_{v}k_{w}}{2m}\right]
+\]
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+Questo parametro viene valutato di meno rispetto alla similarity: viene
+ infatti calcolato tante volte quante sono le communities iniziali, o più
+ precisamente si calcola una volta per ogni step dell'algoritmo, quindi
+ per ogni set di communities generato.
+ 
+\end_layout
+
+\begin_layout Standard
+Il calcolo di questo parametro, che associa ad un set di communities un
+ numero reale, è oneroso.
+ È possibile ottimizzare in svariati modi questa funzione, e ne verranno
+ visti tre in ordine crescente di efficienza, sviluppati tutti sullo stesso
+ ragionamento.
+ 
+\end_layout
+
+\begin_layout Paragraph
+Soft EQ
+\end_layout
+
+\begin_layout Standard
+Questa ottimizzazione agisce in due punti:
+\end_layout
+
+\begin_layout Itemize
+rimuove il termine 
+\begin_inset Formula $\frac{1}{2m}$
+\end_inset
+
+ a moltiplicare, esattamente come fatto per la similarity;
+\end_layout
+
+\begin_layout Itemize
+precalcola per ogni nodo il grado di appartenenza, così da non doverlo calcolare
+ ogni volta che è richiesto; questo da solo è il miglioramento principale
+ applicabile alla formula;
+\end_layout
+
+\begin_layout Standard
+Alla fine la formula ottenuta è la seguente:
+\begin_inset Formula 
+\begin{equation}
+\frac{EQ}{f}=\sum_{i}\sum_{v,w\in C_{i}}\frac{A_{vw}-fk_{v}k_{w}}{O_{v}O_{w}}\label{eq:softeq}
+\end{equation}
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+L'uguaglianza di questa formula all'originale è dimostrabile in maniera
+ banale, visto che l'unica modifica effettuata alla formula è la rimozione
+ di 
+\begin_inset Formula $f$
+\end_inset
+
+.
+ Perché la formula sia valida sempre è però necessario mantenere aggiornati
+ i vari 
+\begin_inset Formula $O_{v}$
+\end_inset
+
+.
+ Questo è un compito che va fatto in due tempi:
+\end_layout
+
+\begin_layout Itemize
+in fase di creazione delle communities: per ogni nodo aggiunto ad una community,
+ il suo grado di appartenenza viene incrementato di uno;
+\end_layout
+
+\begin_layout Itemize
+in fase di merge di due communities.
+\end_layout
+
+\begin_layout Standard
+Quest'ultima fase richiede qualche riga per la spiegazione.
+ Durante la fase di merge due communities 
+\begin_inset Formula $C_{i}$
+\end_inset
+
+ e 
+\begin_inset Formula $C_{j}$
+\end_inset
+
+ vengono unite per creare la seguente community:
+\begin_inset Formula 
+\[
+C_{k}=C_{i}\cap C_{j}
+\]
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+Facciamo un bilancio sul grado di appartenenza dei nodi prima e dopo il
+ merge:
+\end_layout
+
+\begin_layout Itemize
+i nodi che non sono in nessuna community non cambiano grado di appartenenza;
+\end_layout
+
+\begin_layout Itemize
+i nodi che sono solo in una community non cambiano grado di appartenenza,
+ perché escono da una community ma rientrano in un'altra;
+\end_layout
+
+\begin_layout Itemize
+i nodi che sono in entrambe le communities, cioé nella loro intersezione,
+ vedono il loro grado appartenza decrementare di un'unità.
+ Questo perché escono da due community ma rientrano in una soltanto.
+\end_layout
+
+\begin_layout Standard
+Bisogna quindi implementare questa logica nella funzione di merge: il costo
+ computazionale di questo meccanismo è sicuramente trascurabile rispetto
+ ai vantaggi ottenuti utilizzando questo sistema.
+\end_layout
+
+\begin_layout Paragraph
+Medium EQ
+\end_layout
+
+\begin_layout Standard
+Questa ottimizzazione si basa sulla precedente ed è di lieve entità, ed
+ essenzialmente fa una raccolta a fattor comune per 
+\begin_inset Formula $\frac{k_{v}}{O_{v}}$
+\end_inset
+
+.
+ La formula ottenuta è la seguente:
+\begin_inset Formula 
+\[
+\frac{EQ}{f}=\sum_{i}\sum_{v\in C_{i}}\frac{k_{v}}{O_{v}}\sum_{w\in C_{i}}\frac{A_{vw}-fk_{w}}{O_{w}}
+\]
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+In questo caso non è necessario implementare ulteriori meccanismi di consistenza.
+ Si può dimostrare l'equivalenza semplicemente espandendo 
+\begin_inset Formula $\frac{k_{v}}{O_{v}}$
+\end_inset
+
+ all'interno della terza serie.
+\end_layout
+
+\begin_layout Paragraph
+Hard EQ
+\end_layout
+
+\begin_layout Standard
+Questa ottimizzazione si basa ancora sulle precedenti, ma si spinge a livelli
+ estremi; introduce anche un overhead notevole, che riduce di molto il guadagno
+ in termini di prestazioni, ma non lo annulla del tutto.
+ La funzione è la seguente:
+\begin_inset Formula 
+\begin{equation}
+\frac{EQ}{f}=\sum_{i}\lambda_{i}-f\delta_{i}\label{eq:hardeq}
+\end{equation}
+
+\end_inset
+
+dove:
+\begin_inset Formula 
+\begin{equation}
+\lambda_{i}=\sum_{v,w\in C_{i}}\frac{A_{vw}}{O_{v}O_{w}}\label{eq:fci}
+\end{equation}
+
+\end_inset
+
+è chiamato fattore di connessione interno della community i, mentre:
+\begin_inset Formula 
+\begin{equation}
+\delta_{i}=\left(\sum_{v\in C_{i}}\frac{k_{v}}{O_{v}}\right)^{2}\label{eq:eq_gp}
+\end{equation}
+
+\end_inset
+
+è chiamato grado pesato della community i.
+ 
+\end_layout
+
+\begin_layout Theorem
+Le funzioni 
+\begin_inset CommandInset ref
+LatexCommand ref
+reference "eq:hardeq"
+
+\end_inset
+
+ ed 
+\begin_inset CommandInset ref
+LatexCommand ref
+reference "eq:softeq"
+
+\end_inset
+
+ sono equivalenti, a meno di una costante moltiplicativa.
+\end_layout
+
+\begin_layout Proof
+Espandiamo la formula 
+\begin_inset CommandInset ref
+LatexCommand ref
+reference "eq:hardeq"
+
+\end_inset
+
+ con le definizioni 
+\begin_inset CommandInset ref
+LatexCommand ref
+reference "eq:fci"
+
+\end_inset
+
+ e 
+\begin_inset CommandInset ref
+LatexCommand ref
+reference "eq:eq_gp"
+
+\end_inset
+
+ date:
+\begin_inset Formula 
+\begin{eqnarray*}
+ & \frac{EQ}{f} & =\\
+= & \sum_{i}\sum_{v,w\in C_{i}}\frac{A_{vw}}{O_{v}O_{w}}-f\left(\sum_{v\in C_{i}}\frac{k_{v}}{O_{v}}\right)^{2} & =\\
+= & \sum_{i}\sum_{v\in C_{i}}\sum_{w\in C_{i}}\frac{A_{vw}}{O_{v}O_{w}}-f\left(\sum_{v\in C_{i}}\frac{k_{v}}{O_{v}}\right)\left(\sum_{v\in C_{i}}\frac{k_{v}}{O_{v}}\right) & =\\
+= & \sum_{i}\sum_{v\in C_{i}}\sum_{w\in C_{i}}\frac{A_{vw}}{O_{v}O_{w}}-f\sum_{v\in C_{i}}\left(\frac{k_{v}}{O_{v}}\left(\sum_{w\in C_{i}}\frac{k_{w}}{O_{w}}\right)\right) & =\\
+= & \sum_{i}\sum_{v\in C_{i}}\sum_{w\in C_{i}}\frac{A_{vw}}{O_{v}O_{w}}-f\sum_{v\in C_{i}}\sum_{w\in C_{i}}\frac{k_{v}}{O_{v}}\frac{k_{w}}{O_{w}} & =\\
+= & \sum_{i}\sum_{v\in C_{i}}\sum_{w\in C_{i}}\frac{A_{vw}-k_{v}k_{w}}{O_{v}O_{w}}
+\end{eqnarray*}
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+Si vede che l'equazione 
+\begin_inset CommandInset ref
+LatexCommand ref
+reference "eq:hardeq"
+
+\end_inset
+
+ può essere sfruttata vantaggiosamente: è possibile precalcolare i due termini
+ 
+\begin_inset Formula $\lambda$
+\end_inset
+
+ e 
+\begin_inset Formula $\delta$
+\end_inset
+
+ per ogni community.
+ Il problema principale è però il mantenere consistenti questi dati durante
+ le iterazioni, e il costo è elevato.
+ Infatti, oltre alle operazioni indicate per l'aggiornamento del grado di
+ appartenenza, è necessario aggiornare entrambi i termini introdotti per
+ ogni community contenente i nodi il cui grado di appartenenza è cambiato.
+ È evidente che questa non è un'operazione leggera, e il guadagno prestazionale
+ ottenuto con questa soluzione è minimo, seppur presente.
+\end_layout
+
+\begin_layout Subsubsection
+Ordinamento per valori di similarity crescente
+\end_layout
+
+\begin_layout Standard
+Le due modifiche proposte portano a un notevole aumento di velocità di esecuzion
+e dell'algoritmo, in quanto sfruttano l'invarianza di alcuni dati frequentemente
+ usati per tutta l'esecuzione.
+ Viene spontaneo quindi domandarsi se è possibile ottenere un risultato
+ simile anche per la fase di ordinamento, memorizzando in ordine tutti i
+ risultati della similarity, avendo cura di rimuovere i vecchi e di aggiornare
+ i restanti.
+ Esistono diversi metodi per farlo, e in questo progetto sfruttiamo il concetto
+ di lista dei massimi a dimensione limitata, o cache dei massimi.
+ 
+\end_layout
+
+\begin_layout Standard
+È infatti impensabile memorizzare tutti i valori di similarity calcolati:
+ supponendo infatti di poter esprimere gli indici delle community su 4B
+ e di utilizzare numeri a virgola mobile a doppia precisione su 8B per esprimere
+ la similarity, si utilizzerebbero 16B solo per la memorizzazione di una
+ tupla 
+\begin_inset Formula $\left(i,\, j,\, M_{C_{i},C_{j}}\right)$
+\end_inset
+
+.
+ A questi andrebbero poi sommati i byte eventualmente utilizzati dalla struttura
+ dati incaricata di mantenere questi risultati, tenendo presente che avverranno
+ frequenti cancellazioni e inserimenti in qualsiasi posizione:
+\end_layout
+
+\begin_layout Itemize
+per un vettore a dimensione dinamica l'overhead in termini di memoria non
+ dipende dal numero di elementi memorizzati, ma si hanno penalità nel rimuovere
+ gli elementi tanto più pesanti quanto più vicini si è alla testa del vettore
+\begin_inset Foot
+status collapsed
+
+\begin_layout Plain Layout
+Poiché è necessario fare lo shift dei dati per coprire lo spazio lasciato
+ vuoto.
+\end_layout
+
+\end_inset
+
+, e mantenerlo ordinato è ugualmente un'operazione costosa
+\begin_inset Foot
+status collapsed
+
+\begin_layout Plain Layout
+Per lo stesso motivo: un inserimento in testa richiederebbe lo spostamento
+ di tutti gli altri elementi in avanti.
+\end_layout
+
+\end_inset
+
+.
+ Questa opzione è sicuramente da scartare, nonostante l'overhead minimo.
+\end_layout
+
+\begin_layout Itemize
+Utilizzando una lista concatenata con un solo puntatore per elemento si
+ ha un overhead di 
+\begin_inset Formula $x$
+\end_inset
+
+ byte, dove:
+\begin_inset Formula 
+\[
+x=\frac{X}{8}
+\]
+
+\end_inset
+
+con 
+\begin_inset Formula $X$
+\end_inset
+
+ il numero di bit utilizzati per l'indirizzamento in memoria.
+ Valori comuni di 
+\begin_inset Formula $x$
+\end_inset
+
+ sono 4B ed 8B, per sistemi rispettivamente a 32 e 64 bit; consideriamo
+ un sistema con 
+\begin_inset Formula $x=8B$
+\end_inset
+
+.
+ L'occupazione totale di memoria per elemento ammonterebbe a 24B, cioè un
+ incremento del 50%.
+ È possibile fare inserimenti e rimozioni con complessità dipendente, sostanzial
+mente, dalla posizione in cui si vuole inserire o rimuovere un dato; è quindi
+ costoso estrarre o inserire elementi in coda.
+ 
+\end_layout
+
+\begin_layout Itemize
+Una lista concatenata con due puntatori per elemento aggiunge un overhead
+ di 
+\begin_inset Formula $2xB$
+\end_inset
+
+; per un sistema a 64 bit si ha un incremento del 100%, arrivando a 32B.
+ I vantaggi sono comunque notevoli, perché è possibile eseguire operazioni
+ in testa e in coda con complessità costante.
+ Tuttavia, l'inserimento e l'estrazione dei dati in generale hanno complessità
+ lineare, dipendente dalla posizione in cui si vuole inserire o rimuovere
+ un elemento.
+ 
+\end_layout
+
+\begin_layout Itemize
+Un insieme ordinato può essere implementato con lo stesso overhead di una
+ lista concatenata, utilizzando una struttura ad albero; verrà però garantito
+ l'inserimento ordinato dei dati con complessità logaritmica (funzione del
+ numero di elementi presenti nell'albero), oltre che la rimozione.
+ Nonostante l'overhead in termini di memoria, questa è la struttura dati
+ più veloce che possiamo ottenere.
+\end_layout
+
+\begin_layout Standard
+Utilizzando un insieme per mantenere i valori calcolati abbiamo un costo
+ in memoria di 32B per elemento; gli elementi però sono funzione del numero
+ iniziale di communities, precisamente sono le permutazioni delle communities
+ iniziali:
+\begin_inset Formula 
+\[
+\#elementi=\frac{N(N-1)}{2}
+\]
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+Ora, è chiaro che memorizzare tutti i valori è proibitivo: 
+\end_layout
+
+\begin_layout Itemize
+grafo IT, con 620 communities iniziali: 
+\begin_inset Formula 
+\[
+Mem_{IT}=191890*32B=6140480B\approx6MB
+\]
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Itemize
+grafo Internet, con 36496 communities iniziali:
+\begin_inset Formula 
+\[
+Mem_{Internet}=665960760*32B=21310744320B\approx20GB
+\]
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+Come già anticipato, la memorizzazione di tutti i dati è impensabile: oltre
+ per l'occupazione in memoria, l'utilizzo di un insieme di dati così grande
+ renderebbe l'algoritmo Memory-Bound.
+\end_layout
+
+\begin_layout Standard
+Si può però utilizzare un approccio diverso, e cioé mantenere una lista
+ limitata dei massimi, chiamata anche cache dei massimi.
+ Nell'implementazione dell'algoritmo abbiamo scelto mantenere al più 
+\begin_inset Formula $C_{f}N$
+\end_inset
+
+ valori, da ora in poi chiamati massimi.
+ Si memorizza un valore solo se questo ha similarity maggiore del massimo
+ a similarity minima oppure se la cache non ha raggiunto il limite massimo.
+ Questa sarà la regola di inserimento:
+\begin_inset Formula 
+\begin{equation}
+M_{C_{i},C_{j}}>min\left\{ Cache\right\} \, OR\,\#\left\{ Cache\right\} <3N\label{eq:rinserimento}
+\end{equation}
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+Supponiamo da ora in avanti che:
+\begin_inset Formula 
+\[
+C_{f}=3
+\]
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+Quando si esegue il primo ciclo dell'algoritmo la cache sarà vuota; verrà
+ quindi calcolata la similarity per ogni possibile coppia, e i risultati
+ verranno memorizzati in base al criterio sopra esposto.
+ La cache arriverà ad avere 3N elementi.
+ Si estrae poi l'utilmo elemento dalla cache, cioè quello con valore più
+ alto (arrivando ad avere 
+\begin_inset Formula $3N-1$
+\end_inset
+
+ elementi), e si fa il merge tra le due community 
+\begin_inset Formula $i$
+\end_inset
+
+ e 
+\begin_inset Formula $j$
+\end_inset
+
+ che l'hanno prodotto.
+ 
+\end_layout
+
+\begin_layout Standard
+È necessario rimuovere qualsiasi elemento della cache prodotto da una delle
+ due community: non è più presente l'elemento 
+\begin_inset Formula $(i,\, j)$
+\end_inset
+
+ in quanto è stato estratto; di conseguenza le due community possono aver
+ generato 
+\begin_inset Formula $N-2$
+\end_inset
+
+ massimi cadauna.
+ Nel caso massimo, la cache conterrebbe quindi 
+\begin_inset Formula $N+3$
+\end_inset
+
+ elementi.
+ 
+\end_layout
+
+\begin_layout Standard
+Quando si crea una nuova community e la si inserisce nel set è necessario
+ calcolare la similarity tra questa e le altre community.
+ Questo porterà ad avere potenzialmente 
+\begin_inset Formula $N-2$
+\end_inset
+
+ massimi; se la cache non è vuota questi valori possono essere inseriti
+ direttamente lì dentro, garantendo comunque che la lista mantenga sempre
+ i massimi.
+ Se invece la lista è vuota, è necessario ricalcolare la similarity per
+ tutte le coppie, poiché non abbiamo più informazioni sul vecchio set.
+ 
+\end_layout
+
+\begin_layout Standard
+Si può presentare in questo caso una situazione anomala: supponiamo di portarci
+ in una condizione tale da avere un solo elemento 
+\begin_inset Formula $(a,b)$
+\end_inset
+
+ dopo il merge.
+ Questo elemento da solo è il massimo tra tutti gli altri rimasti nel set.
+ Quando inseriamo la nuova community può succedere che nessun elemento sia
+ maggiore dell'elemento in questione; tuttavia per la regola 
+\begin_inset CommandInset ref
+LatexCommand ref
+reference "eq:rinserimento"
+
+\end_inset
+
+ questi elementi entrano 
+\emph on
+tutti
+\emph default
+ nella lista.
+ In seguito è ovvio che verrà estratto l'elemento di massimo valore, cioè
+ 
+\begin_inset Formula $\left(a,b\right)$
+\end_inset
+
+.
+ Verranno inoltre invalidati sempre e solo due elementi dalla cache.
+ Ora la lista dei massimi si è ristretta ad un sottoinsieme dello spazio
+ delle soluzioni: quando verranno generati i massimi della nuova community
+ noi non possiamo sapere se nel vecchio set c'era qualche valore minore
+ di 
+\begin_inset Formula $(a,b)$
+\end_inset
+
+ ma maggiore di qualsiasi altro elemento aggiunto in seguito nella cache.
+ Non sono state trovate (ma non se ne esclude l'esistenza) relazioni sulla
+ similarity che garantiscono la presenza di questo massimo nei nuovi valori
+ generati, oppure che una situazione simile non si può presentare.
+ Vengono quindi proposti due sistemi per evitare questo problema:
+\end_layout
+
+\begin_layout Enumerate
+si aggiunge un'ulteriore regola: se il valore massimo presente in cache
+ prima e dopo l'aggiornamento della cache dopo un merge è lo stesso, la
+ cache è da invalidare completamente.
+ Questo controllo genera molti falsi positivi, ed non è quindi il metodo
+ più efficiente disponibile.
+ 
+\end_layout
+
+\begin_layout Enumerate
+Si usa una regola di inserimento modificata per l'aggiornamento della cache:
+ si restringe la regola usando solo la disuguaglianza presente prima dell'operat
+ore logico OR in 
+\begin_inset CommandInset ref
+LatexCommand ref
+reference "eq:rinserimento"
+
+\end_inset
+
+, per arrivare alla seguente regola di aggioramento:
+\begin_inset Formula 
+\begin{equation}
+M_{C_{i},C_{j}}>min\left\{ Cache\right\} \label{eq:raggiornamento}
+\end{equation}
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+Tra i due metodi proposti
+\begin_inset Foot
+status open
+
+\begin_layout Plain Layout
+Probabilmente è possibile modificare il primo sistema per fare il confronto
+ solamente quando lo si ritiene necessario; in questa maniera il numero
+ di falsi positivi dovrebbe scendere drasticamente.
+ 
+\end_layout
+
+\end_inset
+
+ noi implementiamo il secondo, in quanto rende necessario un nuovo calcolo
+ completo della similarity dopo molto tempo.
+ In particolare risulta molto efficace più è alto 
+\begin_inset Formula $C_{f}$
+\end_inset
+
+.
+ Nonostante le complicazioni evidenziate il guadagno è certamente notevole
+ e vale la pena implementare questo meccanismo.
+ Chiaramente, incrementando 
+\begin_inset Formula $C_{f}$
+\end_inset
+
+ la probabilità di invalidare tutta la cache (o analogalmente quella di
+ non riuscire a riempirla) diventa bassa, ma si corre il rischio di utilizzare
+ troppa memoria, rendendo complessivamente il sistema più lento.
+ 
+\end_layout
+
+\begin_layout Subsection
+Implementazione (federico)
+\end_layout
+
+\begin_layout Standard
+L'implementazione dell'algoritmo EAGLE è stata realizzata in C++, con l'utilizzo
+ delle librerie 
+\emph on
+igraph
+\emph default
+ e 
+\emph on
+boost
+\emph default
+.
+ Tali librerie sono opensource.
+\end_layout
+
+\begin_layout Subsubsection
+Considerazioni (federico)
+\end_layout
+
+\begin_layout Section
+L'algoritmo GCE (davide)
+\end_layout
+
+\begin_layout Subsection
+Codice utilizzo GCE (davide)
+\end_layout
+
+\begin_layout Section
+Confronto fra EAGLE e GCE
+\end_layout
+
+\begin_layout Subsection
+Descrizione delle metriche utilizzate (sivlia)
+\end_layout
+
+\begin_layout Subsubsection
+Implementazione delle metriche (andrea, davide) <-- qui mettete pure tutta
+ la struttura Communities
+\end_layout
+
+\begin_layout Subsection
+Confronto in metriche e prestazioni (tutti)
+\end_layout
+
+\begin_layout Subsubsection
+Confronto generale, senza fare riferimento a nessun grafo specifico
+\end_layout
+
+\begin_layout Subsubsection
+Grafo EAGLE
+\end_layout
+
+\begin_layout Subsubsection
+Grafo IT
+\end_layout
+
+\begin_layout Subsubsection
+Grafo Internet
+\end_layout
+
+\begin_layout Section
+Conclusioni (andrea)
+\end_layout
+
+\end_body
+\end_document
