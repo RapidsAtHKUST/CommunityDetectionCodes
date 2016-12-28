@@ -1,0 +1,62 @@
+Link Communities C++
+
+This directory contains C++ code and helper files to perform link clustering for very
+large networks (millions of edges).
+
+Since this code is optimized for size and speed, it is unable to store the full
+dendrogram, nor compute the maximum partition density. To avoid memory issues, a two-step
+process is used: a (possibly very very large) file containing all the link similarities 
+is created, then scanned over and all edge pairs beyond a given similarity threshold are
+clustered (single linkage). You can estimate the maximum partition density by providing
+many thresholds (the similarity file need only be computed once). A shell script is
+provided to help perform this loop.
+
+The given network must be connected and undirected. Node IDs must be sequentially ordered
+integers starting from zero. The network must be stored as an 'edgelist' where each edge
+is on its own line of the input file and consists of two integers (the edge's nodes)
+separated by a space. This format (edgelist with sequential integer nodes) is referred to
+as a '.pairs' file.
+
+For convenience, the file "edgelist2pairs.py" can convert an arbitrary edgelist with any
+node ids to the .pairs format. To see how to use it, run 
+	$ python edgelist2pairs.py -h
+
+
+As mentioned, the code consists of two steps: calculate the similarities and then cluster
+the edges using a given similarity threshold.
+
+To perform the first step:
+	$ g++ -O5 -o calcJaccards calcAndWrite_Jaccards.cpp
+	$ ./calcJaccards net.pairs net.jaccs
+
+This reads the provided net.pairs and create a (possibly large) net.jaccs file, 
+containing all the link similarities.
+
+To record the clusters for a given THRESHOLD:
+	$ g++ -O5 -o clusterJaccards clusterJaccsFile.cpp
+	$ ./clusterJaccards net.pairs net.jaccs net.clusters net.mc_nc THRESHOLD
+
+will scan the net.jaccs file, record all the clusters at THRESHOLD in net.clusters, and 
+the sizes of each cluster (number of edges and number of induced nodes) to net.mc_nc. The
+latter is useful for quickly computing the partition density.
+
+partition_density.py can be used to compute the partition density for a cut, using the
+.mc_nc file.
+
+
+Finally, two BASH scripts are provided for convenience:
+
+ link_clustering.sh - compiles and performs the full calculation (both steps), good for
+single runs. Try it with the included example .pairs file. For help, run
+'./link_clustering' (with no arguments) from a terminal.
+
+ loop_thresholds.sh - if the link similarity (.jaccs) file has already been created, this
+will loop over many thresholds, recording the clusters at each. This script will need
+editing to change some variables, and possibly replace the list of thresholds to be 
+looped over.
+
+
+Good luck!
+
+-- Jim Bagrow, bagrowjp [at] gmail [dot] com
+
