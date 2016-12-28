@@ -1,35 +1,12 @@
 #!/usr/bin/env python
 # encoding:UTF-8
 
-################################################################################################
-#
-#    Community Detection via Local Spectral Clustering
-#
-################################################################################################
-
-# (Our algorithm is also known as "LEMON", which is the short form of Local Expansion via Minimum One Norm)
-
-
-# LEMON.py
-# Yixuan Li
-# Last modified: 2015-1-8
-#
-# This program is free software: you can redistribute it and/or modify
-# it under the terms of the GNU General Public License as published by
-# the Free Software Foundation, either version 2 of the License, or
-# (at your option) any later version.
-
-
 import numpy as np
 import math
-import pulp  # You need to manually install this package in order to run this code
-import sys
-import random
+import pulp
 import gc
 
 from copy import deepcopy
-from scipy import io as spio
-from scipy import sparse
 from scipy import linalg as splin
 from optparse import OptionParser
 
@@ -42,7 +19,6 @@ def swap(a, b):
 
 def set_initial_prob(n, starting_nodes):
     """Precondition: starting_nodes is ndarray which indicate the indices of starting points 
-       
        Return: A probability vector with n elements
     """
     v = np.zeros(n)
@@ -53,7 +29,6 @@ def set_initial_prob(n, starting_nodes):
 
 def set_initial_prob_proportional(n, degree_sequence, starting_nodes):
     """Precondition: starting_nodes is ndarray which indicate the indices of starting points 
-       
        Return: A probability vector with n elements
     """
     v = np.zeros(n)
@@ -120,7 +95,6 @@ def read_groundtruth(filename, delimiter=None, nodetype=int):
     """Input: a file with list of the nodes and their membership(s) (memberships are labelled by integer numbers >=1). 
        For example:  A      3 6 8 (Node A belongs to community 3, 6 and 8)
        Output: a nested list where each sublist correspondes to a community, containing the node indices within the community
-    
     """
     comm_count = 12000
     print "Parsing ground truth communities..."
@@ -142,7 +116,6 @@ def read_groundtruth(filename, delimiter=None, nodetype=int):
 
 def adj_to_Laplacian(G):
     """Computes the normalized adjacency matrix of a given graph"""
-
     n = G.shape[0]
     D = np.zeros((1, n))
     for i in range(n):
@@ -158,10 +131,8 @@ def adj_to_Laplacian(G):
 
 def cal_conductance(G, cluster):
     """cluster: a list of node id that forms a community. Data type of cluster is given by numpy array
-
-       Calculate the conductance of the cut A and complement of A. 
+       Calculate the conductance of the cut A and complement of A.
     """
-
     assert type(cluster) == np.ndarray, "The given community members is not a numpy array"
 
     temp = G[cluster, :]
@@ -251,7 +222,6 @@ def map_from_new_to_ori(nodelist, map_dict):
     """
     Given a list of node indices in the new graph after sampling, return the list of indices that the nodes correspond
     to in the original graph before sampling. 
-    
     """
     nodelist = np.array(nodelist)
     mapped_list = []
@@ -282,10 +252,8 @@ def random_walk(G, initial_prob, subspace_dim=3, walk_steps=3):
     """
     Start a random walk with probability distribution p_initial. 
     Transition matrix needs to be calculated according to adjacent matrix G.
-    
     """
-    assert type(initial_prob) == np.ndarray, "Initial probability distribution is \
-                                             not a numpy array"
+    assert type(initial_prob) == np.ndarray, "Initial probability distribution is not a numpy array"
 
     # Transform the adjacent matrix to a laplacian matrix P
     P = adj_to_Laplacian(G)
@@ -358,7 +326,6 @@ def seed_expand_auto(G, seedset, min_comm_size, max_comm_size, expand_step=None,
     [r, c] = Orth_Prob_Matrix.shape
     seed = seedset
     step = expand_step
-    iteration = 0
     F1_scores = []
     Jaccard_scores = []
     detected_comm = []
@@ -407,8 +374,8 @@ def seed_expand_auto(G, seedset, min_comm_size, max_comm_size, expand_step=None,
             Jind = 0
 
         global_conductance[iteration] = cond
-        if global_conductance[iteration - 1] <= global_conductance[iteration] and global_conductance[iteration - 1] <= \
-                global_conductance[iteration - 2]:
+        if global_conductance[iteration - 1] <= global_conductance[iteration] and \
+                        global_conductance[iteration - 1] <= global_conductance[iteration - 2]:
             flag = False
 
         iteration += 1
@@ -440,7 +407,7 @@ def global_minimum(sequence, start_index):
     return detected_size, cond
 
 
-def cal_Fscore(detected_comm, ground_truth_comm, beta=1):
+def cal_f_score(detected_comm, ground_truth_comm, beta=1):
     """
         Given a set of algorithmic communities C and the ground truth communities S, F score measures the relevance 
         between the algorithmic communities and the ground truth communities. 
@@ -459,10 +426,9 @@ def cal_Fscore(detected_comm, ground_truth_comm, beta=1):
     return Fscore
 
 
-def cal_Jaccard(detected_comm, ground_truth_comm):
+def cal_jaccard(detected_comm, ground_truth_comm):
     """
     Jaccard is defined as the size of the intersection divided by the size of the union of the sample sets
-
     """
     detected_comm = list(detected_comm)
     ground_truth_comm = list(ground_truth_comm)
@@ -473,53 +439,36 @@ def cal_Jaccard(detected_comm, ground_truth_comm):
     return Jind
 
 
+# Parse the arguments
+class MyParser(OptionParser):
+    def format_epilog(self, formatter):
+        return self.epilog
+
+
 if __name__ == '__main__':
-
-    #########################################################################################
-    # Parse the arguments
-    class MyParser(OptionParser):
-        def format_epilog(self, formatter):
-            return self.epilog
-
-
     usage = "usage: python LEMON.py [options]"
-    description = """
-    """
-    epilog = """
-
-    """
-    parser = MyParser(usage, description=description, epilog=epilog)
+    parser = MyParser(usage)
     parser.add_option("-d", "--delimiter", dest="delimiter", default=' ',
                       help="delimiter of input & output files [default: space]")
-
     parser.add_option("-f", "--input network file", dest="network_file", default="../example/amazon/graph",
                       help="input file of edge list for clustering [default: example_graphs/amazon/graph]")
-
     parser.add_option("-g", "--input community ground truth file", dest="groundtruth_community_file",
                       default="../example/amazon/community",
                       help="input file of ground truth community membership [default: example_graphs/amazon/community]")
-
     parser.add_option("--out", "--output file", dest="output_file", default="output.txt",
                       help="output file of detected community [default: output.txt]")
-
     parser.add_option("--sd", "--input seed set file", dest="seed_set_file", default="../example/amazon/seed",
                       help="input file of initial seed set [default: example_graphs/amazon/seed]")
-
     parser.add_option("-c", "--minimum community size", dest="min_comm_size", default=20,
                       help="the minimum size of a single community in the network [default: 50]")
-
     parser.add_option("-C", "--maximal community size", dest="max_comm_size", default=100,
                       help="the maximum size of a single community in the network [default: 400]")
-
     parser.add_option("-s", "--sample rate", dest="sample_rate", default=0.007,
                       help="the percentile of nodes left for local detection after sampling [default: 0.007]")
-
     parser.add_option("-e", "--expand step", dest="expand_step", default=6,
                       help="the step of seed set increasement during expansion process [default: 6]")
-
     parser.add_option("-z", "--seed set size", dest="ini_num_of_seed", default=3,
                       help="the initial number of seeds used for expansion [default: 3]")
-
     (options, args) = parser.parse_args()
     delimiter = options.delimiter
     network_file = options.network_file
@@ -531,9 +480,6 @@ if __name__ == '__main__':
     sample_rate = float(options.sample_rate)
     expand_step = int(options.expand_step)
     seed_set_size = int(options.ini_num_of_seed)
-
-    ####################################################################################################################
-
 
     comms_indices_map, count = read_groundtruth(community_file, delimiter=delimiter, nodetype=int)
     graph_linklist, node_number, edge_number, degree = read_edgelist(network_file, delimiter=delimiter, nodetype=int)
@@ -555,28 +501,23 @@ if __name__ == '__main__':
     test_comm = test_comm - 1
 
     # sample the graph, adjust indices
-    new_graph, map_dict, map_dict_reverse, sample_rate, new_graph_size = sample_graph(graph_linklist, node_number,
-                                                                                      degree, seedset, 0.007,
-                                                                                      biased=False)
+    new_graph, map_dict, map_dict_reverse, sample_rate, new_graph_size \
+        = sample_graph(graph_linklist, node_number, degree, seedset, 0.007, biased=False)
     new_seedset = map_from_ori_to_new(seedset, map_dict_reverse)
     new_test_comm = map_from_ori_to_new(test_comm, map_dict_reverse)
-
-    # run the local spectral clustering algorithm and return the detected community (Note: the indices here correspond to mapped indices in the sampled graph)
     detected_comm = seed_expand_auto(new_graph, new_seedset, min_comm_size, max_comm_size, expand_step, subspace_dim=3,
                                      walk_steps=3, biased=False)
 
     # map the indices back to the original graph
     detected_comm_ori = map_from_new_to_ori(detected_comm, map_dict)
 
-    # printing running information
     print "-------------------------------------------------------"
     print "The detected community is: \n"
     print list(detected_comm_ori + 1)
-    F1_score = cal_Fscore(detected_comm, new_test_comm)
+    F1_score = cal_f_score(detected_comm, new_test_comm)
     print "-----------------------------------------------------------------------"
     print "The F1 score between detected community and ground truth community is: ", F1_score
 
-    # write out result
     with open(output_file, "a") as out:
         out.write("# detected community:" + "\n")
         out.write(str(list(detected_comm_ori + 1)))
