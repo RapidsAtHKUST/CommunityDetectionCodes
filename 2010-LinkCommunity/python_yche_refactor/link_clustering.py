@@ -37,9 +37,9 @@ if __name__ == '__main__':
     print "# loading network from edgelist..."
     basename = os.path.splitext(args[0])[0]
     if is_weighted:
-        adj, edges, ij2wij = read_edgelist_weighted(args[0], delimiter=delimiter)
+        adj, edges, ij2wij = read_edge_list_weighted(args[0], delimiter=delimiter)
     else:
-        adj, edges = read_edgelist_unweighted(args[0], delimiter=delimiter)
+        adj, edges = read_edge_list_unweighted(args[0], delimiter=delimiter)
 
     if threshold is not None:
         if is_weighted:

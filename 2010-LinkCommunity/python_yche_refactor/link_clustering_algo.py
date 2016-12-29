@@ -6,10 +6,11 @@ from heapq import heappush, heappop
 from itertools import combinations, chain
 
 
-def sort_two_vertices(a, b):
+def get_sorted_pair(a, b):
     if a > b:
         return b, a
-    return a, b
+    else:
+        return a, b
 
 
 def cal_density(edge_num, vertex_num):
@@ -19,49 +20,50 @@ def cal_density(edge_num, vertex_num):
         return 0.0
 
 
+def cal_jaccard(left_set, right_set):
+    return 1.0 * len(left_set & right_set) / len(left_set | right_set)
+
+
 def similarities_unweighted(adj_list_dict):
-    print "computing similarities..."
-    i_adj = dict((n, adj_list_dict[n] | {n}) for n in adj_list_dict)  # node -> inclusive neighbors
-    min_heap = []  # elements are (1-sim,eij,eik)
-    for n in adj_list_dict:  # n is the shared node
+    i_adj = dict((n, adj_list_dict[n] | {n}) for n in adj_list_dict)
+    min_heap = []
+    for n in adj_list_dict:
         if len(adj_list_dict[n]) > 1:
             for i, j in combinations(adj_list_dict[n], 2):  # all unordered pairs of neighbors
-                edge_pair = sort_two_vertices(sort_two_vertices(i, n), sort_two_vertices(j, n))
-                inc_ns_i, inc_ns_j = i_adj[i], i_adj[j]  # inclusive neighbors
-                S = 1.0 * len(inc_ns_i & inc_ns_j) / len(inc_ns_i | inc_ns_j)  # Jacc similarity...
+                edge_pair = get_sorted_pair(get_sorted_pair(i, n), get_sorted_pair(j, n))
+                inc_ns_i, inc_ns_j = i_adj[i], i_adj[j]
+                S = cal_jaccard(inc_ns_i, inc_ns_j)
                 heappush(min_heap, (1 - S, edge_pair))
     return [heappop(min_heap) for i in xrange(len(min_heap))]  # return ordered edge pairs
 
 
 def similarities_weighted(adj_dict, edge_weight_dict):
-    print "computing similarities..."
-    i_adj = dict((n, adj_dict[n] | {n}) for n in adj_dict)  # node -> inclusive neighbors
-
+    i_adj = dict((n, adj_dict[n] | {n}) for n in adj_dict)
     Aij = copy(edge_weight_dict)
     n2a_sqrd = {}
     for n in adj_dict:
-        Aij[n, n] = 1.0 * sum(edge_weight_dict[sort_two_vertices(n, i)] for i in adj_dict[n]) / len(adj_dict[n])
-        n2a_sqrd[n] = sum(Aij[sort_two_vertices(n, i)] ** 2 for i in i_adj[n])  # includes (n,n)!
+        Aij[n, n] = 1.0 * sum(edge_weight_dict[get_sorted_pair(n, i)] for i in adj_dict[n]) / len(adj_dict[n])
+        n2a_sqrd[n] = sum(Aij[get_sorted_pair(n, i)] ** 2 for i in i_adj[n])  # includes (n,n)!
 
-    min_heap = []  # elements are (1-sim,eij,eik)
-    for ind, n in enumerate(adj_dict):  # n is the shared node
-        # print ind, 100.0*ind/len(adj)
+    min_heap = []
+    for ind, n in enumerate(adj_dict):
         if len(adj_dict[n]) > 1:
-            for i, j in combinations(adj_dict[n], 2):  # all unordered pairs of neighbors
-                edge_pair = sort_two_vertices(sort_two_vertices(i, n), sort_two_vertices(j, n))
-                inc_ns_i, inc_ns_j = i_adj[i], i_adj[j]  # inclusive neighbors
+            for i, j in combinations(adj_dict[n], 2):
+                edge_pair = get_sorted_pair(get_sorted_pair(i, n), get_sorted_pair(j, n))
+                inc_ns_i, inc_ns_j = i_adj[i], i_adj[j]
 
                 ai_dot_aj = 1.0 * sum(
-                    Aij[sort_two_vertices(i, x)] * Aij[sort_two_vertices(j, x)] for x in inc_ns_i & inc_ns_j)
+                    Aij[get_sorted_pair(i, x)] * Aij[get_sorted_pair(j, x)] for x in inc_ns_i & inc_ns_j)
 
                 S = ai_dot_aj / (n2a_sqrd[i] + n2a_sqrd[j] - ai_dot_aj)  # tanimoto similarity
                 heappush(min_heap, (1 - S, edge_pair))
     return [heappop(min_heap) for i in xrange(len(min_heap))]  # return ordered edge pairs
 
 
+# Hierarchical Link Community
 class HLC:
-    def __init__(self, adj, edges):
-        self.adj = adj  # node -> set of neighbors
+    def __init__(self, adj_list_dict, edges):
+        self.adj = adj_list_dict  # node -> set of neighbors
         self.edges = edges  # list of edges
         self.density_factor = 2.0 / len(edges)
 
@@ -76,7 +78,7 @@ class HLC:
 
     def initialize_edges(self):
         for cid, edge in enumerate(self.edges):
-            edge = sort_two_vertices(*edge)  # just in case
+            edge = get_sorted_pair(*edge)  # just in case
             self.edge2cid[edge] = cid
             self.cid2edges[cid] = {edge}
             self.orig_cid2edge[cid] = edge
@@ -123,10 +125,10 @@ class HLC:
 
     def single_linkage(self, threshold=None, w=None, dendro_flag=False):
         print "clustering..."
-        self.list_D = [(1.0, 0.0)]  # list of (S_i,D_i) tuples...
-        self.best_D = 0.0
-        self.best_S = 1.0  # similarity threshold at best_D
-        self.best_P = None  # best partition, dict: edge -> cid
+        list_D = [(1.0, 0.0)]  # list of (S_i,D_i) tuples...
+        best_D = 0.0
+        best_S = 1.0  # similarity threshold at best_D
+        best_P = None  # best partition, dict: edge -> cid
 
         if w is None:  # unweighted
             H = similarities_unweighted(self.adj)  # min-heap ordered by 1-s
@@ -142,19 +144,19 @@ class HLC:
                 break
 
             if S != S_prev:  # update list
-                if self.D >= self.best_D:  # check PREVIOUS merger, because that's
-                    self.best_D = self.D  # the end of the tie
-                    self.best_S = S
-                    self.best_P = copy(self.edge2cid)  # slow...
-                self.list_D.append((S, self.D))
+                if self.D >= best_D:  # check PREVIOUS merger, because that's
+                    best_D = self.D  # the end of the tie
+                    best_S = S
+                    best_P = copy(self.edge2cid)  # slow...
+                list_D.append((S, self.D))
                 S_prev = S
 
             self.merge_comms(eij_eik[0], eij_eik[1], S, dendro_flag)
 
-        # self.list_D.append( (0.0,self.list_D[-1][1]) ) # add final val
+        # list_D.append( (0.0,list_D[-1][1]) ) # add final val
         if threshold is not None:
             return self.edge2cid, self.D
         if dendro_flag:
-            return self.best_P, self.best_S, self.best_D, self.list_D, self.orig_cid2edge, self.linkage
+            return best_P, best_S, best_D, list_D, self.orig_cid2edge, self.linkage
         else:
-            return self.best_P, self.best_S, self.best_D, self.list_D
+            return best_P, best_S, best_D, list_D
