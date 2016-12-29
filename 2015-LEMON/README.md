@@ -85,5 +85,5 @@ Usage
 
 ######To View Full Command List######
 
-The full list of command line options is available with ``$python LEMON.py --help``
+The full list of command line options is available with ``$python lemon.py --help``
 

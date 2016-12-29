@@ -1,121 +1,33 @@
 #!/usr/bin/env python
 # encoding:UTF-8
 
-import numpy as np
 import math
 import pulp
-import gc
 
 from copy import deepcopy
 from scipy import linalg as splin
 from optparse import OptionParser
 
-
-def swap(a, b):
-    if a > b:
-        return b, a
-    return a, b
+from io_helper import *
 
 
 def set_initial_prob(n, starting_nodes):
-    """Precondition: starting_nodes is ndarray which indicate the indices of starting points 
-       Return: A probability vector with n elements
-    """
     v = np.zeros(n)
     v[starting_nodes] = 1. / starting_nodes.size
-
     return v
 
 
 def set_initial_prob_proportional(n, degree_sequence, starting_nodes):
-    """Precondition: starting_nodes is ndarray which indicate the indices of starting points 
-       Return: A probability vector with n elements
-    """
     v = np.zeros(n)
     vol = 0
     for node in starting_nodes:
         vol += degree_sequence[node]
     for node in starting_nodes:
         v[node] = degree_sequence[node] / float(vol)
-
     return v
 
 
-def read_edgelist(filename, delimiter=None, nodetype=int):
-    """Generate the adjacent matrix of a graph with overlapping communities. 
-       Input: A two-clumn edgelist 
-       Return: An adjacency matrix in the form of ndarray corresponding to the given edge list.
-    """
-    edgeset = set()
-    nodeset = set()
-
-    print "Reading the edgelist..."
-    with open(filename) as f:
-        for line in f.readlines():
-            if not line.strip().startswith("#"):
-                L = line.strip().split(delimiter)
-                ni, nj = nodetype(L[0]), nodetype(L[1])
-                nodeset.add(ni)
-                nodeset.add(nj)
-                if ni != nj:
-                    edgeset.add(swap(ni, nj))
-        node_number = len(list(nodeset))
-        edge_number = len(list(edgeset))
-    del edgeset
-
-    print "The network has", node_number, "nodes with", edge_number, "edges."
-    graph_linklist = [set() for i in range(0, node_number)]  # Initialize the graph in the format of linked list
-    del nodeset
-
-    for i in range(node_number):
-        graph_linklist[i].add(i)
-    with open(filename, 'U') as f:
-        for line in f.readlines():
-            if not line.strip().startswith("#"):
-                L = line.strip().split(delimiter)
-                ni, nj = nodetype(L[0]), nodetype(L[1])
-                if ni != nj:
-                    a = ni - 1
-                    b = nj - 1
-                    graph_linklist[a].add(b)
-                    graph_linklist[b].add(a)
-    gc.collect()
-
-    degree = []
-    for node in range(node_number):
-        degree.append(len(graph_linklist[node]))
-
-    print "Finish constructing graph."
-    print "-------------------------------------------------------"
-
-    return graph_linklist, node_number, edge_number, degree
-
-
-def read_groundtruth(filename, delimiter=None, nodetype=int):
-    """Input: a file with list of the nodes and their membership(s) (memberships are labelled by integer numbers >=1). 
-       For example:  A      3 6 8 (Node A belongs to community 3, 6 and 8)
-       Output: a nested list where each sublist correspondes to a community, containing the node indices within the community
-    """
-    comm_count = 12000
-    print "Parsing ground truth communities..."
-    communities = [[] for i in range(comm_count)]
-
-    with open(filename, 'U') as f:
-        count = 0
-        for line in f.readlines():
-            if not line.strip().startswith("#"):
-                L = line.strip().split('\t')
-                membership_array = np.fromstring(L[0], dtype=int, sep=' ')
-
-                communities[count] = membership_array
-                count += 1
-    print "Finish parsing communities."
-
-    return communities, count
-
-
-def adj_to_Laplacian(G):
-    """Computes the normalized adjacency matrix of a given graph"""
+def adj_to_laplacian(G):
     n = G.shape[0]
     D = np.zeros((1, n))
     for i in range(n):
@@ -130,9 +42,6 @@ def adj_to_Laplacian(G):
 
 
 def cal_conductance(G, cluster):
-    """cluster: a list of node id that forms a community. Data type of cluster is given by numpy array
-       Calculate the conductance of the cut A and complement of A.
-    """
     assert type(cluster) == np.ndarray, "The given community members is not a numpy array"
 
     temp = G[cluster, :]
@@ -185,7 +94,6 @@ def sample_graph(G_linklist, node_number, degree_sequence, starting_node, sample
         sub_prob_distribution.append(prob_distribution[node])
         index += 1
 
-    new = [0 for k in range(node_number)]
     new_graph_size = 3000
 
     node_in_new_graph = list(np.argsort(sub_prob_distribution)[::-1][:new_graph_size])
@@ -219,57 +127,41 @@ def sample_graph(G_linklist, node_number, degree_sequence, starting_node, sample
 
 
 def map_from_new_to_ori(nodelist, map_dict):
-    """
-    Given a list of node indices in the new graph after sampling, return the list of indices that the nodes correspond
-    to in the original graph before sampling. 
-    """
     nodelist = np.array(nodelist)
     mapped_list = []
     for node in nodelist:
         mapped_list.append(map_dict[node])
-
     return np.array(mapped_list)
 
 
 def map_from_ori_to_new(nodelist, map_dict_reverse):
-    """
-    Given a list of node indices in the original graph before sampling, return the list of indices that the nodes correspond
-    to in the new graph after sampling. 
-    """
     nodelist = np.array(nodelist)
     mapped_list = []
     for node in nodelist:
         if node in map_dict_reverse:
             mapped_list.append(map_dict_reverse[node])
         else:
-            mapped_list.append(
-                10000000000)  # set the value to be infinity when the key cannot be found in the dictionary
-
+            mapped_list.append(10000000000)
     return np.array(mapped_list)
 
 
 def random_walk(G, initial_prob, subspace_dim=3, walk_steps=3):
-    """
-    Start a random walk with probability distribution p_initial. 
-    Transition matrix needs to be calculated according to adjacent matrix G.
-    """
     assert type(initial_prob) == np.ndarray, "Initial probability distribution is not a numpy array"
 
     # Transform the adjacent matrix to a laplacian matrix P
-    P = adj_to_Laplacian(G)
+    P = adj_to_laplacian(G)
 
-    Prob_Matrix = np.zeros((G.shape[0], subspace_dim))
-    Prob_Matrix[:, 0] = initial_prob
+    prob_matrix = np.zeros((G.shape[0], subspace_dim))
+    prob_matrix[:, 0] = initial_prob
     for i in range(1, subspace_dim):
-        Prob_Matrix[:, i] = np.dot(Prob_Matrix[:, i - 1], P)
+        prob_matrix[:, i] = np.dot(prob_matrix[:, i - 1], P)
 
-    Orth_Prob_Matrix = splin.orth(Prob_Matrix)
+    orth_prob_matrix = splin.orth(prob_matrix)
 
     for i in range(walk_steps):
-        temp = np.dot(Orth_Prob_Matrix.T, P)
-        Orth_Prob_Matrix = splin.orth(temp.T)
-
-    return Orth_Prob_Matrix
+        temp = np.dot(orth_prob_matrix.T, P)
+        orth_prob_matrix = splin.orth(temp.T)
+    return orth_prob_matrix
 
 
 def min_one_norm(B, initial_seed, seed):
@@ -286,9 +178,7 @@ def min_one_norm(B, initial_seed, seed):
     f = dict(zip(indices_y, [1.0] * r))
 
     prob += pulp.lpSum(f[i] * y[i] for i in indices_y)  # objective function
-
     prob += pulp.lpSum(y[s] for s in initial_seed) >= 1
-
     prob += pulp.lpSum(y[r] for r in seed) >= 1 + weight_later_added * difference
 
     for j in range(r):
@@ -301,7 +191,6 @@ def min_one_norm(B, initial_seed, seed):
     result = []
     for var in indices_y:
         result.append(y[var].value())
-
     return result
 
 
@@ -323,20 +212,14 @@ def seed_expand_auto(G, seedset, min_comm_size, max_comm_size, expand_step=None,
 
     # Initialization
     detected = list(seedset)
-    [r, c] = Orth_Prob_Matrix.shape
     seed = seedset
     step = expand_step
-    F1_scores = []
-    Jaccard_scores = []
     detected_comm = []
 
     global_conductance = np.zeros(30)
     global_conductance[-1] = 1000000  # set the last element to be infinitely large
     global_conductance[-2] = 1000000
     flag = True
-
-    F1_score_return = []
-    Jaccard_score_return = []
 
     iteration = 0
     while flag:
@@ -349,7 +232,6 @@ def seed_expand_auto(G, seedset, min_comm_size, max_comm_size, expand_step=None,
 
         conductance_record = np.zeros(max_comm_size - min_comm_size + 1)
         conductance_record[-1] = 0
-        community_size = [0]
         for i in range(min_comm_size, max_comm_size):
             candidate_comm = np.array(list(temp[::-1][:i]))
             conductance_record[i - min_comm_size] = cal_conductance(G, candidate_comm)
@@ -369,17 +251,12 @@ def seed_expand_auto(G, seedset, min_comm_size, max_comm_size, expand_step=None,
             current_comm = list(temp[::-1][:detected_size])
             detected_comm = current_comm
 
-        else:
-            F1_score = 0
-            Jind = 0
-
         global_conductance[iteration] = cond
         if global_conductance[iteration - 1] <= global_conductance[iteration] and \
                         global_conductance[iteration - 1] <= global_conductance[iteration - 2]:
             flag = False
 
         iteration += 1
-
     return detected_comm
 
 
@@ -408,11 +285,6 @@ def global_minimum(sequence, start_index):
 
 
 def cal_f_score(detected_comm, ground_truth_comm, beta=1):
-    """
-        Given a set of algorithmic communities C and the ground truth communities S, F score measures the relevance 
-        between the algorithmic communities and the ground truth communities. 
-        F_beta = (1+beta^2) / beta^2 * (precision(S)*recall(S)) / (precision(S)+recall(S))
-    """
     detected_comm = list(detected_comm)
     ground_truth_comm = list(ground_truth_comm)
     correctly_classified = list(set(detected_comm).intersection(set(ground_truth_comm)))
@@ -422,31 +294,25 @@ def cal_f_score(detected_comm, ground_truth_comm, beta=1):
         Fscore = (1 + math.sqrt(beta)) / float(math.sqrt(beta)) * precision * recall / float(precision + recall)
     else:
         Fscore = 0
-
     return Fscore
 
 
 def cal_jaccard(detected_comm, ground_truth_comm):
-    """
-    Jaccard is defined as the size of the intersection divided by the size of the union of the sample sets
-    """
     detected_comm = list(detected_comm)
     ground_truth_comm = list(ground_truth_comm)
     correctly_classified = list(set(detected_comm).intersection(set(ground_truth_comm)))
     union = list(set(detected_comm).union(set(ground_truth_comm)))
-    Jind = len(correctly_classified) / float(len(union))
+    jind = len(correctly_classified) / float(len(union))
+    return jind
 
-    return Jind
 
-
-# Parse the arguments
 class MyParser(OptionParser):
     def format_epilog(self, formatter):
         return self.epilog
 
 
 if __name__ == '__main__':
-    usage = "usage: python LEMON.py [options]"
+    usage = "usage: python lemon.py [options]"
     parser = MyParser(usage)
     parser.add_option("-d", "--delimiter", dest="delimiter", default=' ',
                       help="delimiter of input & output files [default: space]")
@@ -498,7 +364,7 @@ if __name__ == '__main__':
         [14833, 42658, 43004, 58660, 14835, 14836, 14837, 106584, 115338, 42659, 58661, 106585, 288614, 106586, 14838,
          106587, 302943, 14839, 14840, 302944, 115339, 106588, 106589, 206424, 106590, 42660, 106591, 42661, 115340,
          293641, 106592])
-    test_comm = test_comm - 1
+    test_comm -= 1
 
     # sample the graph, adjust indices
     new_graph, map_dict, map_dict_reverse, sample_rate, new_graph_size \
