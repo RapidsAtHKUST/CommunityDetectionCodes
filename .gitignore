@@ -1,2 +1,8 @@
+# jetbrains config
 .idea
+
+# output data
 output*.txt
+
+# matlab
+*.mex*
