@@ -1,9 +1,10 @@
 # CommunityDetectionCodes
-Locality-Based Overlapping Community Detection Algorithms
+Locality-Based Overlapping Community Detection Algorithms.
 
 ## Algorithms
 - [2009-Connected-Iterative-Scan](2009-Connected-Iterative-Scan)
 - [2009-EAGLE](2009-EAGLE)
+- [2010-LinkComm](2010-LinkCommunity)
 - [2010-iLCD](2010-iLCD)
 - [2011-GCE](2011-GCE)
 - [2011-OSLOM-v2](2011-OSLOM-v2)
