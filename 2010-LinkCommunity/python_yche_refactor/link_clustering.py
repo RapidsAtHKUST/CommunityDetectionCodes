@@ -13,9 +13,7 @@ class MyParser(OptionParser):
 
 
 if __name__ == '__main__':
-
     usage = "usage: python %prog [options] filename"
-
     parser = MyParser(usage)
     parser.add_option("-d", "--delimiter", dest="delimiter", default="\t",
                       help="delimiter of input & output files [default: tab]")

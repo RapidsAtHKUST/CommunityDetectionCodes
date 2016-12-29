@@ -297,15 +297,6 @@ def cal_f_score(detected_comm, ground_truth_comm, beta=1):
     return Fscore
 
 
-def cal_jaccard(detected_comm, ground_truth_comm):
-    detected_comm = list(detected_comm)
-    ground_truth_comm = list(ground_truth_comm)
-    correctly_classified = list(set(detected_comm).intersection(set(ground_truth_comm)))
-    union = list(set(detected_comm).union(set(ground_truth_comm)))
-    jind = len(correctly_classified) / float(len(union))
-    return jind
-
-
 class MyParser(OptionParser):
     def format_epilog(self, formatter):
         return self.epilog

@@ -12,24 +12,20 @@ def sort_two_vertices(a, b):
     return a, b
 
 
-def Dc(m, n):
-    """partition density"""
-    try:
-        return m * (m - n + 1.0) / (n - 2.0) / (n - 1.0)
-    except ZeroDivisionError:  # numerator is "strongly zero"
+def cal_density(edge_num, vertex_num):
+    if vertex_num > 2:
+        return edge_num * (edge_num - vertex_num + 1.0) / ((vertex_num - 2.0) * (vertex_num - 1.0))
+    else:
         return 0.0
 
 
-def similarities_unweighted(adj):
-    """Get all the edge similarities. Input dict maps nodes to sets of neighbors.
-    Output is a list of decorated edge-pairs, (1-sim,eij,eik), ordered by similarity.
-    """
+def similarities_unweighted(adj_list_dict):
     print "computing similarities..."
-    i_adj = dict((n, adj[n] | {n}) for n in adj)  # node -> inclusive neighbors
+    i_adj = dict((n, adj_list_dict[n] | {n}) for n in adj_list_dict)  # node -> inclusive neighbors
     min_heap = []  # elements are (1-sim,eij,eik)
-    for n in adj:  # n is the shared node
-        if len(adj[n]) > 1:
-            for i, j in combinations(adj[n], 2):  # all unordered pairs of neighbors
+    for n in adj_list_dict:  # n is the shared node
+        if len(adj_list_dict[n]) > 1:
+            for i, j in combinations(adj_list_dict[n], 2):  # all unordered pairs of neighbors
                 edge_pair = sort_two_vertices(sort_two_vertices(i, n), sort_two_vertices(j, n))
                 inc_ns_i, inc_ns_j = i_adj[i], i_adj[j]  # inclusive neighbors
                 S = 1.0 * len(inc_ns_i & inc_ns_j) / len(inc_ns_i | inc_ns_j)  # Jacc similarity...
@@ -67,7 +63,8 @@ class HLC:
     def __init__(self, adj, edges):
         self.adj = adj  # node -> set of neighbors
         self.edges = edges  # list of edges
-        self.Mfactor = 2.0 / len(edges)
+        self.density_factor = 2.0 / len(edges)
+
         self.edge2cid = {}
         self.cid2nodes, self.cid2edges = {}, {}
         self.orig_cid2edge = {}
@@ -94,7 +91,7 @@ class HLC:
             return
         m1, m2 = len(self.cid2edges[cid1]), len(self.cid2edges[cid2])
         n1, n2 = len(self.cid2nodes[cid1]), len(self.cid2nodes[cid2])
-        Dc1, Dc2 = Dc(m1, n1), Dc(m2, n2)
+        Dc1, Dc2 = cal_density(m1, n1), cal_density(m2, n2)
         if m2 > m1:  # merge smaller into larger
             cid1, cid2 = cid2, cid1
 
@@ -121,8 +118,8 @@ class HLC:
 
             m, n = len(self.cid2edges[cid1]), len(self.cid2nodes[cid1])
 
-        Dc12 = Dc(m, n)
-        self.D += (Dc12 - Dc1 - Dc2) * self.Mfactor  # update partition density
+        Dc12 = cal_density(m, n)
+        self.D += (Dc12 - Dc1 - Dc2) * self.density_factor  # update partition density
 
     def single_linkage(self, threshold=None, w=None, dendro_flag=False):
         print "clustering..."
@@ -131,7 +128,7 @@ class HLC:
         self.best_S = 1.0  # similarity threshold at best_D
         self.best_P = None  # best partition, dict: edge -> cid
 
-        if w == None:  # unweighted
+        if w is None:  # unweighted
             H = similarities_unweighted(self.adj)  # min-heap ordered by 1-s
         else:
             H = similarities_weighted(self.adj, w)
