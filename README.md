@@ -13,7 +13,7 @@ Algorithm | Implementation Language | Dependency
 [2011-OSLOM-v2](2011-OSLOM-v2) | c++ |
 [2012-DEMON](2012-DEMON) | python | networkx
 [2013-Seed-Set-Expansion](2013-Seed-Set-Expansion) | c++, matlab | graclus, matlabgl
-[2014-Heat-Kernel](2014-Heat-Kernel) | c++, matlab | 
+[2014-Heat-Kernel](2014-Heat-Kernel) | c++, matlab, python | pylibbvg 
 [2015-LEMON](2015-LEMON) | python | pulp
 
 ## Datasets
