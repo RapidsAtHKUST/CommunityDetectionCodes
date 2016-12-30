@@ -9,12 +9,12 @@ Algorithm | Implementation Language | Dependency
 [2009-EAGLE](2009-EAGLE) | c++ | igraph, boost
 [2010-LinkComm](2010-LinkCommunity) | python| 
 [2010-iLCD](2010-iLCD) | java | args4j, trove4j
-[2011-GCE](2011-GCE) | c++ |
+[2011-GCE](2011-GCE) | c++ | boost
 [2011-OSLOM-v2](2011-OSLOM-v2) | c++ |
-[2012-DEMON](2012-DEMON) | python |
+[2012-DEMON](2012-DEMON) | python | networkx
 [2013-Seed-Set-Expansion](2013-Seed-Set-Expansion) | c++, matlab | graclus, matlabgl
 [2014-Heat-Kernel](2014-Heat-Kernel) | c++, matlab | 
-[2015-LEMON](2015-LEMON) | python | 
+[2015-LEMON](2015-LEMON) | python | pulp
 
 ## Datasets
 
@@ -33,7 +33,7 @@ Dataset | Size
 
 Submodule | Implementation Language
 --- | ---
-- [igraph](SubModules/igraph) | c
+[igraph](SubModules/igraph) | c
 
 ## Attention
 These codes are all research codes, which I found through the internet. Please do not use them in production enviroment.
