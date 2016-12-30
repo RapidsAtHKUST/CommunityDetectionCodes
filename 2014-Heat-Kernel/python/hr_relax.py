@@ -17,14 +17,14 @@ if __name__ == '__main__':
     print G
     Gvol = 102
 
-    ## Setup parameters that can be computed automatically
-    N = 11  # see paper for how to set this automatically
+    # Setup parameters that can be computed automatically
+    N = 11
     t = 5.
     eps = 0.01
     seed = [1]
     psis = compute_psis(N, t)
 
-    ## Estimate hkpr vector
+    # Estimate hkpr vector
     # G is graph as dictionary-of-sets,
     # t, tol, N, psis are precomputed
     x = {}  # Store x, r as dictionaries
@@ -37,7 +37,8 @@ if __name__ == '__main__':
         (v, j) = Q.popleft()  # v has r[(v,j)] ...
         rvj = r[(v, j)]
         # perform the hk-relax step
-        if v not in x: x[v] = 0.
+        if v not in x:
+            x[v] = 0.
         x[v] += rvj
         r[(v, j)] = 0.
         mass = (t * rvj / (float(j) + 1.)) / len(G[v])
@@ -54,14 +55,14 @@ if __name__ == '__main__':
             r[next] += mass
 
     # Find cluster, first normalize by degree
-    for v in x: x[v] /= len(G[v])
+    for v in x:
+        x[v] /= len(G[v])
 
     for v in xrange(1, len(G) + 1):
         if v in x:
             print "hk[%2i] = %.16lf" % (v, x[v])
         else:
             print "hk[%2i] = -0." % (v)
-    print
 
     # Step 2 do a sweep cut based on this vector
     # now sort x's keys by value, decreasing
