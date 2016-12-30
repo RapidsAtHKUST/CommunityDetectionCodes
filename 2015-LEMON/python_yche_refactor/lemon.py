@@ -126,23 +126,9 @@ def sample_graph(G_linklist, node_number, degree_sequence, starting_node, sample
     return new_graph, map_dict, map_dict_reverse, sample_rate, new_graph_size
 
 
-def map_from_new_to_ori(nodelist, map_dict):
-    nodelist = np.array(nodelist)
-    mapped_list = []
-    for node in nodelist:
-        mapped_list.append(map_dict[node])
-    return np.array(mapped_list)
-
-
 def map_from_ori_to_new(nodelist, map_dict_reverse):
-    nodelist = np.array(nodelist)
-    mapped_list = []
-    for node in nodelist:
-        if node in map_dict_reverse:
-            mapped_list.append(map_dict_reverse[node])
-        else:
-            mapped_list.append(10000000000)
-    return np.array(mapped_list)
+    return np.array(
+        [map_dict_reverse[node] if node in map_dict_reverse else 10000000000 for node in np.array(nodelist)])
 
 
 def random_walk(G, initial_prob, subspace_dim=3, walk_steps=3):
@@ -338,39 +324,28 @@ if __name__ == '__main__':
     expand_step = int(options.expand_step)
     seed_set_size = int(options.ini_num_of_seed)
 
-    comms_indices_map, count = read_groundtruth(community_file, delimiter=delimiter, nodetype=int)
-    graph_linklist, node_number, edge_number, degree = read_edgelist(network_file, delimiter=delimiter, nodetype=int)
-
-    # read the initial seed set from file
+    comms_indices_map, count = read_ground_truth(community_file, delimiter=delimiter, nodetype=int)
+    graph_link_list, node_number, edge_number, degree = read_edge_list(network_file, delimiter=delimiter, nodetype=int)
     with open(seed_set_file) as fin:
-        for line in fin.readlines():
-            if not line.strip().startswith("#"):
-                L = line.strip().split('\t')
-                seedset = np.fromstring(L[0], dtype=int, sep=' ')
-                break
-    seedset = np.array(seedset) - 1
+        seedset = np.array(map(int, filter(lambda ele: '#' not in ele, fin.readlines())[0].strip().split()))
+    seedset -= 1
 
-    # modify the "test_comm" if you want to test some other ground truth communities
-    test_comm = np.array(
-        [14833, 42658, 43004, 58660, 14835, 14836, 14837, 106584, 115338, 42659, 58661, 106585, 288614, 106586, 14838,
-         106587, 302943, 14839, 14840, 302944, 115339, 106588, 106589, 206424, 106590, 42660, 106591, 42661, 115340,
-         293641, 106592])
+    with open('eval_ground_truth.txt') as ifs:
+        test_comm = np.array(eval(''.join(map(lambda ele: ele.strip(), ifs.readlines()))))
     test_comm -= 1
 
     # sample the graph, adjust indices
     new_graph, map_dict, map_dict_reverse, sample_rate, new_graph_size \
-        = sample_graph(graph_linklist, node_number, degree, seedset, 0.007, biased=False)
+        = sample_graph(graph_link_list, node_number, degree, seedset, 0.007, biased=False)
     new_seedset = map_from_ori_to_new(seedset, map_dict_reverse)
     new_test_comm = map_from_ori_to_new(test_comm, map_dict_reverse)
+
     detected_comm = seed_expand_auto(new_graph, new_seedset, min_comm_size, max_comm_size, expand_step, subspace_dim=3,
                                      walk_steps=3, biased=False)
-
-    # map the indices back to the original graph
-    detected_comm_ori = map_from_new_to_ori(detected_comm, map_dict)
+    detected_comm_ori = np.array([map_dict[node] for node in np.array(detected_comm)])
 
     print "-------------------------------------------------------"
-    print "The detected community is: \n"
-    print list(detected_comm_ori + 1)
+    print "The detected community is:\n", list(detected_comm_ori - 1)
     F1_score = cal_f_score(detected_comm, new_test_comm)
     print "-----------------------------------------------------------------------"
     print "The F1 score between detected community and ground truth community is: ", F1_score

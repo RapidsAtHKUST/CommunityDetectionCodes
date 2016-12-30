@@ -11,7 +11,7 @@ def sort_two_vertices(a, b):
     return a, b
 
 
-def read_edgelist(filename, delimiter=None, nodetype=int):
+def read_edge_list(filename, delimiter=None, nodetype=int):
     """Generate the adjacent matrix of a graph with overlapping communities.
        Input: A two-clumn edgelist
        Return: An adjacency matrix in the form of ndarray corresponding to the given edge list.
@@ -61,7 +61,7 @@ def read_edgelist(filename, delimiter=None, nodetype=int):
     return graph_linklist, node_number, edge_number, degree
 
 
-def read_groundtruth(filename, delimiter=None, nodetype=int):
+def read_ground_truth(filename, delimiter=None, nodetype=int):
     comm_count = 12000
     print "Parsing ground truth communities..."
     communities = [[] for i in range(comm_count)]
