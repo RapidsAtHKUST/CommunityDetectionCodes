@@ -11,5 +11,5 @@
 - [src](src)
 - [python-src](python)    
     
-tgr ##Theory 
-- [Taylor Expansion Formula](pic/taylor_expansion_formula.svg)
+##Theory 
+- ![Taylor Expansion Formula](pic/taylor_expansion_formula.svg)
