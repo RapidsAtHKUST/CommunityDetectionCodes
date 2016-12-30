@@ -20,51 +20,58 @@ def cal_density(edge_num, vertex_num):
         return 0.0
 
 
-def cal_jaccard(left_set, right_set):
+def cal_jaccard_non_weighted(left_set, right_set):
     return 1.0 * len(left_set & right_set) / len(left_set | right_set)
 
 
-def similarities_unweighted(adj_list_dict):
-    i_adj = dict((n, adj_list_dict[n] | {n}) for n in adj_list_dict)
+def cal_jaccard_weighted(intersect_val, left_val, right_val):
+    return intersect_val / (left_val, right_val - intersect_val)
+
+
+def sort_edge_pairs_by_similarity(adj_list_dict):
+    inc_adj_list_dict = dict((n, adj_list_dict[n] | {n}) for n in adj_list_dict)
     min_heap = []
-    for n in adj_list_dict:
-        if len(adj_list_dict[n]) > 1:
-            for i, j in combinations(adj_list_dict[n], 2):  # all unordered pairs of neighbors
-                edge_pair = get_sorted_pair(get_sorted_pair(i, n), get_sorted_pair(j, n))
-                inc_ns_i, inc_ns_j = i_adj[i], i_adj[j]
-                S = cal_jaccard(inc_ns_i, inc_ns_j)
-                heappush(min_heap, (1 - S, edge_pair))
-    return [heappop(min_heap) for i in xrange(len(min_heap))]  # return ordered edge pairs
+    for vertex in adj_list_dict:
+        if len(adj_list_dict[vertex]) > 1:
+            for i, j in combinations(adj_list_dict[vertex], 2):
+                edge_pair = get_sorted_pair(get_sorted_pair(i, vertex), get_sorted_pair(j, vertex))
+                inc_neighbors_i, inc_neighbors_j = inc_adj_list_dict[i], inc_adj_list_dict[j]
+                similarity_ratio = cal_jaccard_non_weighted(inc_neighbors_i, inc_neighbors_j)
+                heappush(min_heap, (1 - similarity_ratio, edge_pair))
+    return [heappop(min_heap) for i in xrange(len(min_heap))]
 
 
-def similarities_weighted(adj_dict, edge_weight_dict):
-    i_adj = dict((n, adj_dict[n] | {n}) for n in adj_dict)
+def sort_edge_pairs_by_similarity_weighted(adj_dict, edge_weight_dict):
+    inc_adj_list_dict = dict((n, adj_dict[n] | {n}) for n in adj_dict)
+
     Aij = copy(edge_weight_dict)
     n2a_sqrd = {}
-    for n in adj_dict:
-        Aij[n, n] = 1.0 * sum(edge_weight_dict[get_sorted_pair(n, i)] for i in adj_dict[n]) / len(adj_dict[n])
-        n2a_sqrd[n] = sum(Aij[get_sorted_pair(n, i)] ** 2 for i in i_adj[n])  # includes (n,n)!
+    for vertex in adj_dict:
+        Aij[vertex, vertex] = float(sum(edge_weight_dict[get_sorted_pair(vertex, i)] for i in adj_dict[vertex]))
+        Aij[vertex, vertex] /= len(adj_dict[vertex])
+        n2a_sqrd[vertex] = sum(Aij[get_sorted_pair(vertex, i)] ** 2
+                               for i in inc_adj_list_dict[vertex])  # includes (n,n)!
 
     min_heap = []
-    for ind, n in enumerate(adj_dict):
-        if len(adj_dict[n]) > 1:
-            for i, j in combinations(adj_dict[n], 2):
-                edge_pair = get_sorted_pair(get_sorted_pair(i, n), get_sorted_pair(j, n))
-                inc_ns_i, inc_ns_j = i_adj[i], i_adj[j]
+    for vertex in adj_dict:
+        if len(adj_dict[vertex]) > 1:
+            for i, j in combinations(adj_dict[vertex], 2):
+                edge_pair = get_sorted_pair(get_sorted_pair(i, vertex), get_sorted_pair(j, vertex))
+                inc_ns_i, inc_ns_j = inc_adj_list_dict[i], inc_adj_list_dict[j]
 
-                ai_dot_aj = 1.0 * sum(
-                    Aij[get_sorted_pair(i, x)] * Aij[get_sorted_pair(j, x)] for x in inc_ns_i & inc_ns_j)
+                ai_dot_aj = float(
+                    sum(Aij[get_sorted_pair(i, x)] * Aij[get_sorted_pair(j, x)] for x in inc_ns_i & inc_ns_j))
 
-                S = ai_dot_aj / (n2a_sqrd[i] + n2a_sqrd[j] - ai_dot_aj)  # tanimoto similarity
-                heappush(min_heap, (1 - S, edge_pair))
-    return [heappop(min_heap) for i in xrange(len(min_heap))]  # return ordered edge pairs
+                similarity_ratio = cal_jaccard_weighted(ai_dot_aj, n2a_sqrd[i], n2a_sqrd[j])
+                heappush(min_heap, (1 - similarity_ratio, edge_pair))
+    return [heappop(min_heap) for i in xrange(len(min_heap))]
 
 
 # Hierarchical Link Community
 class HLC:
     def __init__(self, adj_list_dict, edges):
-        self.adj = adj_list_dict  # node -> set of neighbors
-        self.edges = edges  # list of edges
+        self.adj_list_dict = adj_list_dict
+        self.edges = edges
         self.density_factor = 2.0 / len(edges)
 
         self.edge2cid = {}
@@ -73,8 +80,13 @@ class HLC:
         self.curr_maxcid = 0
         self.linkage = []  # dendrogram
 
-        self.initialize_edges()  # every edge in its own comm
         self.D = 0.0  # partition density
+        self.initialize_edges()  # every edge in its own comm
+
+        self.list_D = [(1.0, 0.0)]  # list of (S_i,D_i) tuples...
+        self.best_D = 0.0
+        self.best_S = 1.0  # similarity threshold at self.best_D
+        self.best_P = None  # best partition, dict: edge -> cid
 
     def initialize_edges(self):
         for cid, edge in enumerate(self.edges):
@@ -124,39 +136,32 @@ class HLC:
         self.D += (Dc12 - Dc1 - Dc2) * self.density_factor  # update partition density
 
     def single_linkage(self, threshold=None, w=None, dendro_flag=False):
-        print "clustering..."
-        list_D = [(1.0, 0.0)]  # list of (S_i,D_i) tuples...
-        best_D = 0.0
-        best_S = 1.0  # similarity threshold at best_D
-        best_P = None  # best partition, dict: edge -> cid
-
-        if w is None:  # unweighted
-            H = similarities_unweighted(self.adj)  # min-heap ordered by 1-s
+        if w is None:
+            H = sort_edge_pairs_by_similarity(self.adj_list_dict)  # min-heap ordered by 1-s
         else:
-            H = similarities_weighted(self.adj, w)
-        S_prev = -1
+            H = sort_edge_pairs_by_similarity_weighted(self.adj_list_dict, w)
+        prev_similarity = -1
 
         # (1.0, (None, None)) takes care of the special case where the last
         # merging gives the maximum partition density (e.g. a single clique).
         for oms, eij_eik in chain(H, [(1.0, (None, None))]):
-            S = 1 - oms  # remember, H is a min-heap
-            if threshold and S < threshold:
+            cur_similarity = 1 - oms
+            if threshold and cur_similarity < threshold:
                 break
 
-            if S != S_prev:  # update list
-                if self.D >= best_D:  # check PREVIOUS merger, because that's
-                    best_D = self.D  # the end of the tie
-                    best_S = S
-                    best_P = copy(self.edge2cid)  # slow...
-                list_D.append((S, self.D))
-                S_prev = S
+            if cur_similarity != prev_similarity:  # update list
+                if self.D >= self.best_D:  # check PREVIOUS merger, because that's
+                    self.best_D = self.D  # the end of the tie
+                    self.best_S = cur_similarity
+                    self.best_P = copy(self.edge2cid)  # slow...
+                self.list_D.append((cur_similarity, self.D))
+                prev_similarity = cur_similarity
+            self.merge_comms(eij_eik[0], eij_eik[1], cur_similarity, dendro_flag)
 
-            self.merge_comms(eij_eik[0], eij_eik[1], S, dendro_flag)
-
-        # list_D.append( (0.0,list_D[-1][1]) ) # add final val
+        # self.list_D.append( (0.0,self.list_D[-1][1]) ) # add final val
         if threshold is not None:
             return self.edge2cid, self.D
         if dendro_flag:
-            return best_P, best_S, best_D, list_D, self.orig_cid2edge, self.linkage
+            return self.best_P, self.best_S, self.best_D, self.list_D, self.orig_cid2edge, self.linkage
         else:
-            return best_P, best_S, best_D, list_D
+            return self.best_P, self.best_S, self.best_D, self.list_D
