@@ -1,5 +1,6 @@
 # jetbrains config
 .idea
+cmake-build-debug
 
 # output data
 output*.txt

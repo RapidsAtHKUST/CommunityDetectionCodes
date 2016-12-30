@@ -1,5 +1,6 @@
 #ifndef __MAXCACHE_H
 #define __MAXCACHE_H
+
 #include <list>
 #include <set>
 
@@ -10,23 +11,21 @@
  L'ugaglianza tra un massimo ed un altro è data dall'uguaglianza di i e j.
  Il confronto invece si basa esclusivamente sul valore di s.
  */
-struct Max
-{
-  /// Indice della prima community
-  int i;
-  
-  /// Indice della seconda community
-  int j;
-  
-  /// Similarity delle due community
-  double s;
+struct Max {
+    /// Indice della prima community
+    int i;
+
+    /// Indice della seconda community
+    int j;
+
+    /// Similarity delle due community
+    double s;
 };
 
 /// Confronto LESS THAN per due elementi della cache
 inline
-bool operator<(const Max& a, const Max& b)
-{
-  return a.s < b.s;
+bool operator<(const Max &a, const Max &b) {
+    return a.s < b.s;
 }
 
 
@@ -43,23 +42,22 @@ bool operator<(const Max& a, const Max& b)
  elemento non viene reinserito. Check è la funzione che inserisce se è il caso
  l'elemento nella collezione. 
  */
-class MaxCache
-{
-  private:
+class MaxCache {
+private:
     /// La dimensione massima della cache
     unsigned int size;
-  
+
     /// Insieme senza vincoli di unicità degli elementi di massimo
     std::multiset<Max> cache;
-    
-  public:
+
+public:
     /**
      Costruttore della cache.
      
      param size La dimensione massima della cache.
      */
     MaxCache(unsigned int size);
-    
+
     /**
      Indica se la cache è vuota, cioè se non ha elementi oppure se l'unico 
      elemento presente è quello a similarity infinita negativa.
@@ -67,7 +65,7 @@ class MaxCache
      return true se la cache è vuota, false altrimenti.
      */
     bool isEmpty();
-    
+
     /**
      Controlla l'elemento fornito per inserirlo eventualmente nella cache.
      
@@ -76,7 +74,7 @@ class MaxCache
      param s valore della similarity calcolato
      */
     void check(unsigned int i, unsigned int j, double s);
-  
+
     /**
      Restituisce l'elemento di massimo valore. Richiede che la cache non sia 
      vouta, altrimenti il risultato è indefinito.
@@ -84,9 +82,9 @@ class MaxCache
      return L'elemento della cache massimo.
      */
     Max get();
-    
+
     // void update(int i, int j, int a);
-    
+
     /**
      Svuota la cache, riportandola alle condizioni iniziali.
      */
