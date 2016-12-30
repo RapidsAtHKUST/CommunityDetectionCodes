@@ -17,3 +17,4 @@ endif ()
 
 set(SourceFiles Communities.cpp MaxCache.cpp eagle.cpp main.cpp)
 add_executable(2009-eagle ${SourceFiles})
+target_link_libraries(2009-eagle igraph)
