@@ -1,0 +1,337 @@
+.\" Copyright (c) 2014 Stijn van Dongen
+.TH "mclcm" 1 "16 May 2014" "mclcm 14-137" "USER COMMANDS "
+.po 2m
+.de ZI
+.\" Zoem Indent/Itemize macro I.
+.br
+'in +\\$1
+.nr xa 0
+.nr xa -\\$1
+.nr xb \\$1
+.nr xb -\\w'\\$2'
+\h'|\\n(xau'\\$2\h'\\n(xbu'\\
+..
+.de ZJ
+.br
+.\" Zoem Indent/Itemize macro II.
+'in +\\$1
+'in +\\$2
+.nr xa 0
+.nr xa -\\$2
+.nr xa -\\w'\\$3'
+.nr xb \\$2
+\h'|\\n(xau'\\$3\h'\\n(xbu'\\
+..
+.if n .ll -2m
+.am SH
+.ie n .in 4m
+.el .in 8m
+..
+.SH NAME
+mclcm \- hierarchical clustering of graphs with mcl
+.SH SYNOPSIS
+
+\fBmclcm\fP <-|fname> [mclcm-options] [-- "mcl options"*]
+
+.di ZV
+.in 0
+.nf \fC
+\fBmclcm\fP <-|fname> -a "-I 4 --shadow=vl"
+\fBmclcm\fP <-|fname> -a "-I 3" -- "-I 5"
+\fBmclcm\fP <-|fname> -a "-I 3" -b1 "" -- "-ph 3 --shadow=vl -I 5"
+.fi \fR
+.in
+.di
+.ne \n(dnu
+.nf \fC
+.ZV
+.fi \fR
+
+\fBmclcm\fP <-fname>
+\fB[--contract\fP (\fIcontraction mode\fP)\fB]\fP
+\fB[--dispatch\fP (\fIdispatch mode\fP)\fB]\fP
+\fB[--integrate\fP (\fIintegrate mode\fP)\fB]\fP
+\fB[--subcluster\fP (\fIsubcluster mode\fP)\fB]\fP
+\fB[-a\fP <opts> (\fIshared mcl options\fP)\fB]\fP
+\fB[-b1\fP <opts> (\fIdedicated base 1 mcl options\fP)\fB]\fP
+\fB[-b2\fP <opts> (\fIdedicated base 2 mcl options\fP)\fB]\fP
+\fB[-tf\fP spec (\fIapply tf-spec to input matrix\fP)\fB]\fP
+\fB[-c\fP <fname> (\fIinput clustering\fP)\fB]\fP
+\fB[-n\fP <num> (\fIiteration limit\fP)\fB]\fP
+\fB[--root\fP (\fIensure universe root clustering\fP)\fB]\fP
+\fB[-cone\fP <fname> (\fInested cluster stack file\fP)\fB]\fP
+\fB[-stack\fP <fname> (\fIexpanded cluster stack file\fP)\fB]\fP
+\fB[-coarse\fP <fname> (\fIcoarsened graphs file\fP)\fB]\fP
+\fB[-write\fP (\fIstack,cone,coarse,steps\fP)\fB]\fP
+\fB[-write-base\fP <fname> (\fIwrite base matrix\fP)\fB]\fP
+\fB[-stem\fP <str> (\fIprefix for all outputs\fP)\fB]\fP
+\fB[--mplex=\fPy/n (\fIwrite clusterings separately\fP)\fB]\fP
+\fB[-annot\fP str (\fIdummy annotation option\fP)\fB]\fP
+\fB[-h\fP (\fIprint synopsis, exit\fP)\fB]\fP
+\fB[--apropos\fP (\fIprint synopsis, exit\fP)\fB]\fP
+\fB[--version\fP (\fIprint version, exit\fP)\fB]\fP
+\fB[-q\fP spec (\fIlog levels\fP)\fB]\fP
+\fB[-z\fP (\fIshow default shared options\fP)\fB]\fP
+[-- "mcl options"*]
+.SH DESCRIPTION
+
+The mclcm options may be followed by a number of trailing arguments\&.
+The trailing arguments should be separated from the mclcm options
+by the separator \fC--\fP\&.
+Normally each trailing argument should consist of a set of zero, one, or more mcl arguments
+enclosed in quotes or double quotes to group them together\&.
+These arguments are passed to the successive stages of hierarchical
+clustering\&. They are combined with the default options\&. If an option
+is specified both in the default options list and in a trailing
+options list the latter specification overrides the former\&.
+When the \fB--integrate\fP option is specified the trailing arguments
+must be names of files containing mcl clusterings; see further below\&.
+\fBmclcm\fP has four major modes of operation, namely \fIcontraction\fP (default),
+\fIintegration\fP, \fIdispatch\fP, and \fIsubcluster\fP\&. Each mode is
+described a little below\&. Note though that \fIdispatch\fP mode is not
+the best mode to use for hierarchical clustering\&. It is mostly useful
+to generate multiple mcl clusterings in a single run\&.
+
+In all modes \fBmclcm\fP will generate a file, by default called \fImcl\&.cone\fP\&.
+This is a representation of a hierarchical clustering that is particular
+to mcl\&. It can be converted to \fInewick\fP format like this:
+
+.di ZV
+.in 0
+.nf \fC
+         mcxdump -imx-tree mcl\&.cone --newick -o NEWICKFILE
+   OR    mcxdump -imx-tree mcl\&.cone --newick -o NEWICKFILE -tab TABFILE
+.fi \fR
+.in
+.di
+.ne \n(dnu
+.nf \fC
+.ZV
+.fi \fR
+
+In the last example, TABFILE should be a file containing a mapping
+from mcl labels to application labels\&. Refer to \fBmcxio(5)\fP for
+more information about tab files and mcl input/ouput formats\&.
+.SH OPTIONS
+
+.ZI 2m "\fB--contract\fP (\fIrepeated contraction mode\fP)"
+\&
+.br
+This is the default mode of operation\&.
+At each successive step of constructing the hierarchy on top of the first
+level mcl clustering, mclcm uses a matrix derived from the input matrix and
+the last computed clustering to compute a contracted graph\&.
+The contracted graph is a graph where the nodes represent the clusters of
+the last clustering\&. The matrix derived from the input graph that is used to
+construct the contracted graph is called the \fIbase matrix\fP\&. The base
+matrix can be either the \fIstart matrix\fP or the \fIexpansion matrix\fP\&.
+The \fIstart matrix\fP is the input matrix after transformations have been
+applied to it (if any)\&.
+The \fIexpansion matrix\fP is the first expanded matrix of some
+mcl process applied to the input graph\&.
+
+By default the base matrix is constructed from either the start matrix
+or the expansion matrix obtained from the first mcl process\&.
+It is possible to use a start matrix derived from special purpose
+mcl transformation parameters (such as \fB-ph\fP and \fB-tf\fP)
+or an expansion matrix derived from a special purpose mcl process\&.
+The \fB-b1\fP and \fB-b2\fP parameters provide the interfaces
+to this functionality\&.
+
+You are advised to start with a high inflation value for the input
+graph and to use shadowing, e\&.g\&. include \fC--shadow=vl\fP in the
+\fB-a\fP argument\&.
+This generally leads to hierarchies that are better balanced\&.
+Shadowing is a transformation where nodes are added to the
+graph, preventing relatively distant nodes from unwanted chaining\&.
+For more information refer to the \fBmcl\fP manual\&.
+The invocations in \fBSYNOPSIS\fP are a good starting point\&.
+.in -2m
+
+.ZI 2m "\fB--dispatch\fP (\fIdifferent mcl processes\fP)"
+\&
+.br
+In this mode each trailing argument is specified as a set of options to pass
+to an mcl process\&. For each trailing argument an mcl process is thus
+computed\&. The set of resulting clusterings is integrated into a hierarchy\&.
+.in -2m
+
+.ZI 2m "\fB--integrate\fP (\fIexisting clusterings\fP)"
+\&
+.br
+This mode is similar to \fIdispatch\fP mode\&. The difference is that with
+this option mclcm simply integrates a set of already existing clusterings\&.
+Each trailing argument must be the name of a file containing a clustering\&.
+The set of clusterings thus specified is integrated into a hierarchy\&.
+.in -2m
+
+.ZI 2m "\fB--subcluster\fP (\fIrepeated sub-clustering\fP)"
+\&
+.br
+In this mode each trailing argument specifies a set of options to pass to an
+mcl process\&. The second clustering process is applied to the graph of
+components induced by the first clustering, resulting in a further
+subdivision of the first clustering\&. This approach is repeated with each
+further trailing argument\&. With this approach, the first clustering will be
+the most coarse clustering\&. Hence, subsequent trailing arguments will
+typically specify increasingly higher inflation values, pre-inflation
+values, and optionally more stringent transformation parameters
+in order to achieve further subdivsions\&.
+.in -2m
+
+.ZI 2m "\fB-a\fP <opts> (\fIshared mcl options\fP)"
+\&
+.br
+Use this to change and/or set the default mcl options for
+all iterations\&. Use quotes if necessary\&.
+Example of usage: -a "-I 5"\&.
+.in -2m
+
+.ZI 2m "\fB-b1\fP <opts> (\fIdedicated base 1 mcl options\fP)"
+\&
+.br
+This will apply the mcl options \fIopts\fP to the input matrix\&. The
+resulting start matrix is used as the base matrix for constructing contracted
+graphs\&.
+.in -2m
+
+.ZI 2m "\fB-b2\fP <opts> (\fIdedicated base 2 mcl options\fP)"
+\&
+.br
+This will apply the mcl options \fIopts\fP to the input matrix and
+compute the first iterand of the corresponding mcl process\&. The first
+iterand, aka the expansion matrix, is used as the base matrix for
+constructing contracted graphs\&.
+.in -2m
+
+.ZI 2m "\fB-tf\fP <tf-spec> (\fItransform input matrix values\fP)"
+\&
+.br
+Transform the input matrix values according
+to the syntax described in \fBmcxio(5)\fP\&.
+.in -2m
+
+.ZI 2m "\fB-c\fP <fname> (\fIinput clustering\fP)"
+\&
+.br
+The hierarchical clustering process will be kicked off by
+the clustering found in \fI<fname>\fP\&.
+.in -2m
+
+.ZI 2m "\fB-n\fP <num> (\fIiteration limit\fP)"
+\&
+.br
+This puts an upper bound to the number of contractions that
+will be performed\&.
+.in -2m
+
+.ZI 2m "\fB--root\fP (\fIensure universe root clustering\fP)"
+\&
+.br
+In case the graph consists of different connected components,
+the last clustering computed by the mclcm process will
+correspond with those connected components\&. This option
+simply adds an artificial clustering where all nodes
+have been joined into a single cluster\&.
+.in -2m
+
+.ZI 2m "\fB-cone\fP <fname> (\fInested cluster stack file\fP)"
+\&
+.br
+File to write the nested cluster stack to\&.
+The nested cluster stack contains a sequence of clusterings,
+each written as an MCL matrix\&.
+The first (bottom) clustering is a clustering of the nodes
+in the input graph\&. Each subsequent clustering is a clustering
+where the nodes are the clusters of the previous clustering\&.
+\fBmcxdump\fP can dump this format if the file name is given as
+the \fB-imx-stack\fP option\&. The explanation
+for the cone/stack discrepancy is simple\&. To mcxdump
+the contents are simply a stack of matrices\&. It does not
+care whether the stack is cone shaped, cylindrical, or
+yet another shape\&.
+.in -2m
+
+.ZI 2m "\fB-stack\fP <fname> (\fIexpanded cluster stack file\fP)"
+\&
+.br
+File to write the expanded cluster stack to\&. The expanded cluster stack is
+similar to the nested cluster stack except that each cluster lists all the
+nodes in the input graph it contains\&.
+\fBmcxdump\fP can dump this format if the file name is given as
+the \fB-imx-stack\fP option\&.
+.in -2m
+
+.ZI 2m "\fB-coarse\fP <fname> (\fIcoarsened graphs file\fP)"
+\&
+.br
+File to write the sequence of coarsened graphs to\&. Each clustering induces a
+coarsened graph where the nodes represent the clusters and an edge between
+two nodes represents the connectivity between the corresponding two
+clusters\&. The computation of this connectivity takes into account all edges
+between the two clusters in in the original graph\&.
+.in -2m
+
+.ZI 2m "\fB-write\fP <tag> (\fIselect output modes\fP)"
+\&
+.br
+Use this option to explicitly specify all of the output types you want
+written in a comma-separated string\&. \fI<tag>\fP may contain
+any of the strings \fIstack\fP, \fIcone\fP, \fIcoarse\fP, \fIsteps\fP\&.
+The current default is to write all of these except \fIcoarse\fP\&.
+The latter dumps the intermediate coarsened (aka contracted) graphs
+to a single file\&.
+.in -2m
+
+.ZI 2m "\fB-write-base\fP <fname> (\fIwrite base matrix\fP)"
+\&
+.br
+Write the base matrix to file\&. This can be useful for debugging
+expectations\&.
+.in -2m
+
+.ZI 2m "\fB-stem\fP <str> (\fIprefix for all outputs\fP)"
+\&
+.br
+All output files share the same prefix\&. The default is \fCmcl\fP
+and can be changed with this option\&.
+.in -2m
+
+.ZI 2m "\fB--mplex\fP=y/n (\fIwrite clusterings separately\fP)"
+\&
+.br
+If turned on each clustering is written in a separate file\&. The first
+clustering is written to the file \fI<stem>\fP\&.3 where \fI<stem>\fP is
+determined by the \fB-stem\fP option\&. For each subsequent clustering
+the index is incremented by two, so clusterings are written to
+files for which the name ends with an odd index\&.
+.in -2m
+
+.ZI 2m "\fB-annot\fP str (\fIdummy annotation option\fP)"
+\&
+.br
+\fBmclcm\fP writes the command line with which it was invoked to the output file
+(either of the \fIcone\fP or \fIstack\fP files)\&. Use this option to include
+any additional information\&. mclcm does nothing with this option except copying
+it as just described\&.
+.in -2m
+
+.ZI 2m "\fB-q\fP spec (\fIlog levels\fP)"
+\&
+.br
+Set the quiet level\&. Read \fBtingea\&.log(7)\fP for syntax and semantics\&.
+.in -2m
+
+.ZI 2m "\fB-z\fP (\fIshow default shared options\fP)"
+\&
+.br
+Show the default mcl options\&. These are used for each mcl invocation as
+successively applied to the input graph and succeeding contracted graphs\&.
+.in -2m
+.SH AUTHOR
+
+Stijn van Dongen\&.
+.SH SEE ALSO
+
+\fBmclfamily(7)\fP for an overview of all the documentation
+and the utilities in the mcl family\&.

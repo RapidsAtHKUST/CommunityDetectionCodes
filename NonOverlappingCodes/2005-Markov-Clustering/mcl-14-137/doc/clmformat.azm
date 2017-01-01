@@ -1,0 +1,617 @@
+\import{mcx.zmm}
+
+\begin{pud::man}{
+
+   {name}{clmformat}
+   {html_title}{The clmformat manual}
+   {author}{Stijn van Dongen}
+   {section}{1}
+   {synstyle}{long}
+   {defstyle}{long}
+
+   \man_share
+}
+
+\${html}{\"pud::man::maketoc"}
+
+\sec{*}{name}{NAME}
+\NAME{clm format}{display cluster results in readable form}
+
+\par{
+   (optionally with labels and/or cohesion and stickiness measures
+   attached).
+   }
+
+\par{
+   Unless used with the \genopt{-dump}{fname} or \genopt{--dump} option,
+   \clmformat depends on the presence of the macro processor \bf{zoem}, as
+   described further below.
+}
+
+\par{
+   The \genopt{-icl}{fname} input clustering option is always required. The
+   \genopt{-imx}{fname} input matrix option is required in fancy mode.  The tab
+   file option \genopt{-tab}{fname} is needed if you want label information in
+   the output rather than mcl identifiers.
+}
+
+\sec{synopsis}{SYNOPSIS}
+
+\par{
+   \clmformat has two different modes of output: \it{dump} and \it{fancy}.
+   If neither is specified, \it{fancy} is used. In this mode, \clmformat
+   generates a large arrary of performance measures related to nodes and
+   clusters in both interlinked html output and plain text files.  The files
+   will be contained in an output directory that is newly created if not yet
+   existing.  In fancy mode the \genopt{-imx} option is required and the macro
+   processor \bf{zoem} must be available (\httpref{http://micans.org/zoem}).
+}
+
+\par{
+   If \it{dump} is specified (see below how to do this) \clmformat just
+   generates a dump file where each line
+   contains a cluster in the form of tab-separated indices, or tab-separated
+   labels in case the \genopt{-tab} option is used. This dump is easy to parse
+   with a simple or even quick-and-dirty script.
+   You can include some very simple performance measures in this dump file
+   by supplying \genopt{--dump-measures}.  Use
+   \genopt{-dump}{fname} to specify the name of the file to dump to, rather
+   than having \clmformat construct a file name by itself.
+}
+
+\par{
+   \clmformat can combine the both modes by using either \genopt{--dump} or
+   \genopt{-dump}{fname} \it{and} \genopt{--fancy}.  In this case the dump file
+   will be created in the output directory that is used by \it{fancy} mode.
+}
+
+\par{\clmformat}
+
+\par{
+\: begin{spacing}{{left}{12}}
+      \synreqopt{-icl}{fname}{input cluster file}
+      \synreqopt{-imx}{fname}{input matrix/graph file}
+      \synoptopt{-tf}{spec}{apply tf-spec to input matrix}
+      \synoptopt{-pi}{num}{apply pre-inflation to matrix}
+      \synoptopt{-tab}{fname}{read tab file}
+      \synoptopt{--lazy-tab}{allow mismatched tab-file}
+      \synoptopt{-lump-count}{n}{node threshold}
+      \synoptopt{--dump}{write dump to dump.<icl-name>}
+      \synoptopt{-dump}{fname}{write dump to file}
+      \synoptopt{--dump-pairs}{write cluster/node pair per line}
+      \synoptopt{--dump-measures}{write simple performance measures}
+      \synoptopt{-dump-node-sep}{str}{separate entries with str}
+      \synoptopt{--fancy}{spawn information blizzard}
+      \synoptopt{-dir}{dirname}{write results to directory}
+      \synoptopt{-infix}{str}{use after base name/directory}
+      \synoptopt{-nsm}{fname}{output node stickiness file}
+      \synoptopt{-ccm}{fname}{output cluster cohesion file}
+      \synoptopt{--adapt}{allow domain mismatch}
+      \synoptopt{--subgraph}{take subgraph with --adapt}
+      \synoptopt{-zmm}{fname}{assume macro definitions are in fname}
+      \synoptopt{-fmt}{fname}{write to encoding file fname}
+      \stdsynopt
+\: end{spacing}
+}
+
+\par{Consult the option descriptions and the introduction above for
+   interdependencies of options.}
+
+\par{
+   \clmformat generates in fancy mode a logical description of the
+   to-be-formatted content in a very small vocabulary of format-specific
+   zoem macros.  The appearance of the output can be easily changed by adapting
+   a zoem macro definition file (also output by \clmformat) that is used by the
+   zoem interpreter to interpret the logical elements.
+}
+
+\par{
+   The output format is apt to change over subsequent releases, as a result of
+   user feedback.  Such changes will most likely be confined to the zoem macro
+   definition file.
+}
+
+\par{
+   The \ref{xpl}{cap} section further below is likely to be of interest.
+}
+
+\sec{description}{DESCRIPTION}
+\par{
+   The primary function of \clmformat is to display cluster results and
+   associated confidence measures in a readable form, by listing clusters in
+   terms of the labels associated with the indices that are used in the mcl
+   matrix. The labels must be stored in a so called \it{tab} file; see the
+   \optref{-tab}{\genopt{-tab}} option for more information.
+}
+
+\cpar{NOTE}{
+   \clmformat output is in the form of \it{zoem} macros.
+   You need to have zoem installed in your system if you want \clmformat
+   to be of use. Zoem will not be necessary if you are using
+   the \genopt{-dump} option.
+}
+
+\par{
+   The \optref{-imx}{\genopt{-imx}{mx}} option is required
+   unless the \genopt{-dump} option is used. The latter option
+   results in special behaviour described under the
+   \optref{-dump}{\genopt{-dump}{fname}} entry.
+}
+
+\par{
+   Output is by default written in a directory that
+   is newly created if it does not yet exist (normally several files
+   will be created, for which the directory acts as a natural container).
+   It is possible to simply output to the current directory, for that you need
+   to specify \useopt{-dir}{./}. If \useopt{-dir} is not specified, the output
+   directory \v{fmt.<clname>} will be used, where \v{<clname>} is the argument
+   to the \genopt{-cl} option. In the output directory, \clmformat will
+   normally write two files. One contains zoem macros encoding formatted output
+   (the encoding file), and the second (the definition file) contains zoem
+   macro definitions which are used by the former.
+}
+
+\par{
+   The encoding file is by default called \v{fmt.azm}
+   (cf. the \optref{-fmt}{\genopt{-fmt}{fname}} option).
+   It contains \it{zoem} macros. It imports the macro definition file
+   called \v{clmformat.zmm}
+   that is normally also written by \clmformat. Another macro definition
+   file can be specified by using the \optref{-zmm}{\genopt{-zmm}{<defsname>}}
+   option. In this case \clmformat will refrain from writing the definition
+   file and replace mentions of \v{clmformat.zmm} in the encoding file
+   by \v{<defsname>}.
+}
+
+\par{
+   The encoding file needs to be processed by issuing one of the following
+   commands from within the directory where the file is located.
+}
+
+\verbatim{\:/
+   zoem -i fmt -d html
+   zoem -i fmt -d txt}
+
+\car{
+   The first will result in HTML formatted output, the second in
+   plain text format.  Obviously, you need to have installed zoem
+   (e.g. from \httpref{http://micans.org/zoem/src/}) for this to work.
+}
+
+\par{
+   For each cluster a paragraph is output.  First comes a listing of other
+   clusters (in order of relevance, possibly empty) for which a significant
+   amount of edges exists between the other and the current cluster.  Second
+   comes a listing of the nodes in the current cluster.  For each node a small
+   sublist is made (in order of relevance, possibly empty) of other clusters in
+   which the node has neighbours and for which the total sum of corresponding
+   edge weights is significant.
+   Several quantities are output for each node/cluster pair that is
+   deemed relevant. These are explained in the section \ref{xpl}{cap}.
+}
+
+\par{
+   Clusters will by default be output to file until the total node count has
+   exceeded a threshold (refer to the \optref{-lump-count}{\genopt{-lump-count}
+   option}).
+}
+
+\par{
+   \clmformat also shows how well each node fits in the cluster it is in and
+   how cohesive each cluster is, using simple but effective measures
+   (described in section \ref{xpl}{cap}).
+   This enables you to compare the quality of the clusters in a clustering
+   relative to each other, and may help in identifying both interesting areas
+   and areas for which cluster structure is hard to find or perhaps absent.
+}
+
+\sec{options}{OPTIONS}
+
+\'begin{itemize}{\mcx_itemopts}
+
+\item{\defopt{-icl}{fname}{input cluster file}}
+\car{
+   Name of the clustering file.
+   }
+
+\item{\defopt{-imx}{fname}{input matrix/graph file}}
+\car{
+   Name of the graph/matrix file.
+   }
+
+\item{\defopt{-tf}{spec}{apply tf-spec to input matrix}}
+\car{
+   Transform the input matrix values according
+   to the syntax described in \mysib{mcxio}.
+   }
+
+\item{\defopt{-tab}{fname}{read tab file}}
+\car{
+   The file \v{fname} should be in \it{tab format}. Refer
+   to \mysib{mcxio}.
+   }
+
+\item{\defopt{--lazy-tab}{allow mismatched tab-file}}
+\car{
+   Allow missing and spurious entries in the tab file.
+   }
+
+\item{\defopt{-dump}{fname}{write dump to file}}
+\car{
+   Clusters are written to file. For each cluster a single line is written
+   containing all indices of all nodes in that cluster.  The indices are
+   separated by tabs. If a tab file is specified, the indices are replaced by
+   the corresponding tab file entry.
+   }
+
+\item{\defopt{--dump}{write dump to file}}
+\car{
+   As \genopt{-dump}{fname} except that \clmformat writes to the file
+   named \v{dump.<icl-name>} where \v{<icl-name>} is the argument to
+   the \genopt{-icl} option.
+   }
+
+\item{\defopt{-infix}{str}{incorporate in base name}}
+\car{
+   \genarg{str} is included in the output file names.
+   This can be used to store the results of different \clmformat runs
+   (e.g. with differing \genopt{-tf} arguments) in the same directory.
+   }
+
+\item{\defopt{--fancy}{force fancy mode}}
+\car{
+   This enforces fancy mode if either of \genopt{-dump} or \genopt{--dump}
+   is given. The dump file will be created in the output directory.
+   }
+
+\item{\defopt{--dump-pairs}{write cluster/node pair per line}}
+\car{
+   Rather than writing a single cluster on each line, write a single
+   cluster index/node (either tab entry or index) pair per line.
+   Works in conjunction with the
+   \optref{-tab}{\genopt{-tab}} and \optref{-imx}{\genopt{-imx}} options.
+   }
+
+\item{\defopt{--dump-measures}{write simple performance measures}}
+\car{
+   If an input matrix is specified with \genopt{-imx}{fname}, three
+   measures of efficiency are prepended, respectively the simple projection
+   score, efficiency or coverage, and the max-efficiency or max-coverage.
+   }
+
+\item{\defopt{-dump-node-sep}{str}{separate entries with str}}
+\car{
+   Separate entries in the dump file with \genopt{str}.
+   }
+
+\item{\defopt{-pi}{num}{apply pre-inflation to matrix}}
+\car{
+   Apply pre-inflation to the matrix specified with the \genopt{-imx} option.
+   This will cause the efficiency scores to place a higher reward on
+   high-weight edges being covered by a clustering (assuming that
+   \genarg{num} is larger than one).
+   }
+
+\par{
+   This option is also useful when \mcl itself was instructed to use
+   pre-inflation when clustering a graph.
+   }
+
+\item{\defopt{-lump-count}{n}{node threshold}}
+\car{
+   The zoem file is created such that during zoem processing clusters are
+   formatted and output within a single file until the node threshold has been
+   exceeded. A new file is then opened and the procedure repeats itself.
+   }
+
+\item{\defopt{--adapt}{allow domain mismatch}}
+\car{
+   Allow the cluster domain to differ from the graph domain. Presumably
+   the clustering is a clustering of a subgraph.  The cohesion and stickiness
+   measures will pertain to the relevant part of the graph only.
+   }
+\""{Refer also to the --subgraph option described below.}
+
+\item{\defopt{--subgraph}{use restriction}}
+\car{
+   If the cluster domain is a subset of the graph domain, the cohesion and
+   stickiness measures will by default still pertain to the entire graph.  By
+   setting this option, the measures will pertain to the subgraph induced by
+   the cluster domain.
+   }
+
+\item{\defopt{-dir}{dirname}{write results to directory}}
+\car{
+   Use \usearg{dirname} as output directory. It will be created
+   if it does not exist already.
+   }
+
+\item{\defopt{-fmt}{fname}{write to encoding file fname}}
+\car{
+   Write to encoding file \usearg{fname} rather than the default \v{fmt.azm}.
+   It is best to supply fname with the standard zoem suffix \v{.azm}.  Zoem
+   will process file of any name, but those lacking the \v{.azm} suffix must be
+   specified using the zoem \genopt{-I}{fname} option.
+   }
+
+\item{\defopt{-zmm}{defsname}{assume macro definitions are in fname}}
+\car{
+   If this option is used, \clmformat will not output the definition file,
+   and mentions of the definition file in the encoding file will use
+   the file name \v{defsname}. This option assumes that a valid definition
+   file by the name of \v{defsname} does exist.
+   }
+
+\item{\defopt{-nsm}{fname}{output node stickiness file}}
+\car{
+   This option specifies the name in which to store (optionally) the \bf{node
+   stickiness matrix}.  It has the following structure.  The columns range over
+   all elements in the graph as specified by the \genopt{-imx} option.
+   The rows range over the clusters as specified by the \genopt{-icl} option.
+   The entries contain the projection value of that particular
+   node onto that particular clusters, i.e. the sum of the weights of
+   all arcs going out from the node to some node in that cluster, written
+   as a fraction relative to the sum of weights of all outgoing arcs.
+   }
+
+\item{\defopt{-ccm}{fname}{output cluster cohesion file}}
+\car{
+   This option specifies the name of the file in which to store (optionally)
+   the \bf{cluster cohesion matrix}.  It has the following structure.
+   Both columns and rows range over all clusters in the clustering as specified
+   by the \genopt{-icl} option. An entry specifies the projection
+   of one cluster onto another cluster, which is simply the average
+   of the projection value onto the second cluster of all nodes in the
+   first cluster.
+   }
+
+\stddefopt
+
+\end{itemize}
+
+\sec{xpl}{OUTPUT EXPLAINED}
+
+\par{
+   What follows is an explanation of the output provided by the
+   standard zoem macros. The output comes in a pretty terse number-packed
+   format. The decision was made not to include headers and captions
+   in the output in order to keep it readable.
+   You might want to print out the following annotated examples.
+   At the same side of the equation, the following is probably tough
+   reading unless you have an actual example of clmformatted output at hand.
+   }
+
+\${roff}{\par{
+   If you are reading this in a terminal, you might need to resize
+   it to have width larger than 80 columns, as the examples below
+   are formatted in verbatim mode.}
+   }
+
+\par{
+   Below mention is made of the projection value for a node/cluster pair.
+   This is simply the total amount of edge weights for that node
+   in that cluster (corresponding to neighbours of the node in the
+   cluster) relative to the overall amount of edge weights for that node
+   (corresponding to all its neighbours).
+   The coverage measure (refered to as \bf{cov})
+   is also used. This is similar to the projection
+   value, except that a) the coverage measure rewards the inclusion
+   of large edge weights (and penalizes the inclusion of insignificant
+   edge weights) and b) rewards node/cluster pairs for which the neighbour set
+   of the node is very similar to the cluster.
+   The maximum coverage measure (refered to as \bf{maxcov}) is similar
+   to the normal coverage measure except that it rewards inclusion
+   of large edge weights even more.
+   The cov and maxcov performance measures have several nice continuity and
+   monotonicity properties and are described in \refer{pcfgcmce}.
+   }
+
+
+\cpar{Example cluster header}{}
+
+\verbatim{\
+Cluster 0 sz 15 self 0.82 cov 0.43-0.26
+   10: 0.11
+   18: 0.05
+   12: 0.02}
+
+
+\cpar{explanation}{}
+
+\verbatim{\
+Cluster 0 sz 15 self 0.82 cov 0.43-0.26
+        |    |       |           | |
+        clid count   proj      cov covmax
+
+   10: 0.11
+    |  |
+clidx1 projx1
+
+   18: 0.05
+    |  |
+clidx2 projx2
+
+clid    Numeric cluster identifier (arbitrarily) assigned by MCL.
+count   The size of cluster clid.
+proj    Projection value for cluster clid [d].
+cov     Coverage measure for cluster clid [d].
+maxcov  Max-coverage measure for cluster clid [d].
+clidx1  Index of other cluster sharing relatively many edges.
+projx1  Projection value for the clid/clidx1 pair of clusters [e].
+clidx2  :
+projx2  : as clidx1 and projx1}
+
+
+
+
+\cpar{Example inner node}{
+   An inner node is listed under a cluster, and it is simply a member of that
+   cluster. The name is as opposed to 'outer node', described below.
+   }
+
+\verbatim{\
+[foo bar zut]
+    21     7-5      0.73 0.420-0.331  0.282-0.047  0.071-0.035 <3.54>
+      10   6/3      0.16 0.071-0.047  0.268-0.442 
+      12   4/2      0.11 0.071-0.035  0.296-0.515}
+
+\cpar{explanation}{}
+
+\verbatim{\
+[label]
+    21     7-5      0.73 0.420-0.331  0.282-0.047  0.071-0.035 <3.54>
+     |     | |      |        | |          | |          | |     |
+    idx  nbi nbo    proj   cov covmax max_i min_i  max_o-min_o SUM
+
+      10   6/3      0.16 0.268-0.442  0.071-0.047
+       |   | |      |        | |          | |
+  clusid  sz nb     proj   cov covmax max_i min_i
+
+label   Optional; with -tab <tabfile> option.
+idx     Numeric (mcl) identifier.
+nbi     Count of the neighbours of node idx within its cluster.
+nbo     Count of the neighbours of node idx outside its cluster.
+proj    Projection value [a] of nbi edges.
+cov     Skewed projection [b], rewards inclusion of large edge weights.
+covmax  As cov above, rewarding large edge weights even more.
+max_i   Largest edge weight in the nbi set, normalized [c].
+min_i   Smallest edge weight in the nbi set [c].
+max_o   Largest edge weight outside the nbi set [c]
+min_o   Smallest edge weight outside the nbi set [c].
+SUM     The sum of all edges leaving node idx.
+
+clusid  Index of other cluster that is relevant for node idx.
+sz      Size of that cluster.
+nb      Count of neighbours of node idx in cluster clusid.
+proj    Projection value of edges from node idx to cluster clusid.
+cov     Skewed projection of edges from node idx to cluster clusid.
+covmax  Maximally skewed projection, as above.
+max_o   Largest edge weight for node idx to cluster clusid [c].
+min_o   Smallest edge weight for  node idx to cluster clusid [c].}
+
+
+
+
+\cpar{Example outer node}{
+   An outer node is listed under a cluster. The node is not part of that
+   cluster, but seems to have substantial connections to that cluster. 
+   }
+
+
+\verbatim{\
+[zoo eek few]
+    29   18#2        2-5      0.65 0.883-0.815  0.436-0.218  0.073-0.055
+                      /4      0.27 0.070-0.109  0.073-0.055}
+
+\cpar{explanation}{}
+
+\verbatim{\
+[label]
+    29   18#2        2-5      0.65 0.883-0.815  0.436-0.218  0.073-0.055
+    |    |  |        | |      |        | |          | |          | |
+    idx  cl sz     nbi nbo    proj   cov maxcov max_i min_i  max_o min_o
+         id
+                      /4      0.27 0.070-0.109  0.073-0.055  <2.29>
+                       |      |        | |          | |      |
+                       nb     proj   cov maxcov max_i min_i  SUM
+
+label   Optional; with -tab <tabfile> option.
+idx     Numeric (mcl) identifier
+clid    Index of the cluster that node idx belongs to
+sz      Size of the cluster that node idx belongs to
+proj    :
+cov     :  All these entries are the same as described above
+covmax  :  for inner nodes, pertaining to cluster clid,
+max_i   :  i.e. the native cluster for node idx
+min_i   :  (it is a member of that cluster).
+max_o   :
+min_o   :
+
+nb      The count of neighbours of node idx in the current cluster
+proj    Projection value for node idx relative to current cluster.
+cov     Skewed projection (rewards large edge weights), as above.
+covmax  Maximally skewed projection, as above.
+max_o   Largest edge weight for node idx in current cluster [c].
+min_o   smallest edge weight for node idx in current cluster [c].
+SUM     The sum of *all* edges leaving node idx.}
+
+
+
+\begin{itemize}{
+   {textindent}{3}
+   {itemmargin}{1}
+   {align}{right}
+   {interitem}{1}
+   {flow}{compact}
+}
+
+\item{[a]}
+\car{
+  The projection value for a node relative to some subset of
+  its neighbours is  the sum of edge weights of  all edges to that
+  subset. The sum  is witten as a fraction relative  to the sum
+  of edge weights of all neighbours.
+  }
+
+\item{[b]}
+\car{
+  cov and covmax stand for coverage and maximal coverage.
+  The coverage measure of a node/cluster pair is a generalized and skewed
+  projection value [a] that rewards the presence of large edge weights in the
+  cluster, relative to the collection of weights of all edges departing from
+  the node.  The maxcov measure is a projection value skewed even further,
+  correspondingly rewarding the inclusion of large edge weights.  The cov and
+  maxcov performance measures have several nice continuity properties and are
+  described in \refer{pcfgcmce}.
+  }
+
+\item{[c]}
+\car{
+  All edge weights are written as the fraction of the sum
+  SUM of all edge weights of edges leaving node idx.
+  }
+
+\item{[d]}
+\car{
+  For clusters the projection value and the coverage measures
+  are simply the averages of all projection values [a], respectively
+  coverage measures [b], taken over all nodes in the cluster.
+  The cluster projection value simply measures the sum of edge
+  weights internal to the cluster, relative to the total sum of
+  edge weights of all edges where at least one node in the edge
+  is part of the cluster.
+  }
+
+\item{[e]}
+\car{
+  The projection value for start cluster x and end cluster y
+  is the sum of edge weights of edges between x and y as a fraction
+  of the sum of all edge weights of edges leaving x.
+  }
+
+\end{itemize}
+
+
+\sec{author}{AUTHOR}
+\par{
+   Stijn van Dongen.
+   }
+
+\sec{references}{REFERENCES}
+\par{
+   \reference{pcfgcmce}
+   Stijn van Dongen. \it{Performance criteria for graph clustering and Markov
+   cluster experiments}.  Technical Report INS-R0012, National Research
+   Institute for Mathematics and Computer Science in the Netherlands,
+   Amsterdam, May 2000.\|
+   \httpref{http://www.cwi.nl/ftp/CWIreports/INS/INS-R0012.ps.Z}
+   }
+
+\sec{seealso}{SEE ALSO}
+\par{
+   \mysib{mclfamily} for an overview of all the documentation
+   and the utilities in the mcl family.
+   }
+
+\end{pud::man}
+

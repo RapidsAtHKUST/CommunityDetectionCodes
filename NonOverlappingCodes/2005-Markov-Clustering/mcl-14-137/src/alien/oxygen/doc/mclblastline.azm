@@ -1,0 +1,140 @@
+\import{\"mcx-zmm"}
+
+\begin{pud::man}{
+
+   {name}{mclblastline}
+   {html_title}{The mclblastline manual}
+   {author}{Stijn van Dongen}
+   {section}{1}
+   {synstyle}{long}
+   {defstyle}{long}
+
+   \man_share
+}
+
+\'${html}{\"pud::man::maketoc"}
+
+\sec{name}{NAME}
+\NAME{mclblastline}{a pipeline for clustering from BLAST files.}
+
+\sec{synopsis}{SYNOPSIS}
+
+\car{
+   \mclblastline file-name}
+
+\par{
+   \mclblastline [deblast options] [pipeline options] file-name}
+
+\cpar{NOTE}{
+   \mcl has acquired the ability to proceed from label input
+   as produced by \mcxdeblast. This enables a very lightweight
+   mechanism of generating clusterings from BLAST files.
+   You might want to use this mechanism,
+   documented in the \sibref{mcl}{mcl manual}.}
+
+\cpar{NOTE}{
+   mclblastline used to require (given default parameters)
+   the presence of the \zoem macro processor to produce detailed output.
+   This is no longer the case. By default mclblastline now creates
+   a line-based tab-separated dump file.
+   Zoem \it{will} be invoked when the --fmt-fancy option is supplied.
+   In that case, zoem obviously has to be installed.}
+
+\sec{description}{DESCRIPTION}
+
+\car{
+   \mclblastline wraps around \mclpipeline. It supplies the
+   \genkvp{--parser}{app}
+   and \genkvp{--parser-tag}{str} options, setting them respectively
+   to \it{mcxdeblast} and \it{blast}.  This tells
+   \sib{mclpipeline} to use
+   \sib{mcxdeblast} as the parse script in its pipeline.
+   The significance of
+   the \it{blast} tag is that any mcxdeblast option can be passed through
+   mclblastline and mclpipeline by inserting this tag into the option.
+   For example, mcxdeblast accepts the \genkvp{--score}{x} option.
+   When using mclblastline, you specify it as \genkvp{--blast-score}{x}.
+   There are two exceptions to this rule, namely the
+   \genkvp{--xi-dat}{str} and \genkvp{--xo-dat}{str} options. Refer to
+   the \sib{mclpipeline} manual for more information.}
+
+\par{
+   Additionally, all mclpipeline options are acceptable to \sib{mcxdeblast} as
+   well.  The \genopt{--whatif} is useful for getting a feel for the pipeline.
+   The \genkvp{--mcl-I}{f} inflation option and \genkvp{--mcl-scheme}{i} scheme
+   index options are your basic means for respectively manipulating cluster
+   granularity and allocating resources. Read the \sib{mcl} manual entries for
+   a description of the corresponding \genopt{-I} and \genopt{-scheme} mcl
+   options.}
+
+\par{
+   The best advice is to glance over the \sib{mcxdeblast} and \sib{mclpipeline}
+   options in order to get a feeling for which of those may come in handy for
+   you.  Then start experimenting. Use the \genopt{--whatif} option, it will
+   tell you what would happen without actually doing it.}
+
+\sec{options}{OPTIONS}
+
+\car{
+   All \sib{mcxdeblast} and \sib{mclpipeline} options.
+   mcxdeblast options must be passed using the mechanism described above.}
+
+\sec{examples}{EXAMPLES}
+
+\verbatix{\:/
+   mclblastline --blast-score=b
+      --blast-sort=a --blast-bcut=5 --mcl-I=2.5 myblastfile}
+
+\car{
+   This will use bit scores, sort cluster indices such that the corresponding
+   labels are ordered alphabetically, ignore bit scores not exceeding 5, and
+   use inflation value 2.5. In this case, the output clustering will be in the
+   file named \v{myblastfile.I25s2} (I25 identifying the inflation value and s2
+   identifying the resource scheme) and the formatted output will be in the
+   file \v{myblastfile.I25s2.fmt}.}
+
+\verbatix{\:/
+   mclblastline --prepare-mcl myblastfile
+   mclblastline --start-mcl --mcl-I=1.2 myblastfile
+   mclblastline --start-mcl --mcl-I=1.6 myblastfile
+   mclblastline --start-mcl --mcl-I=2.0 myblastfile
+   mclblastline --start-mcl --mcl-I=2.4 myblastfile
+   mclblastline --start-mcl --mcl-I=2.8 myblastfile
+   etc ..}
+
+\car{
+   The first run prepares an input matrix to be read by \mcl.
+   In this case its file will be named \v{myblastfile.sym}.
+   The subsequent runs use this matrix.
+
+   \bf{CAVEAT} there are some options that you need to repeat
+   when executing such a resumed run. They are clearly marked
+   in the \sib{mclpipeline} manual - namely those options
+   that affect names of (intermediate) files. Most importantly,
+   this concerns the mclpipeline options that have prefix
+   \genopt{--xo} or \genopt{--xi}. For example,}
+
+\verbatix{\:/
+   mclblastline --prepare-mcl --blast-score=b --xo-dat=b myblastfile
+   mclblastline --start-mcl --xo-dat=b --mcl-I=1.2 myblastfile
+   mclblastline --start-mcl --xo-dat=b --mcl-I=1.6 myblastfile
+   mclblastline --start-mcl --xo-dat=b --mcl-I=2.0 myblastfile
+   mclblastline --start-mcl --xo-dat=b --mcl-I=2.4 myblastfile
+   mclblastline --start-mcl --xo-dat=b --mcl-I=2.8 myblastfile
+   etc ..}
+
+\par{
+   In this case, the matrix file will be named \v{myblastfile.b.sym},
+   and the \genopt{--xo-dat} options must be repeated in all runs
+   so that the pipeline reconstructs the correct file name(s).}
+
+\sec{author}{AUTHOR}
+\par{
+   Stijn van Dongen}
+
+\sec{sealso}{SEE ALSO}
+\par{
+   \sib{mcxdeblast}, \sib{mclpipeline}, \sib{mcxassemble}.}
+
+\end{pud::man}
+

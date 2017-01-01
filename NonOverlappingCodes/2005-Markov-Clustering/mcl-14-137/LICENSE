@@ -1,0 +1,59 @@
+
+   This program is free software; you can redistribute it and/or modify it
+   under the terms of version 3 of the GNU General Public License as published
+   by the Free Software Foundation. It should be shipped with MCL in the top
+   level directory as the file COPYING.
+
+   This program is distributed in the hope that it will be useful, but WITHOUT
+   ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or
+   FITNESS FOR A PARTICULAR PURPOSE. See the GNU General Public License for
+   more details.
+
+   You should have received a copy of the GNU General Public License, version
+   2, along with this program in the file COPYING; if not, write to the Free
+   Software Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA
+   02110-1301, USA.
+
+                                    -*-
+
+   If you use MCL software in your scientific research, please cite it
+   appropriately as you would cite a journal or a book. This includes papers
+   published in regular or electronic journals, usage of MCL as a back-end to a
+   database that is accessible via a web interface, or inclusion of MCL in a
+   larger framework of software that is distributed for other people for
+   scientific use.  Include one of the following citations:
+
+      Stijn van Dongen, Graph Clustering by Flow Simulation.
+      PhD thesis, University of Utrecht, May 2000.
+      ( http://www.library.uu.nl/digiarchief/dip/diss/1895620/inhoud.htm )
+
+      Stijn van Dongen. A cluster algorithm for graphs.  Technical Report
+      INS-R0010, National Research Institute for Mathematics and Computer
+      Science in the Netherlands, Amsterdam, May 2000.
+      ( http://www.cwi.nl/ftp/CWIreports/INS/INS-R0010.ps.Z )
+
+   and proper attributions to mcl's home http://micans.org/mcl/
+   and its author, Stijn van Dongen.
+   The publications listed above can be retrieved from the preceding URL.
+
+   If you are using some wrapper around mcl such as the blast module or the
+   tribe module, you are asked to act likewise.
+
+   For biological applications, it is appropriate to cite, additionally,
+   the reference article for the first application of mcl to biological data:
+
+      Enright A.J., Van Dongen S., Ouzounis C.A.
+      An efficient algorithm for large-scale detection of protein families,
+      Nucleic Acids Research 30(7):1575-1584 (2002).
+
+                                    -*-
+
+   For copyright notices of source files, header files, documentation files,
+   and build files, consult the files themselves.
+
+   The largest part of MCL is held copyright by Stijn van Dongen.
+   
+   The build part is copyright by Joost van Baal.
+   util/getpagesize.h is copyright by the Free Software Foundation.
+   The Ziggurat method in util/rand.h is copyright by Jochen Voss.
+

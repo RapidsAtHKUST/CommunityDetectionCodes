@@ -1,0 +1,260 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html>
+<!-- Copyright (c) 2014 Stijn van Dongen -->
+<head>
+<meta name="keywords" content="manual">
+<style type="text/css">
+/* START aephea.base.css */
+body
+{ text-align: justify;
+margin-left: 0%;
+margin-right: 0%;
+}
+a:link { text-decoration: none; }
+a:active { text-decoration: none; }
+a:visited { text-decoration: none; }
+a:link { color: #1111aa; }
+a:active { color: #1111aa; }
+a:visited { color: #111166; }
+a.local:link { color: #11aa11; }
+a.local:active { color: #11aa11; }
+a.local:visited { color: #116611; }
+a.intern:link { color: #1111aa; }
+a.intern:active { color: #1111aa; }
+a.intern:visited { color: #111166; }
+a.extern:link { color: #aa1111; }
+a.extern:active { color: #aa1111; }
+a.extern:visited { color: #661111; }
+a.quiet:link { color: black; }
+a.quiet:active { color: black; }
+a.quiet:visited { color: black; }
+div.verbatim
+{ font-family: monospace;
+margin-top: 1em;
+margin-bottom: 1em;
+font-size: 10pt;
+margin-left: 2em;
+white-space: pre;
+}
+div.indent
+{ margin-left: 8%;
+margin-right: 0%;
+}
+.right { text-align: right; }
+.left { text-align: left; }
+.nowrap { white-space: nowrap; }
+.item_leader
+{ position: relative;
+margin-left: 8%;
+}
+.item_compact { position: absolute; vertical-align: baseline; }
+.item_cascade { position: relative; }
+.item_leftalign { text-align: left; }
+.item_rightalign
+{ width: 2em;
+text-align: right;
+}
+.item_compact .item_rightalign
+{ position: absolute;
+width: 52em;
+right: -2em;
+text-align: right;
+}
+.item_text
+{ position: relative;
+margin-left: 3em;
+}
+.smallcaps { font-size: smaller; text-transform: uppercase }
+/* END aephea.base.css */
+body { font-family: "Garamond", "Gill Sans", "Verdana", sans-serif; }
+body
+{ text-align: justify;
+margin-left: 8%;
+margin-right: 8%;
+}
+</style>
+<title>The mcx erdos manual</title>
+</head>
+<body>
+<p style="text-align:right">
+16 May 2014&nbsp;&nbsp;&nbsp;
+<a class="local" href="mcxerdos.ps"><b>mcx erdos</b></a>
+14-137
+</p>
+<div class=" itemize " style="margin-top:1em; font-size:100%">
+<div class=" item_compact"><div class=" item_rightalign nowrap " style="right:-3em">1.</div></div>
+<div class=" item_text " style="margin-left:4em">
+<a class="intern" href="#name">NAME</a>
+</div>
+<div class=" item_compact"><div class=" item_rightalign nowrap " style="right:-3em">2.</div></div>
+<div class=" item_text " style="margin-left:4em">
+<a class="intern" href="#synopsis">SYNOPSIS</a>
+</div>
+<div class=" item_compact"><div class=" item_rightalign nowrap " style="right:-3em">3.</div></div>
+<div class=" item_text " style="margin-left:4em">
+<a class="intern" href="#description">DESCRIPTION</a>
+</div>
+<div class=" item_compact"><div class=" item_rightalign nowrap " style="right:-3em">4.</div></div>
+<div class=" item_text " style="margin-left:4em">
+<a class="intern" href="#options">OPTIONS</a>
+</div>
+<div class=" item_compact"><div class=" item_rightalign nowrap " style="right:-3em">5.</div></div>
+<div class=" item_text " style="margin-left:4em">
+<a class="intern" href="#seealso">SEE ALSO</a>
+</div>
+</div>
+
+<a name="name"></a>
+<h2>NAME</h2>
+<p style="margin-bottom:0" class="asd_par">
+mcx erdos &mdash; compute shortest paths in a graph</p>
+
+<a name="synopsis"></a>
+<h2>SYNOPSIS</h2>
+<p style="margin-bottom:0" class="asd_par">
+<b>mcx&nbsp;erdos</b> [options]</p>
+<p style="margin-bottom:0" class="asd_par">mcxerdos is not in actual fact a program. This manual
+page documents the behaviour and options of the mcx program when
+invoked in mode <i>erdos</i>. The options <b>-h</b>, <b>--apropos</b>,
+<b>--version</b>, <b>-set</b>, <b>--nop</b>, <b>-progress</b>&nbsp;<i>&lt;num&gt;</i>
+are accessible
+in all <b>mcx</b> modes. They are described
+in the <a class="local sibling" href="mcx.html">mcx</a> manual page.</p>
+<p style="margin-bottom:0" class="asd_par">
+<b>mcx&nbsp;erdos</b>
+<a class="intern" href="#opt-query"><b>[-query</b> &lt;fname&gt; (<i>query input stream</i>)<b>]</b></a>
+<a class="intern" href="#opt-abc"><b>[-abc</b> &lt;fname&gt; (<i>specify label input</i>)<b>]</b></a>
+<a class="intern" href="#opt-imx"><b>[-imx</b> &lt;fname&gt; (<i>specify matrix input</i>)<b>]</b></a>
+<a class="intern" href="#opt-tab"><b>[-tab</b> &lt;fname&gt; (<i>use tab file</i>)<b>]</b></a>
+<a class="intern" href="#opt-o"><b>[-o</b> &lt;fname&gt; (<i>output file name</i>)<b>]</b></a>
+<a class="intern" href="#opt--is-directed"><b>[--is-directed</b> (<i>input graph is directed</i>)<b>]</b></a>
+<a class="intern" href="#opt--is-undirected"><b>[--is-undirected</b> (<i>input graph is directed</i>)<b>]</b></a>
+<a class="intern" href="#opt-write-path"><b>[-write-path</b> &lt;fname&gt; (<i>path matrix file</i>)<b>]</b></a>
+<a class="intern" href="#opt-write-step"><b>[-write-step</b> &lt;fname&gt; (<i>step matrix file</i>)<b>]</b></a>
+<a class="intern" href="#opt-h"><b>[-h</b> (<i>print synopsis, exit</i>)<b>]</b></a>
+<a class="intern" href="#opt--apropos"><b>[--apropos</b> (<i>print synopsis, exit</i>)<b>]</b></a>
+<a class="intern" href="#opt--version"><b>[--version</b> (<i>print version, exit</i>)<b>]</b></a>
+</p>
+
+<a name="description"></a>
+<h2>DESCRIPTION</h2>
+<p style="margin-bottom:0" class="asd_par">
+<b>mcx&nbsp;erdos</b> computes shortest paths in graphs.
+It can read a graph either in label format with <b>-abc</b>
+or in native format with <b>-imx</b>.
+It reads pairs of node indices from an input stream, and for
+each pair outputs a data structure describing the full
+set of shortest paths between the two nodes.
+Edge weights are not taken into account, so an
+edge always represents a unit step size between two nodes
+irrespective of its weight. A mode to compute shortest paths while taking into
+account edge weights will be implemented later as <b>mcx&nbsp;dijkstra</b>.
+</p>
+<p style="margin-bottom:0" class="asd_par">
+Note that the full set of shortest paths between two nodes in
+a graph can be described as a directed acyclic graph (DAG),
+and this is how <b>mcx&nbsp;erdos</b> operates. It is easy to construct
+graphs and node pairs for which the number of shortest paths
+between the two nodes becomes exponential in the size of
+the graph, whereas the lattice description is always
+garantueed to map to a subset of the graph edge set.
+</p>
+<p style="margin-bottom:0" class="asd_par">
+By default it is assumed that the input graph should be treated as
+undirected. To this end a transformation step is applied to ensure that the
+graph in memory is undirected. It is possible to compute shortest
+paths in directed graphs by using <b>--is-directed</b>, and
+it is possible to omit the transformation step by using <b>--is-undirected</b>.
+If the latter is specified while the input graph is in native format and in
+fact directed, results will be erroneous. This could in theory be mitigated
+by checking that the input graph is undirected. However, the reason to use
+<b>--is-undirected</b> is simply to increase speed of operation, whereas
+such a check would be equally expensive as the transformation step that is
+omitted with <b>--is-undirected</b>.
+</p>
+<p style="margin-bottom:0" class="asd_par">
+The input graph/matrix, if specified with the <b>-imx</b> option, has to
+be in mcl matrix/graph format. You can use label input instead by using the
+<b>-abc</b> option.
+Refer to <a class="local sibling" href="mcxio.html">mcxio</a> for a description of these two input formats.
+By default <b>mcx&nbsp;erdos</b> reads from STDIN <i>and expects matrix format</i>.
+To specify label input from STDIN use <b>-abc</b>&nbsp;<b>-</b>.
+</p>
+
+<a name="options"></a>
+<h2>OPTIONS</h2>
+<div class=" itemize " style="margin-top:1em; font-size:100%">
+<div class=" item_cascade"><div class=" item_leftalign nowrap " ><a name="opt-query"></a><b>-query</b> &lt;fname&gt; (<i>query input</i>)</div></div>
+<div class=" item_text " style="margin-left:2em">
+<p style="margin-top:0em; margin-bottom:0em">
+The name for the file from which queries are read.
+A query consists of two white-space separated node indices
+or two white-space separated labels. Labels can only be used
+if either <b>-abc</b> or <b>-tab</b> is specified.
+</p>
+</div>
+<div style="margin-top:0em">&nbsp;</div><div class=" item_cascade"><div class=" item_leftalign nowrap " ><a name="opt-abc"></a><b>-abc</b> &lt;fname&gt; (<i>label input</i>)</div></div>
+<div class=" item_text " style="margin-left:2em">
+<p style="margin-top:0em; margin-bottom:0em">
+The file name for input that is in label format.</p>
+</div>
+<div style="margin-top:0em">&nbsp;</div><div class=" item_cascade"><div class=" item_leftalign nowrap " ><a name="opt-imx"></a><b>-imx</b> &lt;fname&gt; (<i>input matrix</i>)</div></div>
+<div class=" item_text " style="margin-left:2em">
+<p style="margin-top:0em; margin-bottom:0em">
+The file name for input that is in mcl native matrix format.</p>
+</div>
+<div style="margin-top:0em">&nbsp;</div><div class=" item_cascade"><div class=" item_leftalign nowrap " ><a name="opt-o"></a><b>-o</b> &lt;fname&gt; (<i>output file name</i>)</div></div>
+<div class=" item_text " style="margin-left:2em">
+<p style="margin-top:0em; margin-bottom:0em">
+The name of the file to write output to.
+</p>
+</div>
+<div style="margin-top:0em">&nbsp;</div><div class=" item_cascade"><div class=" item_leftalign nowrap " ><a name="opt-tab"></a><b>-tab</b> &lt;fname&gt; (<i>use tab file</i>)</div></div>
+<div class=" item_text " style="margin-left:2em">
+<p style="margin-top:0em; margin-bottom:0em">
+This option causes the output to be printed with the labels
+found in the tab file.
+With <b>-abc</b> this option will, additionally, construct
+a graph only on the labels found in the tab file.
+If this option is used in conjunction with <b>-imx</b> the
+tab domain and the matrix domain are required to be identical.
+</p>
+</div>
+<div style="margin-top:0em">&nbsp;</div><div class=" item_cascade"><div class=" item_leftalign nowrap " ><a name="opt--is-directed"></a><b>--is-directed</b> (<i>compute directed shortest paths</i>)</div></div>
+<div class=" item_text " style="margin-left:2em">
+<p style="margin-top:0em; margin-bottom:0em">
+The input graph is not transformed and assumed to be directed.
+Shortest paths are computed taking this into account.
+</p>
+</div>
+<div style="margin-top:0em">&nbsp;</div><div class=" item_cascade"><div class=" item_leftalign nowrap " ><a name="opt--is-undirected"></a><b>--is-undirected</b> (<i>skip symmetrification step</i>)</div></div>
+<div class=" item_text " style="margin-left:2em">
+<p style="margin-top:0em; margin-bottom:0em">
+The input graph is not transformed and assumed to be undirected.
+Shortest paths are computed on the assumption that the input
+is undirected. Use this option only if you are sure the input
+is undirected and need to have faster execution.
+</p>
+</div>
+<div style="margin-top:0em">&nbsp;</div><div class=" item_cascade item_leftalign nowrap" ><a name="opt-write-path"></a><b>-write-path</b> &lt;fname&gt; (<i>path matrix file</i>)</div><div class=" item_cascade item_leftalign nowrap" ><a name="opt-write-step"></a><b>-write-step</b> &lt;fname&gt; (<i>step matrix file</i>)</div>
+<div class=" item_text " style="margin-left:2em">
+<p style="margin-top:0em; margin-bottom:0em">
+The path matrix enumerates the nodes that take
+part in all shortest paths. The first list contains
+those nodes that lie at distance 1 of the source node,
+the second list contains nodes lying at distance 2,
+and so on.
+The step matrix contains all the edges that make up
+the lattice of shortest paths between the two query nodes.
+</p>
+</div>
+</div>
+
+<a name="seealso"></a>
+<h2>SEE ALSO</h2>
+<p style="margin-bottom:0" class="asd_par">
+<a class="local sibling" href="mcxio.html">mcxio</a>,
+and <a class="local sibling" href="mclfamily.html">mclfamily</a> for an overview of all the documentation
+and the utilities in the mcl family.</p>
+</body>
+</html>

@@ -1,0 +1,519 @@
+\import{mcx.zmm}
+
+\begin{pud::man}{
+
+   {name}{mcxload}
+   {html_title}{The mcxload manual}
+   {author}{Stijn van Dongen}
+   {section}{1}
+   {synstyle}{long}
+   {defstyle}{long}
+
+   \man_share
+}
+
+\${html}{\"pud::man::maketoc"}
+
+\sec{name}{NAME}
+\NAME{mcxload}{load matrices and tab files from label format}
+
+
+\sec{synopsis}{SYNOPSIS}
+
+\par{
+   \mcxload \synreqopt{-abc}{<fname>}{label file}
+   \synreqopt{-o}{<fname>}{output file}}
+
+\: -123 <fname>                    input file, 123 format
+\: -packed <fname>                 input file, packed format
+
+\par{
+   \synoptopt{-abc}{<fname>}{label file}
+   \synoptopt{-123}{<fname>}{identifier file}
+   \synoptopt{-o}{<fname>}{output file}
+
+   \synoptopt{--stream-mirror}{symmetrify, same domain}
+   \synoptopt{--stream-split}{assume different domains}
+   \synoptopt{-re}{<mode>}{edge deduplication mode}
+   \synoptopt{-ri}{<mode>}{image symmetrification mode}
+
+   \synoptopt{-sif}{<fname>}{SIF label file}
+   \synoptopt{-etc}{<fname>}{'etc' label file}
+   \synoptopt{-etc-ai}{<fname>}{leaderless 'etc' label file}
+   \synoptopt{--expect-values}{expect label:weight format}
+   \synoptopt{-235}{<fname>}{leader '235' label file}
+   \synoptopt{-235-ai}{<fname>}{leaderless '235' label file}
+
+   \synoptopt{-packed}{<fname>}{file/stream in binary format}
+   \synoptopt{-pack-cnum}{<num>}{set column range}
+   \synoptopt{-pack-rnum}{<num>}{set row range}
+
+   \synoptopt{-123-max}{<int>}{set domain range}
+   \synoptopt{-123-maxc}{<int>}{set column range}
+   \synoptopt{-123-maxr}{<int>}{set row range}
+
+   \synoptopt{-write-tab}{<fname>}{save domain tab}
+   \synoptopt{-write-tabc}{<fname>}{save column tab}
+   \synoptopt{-write-tabr}{<fname>}{save row tab}
+
+   \synoptopt{-strict-tab}{<fname>}{tab universe}
+   \synoptopt{-strict-tabc}{<fname>}{tabc universe}
+   \synoptopt{-strict-tabr}{<fname>}{tabr universe}
+   \synoptopt{-restrict-tab}{<fname>}{tab world}
+   \synoptopt{-restrict-tabc}{<fname>}{tabc world}
+   \synoptopt{-restrict-tabr}{<fname>}{tabr world}
+   \synoptopt{-extend-tab}{<fname>}{tab launch}
+   \synoptopt{-extend-tabc}{<fname>}{tabc launch}
+   \synoptopt{-extend-tabr}{<fname>}{tabr launch}
+
+   \synoptopt{--stream-log}{log transform stream values}
+   \synoptopt{--stream-neg-log}{negative log transform stream values}
+   \synoptopt{--stream-neg-log10}{negative log-10 transform stream values}
+   \synoptopt{-stream-tf}{transform stream values}
+   \synoptopt{-tf}{<tf-spec>}{transform (not so) final matrix}
+
+   \synoptopt{--transpose}{transpose}
+   \synoptopt{--write-binary}{output binary format}
+   \synoptopt{--debug}{debug}
+   \stdsynopt
+   }
+
+\sec{started}{GETTING STARTED}
+
+\verbatim{\:/
+   mcxload --stream-mirror -abc data1.txt -o data1.mci -write-tab data1.tab
+   mcxload --stream-mirror -etc data2.txt -o data2.mci -write-tab data2.tab
+   mcxload --stream-mirror -sif data3.txt -o data3.mci -write-tab data3.tab}
+
+\car{
+   When the output should be an undirected graph it is safest to always use
+   the \v{--stream-mirror} option. Edges are stored bidirectionally as two arcs,
+   and this option instructs \sib{mcxload} to ensure that both arcs are present.
+   In the above examples three different types of format are read. In all formats,
+   the basic unit of specification is that of an arc specified by a source node,
+   a destination node, and optionally a weight. All formats are line based,
+   with \genopt{-abc} specifying a single arc and \genopt{-etc} and \genopt{-sif}
+   specifying multiple arcs corresponding to a shared source node.
+   For \genopt{-abc} the format is}
+\verbatim{\:/
+<source-label>    <destination-label>     [<weight>]}
+
+\par{
+   The last field, specifying the arc weight, is optional. If not present the arc weight will be
+   set to the default weight of 1.0.} For \genopt{-sif} the format is
+
+\verbatim{\:/
+<source-label>    <relation-type>   <destination-label>   <destination-label>  ...}
+
+\par{
+   There can be an arbitrary number of destination labels. The relation type field
+   in the second column is required but will be ignored. As an extension it is possible
+   to specify weights, requiring the use of the \genopt{--expect-values} option.
+   Weights are specified by tagging them onto the destination label separated by a colon:}
+
+\verbatim{\:/
+<source-label>    <relation-type>   <destination-label>:<weight>   <destination-label>:<weight>  ...}
+
+\par{
+   Finally, the format for the \genopt{-etc} option is the same, except that the relation type
+   column is dropped.}
+
+
+\sec{description}{DESCRIPTION}
+
+\car{
+   \mcxload reads label input from a file. The format of the file should be
+   line-based, each line containing two white-space separated strings (labels)
+   and optionally a number separated from the second label by whitespace. In
+   the absence of a value, mcxload will use the default value 1.0.  If a tab is
+   present on an input line, mcxload will assume that the tab character is the
+   separator for that line. Lines for which the first non-whitespace character
+   is an octothorpe ('\v{#}') are skipped.}
+
+\par{
+   \mcxload will transform the labels into mcl numerical identifiers and the
+   pairs of labels into graph edges or equivalently matrix entries.  The weight
+   of an edge is the value associated with the associated labels. mcxload
+   constructs dictionaries (sometimes just one) that map labels onto mcl
+   identifiers as it goes along. It can optionally write these to file.  In MCL
+   (family) parlance, such a dictionary written to file is called a \it{tab
+   file}.}
+
+\par{
+   It is possible to specify numerical identifiers directly with
+   the \genoptref{-123} option. In this case \mcxload assumes a canonical
+   domain (cf \sibref{mcxio}) and will create the minimal canonical
+   domain that supports the data. Also bear in mind the caveat further
+   below.}
+
+\par{
+   It is possible to effectively predeclare labels and thus enforce
+   an a-priori known mapping of labels onto numerical identifiers.
+   Labels receive an identifier in the order in which they occur
+   in the input. Predeclaring labels can be achieved by
+   having them appear in the desired order and setting the edge
+   weight to zero.}
+
+\par{
+   A major mcxload modality is whether the input refers to a single
+   domain or to two separate domains. An example of the first is where
+   labels are names of people and the value is the extent to which they
+   like one another. This encodes a \it{likability} graph where all
+   the nodes represent people. The reasonable thing to do in this
+   case is to create a single dictionary with all names wherever
+   they occur. All \bf{tab} options (as opposed to \bf{tabc} and \bf{tabr})
+   pertain to this scenario and likewise for the options \genoptref{--graph}
+   and \genoptref{--stream-mirror}.}
+
+\par{
+   An example of the second mode is where the first label is again the name of
+   a person, the second label is the name of an animal species, and the value
+   is the extent to which that person appreciates the species.  In this case, 
+   the reasonable thing to do is to create two dictionaries, one for persons
+   and one for species. All \bf{tabc} and \bf{tabr} options pertain to
+   this scenario. The \bf{tabc} options \it{always refer to the first label}
+   and the \bf{tabr} options \it{always refer to the second label}.
+   The letters \bf{c} and \bf{r} refer to \it{column} and \it{row} respectively.
+   The latter are the names of the matrix domains corresponding
+   to the input domains. Refer to \mysib{mcxio}.}
+
+\par{
+   A further mcxload modality is whether it constructs dictionaries
+   on the fly, or whether it proceeds from a tab file already
+   available.
+   By default mcxload will construct dictionaries on the fly. You
+   need to save them with the appropriate \bf{-write} option(s).
+   All the \bf{strict} options read a tab file
+   and require any labels in the \genoptref{-abc}{label input}
+   to be present in the corresponding tab file. mcxload will then fail in
+   the face of absent labels.
+   All the \bf{restrict} options simply ignore labels that are
+   not found in the corresponding tab file.
+   The \bf{extend} options extend the existing tab file with
+   labels that are not found.
+   It presumably only makes sense to do so if the corresponding
+   \bf{-write} options are used as well.}
+
+\par{
+   The input stream is deduplicated on a per-node neighbourhood basis
+   using the \genoptref{-re} option.}
+
+\par{
+   mcxload has a few options to transform or select based on
+   the values in the input stream and the values in the
+   constructed matrix. These are
+\genoptref{--stream-log},
+\genoptref{--stream-neg-log},
+\genoptref{--stream-neg-log10},
+\genoptref{-stream-tf} and
+\genoptref{-tf}.
+   Refer to \mysib{mcxio} for a description of the syntax accepted
+   by the latter two options \- it is a syntax accepted
+   by a few more mcl siblings.
+   Finally it is possible to transpose the final result
+   using the \genoptref{--transpose} option. Keep in mind that
+   mcxload does not accordingly change its idea of row and
+   column domains.}
+
+\par{
+   The final matrix can be symmetrified using the \genoptref{-ri} option.}
+
+\par{
+   The \optref{-etc}{\genopt{-etc}, \genopt{-235}} and \genopt{-sif} options
+   assume a format where all entries for a given
+   column (or equivalently all neighbours for a given node) are joined onto a
+   single line. This can be useful e.g. to read in externally generated
+   clusterings. The \genopt{-etc} and \genopt{-sif} options expect label
+   input, whereas the \genopt{-235} options expects numbers in the input that
+   are mapped directly onto mcl numerical identifiers.
+   The \sc{SIF} format expected by \genopt{-sif} requires a \it{relationship type}
+   in the second field on each line; this is ignored.
+   As an extension to the \sc{SIF} format
+   weights may optionally follow the labels, separated from them with a colon character.
+   }
+
+\cpar{CAVEAT}{
+   Please note that by feeding the line '1000000000 1' to \mcxload with either
+   of the \genopt{-235} or \genopt{-123} options it will try to allocate a
+   matrix with one billion columns. This is most likely not what is wanted.
+   Assuming that the input contains fewer than one billion unique labels, one
+   should use the label options as described above and below.
+   }
+
+\cpar{STAGES}{
+   Conceptually, input matrix creation consists of the following stages}
+
+\begin{itemize}{
+   {flow}{compact}
+   {interitem}{0}
+   {type}{roman}
+   {textindent}{4}
+   {itemmargin}{2}
+   {align}{right}
+} 
+\item
+\car{
+   Read the input stream, apply \genoptref{-stream-tf} transformation
+   specification, and optionally push reverse elements
+   (\genoptref{--stream-mirror}).}
+\item
+\car{
+   Deduplicate edges in the context of all edges/arcs originating from
+   a given node according to the \genoptref{-re} option.}
+\item
+\car{
+   Apply transpose symmetrification according to the
+   \genoptref{-ri} option, if used.}
+\item
+\car{
+   Apply \genoptref{-tf} transformation specification.}
+\end{itemize}
+
+\sec{options}{OPTIONS}
+
+\begin{itemize}{\mcx_itemopts}
+
+\item{\defopt{-abc}{<fname>}{label file}}
+\car{
+   The file to read label data from.  Labels are separated by white-space. The
+   labels may optionally be followed by a value (again separated by
+   white-space), which is taken as the edge weight between the nodes
+   corresponding with the labels.  If a tab is present on an input line it is
+   presumed to be the separator for that line, including the value if present.
+   Lines for which the first non-blank character is the octothorpe ('\v{#}')
+   are skipped.
+   }
+
+\item{\defopt{-123}{<fname>}{identifier file}}
+\car{
+   The file to read numerical data from. The format is the same as
+   for label data, but the identifiers are directly mapped onto mcl identifiers
+   as described earlier.
+   }
+
+\item{\defopt{-o}{<fname>}{output file}}
+\car{The output file where the constructed matrix is written.}
+
+\item{\defopt{--stream-mirror}{symmetrify, same domain}}
+\car{
+   Whenever \genarg{label1} \genarg{label2} \genarg{value}
+   is encountered in the input, mcxload inserts
+   \genarg{label2} \genarg{label1} \genarg{value} in the input
+   stream as well. This option implies that both labels
+   belong to the same domain.}
+
+\item{\defopt{--stream-split}{assume different domains}}
+\car{
+   This tells mcxload that the two labels belong to different domains.
+   The program will create two tab files, one for columns and one
+   for rows. This can be used for example to create a logical mapping of
+   gene identifiers to species identifiers.
+   }
+
+\item{\defopt{-re}{<max|add|mul|first|last>}{deduplication mode}}
+\car{
+   This specifies  how mcxload should collapse repeated entries, that is edges
+   for which a value is specified multiple times.  This is done relative to a
+   single node at a time, taking into account all neighbours assembled from the
+   input stream.  Note that \genoptref{--stream-mirror} will result in
+   duplicated entries if the input contains edge specifications in both ways.
+   Also note that \usearg{first} and \usearg{last} might not result in
+   symmetric input if only \genopt{--stream-mirror} is used.}
+
+\item{\defopt{-write-tab}{<fname>}{save domain tab}}
+\car{
+   Write the domain to file. It applies to both label types.}
+
+\item{\defopt{-write-tabc}{<fname>}{save column tab}}
+\car{
+   Write the column domain to file. It applies to the first label found
+   on each input line.}
+
+\item{\defopt{-write-tabr}{<fname>}{save row tab}}
+\car{
+   Write the column domain to file. It applies to the second label found
+   on each input line.}
+
+\item{\defopt{-strict-tab}{<fname>}{tab universe}}
+\car{
+   Read a dictionary from file and require each label to be present in the
+   dictionary. mcxload will exit on absentees.}
+
+\item{\defopt{-strict-tabc}{<fname>}{tabc universe}}
+\car{
+   Read a dictionary from file and require the first label on each line
+   to be present in the dictionary. mcxload will exit on absentees.}
+
+\item{\defopt{-strict-tabr}{<fname>}{tabr universe}}
+\car{
+   Read a dictionary from file and require the second label on each line
+   to be present in the dictionary. mcxload will exit on absentees.}
+
+\item{\defopt{-restrict-tab}{<fname>}{tab world}}
+\car{
+   Read a dictionary from file and only accept input lines (edges)
+   for which both labels are present in the dictionary.
+   mcxload will ignore absentees.}
+
+\item{\defopt{-restrict-tabc}{<fname>}{tabc world}}
+\car{
+   Read a dictionary from file and ignore input lines
+   for which the first label is absent from the dictionary.}
+
+\item{\defopt{-restrict-tabr}{<fname>}{tabr world}}
+\car{
+   Read a dictionary from file and ignore input lines
+   for which the second label is absent from the dictionary.}
+
+\item{\defopt{-extend-tab}{<fname>}{tab launch}}
+\car{
+   Read a dictionary from file and extend it with any
+   label from the input not yet present in the dictionary.}
+
+\item{\defopt{-extend-tabc}{<fname>}{tabc launch}}
+\car{
+   Read a dictionary from file and extend it with all
+   first labels from the input not yet present in the dictionary.}
+
+\item{\defopt{-extend-tabr}{<fname>}{tabr launch}}
+\car{
+   Read a dictionary from file and extend it with all
+   second labels from the input not yet present in the dictionary.}
+
+\items{
+   {\defopt{-123-max}{<int>}{set domain range}}
+   {\defopt{-123-maxc}{<int>}{set column range}}
+   {\defopt{-123-maxr}{<int>}{set row range}}
+}
+\car{
+   These options limit the domain ranges accepted by the \genopt{-123} option.
+   Numbers starting from \genarg{<int>} will be ignored, and the domain(s)
+   will range from zero up to one less than \genarg{<int>}.
+   The first, \genopt{-123-max} governs both domains, and \genopt{-123-maxc}
+   and \genopt{-123-maxr} respectively govern the column and row domain.
+   }
+
+
+\item{\defopt{--stream-log}{log transform stream values}}
+\car{
+   Replace each entry by its natural logarithm.}
+
+\items{
+{\defopt{--stream-neg-log}{negative log transform stream values}}
+{\defopt{--stream-neg-log10}{negative log-10 transform stream values}}
+}
+\car{
+   Replace each entry by the  negative of its natural logarithm and
+   log-10 representation, respectively.
+   This is for example useful to convert scores that denote probabilities
+   or p-values such as BLAST scores.
+   }
+
+\item{\defopt{-stream-tf}{transform stream values}}
+\car{
+   Transform the stream values as they are read in according
+   to the syntax described in \mysib{mcxio}.}
+
+\item{\defopt{-tf}{<tf-spec>}{transform (not so) final matrix}}
+\car{
+   Transform the matrix values after deduplication and symmetrification
+   according to the syntax described in \mysib{mcxio}.}
+
+\item{\defopt{-ri}{<max|add|mul>}}
+\car{
+   After the initial matrix has been assembled, it can be symmetrified by
+   either of these options. They indicate the operation used to combine the
+   entries of the transposed matrix and the original matrix. \usearg{mul}
+   is special in that it treats missing entries (which are normally considered
+   zero in mcl matrix operations) as one.}
+
+\item{\defopt{--transpose}{transpose}}
+\car{
+   Write the transposed matrix to file. This is obviously not useful
+   when a symmetric matrix has been generated.}
+
+\items{
+   {\defopt{-etc}{<fname>}{'etc' label file}}
+   {\defopt{-etc-ai}{<fname>}{leaderless 'etc' label file}}
+   {\defopt{-235}{<fname>}{'235' label file}}
+   {\defopt{-235-ai}{<fname>}{leaderless '235' label file}}
+   {\defopt{-sif}{<fname>}{SIF label file}}
+   {\defopt{--expect-values}{expect label:weight format}}
+}
+\car{
+    The input is read in lines; each line is split on whitespace into labels.
+    For \genopt{-etc} the first label is interpreted as the source node.  All
+    other labels are interpreted as destination nodes.
+    Weights may optionally follow the labels, separated from them with a colon character.
+    It is in this case necessary to use the \genopt{--expect-values} option.
+    The \sc{SIF} (Simple Interaction File) format expected by \genopt{-sif} is
+    similar except that it contains an additional field. In this format the
+    second column denotes the \it{relationship type}. It is ignored by \sib{mcxload}.
+    For \genopt{-etc-ai} (\it{auto-increment}) all labels are interpreted as
+    destination nodes and mcxload automatically creates a source node for each
+    line it reads. This option can be useful to read in files encoding a
+    clustering, where each line represents a cluster of white-space separated
+    labels.
+    }
+
+\par{
+   The \genopt{-235} options are similar except that the input is not
+   interpreted as labels but must consist of numbers that explicitly
+   specify the matrix to be built.}
+
+\items{
+   {\defopt{-packed}{<fname>}{file/stream in binary format}}
+   {\defopt{-pack-cnum}{<num>}{set column range}}
+   {\defopt{-pack-rnum}{<num>}{set row range}}
+}
+\car{
+   The \genopt{-packed} option allows to read machine-readable data
+   directly. The data has to correspond to the data types for indexes
+   and values with with MCL was compiled. The use of \genopt{-pack-cnum}
+   and \genopt{-pack-rnum} is required to set the limits of
+   the ranges of indices that will be read.
+   }
+
+\par{
+   The \v{/scripts} directory of the MCL software contains scripts
+   \v{packed-example.sh} and \v{packed-example2.sh}. The first shows the simple
+   binary format that is accepted by \genopt{-packed}.  It also documents the
+   required include files and library and the method by which they can be
+   referenced and linked to.  The second expands on the first example by
+   multiplexing binary output onto multiple output streams. Each output stream
+   is read and loaded by an independent \it{mcxload} instance. The final result
+   is obtained by summing the individual matrices. This can be used to speed up
+   the loading of large data by parallelisation.
+   }
+
+
+\item{\defopt{--write-binary}{output binary format}}
+\car{
+   The output matrix is written in native binary format \- refer to
+   \mysib{mcxio}.}
+
+\item{\defopt{--debug}{debug}}
+\car{
+   Among other things, this turns on warnings when \bf{restrict} tab
+   files are used and labels are found to be missing.}
+
+\stddefopt
+
+\end{itemize}
+
+\sec{author}{AUTHOR}
+\car{
+   Stijn van Dongen.}
+
+\sec{seealso}{SEE ALSO}
+
+\car{
+   \mysib{mcxio},
+   \mysib{mcxdump},
+   \mysib{mcl},
+   \mysib{mclfaq},
+   and \mysib{mclfamily} for an overview of all the documentation
+   and the utilities in the mcl family.}
+
+\end{pud::man}
+

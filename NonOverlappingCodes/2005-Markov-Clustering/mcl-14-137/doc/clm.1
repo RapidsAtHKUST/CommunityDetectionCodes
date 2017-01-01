@@ -1,0 +1,147 @@
+.\" Copyright (c) 2014 Stijn van Dongen
+.TH "clm" 1 "16 May 2014" "clm 14-137" "USER COMMANDS "
+.po 2m
+.de ZI
+.\" Zoem Indent/Itemize macro I.
+.br
+'in +\\$1
+.nr xa 0
+.nr xa -\\$1
+.nr xb \\$1
+.nr xb -\\w'\\$2'
+\h'|\\n(xau'\\$2\h'\\n(xbu'\\
+..
+.de ZJ
+.br
+.\" Zoem Indent/Itemize macro II.
+'in +\\$1
+'in +\\$2
+.nr xa 0
+.nr xa -\\$2
+.nr xa -\\w'\\$3'
+.nr xb \\$2
+\h'|\\n(xau'\\$3\h'\\n(xbu'\\
+..
+.if n .ll -2m
+.am SH
+.ie n .in 4m
+.el .in 8m
+..
+.SH NAME
+clm \- perform various computations on graphs and clusterings
+.SH SYNOPSIS
+
+.di ZV
+.in 0
+.nf \fC
+   \fBclm\fP <mode> [mode-options] [mode-files]
+.fi \fR
+.in
+.di
+.ne \n(dnu
+.nf \fC
+.ZV
+.fi \fR
+
+.SH DESCRIPTION
+
+\fBclm\fP implements a variety of computations on graphs and clusterings\&. The
+first argument to \fBclm\fP should be a \fImode\fP, which is a string establishing
+the type of computation to invoke\&. Each mode \fImode\fP is described in the
+clm\fImode\fP manual page\&. The currently available modes are
+\fBclm\ \&dist\fP,
+\fBclm\ \&info\fP,
+\fBclm\ \&meet\fP,
+\fBclm\ \&mate\fP,
+\fBclm\ \&close\fP,
+\fBclm\ \&order\fP,
+\fBclm\ \&imac\fP,
+\fBclm\ \&vol\fP, and
+\fBclm\ \&residue\fP\&.
+The \fBdist\fP mode is thus described in the
+\fBclmdist\fP manual page\&.
+
+Invoking \fBclm\fP without arguments causes it to print out a list
+of available modes with a short description of the type of
+command line expected by that mode\&.
+
+Invoking \fBclm\fP with just a mode will print out a longer listing
+of options available for that particular mode\&.
+Modes that are able to function normally without arguments
+can be invoked by adding the \fI--nop\fP argument\&.
+
+Several options are shared between all \fBclm\fP modes\&. Note that
+these options are specified after the \fBmode\fP\&. See \fBOPTIONS\fP\&.
+
+The \fB--version\fP option causes \fBclm\fP to print out version
+and license information\&.
+
+Issuing \fIclm help mode\fP will cause \fBclm\fP to look for a manual page
+describing \fImode\fP and display it if found\&. This requires that the
+MANPATH environment variable contains the directory in which the MCL-edge
+manual pages were installed\&. This will usually be \fCPREFIX/share\fP,
+where \fCPREFIX\fP is the path with which the software was configured\&.
+.SH OPTIONS
+
+These are options that pertain to all modes\&. They should be specified
+\fIafter\fP the mode argument\&.
+
+.ZI 2m "\fB-h\fP (\fIsynopsis\fP)"
+\&
+'in -2m
+.ZI 2m "\fB--help\fP (\fIsynopsis\fP)"
+\&
+'in -2m
+'in +2m
+\&
+.br
+List available options\&.
+.in -2m
+
+.ZI 2m "\fB--nop\fP (\fIno-op\fP)"
+\&
+.br
+Not an option\&. This option has no effect then to increment
+the argument count\&. This can be useful for \fBclm\fP modes which are able to
+function without any options\&. Such a mode typically reads from STDIN, writes
+to STDOUT, and uses default settings\&. However, simply specifying a mode
+without options leads \fBclm\fP to output a list of available options for that
+mode\&. This can be averted by using the \fB--nop\fP option\&.
+.in -2m
+
+.ZI 2m "\fB-set\fP key=val (\fIset key-value pair\fP)"
+\&
+.br
+Sets the key\ \&\fBkey\fP to value\ \&\fBval\fP in the environment\&.
+Some modes allow adjustment of settings in this manner\&.
+.in -2m
+
+.ZI 2m "\fB-debug\fP <int> (\fIset debug level/flags\fP)"
+\&
+'in -2m
+.ZI 2m "\fB--debug\fP (\fIturn default debugging on\fP)"
+\&
+'in -2m
+.ZI 2m "\fB--test\fP (\fIturn default testing on\fP)"
+\&
+'in -2m
+'in +2m
+\&
+.br
+The first two turn on debugging, the last is for testing\&. The effect of
+these options is otherwise undocumented\&.
+.in -2m
+
+.ZI 2m "\fB--progress\fP (\fIenable progress reporting\fP)"
+\&
+.br
+This will enable some kind of progress reporting, by
+writing to STDERR\&.
+.in -2m
+.SH AUTHOR
+
+Stijn van Dongen\&.
+.SH SEE ALSO
+
+\fBmclfamily(7)\fP for an overview of all the documentation
+and the utilities in the mcl family\&.

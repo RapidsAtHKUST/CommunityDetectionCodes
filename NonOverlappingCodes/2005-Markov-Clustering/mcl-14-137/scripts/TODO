@@ -1,0 +1,9 @@
+
+
+mlmfifofum
+   --fnipro
+
+      *  Read in a clustering and compute measures
+
+      *  Read in a tree and optimize clustering by going down the tree.
+

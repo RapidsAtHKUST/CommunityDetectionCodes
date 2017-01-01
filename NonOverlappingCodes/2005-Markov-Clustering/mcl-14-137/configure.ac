@@ -1,0 +1,204 @@
+# configure.ac - generated from configure.ac.in by setversion. do not edit
+# configure.ac, but edit the master.
+# Process this file with autoconf to produce a configure script.
+#
+# $Id: configure.ac.in,v 1.36 2006-11-03 13:06:53 flux Exp $
+
+AC_PREREQ(2.50)
+AC_INIT(mcl, 14-137, mcl-devel@lists.micans.org)
+
+PACKAGE=$PACKAGE_NAME
+VERSION=$PACKAGE_VERSION
+
+AC_CONFIG_AUX_DIR(autofoo)
+
+AC_CONFIG_SRCDIR([src/shmcl/mcl.c])
+AM_INIT_AUTOMAKE($PACKAGE, $VERSION)
+# one day we should use a config.h.in
+AC_CONFIG_HEADER(config.h)
+
+# add a `--enable-maintainer-mode' option to `configure'; `maintainer-only' rules turned off by
+# default in Makefile.in's
+AM_MAINTAINER_MODE
+
+
+
+########################  test void*/uint    #####################################
+
+AC_CACHE_CHECK([ _____ weak test for C void* <=> unsigned int conversion],
+   [ac_cv_c_void_uint],
+
+   [AC_RUN_IFELSE(
+         [AC_LANG_SOURCE([[
+#include <limits.h>
+#include <stdio.h>
+
+unsigned test[] =
+{  0x00000000, 0x000000ff, 0x0000ff00, 0x00ff0000, 0xff000000
+,  0x0000000f, 0x00000f00, 0x000f0000, 0x00f00000, 0x0f000000
+,  0x0000ffff, 0x00ffff00, 0xffff0000, 0x00ff00ff, 0xff00ff00
+,  0x00ffffff, 0x00ffffff, 0xffffff00, 0xffff00ff, 0xffffffff
+,  0x80000000, 0x40000000, 0xc0000000, 0x80000001, 0x40000001
+}  ;
+
+int main
+(  int argc
+,  char* argv[]
+)
+   {  int i = 0
+   ;  for (i=0;i<sizeof test/sizeof test[0];i++)
+      {  unsigned  x =  test[i]
+      ;  void* xv    =  (void*)     x
+      ;  unsigned xu =  (unsigned)  xv
+      ;  if (x != xu)
+         {  fprintf(stderr, "%u failed to reappear\n", x)
+         ;  exit(1)
+      ;  }
+      }
+      return 0
+;  }
+   ]])],
+   [ac_cv_c_void_uint=passed],
+   [ac_cv_c_void_uint=failed],
+   [true]
+)]
+)
+
+if test "$ac_cv_c_void_uint" = "failed"; then
+cat <<EOM
+  /\  custom check: num <-> void* failed: do not use --abc options.
+ /\/\ Consider contacting the author (http://micans.org/stijn/contact.html
+ \/\/
+  \/  Please include the file config.log.
+EOM
+fi
+
+########################  helpful reminder   #####################################
+
+# extra ./configure options
+AC_ARG_ENABLE(helpful-reminder,
+   AC_HELP_STRING([--enable-helpful-reminder], [output citation reference (default is yes)]),
+ [    case "${enableval}" in
+         yes) helpful_reminder=yes ;;
+          no) helpful_reminder=no ;;
+         *) AC_MSG_ERROR([bad value ${enableval} for --enable-helpful-reminder]) ;;
+     esac
+ ], [helpful_reminder=yes]
+)
+
+if test "$helpful_reminder" = "yes"; then
+   AC_DEFINE(MCL_HELPFUL_REMINDER, [], [output citation reference (default yes)])
+fi
+
+
+########################  tribe package      #####################################
+##  DEPRECATED.
+##  PLEASE USE BLAST PACKAGE INSTEAD.
+
+##  # extra ./configure options
+##  AC_ARG_ENABLE(tribe,
+##  [  --enable-tribe  build contributed tribe tools (protein clustering stuff) ],
+##   [
+##       case "${enableval}" in
+##           yes) tribe=true ;;
+##           no)  tribe=false ;;
+##           *) AC_MSG_ERROR([bad value ${enableval} for --enable-tribe]) ;;
+##       esac
+##   ], [tribe=false]
+##  )
+##  AM_CONDITIONAL(BUILD_TRIBE, test x$tribe = xtrue)
+
+
+########################  blast package      #####################################
+
+AC_ARG_ENABLE(blast,
+[  --enable-blast   build bio-informatics tools ],
+ [
+     case "${enableval}" in
+         yes) blast=true ;;
+         no)  blast=false ;;
+         *) AC_MSG_ERROR([bad value ${enableval} for --enable-blast]) ;;
+     esac
+ ], [blast=false]
+)
+AM_CONDITIONAL(BUILD_BLAST, test x$blast = xtrue)
+
+
+## it would be nice if we'd be able to set
+## our default -I compile option here
+## AC_SUBST INCLUDES
+## CPPFLAGS
+
+### AC_SUBST(mandir)
+#AC_DEFINE_UNQUOTED(MANPATH, $datarootdir, [
+#  where to look for manual files
+#])
+#AC_SUBST(datarootdir)
+# AC_DEFINE_UNQUOTED([DATA_PATH], [@prefix@/share/man], [Description])
+
+
+
+# Checks for programs.
+AC_PROG_AWK
+AC_PROG_CC
+AC_PROG_INSTALL
+AC_PROG_LN_S
+AC_PROG_RANLIB
+
+# Checks for libraries.
+# FIXME: Replace `main' with a function in `-lm':
+AC_CHECK_LIB([m], [main])
+
+# Checks for header files.
+AC_HEADER_STDC
+AC_CHECK_HEADERS([float.h limits.h malloc.h stdlib.h string.h unistd.h])
+
+# Checks for typedefs, structures, and compiler characteristics.
+AC_C_CONST
+AC_TYPE_SIZE_T
+
+# Figure out how to build C programs using POSIX threads, and
+# use the variables given by acx_pthread.m4 in acinclude.m4
+ACX_PTHREAD([
+ LIBS="$PTHREAD_LIBS $LIBS"
+ CFLAGS="$CFLAGS $PTHREAD_CFLAGS"
+ CC="$PTHREAD_CC"
+])
+
+# Checks for library functions.
+AC_FUNC_MALLOC
+AC_FUNC_MEMCMP
+AC_FUNC_VPRINTF
+AC_CHECK_FUNCS([floor memset pow rint sqrt strchr strpbrk strstr])
+
+AC_CHECK_VA_COPY
+
+# AC_CONFIG_FILES([Makefile])
+AC_OUTPUT([
+    Makefile
+    include/Makefile
+    doc/Makefile
+    testing/Makefile
+    testing/stream/Makefile
+    testing/blast/Makefile
+    testing/setops/Makefile
+    graphs/Makefile
+    img/Makefile
+    scripts/Makefile
+    util/Makefile
+    src/Makefile
+    src/clew/Makefile
+    src/mcl/Makefile
+    src/gryphon/Makefile
+    src/impala/Makefile
+    src/shcl/Makefile
+    src/shmcl/Makefile
+    src/shmx/Makefile
+    src/shmcxquery/Makefile
+    src/shmcx/Makefile
+    src/alien/Makefile
+    src/alien/oxygen/Makefile
+    src/alien/oxygen/doc/Makefile
+    src/alien/oxygen/src/Makefile
+])
+

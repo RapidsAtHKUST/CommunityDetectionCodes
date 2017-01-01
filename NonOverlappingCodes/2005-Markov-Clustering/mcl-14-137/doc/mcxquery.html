@@ -1,0 +1,372 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html>
+<!-- Copyright (c) 2014 Stijn van Dongen -->
+<head>
+<meta name="keywords" content="manual">
+<style type="text/css">
+/* START aephea.base.css */
+body
+{ text-align: justify;
+margin-left: 0%;
+margin-right: 0%;
+}
+a:link { text-decoration: none; }
+a:active { text-decoration: none; }
+a:visited { text-decoration: none; }
+a:link { color: #1111aa; }
+a:active { color: #1111aa; }
+a:visited { color: #111166; }
+a.local:link { color: #11aa11; }
+a.local:active { color: #11aa11; }
+a.local:visited { color: #116611; }
+a.intern:link { color: #1111aa; }
+a.intern:active { color: #1111aa; }
+a.intern:visited { color: #111166; }
+a.extern:link { color: #aa1111; }
+a.extern:active { color: #aa1111; }
+a.extern:visited { color: #661111; }
+a.quiet:link { color: black; }
+a.quiet:active { color: black; }
+a.quiet:visited { color: black; }
+div.verbatim
+{ font-family: monospace;
+margin-top: 1em;
+margin-bottom: 1em;
+font-size: 10pt;
+margin-left: 2em;
+white-space: pre;
+}
+div.indent
+{ margin-left: 8%;
+margin-right: 0%;
+}
+.right { text-align: right; }
+.left { text-align: left; }
+.nowrap { white-space: nowrap; }
+.item_leader
+{ position: relative;
+margin-left: 8%;
+}
+.item_compact { position: absolute; vertical-align: baseline; }
+.item_cascade { position: relative; }
+.item_leftalign { text-align: left; }
+.item_rightalign
+{ width: 2em;
+text-align: right;
+}
+.item_compact .item_rightalign
+{ position: absolute;
+width: 52em;
+right: -2em;
+text-align: right;
+}
+.item_text
+{ position: relative;
+margin-left: 3em;
+}
+.smallcaps { font-size: smaller; text-transform: uppercase }
+/* END aephea.base.css */
+body { font-family: "Garamond", "Gill Sans", "Verdana", sans-serif; }
+body
+{ text-align: justify;
+margin-left: 8%;
+margin-right: 8%;
+}
+</style>
+<title>The mcx q manual</title>
+</head>
+<body>
+<p style="text-align:right">
+16 May 2014&nbsp;&nbsp;&nbsp;
+<a class="local" href="mcxquery.ps"><b>mcx q</b></a>
+14-137
+</p>
+<div class=" itemize " style="margin-top:1em; font-size:100%">
+<div class=" item_compact"><div class=" item_rightalign nowrap " style="right:-3em">1.</div></div>
+<div class=" item_text " style="margin-left:4em">
+<a class="intern" href="#name">NAME</a>
+</div>
+<div class=" item_compact"><div class=" item_rightalign nowrap " style="right:-3em">2.</div></div>
+<div class=" item_text " style="margin-left:4em">
+<a class="intern" href="#synopsis">SYNOPSIS</a>
+</div>
+<div class=" item_compact"><div class=" item_rightalign nowrap " style="right:-3em">3.</div></div>
+<div class=" item_text " style="margin-left:4em">
+<a class="intern" href="#description">DESCRIPTION</a>
+</div>
+<div class=" item_compact"><div class=" item_rightalign nowrap " style="right:-3em">4.</div></div>
+<div class=" item_text " style="margin-left:4em">
+<a class="intern" href="#options">OPTIONS</a>
+</div>
+<div class=" item_compact"><div class=" item_rightalign nowrap " style="right:-3em">5.</div></div>
+<div class=" item_text " style="margin-left:4em">
+<a class="intern" href="#seealso">SEE ALSO</a>
+</div>
+</div>
+
+<a name="name"></a>
+<h2>NAME</h2>
+<p style="margin-bottom:0" class="asd_par">
+mcxquery &mdash; compute simple graph statistics</p>
+
+<a name="synopsis"></a>
+<h2>SYNOPSIS</h2>
+<p style="margin-bottom:0" class="asd_par">mcxquery is not in actual fact a program. This manual
+page documents the behaviour and options of the mcx program when
+invoked in mode <i>query</i>. The options <b>-h</b>, <b>--apropos</b>,
+<b>--version</b>, <b>-set</b>, <b>--nop</b>, <b>-progress</b>&nbsp;<i>&lt;num&gt;</i>
+are accessible
+in all <b>mcx</b> modes. They are described
+in the <a class="local sibling" href="mcx.html">mcx</a> manual page.</p>
+<p style="margin-bottom:0" class="asd_par">
+<b>mcxquery</b>
+<a class="intern" href="#opt-abc"><b>[-abc</b> &lt;fname&gt; (<i>specify label input</i>)<b>]</b></a>
+<a class="intern" href="#opt-imx"><b>[-imx</b> &lt;fname&gt; (<i>specify matrix input</i>)<b>]</b></a>
+<a class="intern" href="#opt-o"><b>[-o</b> &lt;fname&gt; (<i>output file name</i>)<b>]</b></a>
+<a class="intern" href="#opt-tab"><b>[-tab</b> &lt;fname&gt; (<i>use tab file</i>)<b>]</b></a>
+<a class="intern" href="#opt--node-attr"><b>[--node-attr</b> (<i>output node degree and weight attributes</i>)<b>]</b></a>
+<a class="intern" href="#opt-vary-threshold"><b>[-vary-threshold</b> &lt;start/end/step&gt; (<i>analyze graph at similarity cutoffs</i>)<b>]</b></a>
+<a class="intern" href="#opt-vary-knn"><b>[-vary-knn</b> &lt;start/end/step&gt; (<i>analyze graph for varying k-NN</i>)<b>]</b></a>
+<a class="intern" href="#opt-vary-ceil"><b>[-vary-ceil</b> &lt;start/end/step&gt; (<i>analyze graph for varying ceil reductions</i>)<b>]</b></a>
+<a class="intern" href="#opt--no-legend"><b>[--no-legend</b> (<i>do not output explanatory legend</i>)<b>]</b></a>
+<a class="intern" href="#opt--reduce"><b>[--reduce</b> (<i>use reduced matrix</i>)<b>]</b></a>
+<a class="intern" href="#opt--test-metric"><b>[--test-metric</b> (<i>test whether graph distance is metric</i>)<b>]</b></a>
+<a class="intern" href="#opt--test-cycle"><b>[--test-cycle</b> (<i>test whether graph contains cycles</i>)<b>]</b></a>
+<a class="intern" href="#opt-test-cycle"><b>[-test-cycle</b> &lt;num&gt; (<i>test cycles, report cycles</i>)<b>]</b></a>
+<a class="intern" href="#opt--vary-correlation"><b>[--vary-correlation</b> (<i>analyze graph at correlation cutoffs</i>)<b>]</b></a>
+<a class="intern" href="#opt--clcf"><b>[--clcf</b> (<i>include clustering coefficient analysis</i>)<b>]</b></a>
+<a class="intern" href="#opt--eff"><b>[--eff</b> (<i>include efficiency criterion</i>)<b>]</b></a>
+<a class="intern" href="#opt-div"><b>[-div</b> &lt;num&gt; (<i>cluster size separating value</i>)<b>]</b></a>
+<a class="intern" href="#opt--dim"><b>[--dim</b> (<i>report native format and dimensions</i>)<b>]</b></a>
+<a class="intern" href="#opt--values"><b>[--values</b> (<i>output all arc entries/weights, unsorted</i>)<b>]</b></a>
+<a class="intern" href="#opt--values-sorted"><b>[--values-sorted</b> (<i>output all entries/weights, sorted</i>)<b>]</b></a>
+<a class="intern" href="#opt-values-hist"><b>[-values-hist</b> &lt;nbins|start/end/nbins&gt; (<i>weight histogram</i>)<b>]</b></a>
+<a class="intern" href="#opt-degrees-hist"><b>[-degrees-hist</b> &lt;step&gt; (<i>degrees histogram</i>)<b>]</b></a>
+<a class="intern" href="#opt--output-table"><b>[--output-table</b> (<i>output logical tab separated table without key</i>)<b>]</b></a>
+<a class="intern" href="#opt-t"><b>[-t</b> &lt;num&gt; (<i>number of threads to use</i>)<b>]</b></a>
+<a class="intern" href="#opt-icl"><b>[-icl</b> &lt;fname&gt; (<i>input clustering</i>)<b>]</b></a>
+<a class="intern" href="#opt-tf"><b>[-tf</b> spec (<i>apply tf-spec to input matrix</i>)<b>]</b></a>
+<a class="intern" href="#opt-h"><b>[-h</b> (<i>print synopsis, exit</i>)<b>]</b></a>
+<a class="intern" href="#opt--apropos"><b>[--apropos</b> (<i>print synopsis, exit</i>)<b>]</b></a>
+<a class="intern" href="#opt--version"><b>[--version</b> (<i>print version, exit</i>)<b>]</b></a>
+</p>
+
+<a name="description"></a>
+<h2>DESCRIPTION</h2>
+<p style="margin-bottom:0" class="asd_par">
+The default <b>mcxquery</b> output is a list of summary statistics for each
+node. These are its node degree, the mean, minimum, maximum and median
+edge weight. If supplied with a clustering, the output will additionally
+list the cluster size and cluster label for each node.
+</p>
+<p style="margin-bottom:0" class="asd_par">
+Additionally, <b>mcxquery</b> can be used to analyse a graph at different similarity
+cutoffs or at varying parameters of edge reduction strategies such as mutual
+nearest neighbour reduction.
+Attributes supplied across different thresholds are the number of connected
+components, the number of singletons, and statistics (median, average, iqr)
+on node degrees and edge weights.
+Typically this is done on a graph constructed using a very permissive
+threshold. For example, one can create a graph from array expression data
+using <b>mcxarray</b> with a very low pearson correlation cutoff such as&nbsp;0.5
+Then <b>mcxquery</b> can be used to analyze the graph at increasingly
+stringent thresholds of&nbsp;0.50, 0.55, 0.60&nbsp;..&nbsp;0.95.
+</p>
+<p style="margin-bottom:0" class="asd_par">Other tasks that <b>mcxquery</b> be used for include:
+</p>
+<div class=" itemize " style="margin-top:1em; font-size:100%">
+<div class=" item_compact"><div class=" item_leftalign " ><span class="itembullet">&bull;</span></div></div>
+<div class=" item_text " style="margin-left:2em">
+Produce a histogram of edge weights.
+</div>
+<div class=" item_compact"><div class=" item_leftalign " ><span class="itembullet">&bull;</span></div></div>
+<div class=" item_text " style="margin-left:2em">
+Produce a histogram of edge node degrees.
+</div>
+<div class=" item_compact"><div class=" item_leftalign " ><span class="itembullet">&bull;</span></div></div>
+<div class=" item_text " style="margin-left:2em">
+Output all edge weights.
+</div>
+<div class=" item_compact"><div class=" item_leftalign " ><span class="itembullet">&bull;</span></div></div>
+<div class=" item_text " style="margin-left:2em">
+Test whether the graph weight encodes a metric
+(for edge weights that encode distances rather than similarites).
+</div>
+<div class=" item_compact"><div class=" item_leftalign " ><span class="itembullet">&bull;</span></div></div>
+<div class=" item_text " style="margin-left:2em">
+Test whether the graph has a cycle.
+</div>
+</div>
+
+<a name="options"></a>
+<h2>OPTIONS</h2>
+<div class=" itemize " style="margin-top:1em; font-size:100%">
+<div class=" item_cascade"><div class=" item_leftalign nowrap " ><a name="opt-abc"></a><b>-abc</b> &lt;fname&gt; (<i>label input</i>)</div></div>
+<div class=" item_text " style="margin-left:2em">
+<p style="margin-top:0em; margin-bottom:0em">
+The file name for input that is in label format.</p>
+</div>
+<div style="margin-top:0em">&nbsp;</div><div class=" item_cascade"><div class=" item_leftalign nowrap " ><a name="opt-imx"></a><b>-imx</b> &lt;fname&gt; (<i>input matrix</i>)</div></div>
+<div class=" item_text " style="margin-left:2em">
+<p style="margin-top:0em; margin-bottom:0em">
+The file name for input that is in mcl native matrix format.
+</p>
+</div>
+<div style="margin-top:0em">&nbsp;</div><div class=" item_cascade"><div class=" item_leftalign nowrap " ><a name="opt-o"></a><b>-o</b> &lt;fname&gt; (<i>output file name</i>)</div></div>
+<div class=" item_text " style="margin-left:2em">
+<p style="margin-top:0em; margin-bottom:0em">
+Set the name of the file where output should be written to.
+</p>
+</div>
+<div style="margin-top:0em">&nbsp;</div><div class=" item_cascade"><div class=" item_leftalign nowrap " ><a name="opt-tab"></a><b>-tab</b> &lt;fname&gt; (<i>use tab file</i>)</div></div>
+<div class=" item_text " style="margin-left:2em">
+<p style="margin-top:0em; margin-bottom:0em">
+This option causes the output to be printed with the labels
+found in the tab file.
+</p>
+</div>
+<div style="margin-top:0em">&nbsp;</div><div class=" item_cascade"><div class=" item_leftalign nowrap " ><a name="opt--dim"></a><b>--dim</b> (<i>report native format and dimensions</i>)</div></div>
+<div class=" item_text " style="margin-left:2em">
+<p style="margin-top:0em; margin-bottom:0em">
+This will report the matrix format (either interchange or binary)
+and the matrix dimensions. For a graph the two reported dimensions
+should be equal.
+</p>
+</div>
+<div style="margin-top:0em">&nbsp;</div><div class=" item_cascade item_leftalign nowrap" ><a name="opt--values"></a><b>--values</b> (<i>output all entries/weights, unsorted</i>)</div><div class=" item_cascade item_leftalign nowrap" ><a name="opt--values-sorted"></a><b>--values-sorted</b> (<i>output all entries/weights, sorted</i>)</div><div class=" item_cascade item_leftalign nowrap" ><a name="opt-values-hist"></a><b>-values-hist</b> &lt;start/end/nbins&gt; (<i>output weight histogram</i>)</div><div class=" item_cascade item_leftalign nowrap" ><a name="opt-values-hist"></a><b>-values-hist</b> &lt;nbins&gt; (<i>output weight histogram</i>)</div><div class=" item_cascade item_leftalign nowrap" ><a name="opt-degrees-hist"></a><b>-degrees-hist</b> &lt;nbins&gt; (<i>degrees histogram</i>)</div>
+<div class=" item_text " style="margin-left:2em">
+<p style="margin-top:0em; margin-bottom:0em">
+These options are fairly self-documenting. The result of both
+<b>-edges-hist</b> and <b>-degrees-hist</b>
+is a tab separated table of bin offsets and bin counts.
+When using <b>-edges-hist</b>&nbsp;<i>&lt;nbins&gt;</i> the program will
+create a histogram ranging from the smallest to
+the largest edge weight.
+</p>
+</div>
+<div style="margin-top:0em">&nbsp;</div><div class=" item_cascade"><div class=" item_leftalign nowrap " ><a name="opt--output-table"></a><b>--output-table</b> (<i>output logical tab separated table without key</i>)</div></div>
+<div class=" item_text " style="margin-left:2em">
+<p style="margin-top:0em; margin-bottom:0em">
+This option causes table output such as provided by <b>--vary-correlation</b>
+to be output in a logical tab-separated format rather than pretty-printed.
+</p>
+</div>
+<div style="margin-top:0em">&nbsp;</div><div class=" item_cascade"><div class=" item_leftalign nowrap " ><a name="opt-vary-threshold"></a><b>-vary-threshold</b> &lt;start/end/nbins&gt; (<i>analyze graphs at similarity cutoffs</i>)</div></div>
+<div class=" item_text " style="margin-left:2em">
+<p style="margin-top:0em; margin-bottom:0em">
+The graph is analysed at different edge weight thresholds, going from <b>&lt;start&gt;</b>
+to <b>&lt;end&gt;</b> in <b>&lt;nbins&gt;</b> steps.
+</p>
+</div>
+<div style="margin-top:0em">&nbsp;</div><div class=" item_cascade"><div class=" item_leftalign nowrap " ><a name="opt--vary-correlation"></a><b>--vary-correlation</b> (<i>analyze graphs at correlation cutoffs</i>)</div></div>
+<div class=" item_text " style="margin-left:2em">
+<p style="margin-top:0em; margin-bottom:0em">
+This instructs <b>mcxquery</b> to use a threshold list suitable for use with graphs
+in which the edge weight similarities are correlations.
+The list starts at 0.2 and ends at 1.0 using increments of 0.05.
+If a different start or increment is required it can
+be achieved by using the <b>-vary-threshold</b> option.
+For example, a start of&nbsp;0.10 and an increment of&nbsp;0.02 are obtained
+by issuing <b>-vary-threshold</b>&nbsp;<b>:.1/1.0/45</b>.
+</p>
+</div>
+<div style="margin-top:0em">&nbsp;</div><div class=" item_cascade"><div class=" item_leftalign nowrap " >defopt{--no-legend}{do not output explanatory legend}</div></div>
+<div class=" item_text " style="margin-left:2em">
+<p style="margin-top:0em; margin-bottom:0em">
+For a fully parseable output format use <a class="intern" href="#opt--output-table"><b>--output-table</b></a>.
+</p>
+</div>
+<div style="margin-top:0em">&nbsp;</div><div class=" item_cascade item_leftalign nowrap" ><a name="opt--clcf"></a><b>--clcf</b> (<i>include clustering coefficient analysis</i>)</div><div class=" item_cascade item_leftalign nowrap" ><a name="opt--eff"></a><b>--eff</b> (<i>include efficiency criterion</i>)</div>
+<div class=" item_text " style="margin-left:2em">
+<p style="margin-top:0em; margin-bottom:0em">
+These options can be used to compute additional characteristics
+in the analysis of thresholded graphs with <b>--vary-correlation</b>
+and <b>-vary-threshold</b>. For large graphs these are relatively time-consuming
+to compute. More information and a reference for
+the efficiency criterion can be found in <a class="local sibling" href="clminfo.html">clminfo</a>.
+</p>
+</div>
+<div style="margin-top:0em">&nbsp;</div><div class=" item_cascade item_leftalign nowrap" ><a name="opt-vary-knn"></a><b>-vary-knn</b> &lt;start/end/step&gt; (<i>analyze graphs for varying k-NN</i>)</div><div class=" item_cascade item_leftalign nowrap" ><a name="opt-vary-ceil"></a><b>-vary-ceil</b> &lt;start/end/step&gt; (<i>analyze graphs for varying ceil reductions</i>)</div><div class=" item_cascade item_leftalign nowrap" ><a name="opt--reduce"></a><b>--reduce</b> (<i>use reduced matrix</i>)</div>
+<div class=" item_text " style="margin-left:2em">
+<p style="margin-top:0em; margin-bottom:0em">
+These options cause analysis of a graph as it is subjected to reductions
+across a range of parameters. Refer to <a class="local sibling" href="mcxio.html">mcxio</a> for a description of
+these reductions. The analyses starts at the <i>end</i> argument, and
+progresses towards the <i>start</i> argument using decrements of size
+<i>step</i>. By default the reduction is always computed relative to the
+start matrix, i.e. the input matrix after <b>-tf</b> transformations have
+optionally been applied. Specifying <b>--reduce</b> causes this to change
+so that each new reduction is calculated relative to the reduction just
+computed.
+</p>
+<p style="margin-bottom:0" class="asd_par">
+For graphs with ties among edge weights it may be useful to use
+<b>-tf</b>&nbsp;<b>'#tug()'</b>. This will add small perturbations to the
+edge weights and have the effect of breaking ties.
+By default perturbations are computed using the cosine between
+the vectors of neighbours of the two nodes incident to an edge.
+This can be changed to a random perturbation with
+<b>-tf</b>&nbsp;<b>'#rug()'</b>.
+</p>
+</div>
+<div style="margin-top:0em">&nbsp;</div><div class=" item_cascade item_leftalign nowrap" ><a name="opt--test-cycle"></a><b>--test-cycle</b> (<i>test whether graph contains cycles</i>)</div><div class=" item_cascade item_leftalign nowrap" ><a name="opt-test-cycle"></a><b>-test-cycle</b> &lt;num&gt; (<i>test cycles, report cyclees</i>)</div>
+<div class=" item_text " style="margin-left:2em">
+<p style="margin-top:0em; margin-bottom:0em">
+Test whether the input graph contains cycles. With the second option
+nodes that are part of a cycle are output, up to a maximum of <i>&lt;num&gt;</i>
+nodes. Use <i>&lt;num&gt;</i>=<b>-1</b> to output all such nodes.
+</p>
+</div>
+<div style="margin-top:0em">&nbsp;</div><div class=" item_cascade"><div class=" item_leftalign nowrap " ><a name="opt--test-metric"></a><b>--test-metric</b> (<i>test whether graph distance is metric</i>)</div></div>
+<div class=" item_text " style="margin-left:2em">
+<p style="margin-top:0em; margin-bottom:0em">
+This tests all possible triangle relationships.
+</p>
+</div>
+<div style="margin-top:0em">&nbsp;</div><div class=" item_cascade"><div class=" item_leftalign nowrap " ><a name="opt-div"></a><b>-div</b> &lt;num&gt; (<i>cluster size separating value</i>)</div></div>
+<div class=" item_text " style="margin-left:2em">
+<p style="margin-top:0em; margin-bottom:0em">
+When analyzing graphs at different thresholds with one of the
+options above, <b>mcxquery</b> reports the percentage of nodes contained
+in clusters not exceeding a specified size, by default&nbsp;3.
+This number can be changed using the <b>-div</b> option.
+</p>
+</div>
+<div style="margin-top:0em">&nbsp;</div><div class=" item_cascade"><div class=" item_leftalign nowrap " ><a name="opt-tf"></a><b>-tf</b> &lt;tf-spec&gt; (<i>transform input matrix values</i>)</div></div>
+<div class=" item_text " style="margin-left:2em">
+<p style="margin-top:0em; margin-bottom:0em">
+Transform the input matrix values according
+to the syntax described in <a class="local sibling" href="mcxio.html">mcxio</a>.
+</p>
+</div>
+<div style="margin-top:0em">&nbsp;</div><div class=" item_cascade"><div class=" item_leftalign nowrap " ><a name="opt-t"></a><b>-t</b> &lt;num&gt; (<i>number of threads to use</i>)</div></div>
+<div class=" item_text " style="margin-left:2em">
+<p style="margin-top:0em; margin-bottom:0em">
+This has an effect only when using the <b>-vary-knn</b> option,
+and is only useful on multi-CPU machines.
+</p>
+</div>
+<div style="margin-top:0em">&nbsp;</div><div class=" item_cascade"><div class=" item_leftalign nowrap " ><a name="opt--node-attr"></a><b>--node-attr</b> (<i>output node degree and weight attributes</i>)</div></div>
+<div class=" item_text " style="margin-left:2em">
+<p style="margin-top:0em; margin-bottom:0em">
+Output is in the form of a tab separated file.
+The option <b>-icl</b> can be used in conjuction.
+</p>
+</div>
+<div style="margin-top:0em">&nbsp;</div><div class=" item_cascade"><div class=" item_leftalign nowrap " ><a name="opt-icl"></a><b>-icl</b> &lt;fname&gt; (<i>input clustering</i>)</div></div>
+<div class=" item_text " style="margin-left:2em">
+<p style="margin-top:0em; margin-bottom:0em">
+Output for each node the size of the cluster it is in.
+This option can be used in conjunction with <b>--node-attr</b>.
+</p>
+</div>
+</div>
+
+<a name="seealso"></a>
+<h2>SEE ALSO</h2>
+<p style="margin-bottom:0" class="asd_par">
+<a class="local sibling" href="mcxio.html">mcxio</a>,
+and <a class="local sibling" href="mclfamily.html">mclfamily</a> for an overview of all the documentation
+and the utilities in the mcl family.</p>
+</body>
+</html>

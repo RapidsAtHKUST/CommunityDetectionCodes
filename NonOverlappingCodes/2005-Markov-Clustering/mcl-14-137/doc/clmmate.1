@@ -1,0 +1,146 @@
+.\" Copyright (c) 2014 Stijn van Dongen
+.TH "clm mate" 1 "16 May 2014" "clm mate 14-137" "USER COMMANDS "
+.po 2m
+.de ZI
+.\" Zoem Indent/Itemize macro I.
+.br
+'in +\\$1
+.nr xa 0
+.nr xa -\\$1
+.nr xb \\$1
+.nr xb -\\w'\\$2'
+\h'|\\n(xau'\\$2\h'\\n(xbu'\\
+..
+.de ZJ
+.br
+.\" Zoem Indent/Itemize macro II.
+'in +\\$1
+'in +\\$2
+.nr xa 0
+.nr xa -\\$2
+.nr xa -\\w'\\$3'
+.nr xb \\$2
+\h'|\\n(xau'\\$3\h'\\n(xbu'\\
+..
+.if n .ll -2m
+.am SH
+.ie n .in 4m
+.el .in 8m
+..
+.SH NAME
+clm mate \- compute best matches between two clusterings
+
+clmmate is not in actual fact a program\&. This manual
+page documents the behaviour and options of the clm program when
+invoked in mode \fImate\fP\&. The options \fB-h\fP, \fB--apropos\fP,
+\fB--version\fP, \fB-set\fP, \fB--nop\fP are accessible
+in all \fBclm\fP modes\&. They are described
+in the \fBclm\fP manual page\&.
+.SH SYNOPSIS
+
+\fBclm mate\fP
+\fB[-o\fP fname (\fIoutput file name\fP)\fB]\fP
+\fB[-b\fP (\fIomit headers\fP)\fB]\fP
+\fB[--one-to-many\fP (\fIrequire multiple hits in <clfile1>\fP)\fB]\fP
+\fB[-h\fP (\fIprint synopsis, exit\fP)\fB]\fP
+\fB[--apropos\fP (\fIprint synopsis, exit\fP)\fB]\fP
+\fB[--version\fP (\fIprint version, exit\fP)\fB]\fP
+<clfile1> <clfile2>
+.SH DESCRIPTION
+
+\fBclm mate\fP computes for each cluster \fCX\fP in \fCclfile1\fP all clusters
+\fCY\fP in \fCclfile2\fP that have non-empty intersection and outputs
+a line with the data points listed below\&.
+
+.di ZV
+.in 0
+.nf \fC
+   overlap(X,Y)               # 2 * size(meet(X,Y)) / (size(X)+size(Y))
+   index(X)                   # name of cluster
+   index(Y)                   # name of cluster
+   size(meet(X,Y))
+   size(X-Y)                  # size of left difference
+   size(Y-X)                  # size of right difference
+   size(X)
+   size(Y)
+   projection(X, clfile2)     # see below
+   projection(Y, clfile1)     # see below
+.fi \fR
+.in
+.di
+.ne \n(dnu
+.nf \fC
+.ZV
+.fi \fR
+
+The projected size of a cluster \fCX\fP relative to a clustering \fCK\fP is
+simply the sum of all the nodes shared between any cluster \fCY\fP in \fCK\fP
+and \fCX\fP, duplications allowed\&. For example, the projected size of
+\fC(0,1)\fP relative to \fC{(0,2,4), (1,4,9), (1,3,5)}\fP equals \fC3\fP\&.
+
+The overlap between \fCX\fP and \fCY\fP is exactly
+1\&.0 if the two clusters are identical, and for nearly identical
+clusterings the score will be close to 1\&.0\&.
+
+All of this information can also be obtained from the
+contingency matrix defined for two clusterings\&.
+The \fC[i,j]\fP row-column entry in a contigency matrix between
+to clusterings gives the number of entries in the intersection
+between cluster\ \&\fCi\fP and cluster\ \&\fCj\fP from the respective
+clusterings\&. The other information is implicitly present;
+the total number of nodes in clusters\ \&\fCi\fP and\ \&\fCj\fP
+for example can be obtained as the sum of entries in row\ \&\fCi\fP
+and column\ \&\fCj\fP respectively, and the difference counts
+can then be obtained by substracting the intersection count\&.
+The contingency matrix can easily be computed using \fBmcx\fP;
+e\&.g\&.
+
+.di ZV
+.in 0
+.nf \fC
+
+mcx /clfile2 lm /clfile1 lm tp mul /ting wm
+.fi \fR
+.in
+.di
+.ne \n(dnu
+.nf \fC
+.ZV
+.fi \fR
+
+will create the contingency matrix in mcl matrix format
+in the file \fCting\fP, where columns range over the clusters
+in \fCclfile1\fP\&.
+
+The output can be put to good use by sorting it numerically on
+that first score field\&. It is advisable to use a stable sort routine
+(use the \fB-s\fP option for UNIX sort)
+From this information one can quickly extract the closest
+clusters between two clusterings\&.
+.SH OPTIONS
+
+.ZI 2m "\fB-o\fP fname (\fIoutput file name\fP)"
+\&
+.br
+Specify the name of the output file\&.
+.in -2m
+
+.ZI 2m "\fB-b\fP (\fIomit headers\fP)"
+\&
+.br
+Batch mode, omit column names\&.
+.in -2m
+
+.ZI 2m "\fB--one-to-many\fP (\fIrequire multiple hits in <clfile1>\fP)"
+\&
+.br
+Do not output information for clusters in the first file
+that are subset of a cluster in the second file\&.
+.in -2m
+.SH AUTHOR
+
+Stijn van Dongen\&.
+.SH SEE ALSO
+
+\fBmclfamily(7)\fP for an overview of all the documentation
+and the utilities in the mcl family\&.

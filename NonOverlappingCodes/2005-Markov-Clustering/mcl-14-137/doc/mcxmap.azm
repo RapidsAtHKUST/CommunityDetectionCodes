@@ -1,0 +1,202 @@
+\import{mcx.zmm}
+
+\begin{pud::man}{
+
+   {name}{mcxmap}
+   {html_title}{The mcxmap manual}
+   {author}{Stijn van Dongen}
+   {section}{1}
+   {synstyle}{long}
+   {defstyle}{long}
+
+   \man_share
+}
+
+\${html}{\"pud::man::maketoc"}
+
+\sec{name}{NAME}
+\NAME{mcxmap}{permute or remap the indices of graphs and matrices.}
+
+\sec{synopsis}{SYNOPSIS}
+\par{
+   \mcxmap
+   \synreqopt{-imx}{fname}{input}}
+   \synoptopt{-o}{fname}{output}
+   \synoptopt{-make-map}{output map file name}
+   \synoptopt{-make-mapc}{output map file name}
+   \synoptopt{-make-mapr}{output map file name}
+   \synoptopt{-cmul}{a}{coefficient}
+   \synoptopt{-cshift}{b}{translate}
+   \synoptopt{-rmul}{c}{coefficient}
+   \synoptopt{-rshift}{d}{translate}
+   \synoptopt{-mul}{e}{coefficient}
+   \synoptopt{-shift}{f}{translate}
+   \synoptopt{-map}{fname}{row/col map file}
+   \synoptopt{-rmap}{fname}{row map file}
+   \synoptopt{-cmap}{fname}{column map file}
+   \synoptopt{-mapi}{fname}{row/col map file (use inverse)}
+   \synoptopt{-rmapi}{fname}{row map file (use inverse)}
+   \synoptopt{-cmapi}{fname}{column map file (use inverse)}
+   \synoptopt{-tab}{fname}{read (and map) tab file}
+
+\sec{description}{DESCRIPTION}
+
+\par{
+   This utility relabels graphs or matrices. Its main use is in applying a
+   \it{map file} to a given matrix or graph.  A map file contains a so called
+   \it{map matrix} in mcl format that has some special properties (given
+   further below).  The functionality of mcxmap can also be provided by \mcx, as
+   a mapped matrix (i.e. the result of applying a map matrix to another matrix)
+   is simply the usual matrix product of a matrix and a map matrix. However,
+   \mcx will construct a new matrix and leave the original matrix to be mapped
+   alone.  When dealing with huge matrices, considerable gains in efficiency
+   memory-wise and time-wise can be achieved by doing the mapping in-place.
+   This is what mcxmap does. In the future, its functionality may be
+   embedded in \mcx with new mcx operators.}
+
+\par{
+   The special properties of a map matrix are}
+
+\begin{itemize}{
+   {mark}{\*{itembullet}}
+   {flow}{compact}
+   {align}{right}
+   {interitem}{0}
+}
+\item
+\car{
+   The column domain and row domain are
+   of the same cardinality.}
+\item
+\car{
+   Each column has exactly one entry.}
+\item
+\car{
+   Each row domain index occurs in exactly one column.}
+\end{itemize}
+
+\par{
+   These properties imply that the matrix can be used
+   as a map from the column domain onto the row domain.
+   An example map matrix is found in the \secref{examples} Section.}
+
+\sec{options}{OPTIONS}
+
+\begin{itemize}{\mcx_itemopts}
+
+\item{\defopt{-o}{fname}{output file}}
+\car{
+   Output file.}
+
+\item{\defopt{-imx}{fname}{input file}}
+\car{
+   Input file.}
+
+\items{
+   {\defopt{-map}{fname}{row/col map file)}}
+   {\defopt{-rmap}{fname}{row map file}}
+   {\defopt{-cmap}{fname}{column map file}}
+   {\defopt{-mapi}{fname}{row/col map file (use inverse)}}
+   {\defopt{-rmapi}{fname}{row map fil (use inverse)}}
+   {\defopt{-cmapi}{fname}{column map fil (use inverse)}}
+}
+\car{
+   Different ways to specify map files.}
+
+\items{
+   {\defopt{-make-map}{output map file name}}
+   {\defopt{-make-mapc}{output map file name}}
+   {\defopt{-make-mapr}{output map file name}}
+}
+\car{
+   Generate a map that maps the specified domain onto
+   the appropriate canonical domain and write the map
+   matrix to file.}
+
+\items{
+   {\defopt{-cmul}{a}{coefficient}}
+   {\defopt{-cshift}{b}{translate}}
+}
+\car{
+   These options have affect if neither a column map file nor column
+   canonification is specified.  If any of the first two options is used,
+   column indices\~\v{i} are mapped to\~\v{a*i+b}.}
+
+
+\items{
+   {\defopt{-rmul}{c}{coefficient}}
+   {\defopt{-rshift}{d}{translate}}
+}
+\car{
+   These options have affect if neither a row map file nor row
+   canonification is specified.  If any of the first two options is used,
+   indices\~\v{i} are mapped to\~\v{c*i+d}.}
+
+
+\items{
+   {\defopt{-mul}{e}{coefficient}}
+   {\defopt{-shift}{f}{translate}}
+}
+\car{
+   If a map file is specified for a given domain, neither a map file nor
+   canonification is specified.  If any of the first two options is used, the
+   indices\~\v{i} will be mapped to\~\v{e*i+f}.}
+
+
+\item{\defopt{-tab}{fname}{read (and map) tab file}}
+\car{
+   This option requires the \genopt{-map} option. \mcxmap will output the
+   mapped tab definition.
+   }
+
+
+\end{itemize}
+
+
+\sec{examples}{EXAMPLES}
+
+\par{
+   The matrix below has two canonical domains which are identical.
+   It denotes a map of the canonical domain onto itself, in which
+   node 0 is relabeled to 8, node 1 is relabeled to 5, et cetera.
+   }
+
+\verbatix{\
+(mclheader
+mcltype matrix
+dimensions 12x12
+)
+(mclmatrix
+begin
+0  8  $
+1  5  $
+2  3  $
+3  2  $
+4  4  $
+5  6  $
+6  7  $
+7  9  $
+8  1  $
+9  10 $
+10 11 $
+11 0  $
+)
+}
+
+
+\sec{author}{AUTHOR}
+\par{
+   Stijn van Dongen.
+   }
+
+\sec{seealso}{SEE ALSO}
+\par{
+   \mysib{mcxio},
+   \mysib{mcx},
+   \mysib{mcxsubs},
+   and \mysib{mclfamily} for an overview of all the documentation
+   and the utilities in the mcl family.
+   }
+
+\end{pud::man}
+

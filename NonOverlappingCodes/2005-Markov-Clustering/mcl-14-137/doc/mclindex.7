@@ -1,0 +1,175 @@
+.\" Copyright (c) 2014 Stijn van Dongen
+.TH "mclindex" 7 "16 May 2014" "mclindex 14-137" "MISCELLANEOUS "
+.po 2m
+.de ZI
+.\" Zoem Indent/Itemize macro I.
+.br
+'in +\\$1
+.nr xa 0
+.nr xa -\\$1
+.nr xb \\$1
+.nr xb -\\w'\\$2'
+\h'|\\n(xau'\\$2\h'\\n(xbu'\\
+..
+.de ZJ
+.br
+.\" Zoem Indent/Itemize macro II.
+'in +\\$1
+'in +\\$2
+.nr xa 0
+.nr xa -\\$2
+.nr xa -\\w'\\$3'
+.nr xb \\$2
+\h'|\\n(xau'\\$3\h'\\n(xbu'\\
+..
+.if n .ll -2m
+.am SH
+.ie n .in 4m
+.el .in 8m
+..
+.SH NAME
+mclindex \- a list of the utilities and modules present in the MCL distribution\&.
+
+For more information, consult \fBmclfamily(7)\fP\&.
+
+.SH Generic stuff
+
+.ZI 2m "\fBmcl(1)\fP"
+\&
+.br
+the mcl manual page
+.in -2m
+.ZI 2m "\fBmclfaq(7)\fP"
+\&
+.br
+the mcl FAQ
+.in -2m
+.ZI 2m "\fBmcxio(5)\fP"
+\&
+.br
+the mcl matrix format specification
+.in -2m
+.ZI 2m "\fBmclpipeline(1)\fP"
+\&
+.br
+generic pipeline (parsing/matrix creation/clustering/display)
+.in -2m
+.ZI 2m "\fBmcx(1)\fP"
+\&
+.br
+interface to basic matrix operations
+.in -2m
+.ZI 2m "\fBmcxassemble(1)\fP"
+\&
+.br
+prepare input matrix from cooccurrence scores
+.in -2m
+.ZI 2m "\fBmcxdump(1)\fP"
+\&
+.br
+dump matrices, optionally map indices to labels
+.in -2m
+.ZI 2m "\fBmcxarray(1)\fP"
+\&
+.br
+transform array data to MCL matrices
+.in -2m
+.ZI 2m "\fBmcxconvert(1)\fP"
+\&
+.br
+convert between ascii/binary storage types
+.in -2m
+
+.SH Dealing with clustering results
+
+.ZI 2m "\fBclmformat(1)\fP"
+\&
+.br
+display clusterings in browsable format
+.in -2m
+.ZI 2m "\fBclmdist(1)\fP"
+\&
+.br
+compute distances between clusterings
+.in -2m
+.ZI 2m "\fBclminfo(1)\fP"
+\&
+.br
+performance measures for clusterings
+.in -2m
+.ZI 2m "\fBclmmeet(1)\fP"
+\&
+.br
+compute intersection of clusterings
+.in -2m
+.ZI 2m "\fBclmmate(1)\fP"
+\&
+.br
+compute best matches between two clusterings
+.in -2m
+.ZI 2m "\fBclmimac(1)\fP"
+\&
+.br
+Interpret Matrices (c\&.q\&. MCL iterands) As Clusterings
+.in -2m
+.ZI 2m "\fBclmresidue(1)\fP"
+\&
+.br
+extend subgraph clusterings onto encompassing graph
+.in -2m
+.ZI 2m "\fBclmorder(1)\fP"
+\&
+.br
+reorder indices to represent blocks from different clusterings
+.in -2m
+.ZI 2m "\fBclmclose(1)\fP"
+\&
+.br
+fetch connected components from graphs or subgraphs
+.in -2m
+
+.SH Dealing with matrices
+
+.ZI 2m "\fBmcxio(5)\fP"
+\&
+.br
+the mcl matrix format specification
+.in -2m
+.ZI 2m "\fBmcx(1)\fP"
+\&
+.br
+interface to basic matrix operations
+.in -2m
+.ZI 2m "\fBmcxsubs(1)\fP"
+\&
+.br
+extract submatrices by specifiying sets of nodes and clusters
+.in -2m
+.ZI 2m "\fBmcxmap(1)\fP"
+\&
+.br
+remap matrix indices / relabel graph nodes
+.in -2m
+.ZI 2m "\fBmcxassemble(1)\fP"
+\&
+.br
+prepare input matrix from cooccurrence scores
+.in -2m
+
+.SH Application specific parsers and wrappers
+\ \&
+
+\fBBLAST package\fP - Documentation only available if installed with \fB--enable-blast\fP
+.br
+\fC__________________\fP
+.br
+.ZI 2m "\fBmclblastline(1)\fP"
+\&
+.br
+pipeline for clustering from blast files
+.in -2m
+.ZI 2m "\fBmcxdeblast(1)\fP"
+\&
+.br
+prepare input from blast files
+.in -2m

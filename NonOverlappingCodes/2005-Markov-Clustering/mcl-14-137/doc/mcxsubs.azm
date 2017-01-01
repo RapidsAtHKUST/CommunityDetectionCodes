@@ -1,0 +1,663 @@
+\import{mcx.zmm}
+
+\begin{pud::man}{
+
+   {name}{mcxsubs}
+   {html_title}{The mcxsubs manual}
+   {author}{Stijn van Dongen}
+   {section}{1}
+   {synstyle}{long}
+   {defstyle}{long}
+
+   \man_share
+}
+
+\${html}{\"pud::man::maketoc"}
+
+\sec{name}{NAME}
+\NAME{mcxsubs}{extract submatrices (subgraphs) of a matrix (graph).}
+
+
+\par{
+   \mcxsubs can be used to
+   inspect local cluster structure in a graph, for example by looking at the
+   subgraph induced by a single cluster or a couple of clusterings, or the
+   edge set where all tail nodes are from a set of domains and all head
+   nodes are from the complement of this set, and many other variants and
+   refinements.
+}
+
+\par{
+   Additionally, mcxsubs enables
+}
+\begin{itemize}{{interitem}{0}{flow}{compact}}
+\item
+\car{
+   selecting matrix entries based on value.
+}
+
+\item
+\car{
+   making the result characteristic (set all nonzero values to 1.0).
+}
+
+\item
+\car{
+   pruning empty columns and empty rows.
+}
+
+\item
+\car{
+   transposing the result.
+}
+
+\item
+\car{
+   remapping the indices of the result to consecutive indices.
+}
+
+\item
+\car{
+   and other miscellaneous operations.
+}
+
+\end{itemize}
+
+
+\sec{synopsis}{SYNOPSIS}
+\par{
+   \mcxsubs \bf{-imx} <fname> [options] <specs>+
+}
+
+\par{
+   \mcxsubs
+   \synreqopt{-imx}{<fname>}{input matrix}
+   \synoptopt{-dom}{<fname>}{domain matrix}
+   \shared_synoptopt{-tf}
+   \synoptopt{--block}{use block matrix}
+   \synoptopt{--blockc}{use complement of block matrix}
+   \synoptopt{--skin-read}{read domain structure without entries}
+   \synoptopt{--extend}{read extended submatrices}
+   \synoptopt{-tab}{read tab file}
+   \synoptopt{--from-disk}{space/speed optimizer}
+   \synoptopt{-out}{<fname>}{special purpose output file name}
+   \synoptopt{-efac}{<num>}{random edge selection}
+   \synoptopt{-dfac}{<num>}{random domain selection}
+   \synoptopt{-rfac}{<num>}{random column selection}
+   \synoptopt{-cfac}{<num>}{random row selection}
+   \synoptopt{--rand-discard}{remove random selections}
+   \synoptopt{--rand-merge}{merge random selections}
+   \synoptopt{--rand-intersect}{intersect random selections}
+   \synoptopt{--rand-exclusive}{only random selections}
+   \synoptopt{-tag-digits}{k}{set precision}
+   \synoptopt{--tag}{tag nodes}
+   <specs>+
+}
+
+\par{
+   If you are a frequent \mcxsubs user with very large graphs, consider
+   converting the input matrix into binary format using
+   \mcxconvert and then using the mcxsubs
+   \genopt{--from-disk} option. This should give you a 400-fold speed gain.
+}
+
+\sec{description}{DESCRIPTION}
+
+\par{
+   \mcxsubs lets you extract submatrices/subgraphs corresponding with index
+   sets and (possibly) sets of domains from a given domain matrix (e.g.
+   a matrix representing a clustering).  Columns and
+   rows of the target submatrix can be specified both independently and
+   simultaneously, and can be specified as unions of simple index and domain
+   ranges and complements of these.
+}
+
+\par{
+   Because a submatrix or subgraph specification is composed of type,
+   location, column, row, index, and set specifications,
+   the word specification is
+   abbreviated as spec.  Multiple submatrices can be specified
+   simultaneously. A submatrix is created for each submatrix spec. Everything
+   encountered after the \mcxsubs options are exhausted should be a spec.
+   The syntax of specs is described in the \secref{spec} section.
+   By default, the domains of the submatrix will be set to the domains
+   as described in the specification. This can be changed using the
+   \it{uni} directives from the \bf{fin} part.
+}
+
+\sec{options}{OPTIONS}
+
+\begin{itemize}{\mcx_itemopts}
+
+\item{\defopt{-imx}{<fname>}{input matrix}}
+\car{
+   Submatrices will all be selected from the matrix in file \v{<fname>}.
+   This option is obligatory, and throughout this manual its argument
+   is called the \it{source matrix}.
+}
+
+\item{\defopt{-dom}{<fname>}{domain matrix}}
+\car{
+   Submatrices are specified in terms of sets (or domains) of
+   indices. These sets are specified by (the label of) the vectors
+   from the matrix given by this options.
+}
+
+\item{\defopt{--block}{use block matrix}}
+\car{
+   This replaces the input matrix by the block diagonal matrix
+   induced by the domain matrix specified by the \genopt{-dom} option.
+   It works by including a block for each domain in the domain matrix,
+   and will work if there are overlapping domains. That is, it
+   will not include overlapping parts more than once.
+   The output file name can either be specified in the submatrix
+   specification language using the \bf{out}(\it{fname}) directive,
+   or with the \genopt{-out} option.
+}
+
+\item{\defopt{--blockc}{use complement of block matrix}}
+\car{
+   This replaces the input matrix by the complement of the block diagonal
+   matrix described above, and selection of the output name
+   is exactly the same.
+}
+
+\item{\defopt{--skin-read}{read domain structure without entries}}
+\car{
+   This reads a skeleton matrix by only considering its domain structure
+   and not reading any entries, pertaining to the matrix
+   specified by the \genopt{-imx} option.
+}
+
+\shared_defopt{-tf}
+
+\item{\defopt{-tab}{read tab file}}
+\car{
+   Read a tab file. Its domain can be used by the \v{t} and \v{T}
+   indicators.
+}
+
+
+\item{\defopt{--extend}{read extended submatrices}}
+\car{
+   This causes the selection of submatrices where either a row index
+   is in the selected row domain or a columns index is in the selected
+   column domain or both. Equivalently it only excludes matrix entries
+   for which neither the column nor row index is in the selected domains.
+   The resulting matrix has both domains equal to the source matrix.
+}
+
+\item{\defopt{-out}{<fname>}{special purpose output file name}}
+\car{
+   This specifies an output name that can be used for special purposes.
+   Normally, output file names are specified in the submatrix specification
+   using the \bf{out}(\it{fname}) directive.
+}
+
+\item{\defopt{-efac}{<num>}{random edge selection}}
+\car{
+\genarg{num} should be inbetween zero and one. It denotes the probability
+with which each edge is selected.
+}
+
+\item{\defopt{-dfac}{<num>}{random domain selection}}
+\car{
+   \genarg{num} should be inbetween zero and one. It denotes the probability
+   with which entries in the domains will make it into the randomized
+   selection used for subsequent processing. By default the randomized
+   selection is intersected with whatever the other selection criteria (if any)
+   yield, i.e. the behaviour under the \genopt{--rand-intersect} option.
+}
+\par{
+   If the column and row domain are identical, they are submitted to
+   the same selection process and will end up identical. If you don't want
+   this, use \genopt{-rfac} and \genopt{-cfac} separately.
+}
+\par{
+   If you just want a randomized selection, doing}
+
+\verbatim{mcxsubs -imx foo -dfac 0.5 'out(foo.rnd)'}
+\car{
+   will not yield the expected result. Randomized selections only work
+   if a domain has explicitly been specified. The minimal way to achieve
+   this is the following:}
+
+\verbatim{mcxsubs -imx foo -dfac 0.5 'dom(cr), out(foo.rnd)'}
+
+\item{\defopt{-rfac}{<num>}{random column selection}}
+   \car{
+   As \genopt{-dfac}, limited to the column domain.
+   }
+
+\item{\defopt{-cfac}{<num>}{random row selection}}
+\car{
+   As \genopt{-dfac}, limited to the row domain.
+   }
+
+
+\item{\defopt{--rand-merge}{merge random selections}}
+\car{
+   The random selection(s) of domains identify parts of the
+   matrix that will be merged with the result of the main
+   selection process (default).
+   }
+
+\item{\defopt{--rand-discard}{remove random selections}}
+\car{
+   The random selection(s) of domains identify parts of the
+   matrix that will be removed from the result of the main
+   selection process.
+   }
+
+\item{\defopt{--rand-intersect}{intersect random selections}}
+\car{
+   The random selection(s) of domains identify parts of the
+   matrix that will be intersected with the result of the main
+   selection process. This is the default.
+   }
+
+\item{\defopt{--rand-exclusive}{only random selections}}
+\car{
+   The random selection(s) of domains identify parts of the
+   matrix from which the result of the main
+   selection process will be removed.
+   }
+
+\item{\defopt{-tag-digits}{k}{set precision}}
+\car{
+   Sets the precision for tagged output.
+   Setting it to \useopt{-tag-digits}{-1}
+   disables the output of values altogether \- only the node indices
+   and the cluster indices are written.
+   }
+
+\item{\defopt{--tag}{tag nodes}}
+\car{
+   Each node in the column (tail node) listing of the matrix (graph)
+   spec is tagged with the domain it is in. This requires
+   the use of the \genopt{-dom} option.
+   This output mode, called \it{tagged matrix}, is currently not
+   recognized by any of the \mcl/\mcx input routines. It is present
+   to facilitate easier visual inspection of clustering results.
+   }
+
+\item{\defopt{--from-disk}{space/speed optimizer}}
+\car{
+   Use this if the input graph is in binary format, or if the
+   input graph is very large and the subgraph(s) to extract
+   are small in comparison, or if the available memory
+   does not comfortably exceed the size of the graph.
+   }
+
+\par{
+   The effect of this option is that the subgraph will be read
+   directly from disk, without reading in the entire graph
+   in advance. This will be done repeatedly for all subgraphs that are
+   specified.
+   }
+
+\par{
+   This option reduces memory consumption to the size of the subgraph(s)
+   to be extracted.
+   }
+
+\par{
+   For graphs in interchange format, the speed gain is not
+   dramatic. If more than one subgraph is specified, there will most
+   likely be a loss in speed.
+   }
+
+\par{
+   With input graphs in binary format, \mcxsubs will
+   be *very* much faster, to the extent of 400-fold speed gains.
+   It does not matter whether more than one subgraph is specified.
+   }
+
+
+
+\end{itemize}
+
+
+\sec{spec}{SUBMATRIX SPECIFICATIONS}
+
+\par{
+   A submatrix or subgraph spec may contain a number of spec parts.  Each part
+   is specified in a function-style notation.  Different parts are separated by
+   commas. Parts may occur multiple times, but for most parts only the last one
+   specified will be effective. The spec parts are the following: \bf{dom},
+   \bf{ext}, \bf{val}, \bf{size}, \bf{fin}, and \bf{out}. These are described
+   below in the sections DOMAINS, EXTENSION, VALUES, SIZE, FINALIZE and OUTPUT.
+}
+
+\cpar{DOMAINS}{
+   The domain part is specified as
+}
+
+\par{
+   \bf{dom}(\it{X} <, \it{Y}(\it{ispec}) >+)
+}
+
+\par{
+   Here \it{X} is the row/column indicator. Rows are indicated with
+   either \v{r} or \v{R}, columns are indicated with either
+   \v{c} or \v{C}. \it{X} may contain one or two indicators, with
+   a single indicator per column domain and row domain allowed.
+   Uppercase indicators indicate that the complement is being specified
+   relative to the corresponding domain in the target matrix.
+}
+
+\par{
+   \it{Y} is the type indicator, it is exactly one of
+   \v{i}, \v{I}, \v{d}, \v{D}, \v{c}, \v{r}, \v{t}, or \v{T}.
+   The \v{i/I} indicators specify
+   that \it{ispec} contains a simple index specifation.
+   The \v{d/D} specify that \it{ispec} contains domain indices.
+   \it{ispec} must contain a comma-separated list of integers or
+   integer ranges (e.g. 2, 5, 4-8).
+   \v{c} and \v{r} are restricted indicators that refer
+   to the domains in the \it{domain matrix}.
+   \v{t} and \v{T} are restricted indicators that refer
+   to the domain encoded in the tab file as specified by the
+   \genopt{-tab} option. Their usage is described further below.
+}
+
+\par{
+   For domain specifications (\v{d/D}) the columns indexed by
+   these integers in the matrix specified in the \genopt{-dom}
+   option will be fetched and merged. If \genopt{-dom} was not used
+   the target matrix itself (as specified by the \genopt{-imx} option) will be
+   used.  For simple specifications
+   (\v{i/I}) the result is simply the list of integers itself.  Uppercase
+   indicators indicate that the complement is being specified.
+}
+
+\par{Examples:}
+
+\begin{itemize}{\mcx_itemopts}
+\item{\v{dom(cr, i(0-6,10,11-14))}}
+\car{
+   Principal submatrix on indices 0-6, 10, and 11-14 \- all column and row
+   indices are from this set. Equivalently, this encodes the subgraph on
+   nodes 0-6, 10, 11-14. The 'c' stands for column, the 'r' for row, and the
+   'i' for index. It is also possible to specify a 'd' part
+   (standing for domain), this is shown further below.
+}
+
+\item{\v{dom(c, i(0-6,10,11-14)), dom(r, i(1-6,10,11-14))}}
+\car{
+   Equivalent (but less clear) spec of the above.
+}
+
+\item{\v{dom(cR, i(0-6,10,11-14))}}
+\car{
+   Matrix with column indices in 0-6, 10, 11-14, and row indices
+   in the complement of this set. Corresponds with all edges going
+   \it{out} from the set 0-6, 10, 11-14. Complements are triggered
+   by the use of a capital; see the next examples.
+}
+
+\items{
+   {\v{dom(c, i(0-6,10,11-14)), dom(R, i(1-6,10,11-14))}}
+   {\v{dom(c, i(0-6,10,11-14)), dom(r, I(1-6,10,11-14))}}
+}
+\car{
+   Both these examples are equivalent to the previous one.
+   In the last example, the capital 'I' indicates that the complement
+   should be taken. In this example, 'r' combined with 'I' has the
+   same effect as 'R' combined with 'i'.
+}
+
+\item{\v{dom(c, d(3,5-9)), dom(r, d(8-14), i(10-30))}}
+\car{
+   Column indices are taken from the domains 3, 5-9 (from the
+   domain matrix specified by \genopt{-dom}), row indices are taken
+   from domains 8-14 plus the indices 10-30.
+}
+
+\item{\v{dom(cR, d(0-2))}}
+\car{
+   Column indices are all indices from domains 0-2, row indices
+   are all other indices. This gives all edges going \it{out}
+   from domains 0-2.
+}
+
+\par{
+   The use of 'D' is analogous to that of 'C', 'R', and 'I'.
+   Thus, \v{D(0-3,8,21-30)} specifies all indices which are in the
+   complement of the set formed by taking the union of
+   domains 0-3,8,21-30.
+}
+
+\""{
+   There are two special domains \- use \v{-1} to obtain the row domain
+   of the domain matrix, use \v{-2} to obtain its column domain.
+}
+
+\end{itemize}
+
+\par{
+   The \v{c} and \v{r} indicators must be followed by a
+   pair of matching parentheses. They specify to take respectively
+   the column domain and the row domain of the domain matrix (cf. \genoptref{-dom}).
+}
+
+
+\par{
+   The \v{t} and \v{T} indicators must be followed by a
+   pair of matching parentheses. They specify to take the domain
+   found in the tab file or its complement.
+}
+
+\par{
+   As seen above, indices (either representing themselves or domains) are
+   entered as comma-separated lists of single indices, ranges of indices
+   (which may overlap), or staircases of indices (lists of indices with
+   a fixed increment inbetween successive indices).
+   The union of the corresponding elements is taken and
+   passed along. Before anything else, the result set is replaced by its
+   complement if 'I' is specified (for simple indices) or 'D' is specified
+   (for domains).  If there is both an index and a set spec string, the
+   union of the results of both is taken and passed along.  If the latter
+   result is passed to either 'C' or 'R', it is replaced by its complement.
+}
+
+\par{
+   A range is specified e.g. as \v{10-14} and it is inclusive, denoting
+   in this case the indices \v{{10,11,12,13,14}}.
+}
+
+\""{
+\par{
+   If a column or row spec is missing, it is implicitly understood
+   that \it{all} nodes should be taken for the missing type.  A totally empty
+   type spec (which is the case if the first character in the
+   spec is the colon) indicates that the subgraph on all nodes must be
+   taken, which is identical to the original graph. As an aside, this empty
+   type spec renders any location spec useless, as it is
+   ignored.  This behaviour may still be useful in conjunction with the
+   \genopt{--tag} option.
+}
+}
+
+
+\cpar{EXTENSION}{
+   The extension part is specified as
+}
+
+\par{
+   \bf{ext}( < \bf{disc}(\it{k}) | \bf{cdisc}(\it{k}) | \bf{rdisc}(\it{k}) >)
+}
+
+\par{
+   This option requires the input matrix to be held in memory. This implies it
+   will not work with the \genopt{--from-disk} option.}
+
+\par{
+   This \it{assumes that the input matrix encodes a graph}, so the column
+   and row domains must be equal.
+   It will take the currently selected domain (column domain for
+   \bf{disc} and \bf{cdisc}, row domain for \bf{rdisc}), and add
+   all nodes to it that are reachable in \it{k} steps.
+   The \bf{disc} variant replaces both column and row domains by
+   the extended domain, the other variants just change a single domain.
+}
+
+\par{
+   Setting \it{k} to \v{-1} results in adding \it{all} nodes that
+   can be reached from the start domain.
+}
+
+
+\cpar{VALUES}{
+   The value part is specified as
+}
+
+\par{
+   \bf{val}(<tf-spec>)}
+
+\par{
+   It transforms or removes values according to \it{<tf-spec>}.
+\: fixme, anchor #transform
+   Refer to \mysib{mcxio} for a description of the transformation
+   specification syntax and the available transformation primitives.}
+
+\cpar{SIZE}{
+   The size part is specified as
+}
+
+\par{
+   \bf{size}( <                    \:/
+      \bf{lt}(\it{x}) |                \:/
+      \bf{ceil}(\it{x}) |             \:/
+      \bf{gq}(\it{x}) |               \:/
+      \bf{rmgq}(\it{x})                \:/
+   > + )
+}
+
+\par{
+   Where \it{x} is a nonnegative integer, and multiple specifications
+   are separated by commas.
+   The strings 'lt', 'lq', 'gq', 'gt', respectively denote
+   \it{less than},
+   \it{less than or equal to},
+   \it{greater than or equal to},
+   and
+   \it{greater than}.
+}
+
+\par{
+   This prunes or removes column vectors based on their size.  If \bf{lt}
+   is used, column vectors are removed if the number of entries exceeds
+   the specified bound.  If \bf{gq} is used, vectors are discarded
+   if the number of entries is smaller than the specified bound.  If a column
+   vector has an excess of entries over the bound specified by \bf{ceil}, the
+   smallest entries are removed. Ties are not arbitrarily broken, implying that
+   the resulting vector may still have more entries than the specified bound.}
+
+\cpar{FINALIZE}{
+   The finalize part is specified as
+
+\bf{fin}( < \it{key} > )
+
+   where \it{key} is a string and multiple keys are separated by commas.  The
+   corresponding actions are generally applied to the matrix that was extracted
+   according to the domain and value specifications. Exceptions are indicated
+   below.  Currently, there is a fixed order in which actions are considered,
+   corresponding with the order in which they are listed below.
+}
+
+\begin{itemize}{\mcx_itemopts}
+\item{skel}
+   This creates an empty submatrix on the specified domains, and does
+   \it{not} fill it with the corresponding entries from the
+   \optref{-imx}{source matrix}.
+   Options from the \bf{fin} part that affect the column and
+   row domains of a matrix will still be in effect.
+
+\items{{uni}{unir}{unic}}
+   After the submatrix is selected from the source matrix, its domains
+   are changed to mirror one or both of the domains of the source matrix.
+
+\item{tp}
+   The resulting submatrix is replaced by its transpose.
+
+\item{cc}
+   The resulting submatrix is made characteristic.
+
+\items{{scrubc}{scrubr}{scrubg}{scrub}}
+   Domains are shrunk if there are no corresponding entries in the matrix.
+   This is done for both domains if \v{scrub} is specified, for the
+   column domain if \v{scrubc} is specified, and for the row domain
+   if \v{scrubr} is specified. Thus, with \v{scrubc} columns are removed
+   from the domain and the matrix if they are empty.
+   With \v{scrubg} the union of the resulting domains is taken.
+
+\items{{mapc}{mapr}{map}}
+   The appropriate domains are mapped onto consecutive indices starting at zero.
+
+\end{itemize}
+
+
+
+\""{
+\items{{dmerge}{dmeet}{dcar}{drac}{dcxr}{drxc}{dcir}{dric}}
+   Selects a matrix by transforming the domains relative to each other.
+   The directives and their consequences are listed below.
+
+   \begin{itemize}{{w1}{7}{compact}{1}{contiguous}{1}}
+   \item{dmerge} the domains are merged.
+   \item{dmeet} the domains are intersected.
+   \item{dcar} column domain assimilates row domain.
+   \item{drac} row domain assimilates column domain.
+   \item{dcxr} column domain has row domain excluded.
+   \item{drxc} row domain has column domain excluded.
+   \item{dcir} column domain is intersected with row domain.
+   \item{dric} row domain is intersected with column domain.
+   \end{itemize}
+}
+
+\cpar{OUTPUT}{
+   The output part is specified as
+
+   \bf{out}( \it{fname} <, \it{key} >* )
+
+   that is, the \it{fname} option is obligatory if the \bf{out} part is specified.
+   Currently, key can be a single directive, namely \bf{wb} specifying that
+   the resulting matrix should be output in binary format.
+   }
+
+
+\sec{author}{AUTHOR}
+\par{
+   Stijn van Dongen.
+   }
+
+\sec{seealso}{SEE ALSO}
+
+\par{
+   \mysib{mcx},
+   and \mysib{mclfamily} for an overview of all the documentation
+   and the utilities in the mcl family.
+   }
+
+\end{pud::man}
+
+
+
+\done
+
+   \synoptopt {--spec-doms}{use specified domains}
+   \synoptopt {--spec-cols}{use specified column domain}
+   \synoptopt {--spec-rows}{use specified row domain}
+
+\item{\defopt {--spec-doms}{use specified domains}}
+By default, the initial submatrix has its domains restricted to be subdomains
+of the input matrix.  This option overrides that behaviour, so that the
+submatrix domains will, at the initial selection stage, be identical to the
+domains resulting from the specificiation process.
+
+\item{\defopt {--spec-cols}{use specified column domain}}
+See the \genopt{--spec-doms} option above.
+
+\item{\defopt {--spec-rows}{use specified row domain}}
+See the \genopt{--spec-doms} option above.

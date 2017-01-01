@@ -1,0 +1,372 @@
+\import{mcx.zmm}
+
+\begin{pud::man}{
+
+   {name}{mcxi}
+   {html_title}{The mcxi manual}
+   {author}{Stijn van Dongen}
+   {section}{1}
+   {synstyle}{long}
+   {defstyle}{long}
+
+   \man_share
+}
+
+\def{pr#1}{\bf{\1}}
+
+\${html}{\"pud::man::maketoc"}
+
+\sec{name}{NAME}
+\NAME{mcx}{a stack language interpreter for interaction with the \mcl libraries.}
+
+\sec{synopsis}{SYNOPSIS}
+\par{
+   \mcxi (enter interactive mode)
+   }
+
+\par{
+   \mcxi <mcxi expression>
+   }
+
+\sec{description}{DESCRIPTION}
+
+\: \pr{mul} can be applied either to two numbers, to matrices, or a
+\: matrix and a number, \pr{add} can be applied to two numbers, two matrices,
+\: or two strings.  \pr{mul}, \pr{add}, and some other operators yield a real
+\: when applied to a real and an integer.
+
+\par{
+   \mcxi can be used both from the command line and interactively, and supports
+   a rich set of operations such as transposition, scaling, column scaling,
+   multiplication, Hadamard powers and products, et cetera. It has variables,
+   control primitives, and stack manipulation primitives.
+
+   The general aim is to support basic number and matrix arithmetic, as well as
+   graph, set, and clustering operations.  The language will be kept simple,
+   and should serve only as a means of making the \mcl framework a pleasant one
+   for working with graphs, matrices, clusterings, and sets.
+
+   The language is typed, and currently has the types \it{integer, real,
+   matrix, string, and block}.
+
+   Blocks are used both in control statements such as \pr{ifelse} and
+   \pr{while}, and for defining compound statements resembling procedures or
+   functions.
+
+   Some of \mcxi's primitives are overloaded.  The following is a very simple
+   example of implementing and using \mcl in this language.
+   }
+
+\verbatim{
+ 2.0 .i def                   # define inflation value.
+ /small lm                    # load matrix in file 'small'.
+ dim id add                   # add identity matrix.
+ st .x def                    # make stochastic, bind to x.
+ { xpn .i infl vm } .mcl def  # define one mcl iteration.
+ 20 .x .mcl repeat            # iterate 20 times
+ imac                         # interpret matrix as clustering.
+ vm                           # view matrix (clustering).
+}
+
+\car{
+   Somewhat misleadingly, '#' is not recognized as a comment
+   symbol by \mcxi, so don't use it (yet).
+   }
+
+\par{
+   \mcxi has quite a lot of primitives, and they are not all explained in here.
+   However, \mcxi has several help facilities.  \mcxi's munge modes (command
+   line, interactive, and file) are discussed first, followed by some syntactic
+   and semantic rules.
+
+   Several groups of related primitives are then discussed.  These are the help
+   primitives \pr{help}, \pr{grep}, \pr{ops}, and others,
+
+   the binding primitives \pr{def}, \pr{free}, and \pr{unlink},
+
+   the control primitives \pr{ifelse}, \pr{do}, \pr{repeat}, and \pr{while},
+
+   and the stack manipulation primitives \pr{pop}, \pr{exch}, \pr{dup},
+   \pr{mdup}, \pr{copy}, \pr{roll}, \pr{clear}.
+
+   And for the record, \mcxi has \pr{lt}, \pr{lq}, \pr{eq}, \pr{gq}, and
+   \pr{gt}.
+
+   In the grandiloquently named \secref{index} section, you find a list
+   of all current \mcxi primitives.
+   }
+
+\par{
+   First, there is no difference as far as \mcxi is concerned whether
+   you give it a bunch of operators and operands directly from the command
+   line, or whether you do it in interactive mode.  Interactive mode is
+   line-based; each time you type a carriage return, \mcxi starts interpreting
+   the line you typed. Newlines can be escaped by preceding them with a
+   backslash;
+   \mcxi will delay interpretation and keep building up your expression.
+   Command line mode is the same as entering interactive mode and entering a
+   single line. For non-batch processing, interactive mode is the safest,
+   because \mcxi will simply refuse to carry out impossible operations,
+   whereas in command line mode it will exit.
+   }
+
+\par{
+   In interactive mode, \mcxi will by default list the stack after each line you
+   type. This is verbosity level 1. There are four verbosity levels, namely 0,
+   1, 2, and 3 (in increasingly verbose order). Set the level with the \pr{vb}
+   primitive.  Verbosity control is still a bit crude, this is one of the areas
+   in which \mcxi will be improved.
+   }
+
+\par{
+   There is another \mcxi munge mode which is entered when reading files
+   with the \pr{lf} (load file) primitive. This mode is not line-based,
+   the whole file is interpreted in one go \- there is little
+   difference with line-based mode. Beware though, it is currently
+   not possible (nor necessary) to escape newlines in files.
+   }
+
+\par{
+   Currently, \mcxi parses lines of text into atoms in an extremely
+   straightforward way: Whitespace is the only separator, and it is always a
+   separator. This has as a consequence that the block delimiters \pr{\{} and
+   \pr{\}} are not allowed to appear next to a non-white character. Another
+   consequence is that strings cannot contain white spaces. Both these
+   conditions may be relaxed in the future though.
+   }
+
+\par{
+   Strings are always entered
+   with a leading slash, and anything with a leading slash is a string, so
+   \v{/this} is a string.  Currently, the double quote has no special
+   meaning, but it may acquire meaning in the future, especially as in
+   \v{/"maybe the mcxi future will be brighter"}.
+   }
+
+\par{
+   Variables names are always entered with a leading dot, and anything with a
+   leading dot is a variable name. Variables are implicitly typed by the
+   object to which they are bound.  There is no support for arrays (yet).
+   If variables are used, as in \v{.x .y add}, only the names of
+   the variables are popped, and the binding between the names and their
+   values stays intact.
+   }
+
+\par{
+   There are some operators that do in-place modification of the object that
+   they act on, such as \v{infl} (inflation). Currently, these are all
+   operators acting on matrices.  When presented with a variable,
+   they do change the object associated with the variable.
+   In the built-in documentation strings (accessible with \pr{help}
+   and \pr{grep}), such in-place modification is denoted with
+   a prime as in \v{<m> -> <m'>}.
+   }
+
+\par{
+   \pr{dup} can be used to duplicate objects. In case of variables,
+   this will be a copy of the variable name. If one occurrence is
+   used to free the associated object by some operator, all other
+   instances of the variable become \it{stale}.
+   \mcxi will notice this and you will see such elements marked as stale
+   handles in the stack listing. \pr{copy} can be used to copy the
+   object associated with a variable.
+   }
+
+\par{
+   \mcxi is/interprets a stack language. In order to add 1 and 2 you need to
+   write \v{1 2 add}.  When add is evaluated, it removes the previous two
+   items from the stack and replaces it with their sum, in this case the
+   integer 3.
+
+   \mcxi's types are denoted as \v{<int>}, \v{<real>}, \v{<mx>},
+   \v{<str>}, \v{<block>}, and so are objects that can be of that type.  An
+   object that is of underspecified type (such as taken by overloaded
+   operators) is denoted \v{<obj>}.
+   Where a variable name must occur, \v{<var>} is written.
+   In \mcxi parlance a 'variable' is the same as 'handle'.
+   Remember that a variable named \v{x} is written \v{.x}, and
+   that a string "foo" is entered as \v{/foo} in \mcxi.
+   }
+
+\sec{operators}{OPERATORS}
+
+\begin{itemize}{
+   {flow}{cascade}
+   {interitem}{1}
+}
+
+\item{\pr{help}}
+\car{
+   \pr{help} with no arguments prints a descriptory line for each primitive.
+   Can only be used at bottom of stack.
+   Alias: \pr{h}.
+   }
+
+\item{\v{/str} \pr{help}}
+\car{
+   \pr{help} with argument \v{/str} prints a descriptive line for the
+   primitive named \v{str}.  The string must be identical to the primitive's
+   name, or help will not show anything.  Alias: \pr{h}.
+   }
+
+\item{\v{/str} \pr{grep}}
+\car{
+   Prints each descriptive line in which the string str occurs (literally).
+   So \v{/matrix grep} should produce a lot of matrix related
+   primitives (although it may miss generic primitives such as \pr{add}
+   and \pr{mul}). At bottom of stack, prints all descriptive lines.
+   Alias: \pr{g}.
+   }
+
+\item{\pr{ops}}
+\car{
+   Lists all primitives and aliases concisely in a paragraph.
+   }
+
+\item{\pr{list}}
+\car{
+    Lists the contents of the operand stack.
+    }
+
+\item{\pr{info}}
+\car{
+   Lists the top element of the operand stack.
+   }
+
+\item{\v{<int>} \pr{tell}}
+\car{
+   Lists the top \v{<int>} elements of the operand stack.
+   The trio of \pr{list}, \pr{info}, and \pr{tell}
+   is perhaps overdoing it slightly, but anyway there it is.
+   }
+
+\item{\pr{vars}}
+\car{
+   Lists all variables currently bound.
+   }
+
+\item{\v{<obj>} \v{<var>} \pr{def}}
+\car{
+   Bind \v{<obj>} to \v{<var>}. Redefinition is allowed.
+   }
+
+\item{\v{<var>} \pr{free}}
+\car{
+   Break the binding between \v{<var>} and the object it currently binds,
+   and remove object.
+   }
+
+\item{\pr{unlink}}
+\car{
+   Break the binding between \v{<var>} and the object it currently binds,
+   and push object on the stack.
+   }
+
+\item{\v{<int> <block1> <block2>} \pr{ifelse}}
+\car{
+   If \v{<int>} is nonzero execute \v{<block1>},
+   otherwise execute \v{<block2>}.
+   The equate operators \pr{lt}, \pr{lq}, \pr{eq}, \pr{gq}, and \pr{gt}
+   can be used to leave an \v{<int>} on the stack.
+   }
+
+\item{\v{<block>} \pr{do}}
+\car{
+   Execute \v{<block>} (one time).
+   }
+
+\item{\v{<int> <block>} \pr{repeat}}
+\car{
+   Execute \v{<block>} \v{<int>} times.
+   }
+
+\item{\v{<block1> <block2>} \pr{while}}
+\car{
+   This primitive repeatedly executes the \it{condition} \v{<block1>},
+   \it{which must push an integer each time it is executed}.  Each time, the
+   pushed integer is popped.  If it was non-zero, \v{<block2>} is executed,
+   \v{<block1>} is executed, and the cycle continues.  If it was zero,
+   \pr{while} is done.
+   }
+
+\item{\pr{pop}}
+\car{
+   Pops one element off of the stack.
+   }
+
+\item{\pr{exch}}
+\car{
+   Exchanges the top two elements of the stack.
+   }
+
+\item{\pr{dup}}
+\car{
+   Duplicates the top element and pushes the duplicate onto the stack.  In case
+   of a variable, the name is duplicated and not the object it points to. In
+   case of anonymous matrices and strings (and whatever other (composite)
+   objects may emerge), a \it{deep copy} is made that is completely independent
+   of the original object.
+   }
+
+\item{\v{<int>} \pr{mdup}}
+\car{
+   Duplicates the top \v{<int>} elements. See the \pr{dup} entry
+   above for the semantics of duplication. I wrote \pr{mdup} because
+   I thought some other operator needed it, which turned out to be false.
+   In the meantime, I became very much attached to \pr{mdup},
+   so mail me if you think you have any useful use for it.
+   }
+
+\item{\pr{copy}}
+\car{
+   Copies the top element and pushes the copy onto the stack.
+   In case of a variable, copies the object associated with the variable
+   rather than the variable's name (as \pr{dup} would do).
+   }
+
+\item{\v{<int1> <int2>} \pr{roll}}
+\car{
+   Shift \v{<int1>} objects cyclically \v{<int2>} times to the right
+   if \v{<int2>} is positive, to the left otherwise.
+   }
+
+\item{\pr{clear}}
+\car{
+   Empty the stack. All objects bound to variables are unaffected.
+   }
+
+\end{itemize}
+
+\sec{index}{INDEX}
+\par{
+   This is a list of all \mcxi's primitives, including aliases.
+   Do 'mcxi /<op> help' to see a short descriptive string, where <op>
+   is one of the primitives below (remember, strings need a leading slash).
+   }
+
+\par{
+   \pr{add} \pr{addto} \pr{cdim} \pr{ch} \pr{clear} \pr{copy} \pr{def} \pr{dgt}
+   \pr{dim} \pr{div} \pr{do} \pr{dup} \pr{eq} \pr{exch} \pr{free} \pr{gq}
+   \pr{grep} \pr{gt} \pr{hdm} \pr{hdp} \pr{help} \pr{id} \pr{ifelse} \pr{imac}
+   \pr{infl} \pr{info} \pr{jj} \pr{lf} \pr{list} \pr{lm} \pr{lq} \pr{lt} \pr{max}
+   \pr{mdup} \pr{min} \pr{mod} \pr{mul} \pr{ops} \pr{pop} \pr{pow} \pr{quit}
+   \pr{rdim} \pr{repeat} \pr{roll} \pr{st} \pr{tell} \pr{tp} \pr{tut} \pr{unlink}
+   \pr{vars} \pr{vb} \pr{vm} \pr{while} \pr{wm} \pr{xpn} \pr{bye=quit} \pr{d=def}
+   \pr{f=free} \pr{h=help} \pr{i=info} \pr{l=list} \pr{p=pop} \pr{g=grep}
+   \pr{u=unlink} \pr{x=exch}.
+   }
+
+\sec{author}{AUTHOR}
+\par{
+   Stijn van Dongen.
+   }
+
+
+\sec{seealso}{SEE ALSO}
+\par{
+   \mysib{mclfamily} for an overview of all the documentation
+   }
+   and the utilities in the mcl family.
+
+\end{pud::man}
+

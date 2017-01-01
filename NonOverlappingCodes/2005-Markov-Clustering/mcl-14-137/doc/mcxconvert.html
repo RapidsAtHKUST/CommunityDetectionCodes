@@ -1,0 +1,209 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html>
+<!-- Copyright (c) 2014 Stijn van Dongen -->
+<head>
+<meta name="keywords" content="manual">
+<style type="text/css">
+/* START aephea.base.css */
+body
+{ text-align: justify;
+margin-left: 0%;
+margin-right: 0%;
+}
+a:link { text-decoration: none; }
+a:active { text-decoration: none; }
+a:visited { text-decoration: none; }
+a:link { color: #1111aa; }
+a:active { color: #1111aa; }
+a:visited { color: #111166; }
+a.local:link { color: #11aa11; }
+a.local:active { color: #11aa11; }
+a.local:visited { color: #116611; }
+a.intern:link { color: #1111aa; }
+a.intern:active { color: #1111aa; }
+a.intern:visited { color: #111166; }
+a.extern:link { color: #aa1111; }
+a.extern:active { color: #aa1111; }
+a.extern:visited { color: #661111; }
+a.quiet:link { color: black; }
+a.quiet:active { color: black; }
+a.quiet:visited { color: black; }
+div.verbatim
+{ font-family: monospace;
+margin-top: 1em;
+margin-bottom: 1em;
+font-size: 10pt;
+margin-left: 2em;
+white-space: pre;
+}
+div.indent
+{ margin-left: 8%;
+margin-right: 0%;
+}
+.right { text-align: right; }
+.left { text-align: left; }
+.nowrap { white-space: nowrap; }
+.item_leader
+{ position: relative;
+margin-left: 8%;
+}
+.item_compact { position: absolute; vertical-align: baseline; }
+.item_cascade { position: relative; }
+.item_leftalign { text-align: left; }
+.item_rightalign
+{ width: 2em;
+text-align: right;
+}
+.item_compact .item_rightalign
+{ position: absolute;
+width: 52em;
+right: -2em;
+text-align: right;
+}
+.item_text
+{ position: relative;
+margin-left: 3em;
+}
+.smallcaps { font-size: smaller; text-transform: uppercase }
+/* END aephea.base.css */
+body { font-family: "Garamond", "Gill Sans", "Verdana", sans-serif; }
+body
+{ text-align: justify;
+margin-left: 8%;
+margin-right: 8%;
+}
+</style>
+<title>The mcx convert manual</title>
+</head>
+<body>
+<p style="text-align:right">
+16 May 2014&nbsp;&nbsp;&nbsp;
+<a class="local" href="mcxconvert.ps"><b>mcx convert</b></a>
+14-137
+</p>
+<div class=" itemize " style="margin-top:1em; font-size:100%">
+<div class=" item_compact"><div class=" item_rightalign nowrap " style="right:-3em">1.</div></div>
+<div class=" item_text " style="margin-left:4em">
+<a class="intern" href="#name">NAME</a>
+</div>
+<div class=" item_compact"><div class=" item_rightalign nowrap " style="right:-3em">2.</div></div>
+<div class=" item_text " style="margin-left:4em">
+<a class="intern" href="#synopsis">SYNOPSIS</a>
+</div>
+<div class=" item_compact"><div class=" item_rightalign nowrap " style="right:-3em">3.</div></div>
+<div class=" item_text " style="margin-left:4em">
+<a class="intern" href="#description">DESCRIPTION</a>
+</div>
+<div class=" item_compact"><div class=" item_rightalign nowrap " style="right:-3em">4.</div></div>
+<div class=" item_text " style="margin-left:4em">
+<a class="intern" href="#options">OPTIONS</a>
+</div>
+<div class=" item_compact"><div class=" item_rightalign nowrap " style="right:-3em">5.</div></div>
+<div class=" item_text " style="margin-left:4em">
+<a class="intern" href="#author">AUTHOR</a>
+</div>
+<div class=" item_compact"><div class=" item_rightalign nowrap " style="right:-3em">6.</div></div>
+<div class=" item_text " style="margin-left:4em">
+<a class="intern" href="#seealso">SEE ALSO</a>
+</div>
+</div>
+
+<a name="name"></a>
+<h2>NAME</h2>
+<p style="margin-bottom:0" class="asd_par">
+mcx convert &mdash; convert between mcx storage types</p>
+
+<a name="synopsis"></a>
+<h2>SYNOPSIS</h2>
+<p style="margin-bottom:0" class="asd_par">
+<b>mcx&nbsp;convert</b> &lt;matrix-file-in&gt; &lt;matrix-file-out&gt;<br>
+<b>mcx&nbsp;convert</b> [--write-binary] --cone-to-stack &lt;cat-file-in&gt; &lt;cat-file-out&gt;<br>
+<b>mcx&nbsp;convert</b> [--write-binary] --stack-to-cone &lt;cat-file-in&gt; &lt;cat-file-out&gt;
+</p>
+<p style="margin-bottom:0" class="asd_par">mcxconvert is not in actual fact a program. This manual
+page documents the behaviour and options of the mcx program when
+invoked in mode <i>convert</i>. The options <b>-h</b>, <b>--apropos</b>,
+<b>--version</b>, <b>-set</b>, <b>--nop</b>, <b>-progress</b>&nbsp;<i>&lt;num&gt;</i>
+are accessible
+in all <b>mcx</b> modes. They are described
+in the <a class="local sibling" href="mcx.html">mcx</a> manual page.</p>
+<p style="margin-bottom:0" class="asd_par">
+<b>mcx&nbsp;convert</b>
+<a class="intern" href="#opt--cone-to-stack"><b>[--cone-to-stack</b> (<i>transform cone file to stack file</i>)<b>]</b></a>
+<a class="intern" href="#opt--stack-to-cone"><b>[--stack-to-cone</b> (<i>transform stack file to cone file</i>)<b>]</b></a>
+<a class="intern" href="#opt--write-binary"><b>[--write-binary</b> (<i>output native binary format</i>)<b>]</b></a>
+<a class="intern" href="#opt--cat"><b>[--cat</b> (<i>read and write cat format</i>)<b>]</b></a>
+<a class="intern" href="#opt-cat-max"><b>[-cat-max</b> &lt;num&gt; (<i>limit the stack conversion to &lt;num&gt; matrices</i>)<b>]</b></a>
+</p>
+<p style="margin-bottom:0" class="asd_par">
+In the two-argument invocation without additional arguments, <b>mcx&nbsp;convert</b>
+converts from the format found in the first file to the other format, i.e.
+from native interchange to native binary format or the other way around. When
+querying with the <b>-q</b> option, mcx{convert} will output a one-line
+synopsis describing the matrix in the argument. The
+<b>--cone-to-stack</b> and <b>--stack-to-cone</b> options convert
+between the two types of concatenated output provided by <b>mclcm</b>.
+</p>
+
+<a name="description"></a>
+<h2>DESCRIPTION</h2>
+<p style="margin-bottom:0" class="asd_par">
+The <b>mcl</b> libraries make extensive use of matrices. Matrices
+are used to encode graphs, matrices and clusterings.
+They can be stored either in interchange or in binary format. The latter is
+somewhat more efficient in storage and much faster in both reading and
+writing, but the default is interchange format.
+</p>
+<p style="margin-bottom:0" class="asd_par">
+The <b>mcl</b> input routines recognize the type of storage they are dealing
+with. If you want to convert a matrix to the other storage type,
+simply specify the file name of the matrix you want to convert.
+<b>mcx&nbsp;convert</b> will recognize its type, and write the other type
+to the file specified as the second argument.
+</p>
+
+<a name="options"></a>
+<h2>OPTIONS</h2>
+<div class=" itemize " style="margin-top:1em; font-size:100%">
+<div class=" item_cascade"><div class=" item_leftalign nowrap " ><a name="opt--cone-to-stack"></a><b>--cone-to-stack</b> (<i>transform cone file to stack file</i>)</div></div>
+<div class=" item_text " style="margin-left:2em">
+<p style="margin-top:0em; margin-bottom:0em">
+This option requires two trailing options, the names of respectively the
+source cone file and the target stack file.</p>
+</div>
+<div style="margin-top:0em">&nbsp;</div><div class=" item_cascade"><div class=" item_leftalign nowrap " ><a name="opt--stack-to-cone"></a><b>--stack-to-cone</b> (<i>transform stack file to cone file</i>)</div></div>
+<div class=" item_text " style="margin-left:2em">
+<p style="margin-top:0em; margin-bottom:0em">
+This option requires two trailing options, the names of respectively the
+source stack file and the target cone file.</p>
+</div>
+<div style="margin-top:0em">&nbsp;</div><div class=" item_cascade"><div class=" item_leftalign nowrap " ><a name="opt--cat"></a><b>--cat</b> (<i>read and write cat format</i>)</div></div>
+<div class=" item_text " style="margin-left:2em">
+</div>
+<div style="margin-top:0em">&nbsp;</div><div class=" item_cascade"><div class=" item_leftalign nowrap " ><a name="opt-cat-max"></a><b>-cat-max</b> &lt;num&gt; (<i>limit the stack conversion to &lt;num&gt; matrices</i>)</div></div>
+<div class=" item_text " style="margin-left:2em">
+</div>
+<div style="margin-top:0em">&nbsp;</div><div class=" item_cascade"><div class=" item_leftalign nowrap " ><a name="opt--write-binary"></a><b>--write-binary</b> (<i>output native binary format</i>)</div></div>
+<div class=" item_text " style="margin-left:2em">
+<p style="margin-top:0em; margin-bottom:0em">
+This option is only useful with either of the options <a class="intern" href="#opt--cone-to-stack"><b>--cone-to-stack</b></a>,
+<a class="intern" href="#opt--stack-to-cone"><b>--stack-to-cone</b></a>, or <a class="intern" href="#opt--cat"><b>--cat</b></a>.
+</p>
+</div>
+</div>
+
+<a name="author"></a>
+<h2>AUTHOR</h2>
+<p style="margin-bottom:0" class="asd_par">
+Stijn van Dongen.
+</p>
+
+<a name="seealso"></a>
+<h2>SEE ALSO</h2>
+<p style="margin-bottom:0" class="asd_par">
+<a class="local sibling" href="mcxio.html">mcxio</a>,
+and <a class="local sibling" href="mclfamily.html">mclfamily</a> for an overview of all the documentation
+and the utilities in the mcl family.
+</p>
+</body>
+</html>

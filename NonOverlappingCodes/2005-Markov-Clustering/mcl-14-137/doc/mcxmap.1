@@ -1,0 +1,223 @@
+.\" Copyright (c) 2014 Stijn van Dongen
+.TH "mcxmap" 1 "16 May 2014" "mcxmap 14-137" "USER COMMANDS "
+.po 2m
+.de ZI
+.\" Zoem Indent/Itemize macro I.
+.br
+'in +\\$1
+.nr xa 0
+.nr xa -\\$1
+.nr xb \\$1
+.nr xb -\\w'\\$2'
+\h'|\\n(xau'\\$2\h'\\n(xbu'\\
+..
+.de ZJ
+.br
+.\" Zoem Indent/Itemize macro II.
+'in +\\$1
+'in +\\$2
+.nr xa 0
+.nr xa -\\$2
+.nr xa -\\w'\\$3'
+.nr xb \\$2
+\h'|\\n(xau'\\$3\h'\\n(xbu'\\
+..
+.if n .ll -2m
+.am SH
+.ie n .in 4m
+.el .in 8m
+..
+.SH NAME
+mcxmap \- permute or remap the indices of graphs and matrices\&.
+.SH SYNOPSIS
+
+\fBmcxmap\fP
+\fB-imx\fP fname (\fIinput\fP)
+\fB[-o\fP fname (\fIoutput\fP)\fB]\fP
+\fB[-make-map\fP (\fIoutput map file name\fP)\fB]\fP
+\fB[-make-mapc\fP (\fIoutput map file name\fP)\fB]\fP
+\fB[-make-mapr\fP (\fIoutput map file name\fP)\fB]\fP
+\fB[-cmul\fP a (\fIcoefficient\fP)\fB]\fP
+\fB[-cshift\fP b (\fItranslate\fP)\fB]\fP
+\fB[-rmul\fP c (\fIcoefficient\fP)\fB]\fP
+\fB[-rshift\fP d (\fItranslate\fP)\fB]\fP
+\fB[-mul\fP e (\fIcoefficient\fP)\fB]\fP
+\fB[-shift\fP f (\fItranslate\fP)\fB]\fP
+\fB[-map\fP fname (\fIrow/col map file\fP)\fB]\fP
+\fB[-rmap\fP fname (\fIrow map file\fP)\fB]\fP
+\fB[-cmap\fP fname (\fIcolumn map file\fP)\fB]\fP
+\fB[-mapi\fP fname (\fIrow/col map file (use inverse)\fP)\fB]\fP
+\fB[-rmapi\fP fname (\fIrow map file (use inverse)\fP)\fB]\fP
+\fB[-cmapi\fP fname (\fIcolumn map file (use inverse)\fP)\fB]\fP
+\fB[-tab\fP fname (\fIread (and map) tab file\fP)\fB]\fP
+.SH DESCRIPTION
+
+This utility relabels graphs or matrices\&. Its main use is in applying a
+\fImap file\fP to a given matrix or graph\&. A map file contains a so called
+\fImap matrix\fP in mcl format that has some special properties (given
+further below)\&. The functionality of mcxmap can also be provided by \fBmcx\fP, as
+a mapped matrix (i\&.e\&. the result of applying a map matrix to another matrix)
+is simply the usual matrix product of a matrix and a map matrix\&. However,
+\fBmcx\fP will construct a new matrix and leave the original matrix to be mapped
+alone\&. When dealing with huge matrices, considerable gains in efficiency
+memory-wise and time-wise can be achieved by doing the mapping in-place\&.
+This is what mcxmap does\&. In the future, its functionality may be
+embedded in \fBmcx\fP with new mcx operators\&.
+
+The special properties of a map matrix are
+
+.ZJ 1m 1m "\(bu"
+The column domain and row domain are
+of the same cardinality\&.
+.in -2m
+.ZJ 1m 1m "\(bu"
+Each column has exactly one entry\&.
+.in -2m
+.ZJ 1m 1m "\(bu"
+Each row domain index occurs in exactly one column\&.
+.in -2m
+
+These properties imply that the matrix can be used
+as a map from the column domain onto the row domain\&.
+An example map matrix is found in the \fBEXAMPLES\fP Section\&.
+.SH OPTIONS
+
+.ZI 2m "\fB-o\fP fname (\fIoutput file\fP)"
+\&
+.br
+Output file\&.
+.in -2m
+
+.ZI 2m "\fB-imx\fP fname (\fIinput file\fP)"
+\&
+.br
+Input file\&.
+.in -2m
+
+.ZI 2m "\fB-map\fP fname (\fIrow/col map file)\fP)"
+\&
+'in -2m
+.ZI 2m "\fB-rmap\fP fname (\fIrow map file\fP)"
+\&
+'in -2m
+.ZI 2m "\fB-cmap\fP fname (\fIcolumn map file\fP)"
+\&
+'in -2m
+.ZI 2m "\fB-mapi\fP fname (\fIrow/col map file (use inverse)\fP)"
+\&
+'in -2m
+.ZI 2m "\fB-rmapi\fP fname (\fIrow map fil (use inverse)\fP)"
+\&
+'in -2m
+.ZI 2m "\fB-cmapi\fP fname (\fIcolumn map fil (use inverse)\fP)"
+\&
+'in -2m
+'in +2m
+\&
+.br
+Different ways to specify map files\&.
+.in -2m
+
+.ZI 2m "\fB-make-map\fP (\fIoutput map file name\fP)"
+\&
+'in -2m
+.ZI 2m "\fB-make-mapc\fP (\fIoutput map file name\fP)"
+\&
+'in -2m
+.ZI 2m "\fB-make-mapr\fP (\fIoutput map file name\fP)"
+\&
+'in -2m
+'in +2m
+\&
+.br
+Generate a map that maps the specified domain onto
+the appropriate canonical domain and write the map
+matrix to file\&.
+.in -2m
+
+.ZI 2m "\fB-cmul\fP a (\fIcoefficient\fP)"
+\&
+'in -2m
+.ZI 2m "\fB-cshift\fP b (\fItranslate\fP)"
+\&
+'in -2m
+'in +2m
+\&
+.br
+These options have affect if neither a column map file nor column
+canonification is specified\&. If any of the first two options is used,
+column indices\ \&\fCi\fP are mapped to\ \&\fCa*i+b\fP\&.
+.in -2m
+
+.ZI 2m "\fB-rmul\fP c (\fIcoefficient\fP)"
+\&
+'in -2m
+.ZI 2m "\fB-rshift\fP d (\fItranslate\fP)"
+\&
+'in -2m
+'in +2m
+\&
+.br
+These options have affect if neither a row map file nor row
+canonification is specified\&. If any of the first two options is used,
+indices\ \&\fCi\fP are mapped to\ \&\fCc*i+d\fP\&.
+.in -2m
+
+.ZI 2m "\fB-mul\fP e (\fIcoefficient\fP)"
+\&
+'in -2m
+.ZI 2m "\fB-shift\fP f (\fItranslate\fP)"
+\&
+'in -2m
+'in +2m
+\&
+.br
+If a map file is specified for a given domain, neither a map file nor
+canonification is specified\&. If any of the first two options is used, the
+indices\ \&\fCi\fP will be mapped to\ \&\fCe*i+f\fP\&.
+.in -2m
+
+.ZI 2m "\fB-tab\fP fname (\fIread (and map) tab file\fP)"
+\&
+.br
+This option requires the \fB-map\fP option\&. \fBmcxmap\fP will output the
+mapped tab definition\&.
+.in -2m
+.SH EXAMPLES
+
+The matrix below has two canonical domains which are identical\&.
+It denotes a map of the canonical domain onto itself, in which
+node 0 is relabeled to 8, node 1 is relabeled to 5, et cetera\&.
+
+.nf \fC
+(mclheader
+mcltype matrix
+dimensions 12x12
+)
+(mclmatrix
+begin
+0  8  $
+1  5  $
+2  3  $
+3  2  $
+4  4  $
+5  6  $
+6  7  $
+7  9  $
+8  1  $
+9  10 $
+10 11 $
+11 0  $
+)
+.fi \fR
+
+.SH AUTHOR
+
+Stijn van Dongen\&.
+.SH SEE ALSO
+
+\fBmcxio(5)\fP,
+\fBmcx(1)\fP,
+\fBmcxsubs(1)\fP,
+and \fBmclfamily(7)\fP for an overview of all the documentation
+and the utilities in the mcl family\&.

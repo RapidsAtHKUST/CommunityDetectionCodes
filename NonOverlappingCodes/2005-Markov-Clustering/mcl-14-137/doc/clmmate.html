@@ -1,0 +1,218 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html>
+<!-- Copyright (c) 2014 Stijn van Dongen -->
+<head>
+<meta name="keywords" content="manual">
+<style type="text/css">
+/* START aephea.base.css */
+body
+{ text-align: justify;
+margin-left: 0%;
+margin-right: 0%;
+}
+a:link { text-decoration: none; }
+a:active { text-decoration: none; }
+a:visited { text-decoration: none; }
+a:link { color: #1111aa; }
+a:active { color: #1111aa; }
+a:visited { color: #111166; }
+a.local:link { color: #11aa11; }
+a.local:active { color: #11aa11; }
+a.local:visited { color: #116611; }
+a.intern:link { color: #1111aa; }
+a.intern:active { color: #1111aa; }
+a.intern:visited { color: #111166; }
+a.extern:link { color: #aa1111; }
+a.extern:active { color: #aa1111; }
+a.extern:visited { color: #661111; }
+a.quiet:link { color: black; }
+a.quiet:active { color: black; }
+a.quiet:visited { color: black; }
+div.verbatim
+{ font-family: monospace;
+margin-top: 1em;
+margin-bottom: 1em;
+font-size: 10pt;
+margin-left: 2em;
+white-space: pre;
+}
+div.indent
+{ margin-left: 8%;
+margin-right: 0%;
+}
+.right { text-align: right; }
+.left { text-align: left; }
+.nowrap { white-space: nowrap; }
+.item_leader
+{ position: relative;
+margin-left: 8%;
+}
+.item_compact { position: absolute; vertical-align: baseline; }
+.item_cascade { position: relative; }
+.item_leftalign { text-align: left; }
+.item_rightalign
+{ width: 2em;
+text-align: right;
+}
+.item_compact .item_rightalign
+{ position: absolute;
+width: 52em;
+right: -2em;
+text-align: right;
+}
+.item_text
+{ position: relative;
+margin-left: 3em;
+}
+.smallcaps { font-size: smaller; text-transform: uppercase }
+/* END aephea.base.css */
+body { font-family: "Garamond", "Gill Sans", "Verdana", sans-serif; }
+body
+{ text-align: justify;
+margin-left: 8%;
+margin-right: 8%;
+}
+</style>
+<title>The clm mate manual</title>
+</head>
+<body>
+<p style="text-align:right">
+16 May 2014&nbsp;&nbsp;&nbsp;
+<a class="local" href="clmmate.ps"><b>clm mate</b></a>
+14-137
+</p>
+<div class=" itemize " style="margin-top:1em; font-size:100%">
+<div class=" item_compact"><div class=" item_rightalign nowrap " style="right:-3em">1.</div></div>
+<div class=" item_text " style="margin-left:4em">
+<a class="intern" href="#name">NAME</a>
+</div>
+<div class=" item_compact"><div class=" item_rightalign nowrap " style="right:-3em">2.</div></div>
+<div class=" item_text " style="margin-left:4em">
+<a class="intern" href="#synopsis">SYNOPSIS</a>
+</div>
+<div class=" item_compact"><div class=" item_rightalign nowrap " style="right:-3em">3.</div></div>
+<div class=" item_text " style="margin-left:4em">
+<a class="intern" href="#description">DESCRIPTION</a>
+</div>
+<div class=" item_compact"><div class=" item_rightalign nowrap " style="right:-3em">4.</div></div>
+<div class=" item_text " style="margin-left:4em">
+<a class="intern" href="#options">OPTIONS</a>
+</div>
+<div class=" item_compact"><div class=" item_rightalign nowrap " style="right:-3em">5.</div></div>
+<div class=" item_text " style="margin-left:4em">
+<a class="intern" href="#author">AUTHOR</a>
+</div>
+<div class=" item_compact"><div class=" item_rightalign nowrap " style="right:-3em">6.</div></div>
+<div class=" item_text " style="margin-left:4em">
+<a class="intern" href="#seealso">SEE ALSO</a>
+</div>
+</div>
+
+<a name="name"></a>
+<h2>NAME</h2>
+<p style="margin-bottom:0" class="asd_par">
+clm mate &mdash; compute best matches between two clusterings</p>
+<p style="margin-bottom:0" class="asd_par">clmmate is not in actual fact a program. This manual
+page documents the behaviour and options of the clm program when
+invoked in mode <i>mate</i>. The options <b>-h</b>, <b>--apropos</b>,
+<b>--version</b>, <b>-set</b>, <b>--nop</b> are accessible
+in all <b>clm</b> modes. They are described
+in the <a class="local sibling" href="clm.html">clm</a> manual page.</p>
+
+<a name="synopsis"></a>
+<h2>SYNOPSIS</h2>
+<p style="margin-bottom:0" class="asd_par">
+<b>clm mate</b>
+<a class="intern" href="#opt-o"><b>[-o</b> fname (<i>output file name</i>)<b>]</b></a>
+<a class="intern" href="#opt-b"><b>[-b</b> (<i>omit headers</i>)<b>]</b></a>
+<a class="intern" href="#opt--one-to-many"><b>[--one-to-many</b> (<i>require multiple hits in &lt;clfile1&gt;</i>)<b>]</b></a>
+<a class="intern" href="#opt-h"><b>[-h</b> (<i>print synopsis, exit</i>)<b>]</b></a>
+<a class="intern" href="#opt--apropos"><b>[--apropos</b> (<i>print synopsis, exit</i>)<b>]</b></a>
+<a class="intern" href="#opt--version"><b>[--version</b> (<i>print version, exit</i>)<b>]</b></a>
+&lt;clfile1&gt; &lt;clfile2&gt;
+</p>
+
+<a name="description"></a>
+<h2>DESCRIPTION</h2>
+<p style="margin-bottom:0" class="asd_par">
+<b>clm mate</b> computes for each cluster <tt>X</tt> in <tt>clfile1</tt> all clusters
+<tt>Y</tt> in <tt>clfile2</tt> that have non-empty intersection and outputs
+a line with the data points listed below.</p>
+<div class="verbatim">   overlap(X,Y)               # 2 * size(meet(X,Y)) / (size(X)+size(Y))
+   index(X)                   # name of cluster
+   index(Y)                   # name of cluster
+   size(meet(X,Y))
+   size(X-Y)                  # size of left difference
+   size(Y-X)                  # size of right difference
+   size(X)
+   size(Y)
+   projection(X, clfile2)     # see below
+   projection(Y, clfile1)     # see below
+</div>
+<p style="margin-bottom:0" class="asd_par">
+The projected size of a cluster <tt>X</tt> relative to a clustering <tt>K</tt> is
+simply the sum of all the nodes shared between any cluster <tt>Y</tt> in <tt>K</tt>
+and <tt>X</tt>, duplications allowed. For example, the projected size of
+<tt>(0,1)</tt> relative to <tt>{(0,2,4), (1,4,9), (1,3,5)}</tt> equals <tt>3</tt>.</p>
+<p style="margin-bottom:0" class="asd_par">
+The overlap between <tt>X</tt> and <tt>Y</tt> is exactly
+1.0 if the two clusters are identical, and for nearly identical
+clusterings the score will be close to 1.0.</p>
+<p style="margin-bottom:0" class="asd_par">
+All of this information can also be obtained from the
+contingency matrix defined for two clusterings.
+The <tt>[i,j]</tt> row-column entry in a contigency matrix between
+to clusterings gives the number of entries in the intersection
+between cluster&nbsp;<tt>i</tt> and cluster&nbsp;<tt>j</tt> from the respective
+clusterings. The other information is implicitly present;
+the total number of nodes in clusters&nbsp;<tt>i</tt> and&nbsp;<tt>j</tt>
+for example can be obtained as the sum of entries in row&nbsp;<tt>i</tt>
+and column&nbsp;<tt>j</tt> respectively, and the difference counts
+can then be obtained by substracting the intersection count.
+The contingency matrix can easily be computed using <b>mcx</b>;
+e.g.</p>
+<div class="verbatim">
+mcx /clfile2 lm /clfile1 lm tp mul /ting wm</div>
+<p style="margin-top:0em; margin-bottom:0em">
+will create the contingency matrix in mcl matrix format
+in the file <tt>ting</tt>, where columns range over the clusters
+in <tt>clfile1</tt>.</p>
+<p style="margin-bottom:0" class="asd_par">
+The output can be put to good use by sorting it numerically on
+that first score field. It is advisable to use a stable sort routine
+(use the <b>-s</b> option for UNIX sort)
+From this information one can quickly extract the closest
+clusters between two clusterings.</p>
+
+<a name="options"></a>
+<h2>OPTIONS</h2>
+<div class=" itemize " style="margin-top:1em; font-size:100%">
+<div class=" item_cascade"><div class=" item_leftalign nowrap " ><a name="opt-o"></a><b>-o</b> fname (<i>output file name</i>)</div></div>
+<div class=" item_text " style="margin-left:2em">
+<p style="margin-top:0em; margin-bottom:0em">Specify the name of the output file.</p>
+</div>
+<div style="margin-top:0em">&nbsp;</div><div class=" item_cascade"><div class=" item_leftalign nowrap " ><a name="opt-b"></a><b>-b</b> (<i>omit headers</i>)</div></div>
+<div class=" item_text " style="margin-left:2em">
+<p style="margin-top:0em; margin-bottom:0em">Batch mode, omit column names.</p>
+</div>
+<div style="margin-top:0em">&nbsp;</div><div class=" item_cascade"><div class=" item_leftalign nowrap " ><a name="opt--one-to-many"></a><b>--one-to-many</b> (<i>require multiple hits in &lt;clfile1&gt;</i>)</div></div>
+<div class=" item_text " style="margin-left:2em">
+<p style="margin-top:0em; margin-bottom:0em">Do not output information for clusters in the first file
+that are subset of a cluster in the second file.</p>
+</div>
+</div>
+
+<a name="author"></a>
+<h2>AUTHOR</h2>
+<p style="margin-bottom:0" class="asd_par">
+Stijn van Dongen.
+</p>
+
+<a name="seealso"></a>
+<h2>SEE ALSO</h2>
+<p style="margin-bottom:0" class="asd_par">
+<a class="local sibling" href="mclfamily.html">mclfamily</a> for an overview of all the documentation
+and the utilities in the mcl family.
+</p>
+</body>
+</html>

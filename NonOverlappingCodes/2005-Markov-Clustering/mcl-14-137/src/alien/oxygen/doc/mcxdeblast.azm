@@ -1,0 +1,200 @@
+\setx{__searchpath__}{\__searchpath__\!{}{../../../../../zoem/mac}}
+\import{\"mcx-zmm"}
+
+\begin{pud::man}{
+
+   {name}{mcxdeblast}
+   {html_title}{The mcxdeblast manual}
+   {author}{Stijn van Dongen}
+   {section}{1}
+   {synstyle}{long}
+   {defstyle}{long}
+
+   \man_share
+}
+
+\'${html}{\"pud::man::maketoc"}
+
+
+\sec{name}{NAME}
+\NAME{mcxdeblast}{parse BLAST files and stream
+output directly into mcl or write mcxassemble input.}
+
+\sec{synopsis}{SYNOPSIS}
+
+   \mcxdeblast file-name
+
+\par{
+   \mcxdeblast
+   \synoptkvp{--score}{<b|e|r>}{bit scores|e-values|normalize bit score}
+   \synoptopt{--m9}{expect BLAST column format}
+   \synoptopt{--out}{<fname>}{output file}
+   \synoptopt{--line-mode}{abc}{write ID1 ID2 score format}
+   \synoptkvp{--sort}{<a|o>}{alphabetic|occurrence sorting}
+   \synoptkvp{--xi-dat}{<suf>}{strip <suf> from file-name}
+   \synoptkvp{--xo-dat}{<suf>}{add <suf> to base name}
+   \synoptkvp{--bcut}{<val>}{bit score cutoff}
+   \synoptkvp{--ecut}{<val>}{E-value cutoff}
+   \synoptkvp{--rcut}{<val>}{raw value cutoff}
+   \synoptkvp{--tab}{<fname>}{tab file}
+
+   <file-name>}
+
+\sec{description}{DESCRIPTION}
+
+\par{
+   \mcxdeblast parses BLAST files.}
+
+\par{
+   In \it{stream mode} mcxdeblast output can be directly streamed to mcl by
+   using the mcxdeblast \genkvp{--line-mode}{abc} option and equipping mcl with
+   either \genopt{--abc} or \genopt{--expect-abc}.  This can be considered the
+   easy, lightweight and fast track.  This functionality was recently acquired
+   by mcl.}
+
+\par{
+   In the classic and slightly more heavy-handed \it{assemble mode}, mcxdeblast
+   creates output files suitable for use by mcxassemble.  The latter can in
+   turn create input suitable for mcl.  This is the mode in which mcxdeblast is
+   employed by \mclblastline.}
+
+
+\sec{stream}{STREAM MODE}
+
+\car{Enter stream mode by specifiying \genkvp{--line-mode}{abc}.
+Use \genopt{--m9} if the input is in columnar output. Pipe the result
+to a file or directly to mcl. Example invocations can be found
+in \sibref{mcl}{the mcl manual}.}
+
+
+\sec{assemble}{ASSEMBLE MODE}
+
+\car{
+   If the input file is named \v{iput}, mcxdeblast will by
+   default create files \v{iput.hdr}, \v{iput.raw}, \v{iput.tab},
+   \v{iput.map}, and \v{iput.err}. The \v{hdr} file contains
+   information about the number of nodes found. It will be read
+   by \sib{mcxassemble}. The \v{raw} file contains the co-occurrence
+   scores between different nodes (peptides), also to be
+   read by mcxassemble. The co-occurrence scores are in
+   terms of mcl indentiers, which are subjected to rearranging
+   by mcxassemble in order to correctly align them with the tab file.
+   The \v{tab} file contains bindings between mcl identifiers
+   (after rearranging as specified in the map file) and the BLAST labels
+   (peptide identifiers). Refer to the manual of \sib{mcxassemble}
+   for the syntax of a tab file.
+   The \v{err} file contains a list of any errors encountered.}
+
+\par{
+   If the \usekvp{--tab}{fname} option is used mcxdeblast changes
+   its behaviour. It will read the file \usearg{fname}, and use
+   the bindings found therein. It will no longer output any
+   of the \v{hdr}, \v{map}, or \v{tab} files. The \v{hdr}
+   file should be provided by the same application that generated
+   the specified tab file, and the \v{map} file should no longer be
+   necessary (it might be convenient though and perhaps the
+   future will bring a new \genopt{--map} option).}
+
+
+\par{
+   The \usekvp{--tab}{fname} option can be convenient e.g. if
+   you split a BLAST job over multiple machines and want
+   to apply mcxdeblast to each of the subresults. You do
+   this by generating a single central tab file in advance.
+   Then provide each instance of mcxdeblast with this tab file.
+   Each instance will generate a \v{raw} file. The respective
+   \v{raw} files can simply be concatenated and fed to mcxassemble
+   using its \genopt{-raw} option. Additionally, a \v{hdr} file
+   has to be specified for mcxassemble using its \genopt{-hdr}
+   option. The syntax of \v{hdr} files is described in
+   the \sib{mcxassemble} manual.
+   Currently there is usually only one variable
+   in the \v{hdr} file, which is the number of bindings
+   listed in the tab file. This number, in turn, should equal
+   the total number of different peptides encountered in the BLAST input.}
+
+\sec{options}{OPTIONS}
+
+\begin{itemize}{\mcx_itemopts}
+
+\item{\defkvp{--tab}{<fname>}{tab file}}
+\car{
+   Specify a tab file to use, rather than automatically generating one.
+   }
+
+
+\item{\defopt{--out}{<fname>}{output file}}
+\car{
+   Specify the name for the output file.
+   }
+
+
+\item{\defkvp{--score}{<b|e|r>}{bit scores|e-values|norm bit score}}
+\car{
+   Specify whether to use bit scores, E-values, or bit scores
+   normalized by length of the HSP.
+   }
+
+\item{\defkvp{--sort}{<a|o>}{alphabetic|occurrence sorting}}
+\car{
+   Specify how to sort labels.
+   }
+
+\item{\defopt{--m9}{expect BLAST column format}}
+\car{
+   Use this option to parse BLAST output formatted with the -m 9 option.
+   }
+
+\item{\defkvp{--line-mode}{abc}{write ID1 ID2 SCORE format}}
+\car{
+   Use this to stream output directly into mcl. Here \v{abc}
+   is a literal; \genopt{--line-mode} may acquire other line output
+   modes.
+   }
+
+\item{\defkvp{--xi-dat}{<suf>}{strip <suf> from <file-name>}}
+\car{
+   If set, the suffix <suf> is stripped from file-name in order
+   to obtain the base name for output. If <file-name> does not
+   end with suffix, it is assumed to be the base name, and <suf> is
+   added in order to obtain the (real) file-name.
+   }
+
+\item{\defkvp{--xo-dat}{<suf>}{add <suf> to base name}}
+\car{
+   Attaches the suffix to the base name. Use this to distinguish
+   between different parses. One might for example
+   use \genkvp{--score}{b} \genkvp{--bcut}{5} \genkvp{--xo-dat}{b}.
+   }
+
+\item{\defkvp{--bcut}{<val>}{bit score cutoff}}
+\car{
+   Bit scores below the cutoff value are ignored. This
+   triggers the output of bit scores and ignores all other values.
+   }
+
+\item{\defkvp{--ecut}{<val>}{E-value cutoff}}
+\car{
+   E-values below the cutoff value are ignored. This triggers
+   the output of E-values and ignores all other values.
+   }
+
+\item{\defkvp{--rcut}{<val>}{raw value cutoff}}
+\car{
+   Raw values below the cutoff value are ignored. This
+   triggers the output of raw values and ignores all other values.
+   }
+
+\end{itemize}
+
+\sec{author}{AUTHOR}
+   Stijn van Dongen.
+   Jason Stajich implemented the \genopt{--m9} option.
+   Abel Ureta-Vidal and Dinakarpandian Deendayal contributed helpful comments
+   and fixes.
+
+\sec{sealso}{SEE ALSO}
+   \sib{mclblastline}, \sib{mcxassemble}, \sib{mcl},
+   \sib{clmformat}.
+
+\end{pud::man}

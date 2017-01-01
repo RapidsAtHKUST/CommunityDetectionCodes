@@ -1,0 +1,120 @@
+.\" Copyright (c) 2014 Stijn van Dongen
+.TH "clm imac" 1 "16 May 2014" "clm imac 14-137" "USER COMMANDS "
+.po 2m
+.de ZI
+.\" Zoem Indent/Itemize macro I.
+.br
+'in +\\$1
+.nr xa 0
+.nr xa -\\$1
+.nr xb \\$1
+.nr xb -\\w'\\$2'
+\h'|\\n(xau'\\$2\h'\\n(xbu'\\
+..
+.de ZJ
+.br
+.\" Zoem Indent/Itemize macro II.
+'in +\\$1
+'in +\\$2
+.nr xa 0
+.nr xa -\\$2
+.nr xa -\\w'\\$3'
+.nr xb \\$2
+\h'|\\n(xau'\\$3\h'\\n(xbu'\\
+..
+.if n .ll -2m
+.am SH
+.ie n .in 4m
+.el .in 8m
+..
+.SH NAME
+clm imac \- Interpret Matrices (c\&.q\&. MCL iterands output by \fBmcl\fP) As Clusterings\&.
+
+clmimac is not in actual fact a program\&. This manual
+page documents the behaviour and options of the clm program when
+invoked in mode \fIimac\fP\&. The options \fB-h\fP, \fB--apropos\fP,
+\fB--version\fP, \fB-set\fP, \fB--nop\fP are accessible
+in all \fBclm\fP modes\&. They are described
+in the \fBclm\fP manual page\&.
+.SH SYNOPSIS
+
+\fBclm imac\fP -imx <fname> [options]
+
+\fBclm imac\fP
+\fB-imx\fP fname (\fIinput file\fP)
+\fB[-o\fP fname (\fIname/stem for output\fP)\fB]\fP
+\fB[-dag\fP fname (\fIoutput DAG\fP)\fB]\fP
+\fB[-overlap\fP str (\fIoverlap mode\fP)\fB]\fP
+\fB[-sort\fP str (\fIsize|revsize|lex|none\fP)\fB]\fP
+\fB[-strict\fP num (\fIin 0\&.\&.1\fP)\fB]\fP
+\fB[-h\fP (\fIprint synopsis, exit\fP)\fB]\fP
+\fB[--apropos\fP (\fIprint synopsis, exit\fP)\fB]\fP
+\fB[--version\fP (\fIprint version, exit\fP)\fB]\fP
+.SH DESCRIPTION
+
+Use \fBclm imac\fP to interpret matrices (as clusterings) output by \fBmcl\fP using
+\fBmcl\fP\&'s \fB-dump\fP\ \&\fBite\fP option\&.
+
+Use \fBclm imac\fP only if you have a special reason; the normal usage
+of \fBmcl\fP is to do multiple runs for varying \fB-I\fP parameters
+and use the clusterings output by \fBmcl\fP itself\&.
+One reason is if you are interested in clusterings with overlap;
+early MCL iterands generally induce clusterings possessing overlap\&.
+Another reason is to investigate how the cluster structure
+associated with the MCL process evolves over time\&.
+.SH OPTIONS
+
+.ZI 2m "\fB-imx\fP fname (\fIinput file\fP)"
+\&
+.br
+The input file is presumably an MCL iterand resulting
+from the mcl option \fB-dump\fP\ \&\fBite\fP\&.
+.in -2m
+
+.ZI 2m "\fB-strict\fP num (\fIin 0\&.\&.1\fP)"
+\&
+.br
+Higher values (up until 1) will thin out the DAG
+constructed by \fBclm imac\fP\&. The default value is 0\&.00001,
+yielding the full DAG\&.
+.in -2m
+
+.ZI 2m "\fB-o\fP fname (\fIfile name/stem\fP)"
+\&
+.br
+Write to file named \fIfname\fP\&.
+.in -2m
+
+.ZI 2m "\fB-dag\fP fname (\fIoutput DAG\fP)"
+\&
+.br
+Write the DAG (directed acyclic graph) constructed from the input to
+file\&. This DAG is constructed according to the structure associated
+with diagonally positive semi-definite matrices as described
+in the PhD thesis \fIGraph clustering by flow simulation\fP\&.
+Consult \fBmclfamily(7)\fP for references\&.
+.in -2m
+
+.ZI 2m "\fB-sort\fP str (\fIsize|revsize|lex|none\fP)"
+\&
+.br
+Sort the clusters either by increasing size, decreasing size,
+lexicographically by the indices they contain, or use the clustering
+exactly as obtained from the interpretation routine\&.
+.in -2m
+
+.ZI 2m "\fB-overlap\fP mode (\fIoverlap mode\fP)"
+\&
+.br
+With \fImode\fP set to \fIcut\fP, remove any overlap by allocating the
+nodes in overlap to the first cluster in which they were found\&. Mode
+\fIkeep\fP leaves overlap unchanged, and mode \fIsplit\fP results in overlapping
+parts excised and introduced as clusters in their own right\&.
+.in -2m
+.SH AUTHOR
+
+Stijn van Dongen\&.
+.SH SEE ALSO
+
+\fBmclfamily(7)\fP for an overview of all the documentation
+and the utilities in the mcl family\&.

@@ -1,0 +1,128 @@
+
+
+
+
+
+goal:
+   language where closure is easy to write.
+      closure(mx) is interesting: need cascading, if, while,
+      picking, sorting.
+   for more complicated stuff introduce mclvTernary?
+   hum, still try to bind to ruby or lua?
+
+   for efficiency, a framework with complete vectors and counts.
+   it is not even supported in C though, i believe. a temporary
+   vector is constructed for mclvBinary.
+
+
+types
+   <node>
+   <list>
+   <graph> or <context> or <incidence>
+
+context(mx)    sets the current context for overloaded operators.
+
+[ bad idea if I'll be using matrices to store results / keep state ]
+
+will need support for vectors of longs matrices of longs ?  vectors of matrices ?
+tabs ?
+-> not in C though. User-assembled. conflicts with large scale stuff.
+
+
+def closure (<graph> mx, <node> i)
+{  context(mx)
+   let(seen, list(i))
+   let(next, extend(i))
+
+   while(next) {
+      let(nextnext, list())
+      for(next as n) {
+         join(nextnext, extend(n), nextnext)
+      }
+      # apply(join(nextnext, _, nextnext), next)
+      set(next, minus(nextnext, seen))
+      set(seen, join(seen, nextnext))
+   }
+   yield(seen)
+   # yield removes var seen from local storage.
+}
+
+# hum, ref counting?
+
+
+
+(def closure (
+
+mcxquery
+
+load("small.mci")
+load(mx, "small.mci")
+
+paths(2, 10)
+
+
+
+$$ write ext(path()).
+$$ even better: allow arbitrary nesting
+      dom("cr", join(path(disc(1, path(i(0-5), domain("1", 3))))), i(38))
+
+bind(name, expression)
+
+   v  i     i-list      all listed integers
+   v  d     v           join of all sets indexed by v in domain matrix
+   v  d     i-list      join of all sets indexed by i-list in domain matrix
+
+   v  join  v+          everything from all sets
+   v  meet  v+          everything shared by all sets
+   v  minus v+          everything only in leftmost
+   v  diff  v+          everthing in a single set
+   v  disc  i, v        expand nodes in v to radius i 
+   v  tags  l-list      map of all listed labels
+
+   v  paths v           all nodes participating in all shortest paths
+                           between all elements of v
+   v  paths v1, v2      all nodes participating in all shortest paths
+                           between all elements of v1 and v2
+   v  paths i1, i2      all nodes participating in all shortest paths
+                           between i1 and i2, empty if none.
+   m  paths i1, i2      all nodes participating in all shortest paths
+                           between i1 and i2, NULL if none.
+
+
+   v  closure(i)        all things reachable from i
+   m  closure(m)        all connected components in m
+
+   v  strstr(pat)       map of labels matching str
+
+   v  bind(name, v)     bind v to name
+
+   v  cmpl(v)           complement relative to default universe
+
+
+   and empty and default actions should be coded as
+
+      template(cr, v)
+      template(cr, v1, v2)
+
+      sub(cr, v)
+      sub(cr, v1, v2)
+
+   mcd   matrix column domain
+   mrd   matrix row domain
+   dcd   domain column domain
+   drd   domain row domain
+
+   and
+      graph(cr, disc(5, i(..)))
+      graph(cR, (disc(5, i(..))))
+
+
+   this will also make ext({l,r,}disc) redundant.
+   It requires implementing a parse tree. Or lex/yacc.
+
+/  mcxsubs acting on tabs.
+   should be relatively easy: just a different output primitive tab(foo) note
+   that mcxdump already can take subselections.
+
+
+

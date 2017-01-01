@@ -1,0 +1,25 @@
+#  Example of raw data to be read by mcxassemble in conjunction with data.hdr.
+#
+#  NOTES
+#  -  repeated entries are allowed. mcxassemble will by default add them up.
+#  -  values have been mostly omitted, but they are allowed
+#     as in the 7:0.8 entry right below.
+#
+#  try out e.g.
+#     mcxassemble -b data
+#     mcxpipeline --start-assemble --nomap data
+
+4  2  1  6  7:0.8 $
+7  4  3  3 8 10 $
+1  2  0  4 $
+5  0  9  $
+0  1 5  6  1  9 $
+2  4  3 1 $
+3  2 8  7 2 10 $
+8  10  7 3 $
+8  7 11 $
+11 10 8 $
+9  5 0 0  6 5 $
+8  7 $
+6  4 0  9 $
+10 7 3  8 11 $

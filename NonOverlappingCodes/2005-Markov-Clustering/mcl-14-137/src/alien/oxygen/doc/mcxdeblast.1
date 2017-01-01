@@ -1,0 +1,193 @@
+.\" Copyright (c) 2014 Stijn van Dongen
+.TH "mcxdeblast" 1 "16 May 2014" "mcxdeblast 14-137" "USER COMMANDS "
+.po 2m
+.de ZI
+.\" Zoem Indent/Itemize macro I.
+.br
+'in +\\$1
+.nr xa 0
+.nr xa -\\$1
+.nr xb \\$1
+.nr xb -\\w'\\$2'
+\h'|\\n(xau'\\$2\h'\\n(xbu'\\
+..
+.de ZJ
+.br
+.\" Zoem Indent/Itemize macro II.
+'in +\\$1
+'in +\\$2
+.nr xa 0
+.nr xa -\\$2
+.nr xa -\\w'\\$3'
+.nr xb \\$2
+\h'|\\n(xau'\\$3\h'\\n(xbu'\\
+..
+.if n .ll -2m
+.am SH
+.ie n .in 4m
+.el .in 8m
+..
+.SH NAME
+mcxdeblast \- parse BLAST files and stream
+output directly into mcl or write mcxassemble input\&.
+.SH SYNOPSIS
+\fBmcxdeblast\fP file-name
+
+\fBmcxdeblast\fP
+\fB[--score=\fP<b|e|r> (\fIbit scores|e-values|normalize bit score\fP)\fB]\fP
+\fB[--m9\fP (\fIexpect BLAST column format\fP)\fB]\fP
+\fB[--out\fP <fname> (\fIoutput file\fP)\fB]\fP
+\fB[--line-mode\fP abc (\fIwrite ID1 ID2 score format\fP)\fB]\fP
+\fB[--sort=\fP<a|o> (\fIalphabetic|occurrence sorting\fP)\fB]\fP
+\fB[--xi-dat=\fP<suf> (\fIstrip <suf> from file-name\fP)\fB]\fP
+\fB[--xo-dat=\fP<suf> (\fIadd <suf> to base name\fP)\fB]\fP
+\fB[--bcut=\fP<val> (\fIbit score cutoff\fP)\fB]\fP
+\fB[--ecut=\fP<val> (\fIE-value cutoff\fP)\fB]\fP
+\fB[--rcut=\fP<val> (\fIraw value cutoff\fP)\fB]\fP
+\fB[--tab=\fP<fname> (\fItab file\fP)\fB]\fP
+<file-name>
+.SH DESCRIPTION
+
+\fBmcxdeblast\fP parses BLAST files\&.
+
+In \fIstream mode\fP mcxdeblast output can be directly streamed to mcl by
+using the mcxdeblast \fB--line-mode\fP=\fIabc\fP option and equipping mcl with
+either \fB--abc\fP or \fB--expect-abc\fP\&. This can be considered the
+easy, lightweight and fast track\&. This functionality was recently acquired
+by mcl\&.
+
+In the classic and slightly more heavy-handed \fIassemble mode\fP, mcxdeblast
+creates output files suitable for use by mcxassemble\&. The latter can in
+turn create input suitable for mcl\&. This is the mode in which mcxdeblast is
+employed by \fBmclblastline\fP\&.
+.SH STREAM MODE
+Enter stream mode by specifiying \fB--line-mode\fP=\fIabc\fP\&.
+Use \fB--m9\fP if the input is in columnar output\&. Pipe the result
+to a file or directly to mcl\&. Example invocations can be found
+in \fBthe mcl manual\fP\&.
+.SH ASSEMBLE MODE
+If the input file is named \fCiput\fP, mcxdeblast will by
+default create files \fCiput\&.hdr\fP, \fCiput\&.raw\fP, \fCiput\&.tab\fP,
+\fCiput\&.map\fP, and \fCiput\&.err\fP\&. The \fChdr\fP file contains
+information about the number of nodes found\&. It will be read
+by \fBmcxassemble\fP\&. The \fCraw\fP file contains the co-occurrence
+scores between different nodes (peptides), also to be
+read by mcxassemble\&. The co-occurrence scores are in
+terms of mcl indentiers, which are subjected to rearranging
+by mcxassemble in order to correctly align them with the tab file\&.
+The \fCtab\fP file contains bindings between mcl identifiers
+(after rearranging as specified in the map file) and the BLAST labels
+(peptide identifiers)\&. Refer to the manual of \fBmcxassemble\fP
+for the syntax of a tab file\&.
+The \fCerr\fP file contains a list of any errors encountered\&.
+
+If the \fB--tab\fP=\fBfname\fP option is used mcxdeblast changes
+its behaviour\&. It will read the file \fBfname\fP, and use
+the bindings found therein\&. It will no longer output any
+of the \fChdr\fP, \fCmap\fP, or \fCtab\fP files\&. The \fChdr\fP
+file should be provided by the same application that generated
+the specified tab file, and the \fCmap\fP file should no longer be
+necessary (it might be convenient though and perhaps the
+future will bring a new \fB--map\fP option)\&.
+
+The \fB--tab\fP=\fBfname\fP option can be convenient e\&.g\&. if
+you split a BLAST job over multiple machines and want
+to apply mcxdeblast to each of the subresults\&. You do
+this by generating a single central tab file in advance\&.
+Then provide each instance of mcxdeblast with this tab file\&.
+Each instance will generate a \fCraw\fP file\&. The respective
+\fCraw\fP files can simply be concatenated and fed to mcxassemble
+using its \fB-raw\fP option\&. Additionally, a \fChdr\fP file
+has to be specified for mcxassemble using its \fB-hdr\fP
+option\&. The syntax of \fChdr\fP files is described in
+the \fBmcxassemble\fP manual\&.
+Currently there is usually only one variable
+in the \fChdr\fP file, which is the number of bindings
+listed in the tab file\&. This number, in turn, should equal
+the total number of different peptides encountered in the BLAST input\&.
+.SH OPTIONS
+
+.ZI 2m "\fB--tab\fP=<fname> (\fItab file\fP)"
+\&
+.br
+Specify a tab file to use, rather than automatically generating one\&.
+.in -2m
+
+.ZI 2m "\fB--out\fP <fname> (\fIoutput file\fP)"
+\&
+.br
+Specify the name for the output file\&.
+.in -2m
+
+.ZI 2m "\fB--score\fP=<b|e|r> (\fIbit scores|e-values|norm bit score\fP)"
+\&
+.br
+Specify whether to use bit scores, E-values, or bit scores
+normalized by length of the HSP\&.
+.in -2m
+
+.ZI 2m "\fB--sort\fP=<a|o> (\fIalphabetic|occurrence sorting\fP)"
+\&
+.br
+Specify how to sort labels\&.
+.in -2m
+
+.ZI 2m "\fB--m9\fP (\fIexpect BLAST column format\fP)"
+\&
+.br
+Use this option to parse BLAST output formatted with the -m 9 option\&.
+.in -2m
+
+.ZI 2m "\fB--line-mode\fP=abc (\fIwrite ID1 ID2 SCORE format\fP)"
+\&
+.br
+Use this to stream output directly into mcl\&. Here \fCabc\fP
+is a literal; \fB--line-mode\fP may acquire other line output
+modes\&.
+.in -2m
+
+.ZI 2m "\fB--xi-dat\fP=<suf> (\fIstrip <suf> from <file-name>\fP)"
+\&
+.br
+If set, the suffix <suf> is stripped from file-name in order
+to obtain the base name for output\&. If <file-name> does not
+end with suffix, it is assumed to be the base name, and <suf> is
+added in order to obtain the (real) file-name\&.
+.in -2m
+
+.ZI 2m "\fB--xo-dat\fP=<suf> (\fIadd <suf> to base name\fP)"
+\&
+.br
+Attaches the suffix to the base name\&. Use this to distinguish
+between different parses\&. One might for example
+use \fB--score\fP=\fIb\fP \fB--bcut\fP=\fI5\fP \fB--xo-dat\fP=\fIb\fP\&.
+.in -2m
+
+.ZI 2m "\fB--bcut\fP=<val> (\fIbit score cutoff\fP)"
+\&
+.br
+Bit scores below the cutoff value are ignored\&. This
+triggers the output of bit scores and ignores all other values\&.
+.in -2m
+
+.ZI 2m "\fB--ecut\fP=<val> (\fIE-value cutoff\fP)"
+\&
+.br
+E-values below the cutoff value are ignored\&. This triggers
+the output of E-values and ignores all other values\&.
+.in -2m
+
+.ZI 2m "\fB--rcut\fP=<val> (\fIraw value cutoff\fP)"
+\&
+.br
+Raw values below the cutoff value are ignored\&. This
+triggers the output of raw values and ignores all other values\&.
+.in -2m
+.SH AUTHOR
+Stijn van Dongen\&.
+Jason Stajich implemented the \fB--m9\fP option\&.
+Abel Ureta-Vidal and Dinakarpandian Deendayal contributed helpful comments
+and fixes\&.
+.SH SEE ALSO
+\fBmclblastline\fP, \fBmcxassemble\fP, \fBmcl\fP,
+\fBclmformat\fP\&.

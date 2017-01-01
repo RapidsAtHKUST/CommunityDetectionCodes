@@ -1,0 +1,1814 @@
+%!
+%%BoundingBox: 45 215 435 603
+
+
+% iterand 2.
+
+/B_test 0 def     % set to 1 to test BoundingBox parameters
+/BBLL [ 45 215 ] def
+/BBUR [ 435 603 ] def
+
+B_test 1 eq { newpath
+      BBLL aload pop moveto
+      BBLL aload pop BBUR aload pop pop exch lineto   % this is LR
+      BBUR aload pop lineto
+      BBUR aload pop BBLL aload pop pop exch lineto   % this is UL
+      closepath stroke
+} if
+
+/hdist 200 def
+/vdist 200 def
+
+/scalef 9 def
+
+
+50 600 translate
+gsave
+scalef scalef -1 mul scale
+
+/radius 0.25 def
+
+
+/proc_iplt {      %  f l r left right fraction: compute l + (r-l)*fr
+   exch dup       %  f r l l
+   4 1 roll       %  l f r l
+   -1 mul add mul add
+} def
+
+
+/proc_circle {    %     p f   point factor
+   gsave
+                  %%    newpath moveto
+      dup
+      % 1 exch 0 setrgbcolor
+      % -1 mul 1 add 0.25 mul dup 0.5 add exch -0.25 mul 0.5 add 0 exch setrgbcolor
+
+      dup dup                      %     f f f
+      0.5 1.00 proc_iplt 3 1 roll
+      0.0 1.00 proc_iplt 2 1 roll
+      0.5 0.08 proc_iplt
+
+      setrgbcolor
+      exch
+      aload pop moveto
+      % 0.5 0.5 rmoveto
+      currentpoint
+      gsave
+         0 setlinewidth
+         currentpoint radius 0 360 arc
+         fill
+      grestore
+      newpath radius 0 360 arc
+      0 setgray
+      0.05 setlinewidth
+      stroke
+   grestore
+} def
+
+
+% $cl_r = 1;
+% my $t = 1-$val/$::CONF{RED_MAX};
+% ($cl_g, $cl_b) = ($t) x 2;
+
+/proc_line {
+   gsave
+      .10 setlinewidth
+
+      dup dup                      %     f f f
+      0.84 1.00 proc_iplt 3 1 roll
+      0.00 1.00 proc_iplt 2 1 roll
+      0.00 0.00 proc_iplt
+      setrgbcolor
+
+      % setgray
+      aload pop moveto
+      aload pop lineto
+      stroke
+   grestore
+}  def
+
+
+/she {proc_line} def
+/shn {proc_circle} def
+
+/v_0 [4 1] def /v_1 [5 1] def /v_2 [7 1] def /v_3 [8 1] def /v_4 [10 1] def
+/v_5 [11 1] def /v_6 [16 1] def /v_7 [17 1] def /v_8 [18 1] def /v_9 [3 2] def
+/v_10 [4 2] def /v_11 [6 2] def /v_12 [7 2] def /v_13 [11 2] def /v_14 [15 2]
+def /v_15 [16 2] def /v_16 [17 2] def /v_17 [4 3] def /v_18 [5 3] def /v_19 [6
+3] def /v_20 [7 3] def /v_21 [8 3] def /v_22 [10 3] def /v_23 [14 3] def /v_24
+[15 3] def /v_25 [17 3] def /v_26 [18 3] def /v_27 [19 3] def /v_28 [1 4] def
+/v_29 [2 4] def /v_30 [10 4] def /v_31 [12 4] def /v_32 [13 4] def /v_33 [15 4]
+def /v_34 [16 4] def /v_35 [18 4] def /v_36 [19 4] def /v_37 [4 5] def /v_38 [5
+5] def /v_39 [8 5] def /v_40 [9 5] def /v_41 [11 5] def /v_42 [12 5] def /v_43
+[3 6] def /v_44 [7 6] def /v_45 [9 6] def /v_46 [10 6] def /v_47 [12 6] def
+/v_48 [13 6] def /v_49 [15 6] def /v_50 [18 6] def /v_51 [1 7] def /v_52 [4 7]
+def /v_53 [12 7] def /v_54 [13 7] def /v_55 [14 7] def /v_56 [16 7] def /v_57
+[17 7] def /v_58 [18 7] def /v_59 [19 7] def /v_60 [3 8] def /v_61 [4 8] def
+/v_62 [5 8] def /v_63 [6 8] def /v_64 [7 8] def /v_65 [14 8] def /v_66 [15 8]
+def /v_67 [19 8] def /v_68 [3 9] def /v_69 [5 9] def /v_70 [9 9] def /v_71 [11
+9] def /v_72 [14 9] def /v_73 [15 9] def /v_74 [16 9] def /v_75 [19 9] def
+/v_76 [1 10] def /v_77 [2 10] def /v_78 [5 10] def /v_79 [14 10] def /v_80 [15
+10] def /v_81 [17 10] def /v_82 [19 10] def /v_83 [3 11] def /v_84 [6 11] def
+/v_85 [7 11] def /v_86 [10 11] def /v_87 [13 11] def /v_88 [15 11] def /v_89
+[18 11] def /v_90 [1 12] def /v_91 [2 12] def /v_92 [3 12] def /v_93 [7 12] def
+/v_94 [9 12] def /v_95 [10 12] def /v_96 [15 12] def /v_97 [16 12] def /v_98
+[18 12] def /v_99 [2 13] def /v_100 [3 13] def /v_101 [4 13] def /v_102 [6 13]
+def /v_103 [12 13] def /v_104 [13 13] def /v_105 [17 13] def /v_106 [4 14] def
+/v_107 [5 14] def /v_108 [10 14] def /v_109 [13 14] def /v_110 [16 14] def
+/v_111 [17 14] def /v_112 [1 15] def /v_113 [2 15] def /v_114 [3 15] def /v_115
+[6 15] def /v_116 [14 15] def /v_117 [17 15] def /v_118 [2 16] def /v_119 [4
+16] def /v_120 [5 16] def /v_121 [8 16] def /v_122 [12 16] def /v_123 [13 16]
+def /v_124 [14 16] def /v_125 [17 16] def /v_126 [18 16] def /v_127 [19 16] def
+/v_128 [1 17] def /v_129 [4 17] def /v_130 [7 17] def /v_131 [8 17] def /v_132
+[9 17] def /v_133 [10 17] def /v_134 [12 17] def /v_135 [14 17] def /v_136 [16
+17] def /v_137 [5 18] def /v_138 [9 18] def /v_139 [11 18] def /v_140 [12 18]
+def /v_141 [13 18] def /v_142 [19 18] def /v_143 [1 19] def /v_144 [2 19] def
+/v_145 [5 19] def /v_146 [7 19] def /v_147 [9 19] def /v_148 [13 19] def /v_149
+[14 19] def
+
+
+v_21 v_0 0.7 she v_28 v_0 0.7 she v_37 v_0 0.7 she v_38 v_0 0.7 she v_28 v_1
+0.7 she v_29 v_1 0.7 she v_37 v_1 0.7 she v_38 v_1 0.7 she v_9 v_2 0.7 she v_10
+v_2 0.6 she v_17 v_2 0.7 she v_22 v_2 0.7 she v_38 v_2 0.7 she v_39 v_2 0.7 she
+v_30 v_3 0.7 she v_39 v_3 0.7 she v_40 v_3 0.7 she v_11 v_4 0.7 she v_12 v_4
+0.7 she v_19 v_4 0.7 she v_20 v_4 0.6 she v_31 v_4 0.7 she v_32 v_4 0.7 she
+v_39 v_4 0.7 she v_40 v_4 0.7 she v_32 v_5 0.7 she v_39 v_5 0.7 she v_40 v_5
+0.7 she v_41 v_5 0.7 she v_42 v_5 0.7 she v_32 v_6 0.7 she v_35 v_6 0.7 she
+v_36 v_6 0.7 she v_32 v_7 0.7 she v_23 v_8 0.7 she v_33 v_8 0.7 she v_34 v_8
+0.7 she v_2 v_9 0.7 she v_12 v_9 0.7 she v_20 v_9 0.7 she v_38 v_9 0.7 she v_43
+v_9 0.7 she v_2 v_10 0.7 she v_21 v_10 0.7 she v_4 v_11 0.7 she v_29 v_11 0.7
+she v_37 v_11 0.7 she v_39 v_11 0.6 she v_4 v_12 0.6 she v_9 v_12 0.7 she v_22
+v_12 0.7 she v_40 v_12 0.7 she v_39 v_13 0.7 she v_40 v_13 0.7 she v_46 v_13
+0.7 she v_47 v_13 0.7 she v_27 v_14 0.7 she v_31 v_14 0.7 she v_35 v_14 0.7 she
+v_49 v_14 0.7 she v_50 v_16 0.7 she v_2 v_17 0.7 she v_52 v_17 0.7 she v_28
+v_18 0.7 she v_43 v_18 0.6 she v_4 v_19 0.7 she v_29 v_19 0.7 she v_40 v_19 0.6
+she v_4 v_20 0.6 she v_9 v_20 0.7 she v_45 v_20 0.7 she v_0 v_21 0.7 she v_10
+v_21 0.7 she v_46 v_21 0.7 she v_2 v_22 0.7 she v_12 v_22 0.7 she v_8 v_23 0.7
+she v_26 v_23 0.7 she v_41 v_23 0.7 she v_47 v_23 0.7 she v_27 v_24 0.7 she
+v_35 v_24 0.6 she v_36 v_24 0.7 she v_50 v_25 0.7 she v_23 v_26 0.7 she v_14
+v_27 0.7 she v_24 v_27 0.7 she v_33 v_27 0.7 she v_0 v_28 0.7 she v_1 v_28 0.7
+she v_18 v_28 0.7 she v_38 v_28 0.7 she v_51 v_28 0.7 she v_52 v_28 0.7 she
+v_60 v_28 0.7 she v_61 v_28 0.7 she v_62 v_28 0.7 she v_1 v_29 0.7 she v_11
+v_29 0.7 she v_19 v_29 0.7 she v_51 v_29 0.6 she v_60 v_29 0.7 she v_3 v_30 0.7
+she v_4 v_31 0.7 she v_14 v_31 0.7 she v_45 v_31 0.7 she v_4 v_32 0.7 she v_5
+v_32 0.6 she v_6 v_32 0.7 she v_7 v_32 0.7 she v_8 v_33 0.7 she v_27 v_33 0.7
+she v_8 v_34 0.7 she v_59 v_34 0.7 she v_6 v_35 0.6 she v_14 v_35 0.6 she v_24
+v_35 0.7 she v_58 v_35 0.6 she v_59 v_35 0.7 she v_67 v_35 0.7 she v_6 v_36 0.7
+she v_24 v_36 0.7 she v_57 v_36 0.7 she v_58 v_36 0.7 she v_59 v_36 0.7 she v_0
+v_37 0.7 she v_1 v_37 0.7 she v_11 v_37 0.7 she v_62 v_37 0.6 she v_0 v_38 0.7
+she v_1 v_38 0.7 she v_2 v_38 0.7 she v_9 v_38 0.7 she v_28 v_38 0.7 she v_39
+v_38 0.7 she v_51 v_38 0.7 she v_60 v_38 0.7 she v_62 v_38 0.7 she v_63 v_38
+0.7 she v_2 v_39 0.7 she v_3 v_39 0.7 she v_4 v_39 0.7 she v_5 v_39 0.7 she
+v_11 v_39 0.7 she v_13 v_39 0.7 she v_38 v_39 0.7 she v_63 v_39 0.7 she v_3
+v_40 0.7 she v_4 v_40 0.7 she v_5 v_40 0.7 she v_12 v_40 0.7 she v_13 v_40 0.7
+she v_19 v_40 0.7 she v_47 v_40 0.7 she v_5 v_41 0.7 she v_23 v_41 0.6 she v_5
+v_42 0.7 she v_65 v_42 0.7 she v_71 v_42 0.6 she v_9 v_43 0.7 she v_18 v_43 0.7
+she v_20 v_45 0.7 she v_31 v_45 0.6 she v_53 v_45 0.7 she v_13 v_46 0.7 she
+v_21 v_46 0.7 she v_13 v_47 0.7 she v_23 v_47 0.7 she v_40 v_47 0.6 she v_72
+v_47 0.6 she v_56 v_48 0.7 she v_14 v_49 0.7 she v_50 v_49 0.7 she v_58 v_49
+0.6 she v_59 v_49 0.7 she v_16 v_50 0.7 she v_25 v_50 0.7 she v_49 v_50 0.7 she
+v_82 v_50 0.7 she v_28 v_51 0.7 she v_29 v_51 0.7 she v_38 v_51 0.6 she v_76
+v_51 0.6 she v_78 v_51 0.6 she v_83 v_51 0.7 she v_17 v_52 0.7 she v_28 v_52
+0.7 she v_76 v_52 0.7 she v_77 v_52 0.7 she v_45 v_53 0.7 she v_86 v_53 0.7 she
+v_79 v_54 0.7 she v_86 v_54 0.7 she v_58 v_55 0.7 she v_48 v_56 0.7 she v_75
+v_56 0.7 she v_36 v_57 0.7 she v_81 v_57 0.7 she v_35 v_58 0.7 she v_36 v_58
+0.7 she v_49 v_58 0.7 she v_55 v_58 0.7 she v_73 v_58 0.6 she v_81 v_58 0.7 she
+v_34 v_59 0.7 she v_35 v_59 0.7 she v_36 v_59 0.7 she v_49 v_59 0.7 she v_66
+v_59 0.7 she v_74 v_59 0.7 she v_81 v_59 0.7 she v_89 v_59 0.7 she v_28 v_60
+0.7 she v_29 v_60 0.7 she v_38 v_60 0.7 she v_64 v_60 0.7 she v_90 v_60 0.7 she
+v_28 v_61 0.7 she v_83 v_61 0.7 she v_84 v_61 0.7 she v_28 v_62 0.7 she v_37
+v_62 0.7 she v_38 v_62 0.6 she v_76 v_62 0.7 she v_77 v_62 0.7 she v_83 v_62
+0.6 she v_85 v_62 0.7 she v_38 v_63 0.7 she v_39 v_63 0.7 she v_84 v_63 0.7 she
+v_60 v_64 0.7 she v_68 v_64 0.6 she v_85 v_64 0.6 she v_86 v_64 0.6 she v_42
+v_65 0.7 she v_59 v_66 0.7 she v_67 v_66 0.7 she v_75 v_66 0.7 she v_89 v_66
+0.7 she v_35 v_67 0.7 she v_66 v_67 0.7 she v_73 v_67 0.7 she v_74 v_67 0.7 she
+v_80 v_67 0.7 she v_98 v_67 0.7 she v_64 v_68 0.7 she v_84 v_68 0.7 she v_76
+v_69 0.7 she v_92 v_69 0.7 she v_94 v_69 0.7 she v_102 v_69 0.7 she v_42 v_71
+0.7 she v_47 v_72 0.6 she v_58 v_73 0.6 she v_67 v_73 0.7 she v_75 v_73 0.7 she
+v_82 v_73 0.7 she v_89 v_73 0.7 she v_59 v_74 0.7 she v_67 v_74 0.7 she v_75
+v_74 0.7 she v_56 v_75 0.7 she v_66 v_75 0.7 she v_73 v_75 0.7 she v_74 v_75
+0.7 she v_80 v_75 0.7 she v_97 v_75 0.7 she v_51 v_76 0.7 she v_52 v_76 0.7 she
+v_62 v_76 0.7 she v_69 v_76 0.7 she v_78 v_76 0.7 she v_101 v_76 0.7 she v_52
+v_77 0.7 she v_62 v_77 0.7 she v_78 v_77 0.6 she v_101 v_77 0.6 she v_51 v_78
+0.7 she v_76 v_78 0.7 she v_77 v_78 0.6 she v_90 v_78 0.7 she v_91 v_78 0.7 she
+v_92 v_78 0.7 she v_94 v_78 0.7 she v_54 v_79 0.7 she v_103 v_79 0.7 she v_105
+v_79 0.7 she v_67 v_80 0.7 she v_75 v_80 0.7 she v_82 v_80 0.7 she v_98 v_80
+0.7 she v_105 v_80 0.7 she v_57 v_81 0.7 she v_58 v_81 0.7 she v_59 v_81 0.7
+she v_87 v_81 0.6 she v_111 v_81 0.7 she v_50 v_82 0.7 she v_73 v_82 0.7 she
+v_80 v_82 0.7 she v_88 v_82 0.7 she v_51 v_83 0.7 she v_61 v_83 0.7 she v_62
+v_83 0.6 she v_84 v_83 0.7 she v_113 v_83 0.7 she v_61 v_84 0.7 she v_63 v_84
+0.7 she v_68 v_84 0.7 she v_83 v_84 0.7 she v_106 v_84 0.7 she v_115 v_84 0.6
+she v_62 v_85 0.7 she v_64 v_85 0.6 she v_108 v_85 0.7 she v_115 v_85 0.7 she
+v_53 v_86 0.7 she v_54 v_86 0.7 she v_64 v_86 0.7 she v_87 v_86 0.6 she v_104
+v_86 0.7 she v_109 v_86 0.7 she v_116 v_86 0.7 she v_81 v_87 0.6 she v_86 v_87
+0.7 she v_95 v_87 0.7 she v_82 v_88 0.7 she v_111 v_88 0.7 she v_59 v_89 0.7
+she v_66 v_89 0.7 she v_73 v_89 0.7 she v_117 v_89 0.7 she v_60 v_90 0.7 she
+v_78 v_90 0.7 she v_112 v_90 0.7 she v_113 v_90 0.7 she v_114 v_90 0.7 she v_78
+v_91 0.7 she v_112 v_91 0.7 she v_113 v_91 0.7 she v_114 v_91 0.7 she v_69 v_92
+0.7 she v_78 v_92 0.6 she v_102 v_92 0.7 she v_112 v_92 0.7 she v_113 v_92 0.6
+she v_120 v_93 0.7 she v_69 v_94 0.7 she v_78 v_94 0.7 she v_107 v_94 0.7 she
+v_121 v_94 0.7 she v_122 v_94 0.7 she v_87 v_95 0.7 she v_109 v_95 0.7 she
+v_116 v_95 0.7 she v_121 v_95 0.7 she v_122 v_95 0.7 she v_116 v_96 0.7 she
+v_117 v_96 0.7 she v_125 v_96 0.7 she v_126 v_96 0.7 she v_127 v_96 0.7 she
+v_75 v_97 0.7 she v_104 v_97 0.7 she v_125 v_97 0.7 she v_126 v_97 0.7 she
+v_127 v_97 0.7 she v_67 v_98 0.7 she v_80 v_98 0.7 she v_125 v_98 0.7 she v_126
+v_98 0.7 she v_127 v_98 0.7 she v_119 v_100 0.7 she v_120 v_100 0.6 she v_128
+v_100 0.6 she v_76 v_101 0.7 she v_77 v_101 0.7 she v_128 v_101 0.7 she v_69
+v_102 0.7 she v_92 v_102 0.7 she v_121 v_102 0.7 she v_79 v_103 0.7 she v_86
+v_104 0.7 she v_97 v_104 0.6 she v_79 v_105 0.7 she v_80 v_105 0.7 she v_127
+v_105 0.6 she v_84 v_106 0.7 she v_128 v_106 0.6 she v_137 v_106 0.7 she v_94
+v_107 0.7 she v_112 v_107 0.7 she v_118 v_107 0.7 she v_121 v_107 0.7 she v_128
+v_107 0.7 she v_130 v_107 0.7 she v_137 v_107 0.7 she v_85 v_108 0.7 she v_116
+v_108 0.7 she v_123 v_108 0.7 she v_133 v_108 0.7 she v_134 v_108 0.6 she v_86
+v_109 0.7 she v_95 v_109 0.7 she v_110 v_109 0.7 she v_140 v_109 0.7 she v_141
+v_109 0.7 she v_109 v_110 0.7 she v_135 v_110 0.7 she v_142 v_110 0.7 she v_81
+v_111 0.7 she v_88 v_111 0.7 she v_116 v_111 0.7 she v_90 v_112 0.7 she v_91
+v_112 0.7 she v_92 v_112 0.7 she v_107 v_112 0.7 she v_83 v_113 0.7 she v_90
+v_113 0.7 she v_91 v_113 0.7 she v_92 v_113 0.7 she v_144 v_113 0.6 she v_90
+v_114 0.7 she v_91 v_114 0.7 she v_143 v_114 0.7 she v_144 v_114 0.7 she v_145
+v_114 0.7 she v_84 v_115 0.7 she v_85 v_115 0.7 she v_138 v_115 0.7 she v_144
+v_115 0.7 she v_145 v_115 0.7 she v_146 v_115 0.7 she v_147 v_115 0.7 she v_86
+v_116 0.7 she v_95 v_116 0.7 she v_96 v_116 0.7 she v_108 v_116 0.7 she v_111
+v_116 0.7 she v_117 v_116 0.7 she v_125 v_116 0.7 she v_126 v_116 0.7 she v_148
+v_116 0.7 she v_149 v_116 0.7 she v_89 v_117 0.7 she v_96 v_117 0.7 she v_116
+v_117 0.7 she v_124 v_117 0.7 she v_135 v_117 0.7 she v_149 v_117 0.7 she v_107
+v_118 0.7 she v_137 v_118 0.6 she v_145 v_118 0.7 she v_100 v_119 0.7 she v_144
+v_119 0.6 she v_146 v_119 0.7 she v_93 v_120 0.7 she v_100 v_120 0.7 she v_121
+v_120 0.6 she v_128 v_120 0.7 she v_131 v_120 0.7 she v_132 v_120 0.7 she v_144
+v_120 0.7 she v_94 v_121 0.7 she v_95 v_121 0.7 she v_102 v_121 0.7 she v_107
+v_121 0.7 she v_120 v_121 0.7 she v_122 v_121 0.7 she v_145 v_121 0.7 she v_94
+v_122 0.7 she v_95 v_122 0.7 she v_121 v_122 0.7 she v_132 v_122 0.7 she v_138
+v_122 0.7 she v_147 v_122 0.7 she v_108 v_123 0.7 she v_117 v_124 0.7 she v_125
+v_124 0.7 she v_126 v_124 0.7 she v_96 v_125 0.7 she v_97 v_125 0.7 she v_98
+v_125 0.7 she v_116 v_125 0.7 she v_124 v_125 0.7 she v_135 v_125 0.7 she v_149
+v_125 0.7 she v_96 v_126 0.7 she v_97 v_126 0.7 she v_98 v_126 0.7 she v_116
+v_126 0.7 she v_124 v_126 0.7 she v_135 v_126 0.7 she v_149 v_126 0.7 she v_96
+v_127 0.7 she v_97 v_127 0.7 she v_98 v_127 0.7 she v_105 v_127 0.7 she v_100
+v_128 0.7 she v_101 v_128 0.7 she v_106 v_128 0.6 she v_107 v_128 0.7 she v_120
+v_128 0.7 she v_107 v_130 0.7 she v_139 v_130 0.7 she v_120 v_131 0.7 she v_134
+v_131 0.7 she v_120 v_132 0.7 she v_122 v_132 0.7 she v_134 v_132 0.7 she v_137
+v_132 0.7 she v_140 v_132 0.7 she v_145 v_132 0.6 she v_148 v_132 0.7 she v_108
+v_133 0.7 she v_135 v_133 0.7 she v_148 v_133 0.7 she v_149 v_133 0.7 she v_108
+v_134 0.6 she v_131 v_134 0.7 she v_132 v_134 0.7 she v_138 v_134 0.6 she v_147
+v_134 0.7 she v_110 v_135 0.7 she v_117 v_135 0.7 she v_125 v_135 0.7 she v_126
+v_135 0.7 she v_133 v_135 0.7 she v_106 v_137 0.7 she v_107 v_137 0.7 she v_118
+v_137 0.6 she v_132 v_137 0.7 she v_138 v_137 0.7 she v_144 v_137 0.7 she v_147
+v_137 0.7 she v_115 v_138 0.7 she v_122 v_138 0.7 she v_134 v_138 0.7 she v_137
+v_138 0.7 she v_141 v_138 0.7 she v_148 v_138 0.7 she v_130 v_139 0.7 she v_109
+v_140 0.7 she v_132 v_140 0.7 she v_147 v_140 0.6 she v_109 v_141 0.6 she v_138
+v_141 0.7 she v_147 v_141 0.7 she v_110 v_142 0.7 she v_114 v_143 0.7 she v_113
+v_144 0.7 she v_114 v_144 0.7 she v_115 v_144 0.7 she v_119 v_144 0.7 she v_120
+v_144 0.7 she v_137 v_144 0.7 she v_145 v_144 0.7 she v_114 v_145 0.7 she v_115
+v_145 0.7 she v_118 v_145 0.7 she v_121 v_145 0.7 she v_132 v_145 0.7 she v_144
+v_145 0.7 she v_115 v_146 0.7 she v_119 v_146 0.7 she v_115 v_147 0.7 she v_122
+v_147 0.7 she v_134 v_147 0.7 she v_137 v_147 0.7 she v_140 v_147 0.7 she v_141
+v_147 0.7 she v_148 v_147 0.7 she v_116 v_148 0.7 she v_132 v_148 0.7 she v_133
+v_148 0.7 she v_138 v_148 0.7 she v_147 v_148 0.7 she v_116 v_149 0.7 she v_117
+v_149 0.7 she v_125 v_149 0.7 she v_126 v_149 0.7 she v_133 v_149 0.7 she v_2
+v_0 0.7 she v_12 v_0 0.7 she v_20 v_0 0.6 she v_29 v_0 0.6 she v_3 v_1 0.7 she
+v_21 v_1 0.6 she v_0 v_2 0.6 she v_4 v_2 0.6 she v_1 v_3 0.7 she v_13 v_3 0.6
+she v_18 v_3 0.6 she v_22 v_3 0.7 she v_2 v_4 0.6 she v_30 v_4 0.6 she v_21 v_5
+0.6 she v_30 v_5 0.7 she v_31 v_5 0.6 she v_23 v_6 0.6 she v_27 v_6 0.7 she
+v_33 v_6 0.6 she v_34 v_6 0.6 she v_23 v_7 0.6 she v_24 v_7 0.7 she v_33 v_7
+0.6 she v_34 v_7 0.6 she v_35 v_7 0.7 she v_36 v_7 0.6 she v_14 v_8 0.6 she
+v_24 v_8 0.6 she v_35 v_8 0.7 she v_36 v_8 0.6 she v_37 v_9 0.6 she v_12 v_10
+0.7 she v_20 v_10 0.6 she v_37 v_10 0.6 she v_38 v_10 0.6 she v_38 v_11 0.7 she
+v_0 v_12 0.6 she v_10 v_12 0.6 she v_17 v_12 0.7 she v_38 v_12 0.6 she v_39
+v_12 0.6 she v_3 v_13 0.7 she v_21 v_13 0.6 she v_32 v_13 0.6 she v_41 v_13 0.6
+she v_42 v_13 0.7 she v_8 v_14 0.6 she v_26 v_14 0.6 she v_32 v_14 0.7 she v_27
+v_15 0.6 she v_32 v_15 0.6 she v_35 v_15 0.7 she v_36 v_15 0.6 she v_23 v_16
+0.6 she v_12 v_17 0.6 she v_20 v_17 0.7 she v_43 v_17 0.6 she v_3 v_18 0.6 she
+v_21 v_18 0.7 she v_29 v_18 0.6 she v_39 v_19 0.6 she v_0 v_20 0.7 she v_10
+v_20 0.6 she v_17 v_20 0.6 she v_22 v_20 0.6 she v_37 v_20 0.7 she v_38 v_20
+0.6 she v_40 v_20 0.6 she v_44 v_20 0.7 she v_1 v_21 0.6 she v_5 v_21 0.6 she
+v_13 v_21 0.7 she v_18 v_21 0.6 she v_30 v_21 0.6 she v_44 v_21 0.6 she v_45
+v_21 0.7 she v_3 v_22 0.6 she v_20 v_22 0.6 she v_42 v_22 0.7 she v_45 v_22 0.6
+she v_46 v_22 0.6 she v_47 v_22 0.7 she v_6 v_23 0.6 she v_7 v_23 0.6 she v_16
+v_23 0.6 she v_25 v_23 0.7 she v_42 v_23 0.6 she v_48 v_23 0.6 she v_7 v_24 0.7
+she v_8 v_24 0.6 she v_26 v_24 0.6 she v_31 v_24 0.6 she v_49 v_24 0.7 she v_23
+v_25 0.6 she v_14 v_26 0.6 she v_24 v_26 0.7 she v_33 v_26 0.6 she v_50 v_26
+0.6 she v_6 v_27 0.7 she v_15 v_27 0.6 she v_34 v_27 0.6 she v_50 v_27 0.6 she
+v_0 v_29 0.7 she v_18 v_29 0.6 she v_38 v_29 0.6 she v_52 v_29 0.7 she v_4 v_30
+0.6 she v_5 v_30 0.6 she v_21 v_30 0.7 she v_32 v_30 0.6 she v_44 v_30 0.6 she
+v_47 v_30 0.6 she v_53 v_30 0.7 she v_5 v_31 0.6 she v_24 v_31 0.6 she v_33
+v_31 0.7 she v_40 v_31 0.6 she v_53 v_31 0.6 she v_54 v_31 0.7 she v_13 v_32
+0.6 she v_14 v_32 0.6 she v_15 v_32 0.6 she v_30 v_32 0.7 she v_34 v_32 0.6 she
+v_46 v_32 0.6 she v_49 v_32 0.7 she v_53 v_32 0.6 she v_54 v_32 0.6 she v_6
+v_33 0.7 she v_7 v_33 0.6 she v_26 v_33 0.6 she v_31 v_33 0.6 she v_35 v_33 0.7
+she v_48 v_33 0.6 she v_6 v_34 0.6 she v_7 v_34 0.7 she v_27 v_34 0.6 she v_32
+v_34 0.6 she v_36 v_34 0.7 she v_49 v_34 0.6 she v_50 v_34 0.6 she v_7 v_35 0.6
+she v_8 v_35 0.7 she v_15 v_35 0.6 she v_33 v_35 0.6 she v_7 v_36 0.7 she v_8
+v_36 0.6 she v_15 v_36 0.6 she v_34 v_36 0.7 she v_9 v_37 0.6 she v_10 v_37 0.6
+she v_20 v_37 0.6 she v_44 v_37 0.7 she v_51 v_37 0.6 she v_60 v_37 0.6 she
+v_61 v_37 0.7 she v_10 v_38 0.6 she v_11 v_38 0.6 she v_12 v_38 0.7 she v_20
+v_38 0.6 she v_29 v_38 0.6 she v_44 v_38 0.6 she v_61 v_38 0.7 she v_12 v_39
+0.6 she v_19 v_39 0.6 she v_64 v_39 0.7 she v_20 v_40 0.6 she v_31 v_40 0.6 she
+v_42 v_40 0.7 she v_64 v_40 0.6 she v_13 v_41 0.6 she v_54 v_41 0.6 she v_55
+v_41 0.7 she v_13 v_42 0.6 she v_22 v_42 0.6 she v_23 v_42 0.7 she v_40 v_42
+0.6 she v_45 v_42 0.6 she v_55 v_42 0.7 she v_17 v_43 0.6 she v_63 v_43 0.6 she
+v_69 v_43 0.6 she v_20 v_44 0.7 she v_21 v_44 0.6 she v_30 v_44 0.6 she v_37
+v_44 0.7 she v_38 v_44 0.6 she v_61 v_44 0.6 she v_69 v_44 0.7 she v_70 v_44
+0.6 she v_78 v_44 0.6 she v_21 v_45 0.6 she v_22 v_45 0.7 she v_42 v_45 0.6 she
+v_47 v_45 0.6 she v_63 v_45 0.7 she v_64 v_45 0.6 she v_22 v_46 0.6 she v_32
+v_46 0.7 she v_48 v_46 0.6 she v_53 v_46 0.6 she v_54 v_46 0.6 she v_22 v_47
+0.7 she v_30 v_47 0.6 she v_45 v_47 0.6 she v_49 v_47 0.7 she v_65 v_47 0.6 she
+v_71 v_47 0.6 she v_23 v_48 0.7 she v_33 v_48 0.6 she v_46 v_48 0.6 she v_66
+v_48 0.6 she v_71 v_48 0.7 she v_72 v_48 0.6 she v_24 v_49 0.6 she v_32 v_49
+0.7 she v_34 v_49 0.6 she v_47 v_49 0.6 she v_53 v_49 0.7 she v_72 v_49 0.6 she
+v_74 v_49 0.6 she v_26 v_50 0.6 she v_27 v_50 0.7 she v_34 v_50 0.6 she v_74
+v_50 0.6 she v_37 v_51 0.7 she v_69 v_51 0.6 she v_77 v_51 0.6 she v_29 v_52
+0.7 she v_64 v_52 0.6 she v_78 v_52 0.6 she v_30 v_53 0.6 she v_31 v_53 0.7 she
+v_32 v_53 0.6 she v_46 v_53 0.6 she v_49 v_53 0.7 she v_66 v_53 0.6 she v_70
+v_53 0.6 she v_72 v_53 0.7 she v_31 v_54 0.6 she v_32 v_54 0.6 she v_41 v_54
+0.6 she v_46 v_54 0.7 she v_56 v_54 0.6 she v_70 v_54 0.6 she v_73 v_54 0.7 she
+v_74 v_54 0.6 she v_41 v_55 0.6 she v_42 v_55 0.7 she v_57 v_55 0.6 she v_71
+v_55 0.6 she v_74 v_55 0.6 she v_79 v_55 0.7 she v_80 v_55 0.6 she v_54 v_56
+0.6 she v_67 v_56 0.7 she v_79 v_56 0.6 she v_80 v_56 0.6 she v_55 v_57 0.7 she
+v_65 v_57 0.6 she v_72 v_57 0.6 she v_73 v_57 0.6 she v_82 v_57 0.7 she v_66
+v_58 0.6 she v_74 v_58 0.6 she v_82 v_58 0.7 she v_37 v_60 0.6 she v_83 v_60
+0.6 she v_37 v_61 0.7 she v_38 v_61 0.6 she v_44 v_61 0.6 she v_76 v_61 0.6 she
+v_77 v_61 0.7 she v_70 v_62 0.6 she v_84 v_62 0.6 she v_43 v_63 0.7 she v_45
+v_63 0.6 she v_68 v_63 0.6 she v_39 v_64 0.7 she v_40 v_64 0.6 she v_45 v_64
+0.6 she v_52 v_64 0.6 she v_47 v_65 0.7 she v_57 v_65 0.6 she v_87 v_65 0.6 she
+v_88 v_65 0.7 she v_48 v_66 0.6 she v_53 v_66 0.6 she v_58 v_66 0.7 she v_81
+v_66 0.6 she v_87 v_66 0.6 she v_88 v_66 0.6 she v_56 v_67 0.7 she v_89 v_67
+0.6 she v_63 v_68 0.6 she v_83 v_68 0.7 she v_90 v_68 0.6 she v_91 v_68 0.6 she
+v_92 v_68 0.7 she v_43 v_69 0.6 she v_44 v_69 0.6 she v_51 v_69 0.6 she v_70
+v_69 0.7 she v_77 v_69 0.6 she v_83 v_69 0.6 she v_93 v_69 0.7 she v_44 v_70
+0.6 she v_53 v_70 0.6 she v_54 v_70 0.7 she v_62 v_70 0.6 she v_69 v_70 0.6 she
+v_84 v_70 0.6 she v_87 v_70 0.7 she v_93 v_70 0.6 she v_94 v_70 0.6 she v_47
+v_71 0.7 she v_48 v_71 0.6 she v_55 v_71 0.6 she v_72 v_71 0.7 she v_85 v_71
+0.6 she v_87 v_71 0.6 she v_94 v_71 0.6 she v_103 v_71 0.7 she v_48 v_72 0.6
+she v_49 v_72 0.6 she v_53 v_72 0.7 she v_57 v_72 0.6 she v_71 v_72 0.6 she
+v_81 v_72 0.7 she v_96 v_72 0.6 she v_54 v_73 0.6 she v_57 v_73 0.6 she v_96
+v_73 0.7 she v_97 v_73 0.6 she v_49 v_74 0.6 she v_50 v_74 0.7 she v_54 v_74
+0.6 she v_55 v_74 0.6 she v_58 v_74 0.7 she v_82 v_74 0.6 she v_87 v_74 0.6 she
+v_89 v_74 0.6 she v_96 v_74 0.7 she v_97 v_74 0.6 she v_98 v_74 0.6 she v_61
+v_76 0.7 she v_99 v_76 0.6 she v_100 v_76 0.6 she v_51 v_77 0.7 she v_61 v_77
+0.6 she v_69 v_77 0.6 she v_99 v_77 0.6 she v_100 v_77 0.7 she v_44 v_78 0.6
+she v_52 v_78 0.6 she v_83 v_78 0.7 she v_102 v_78 0.6 she v_55 v_79 0.6 she
+v_56 v_79 0.7 she v_81 v_79 0.6 she v_97 v_79 0.6 she v_104 v_79 0.6 she v_55
+v_80 0.7 she v_56 v_80 0.6 she v_89 v_80 0.6 she v_104 v_80 0.7 she v_66 v_81
+0.6 she v_72 v_81 0.6 she v_79 v_81 0.7 she v_96 v_81 0.6 she v_105 v_81 0.6
+she v_57 v_82 0.6 she v_58 v_82 0.7 she v_74 v_82 0.6 she v_97 v_82 0.6 she
+v_105 v_82 0.7 she v_60 v_83 0.6 she v_68 v_83 0.6 she v_69 v_83 0.7 she v_78
+v_83 0.6 she v_106 v_83 0.6 she v_62 v_84 0.6 she v_70 v_84 0.7 she v_94 v_84
+0.6 she v_101 v_84 0.6 she v_107 v_84 0.7 she v_71 v_85 0.6 she v_86 v_85 0.6
+she v_95 v_85 0.7 she v_101 v_85 0.6 she v_107 v_85 0.6 she v_85 v_86 0.6 she
+v_93 v_86 0.7 she v_65 v_87 0.6 she v_66 v_87 0.6 she v_70 v_87 0.7 she v_71
+v_87 0.6 she v_74 v_87 0.6 she v_97 v_87 0.7 she v_65 v_88 0.6 she v_66 v_88
+0.6 she v_89 v_88 0.6 she v_98 v_88 0.7 she v_103 v_88 0.6 she v_105 v_88 0.6
+she v_109 v_88 0.7 she v_110 v_88 0.6 she v_67 v_89 0.6 she v_74 v_89 0.7 she
+v_80 v_89 0.6 she v_88 v_89 0.6 she v_96 v_89 0.7 she v_110 v_89 0.6 she v_111
+v_89 0.6 she v_68 v_90 0.6 she v_106 v_90 0.7 she v_68 v_91 0.6 she v_106 v_91
+0.6 she v_107 v_91 0.7 she v_68 v_92 0.6 she v_107 v_92 0.6 she v_114 v_92 0.7
+she v_69 v_93 0.6 she v_70 v_93 0.6 she v_86 v_93 0.7 she v_95 v_93 0.6 she
+v_101 v_93 0.6 she v_106 v_93 0.6 she v_107 v_93 0.7 she v_108 v_93 0.6 she
+v_115 v_93 0.6 she v_70 v_94 0.7 she v_71 v_94 0.6 she v_84 v_94 0.6 she v_102
+v_94 0.7 she v_85 v_95 0.6 she v_93 v_95 0.6 she v_104 v_95 0.6 she v_72 v_96
+0.7 she v_73 v_96 0.6 she v_74 v_96 0.6 she v_81 v_96 0.7 she v_89 v_96 0.6 she
+v_98 v_96 0.6 she v_103 v_96 0.7 she v_109 v_96 0.6 she v_73 v_97 0.6 she v_74
+v_97 0.6 she v_79 v_97 0.7 she v_82 v_97 0.6 she v_87 v_97 0.6 she v_117 v_97
+0.7 she v_74 v_98 0.6 she v_88 v_98 0.6 she v_96 v_98 0.7 she v_117 v_98 0.6
+she v_76 v_99 0.6 she v_77 v_99 0.6 she v_107 v_99 0.7 she v_118 v_99 0.6 she
+v_128 v_99 0.6 she v_76 v_100 0.7 she v_77 v_100 0.6 she v_102 v_100 0.6 she
+v_115 v_100 0.7 she v_118 v_100 0.6 she v_84 v_101 0.6 she v_85 v_101 0.7 she
+v_93 v_101 0.6 she v_112 v_101 0.6 she v_113 v_101 0.7 she v_118 v_101 0.6 she
+v_119 v_101 0.6 she v_120 v_101 0.7 she v_78 v_102 0.6 she v_94 v_102 0.6 she
+v_100 v_102 0.7 she v_114 v_102 0.6 she v_119 v_102 0.6 she v_120 v_102 0.7 she
+v_71 v_103 0.6 she v_88 v_103 0.6 she v_96 v_103 0.7 she v_122 v_103 0.6 she
+v_123 v_103 0.6 she v_124 v_103 0.7 she v_79 v_104 0.6 she v_80 v_104 0.6 she
+v_95 v_104 0.7 she v_122 v_104 0.6 she v_123 v_104 0.6 she v_124 v_104 0.7 she
+v_81 v_105 0.6 she v_82 v_105 0.6 she v_88 v_105 0.7 she v_126 v_105 0.6 she
+v_83 v_106 0.6 she v_90 v_106 0.7 she v_91 v_106 0.6 she v_93 v_106 0.6 she
+v_112 v_106 0.7 she v_118 v_106 0.6 she v_84 v_107 0.6 she v_85 v_107 0.7 she
+v_91 v_107 0.6 she v_92 v_107 0.6 she v_93 v_107 0.7 she v_99 v_107 0.6 she
+v_113 v_107 0.6 she v_129 v_107 0.7 she v_93 v_108 0.6 she v_109 v_108 0.6 she
+v_121 v_108 0.7 she v_122 v_108 0.6 she v_131 v_108 0.6 she v_88 v_109 0.7 she
+v_96 v_109 0.6 she v_108 v_109 0.6 she v_134 v_109 0.7 she v_135 v_109 0.6 she
+v_88 v_110 0.6 she v_89 v_110 0.7 she v_116 v_110 0.6 she v_124 v_110 0.6 she
+v_136 v_110 0.7 she v_89 v_111 0.6 she v_101 v_112 0.6 she v_106 v_112 0.7 she
+v_119 v_112 0.6 she v_129 v_112 0.6 she v_143 v_112 0.7 she v_144 v_112 0.6 she
+v_101 v_113 0.6 she v_107 v_113 0.7 she v_120 v_113 0.6 she v_143 v_113 0.6 she
+v_92 v_114 0.7 she v_102 v_114 0.6 she v_115 v_114 0.6 she v_137 v_114 0.7 she
+v_93 v_115 0.6 she v_100 v_115 0.6 she v_114 v_115 0.7 she v_121 v_115 0.6 she
+v_132 v_115 0.6 she v_137 v_115 0.7 she v_110 v_116 0.6 she v_140 v_116 0.6 she
+v_141 v_116 0.7 she v_97 v_117 0.6 she v_98 v_117 0.6 she v_99 v_118 0.7 she
+v_100 v_118 0.6 she v_101 v_118 0.6 she v_106 v_118 0.7 she v_120 v_118 0.6 she
+v_143 v_118 0.6 she v_144 v_118 0.7 she v_101 v_119 0.6 she v_102 v_119 0.6 she
+v_112 v_119 0.7 she v_128 v_119 0.6 she v_130 v_119 0.6 she v_101 v_120 0.7 she
+v_102 v_120 0.6 she v_113 v_120 0.6 she v_118 v_120 0.7 she v_130 v_120 0.6 she
+v_146 v_120 0.6 she v_108 v_121 0.7 she v_115 v_121 0.6 she v_139 v_121 0.6 she
+v_146 v_121 0.7 she v_103 v_122 0.6 she v_104 v_122 0.6 she v_108 v_122 0.7 she
+v_133 v_122 0.6 she v_136 v_122 0.6 she v_148 v_122 0.7 she v_149 v_122 0.6 she
+v_103 v_123 0.6 she v_104 v_123 0.7 she v_133 v_123 0.6 she v_136 v_123 0.6 she
+v_148 v_123 0.7 she v_149 v_123 0.6 she v_103 v_124 0.6 she v_104 v_124 0.7 she
+v_110 v_124 0.6 she v_139 v_124 0.6 she v_148 v_124 0.7 she v_149 v_124 0.6 she
+v_105 v_126 0.6 she v_99 v_128 0.7 she v_119 v_128 0.6 she v_129 v_128 0.6 she
+v_107 v_129 0.7 she v_112 v_129 0.6 she v_128 v_129 0.6 she v_130 v_129 0.7 she
+v_143 v_129 0.6 she v_144 v_129 0.6 she v_146 v_129 0.7 she v_119 v_130 0.6 she
+v_120 v_130 0.6 she v_129 v_130 0.7 she v_108 v_131 0.6 she v_137 v_131 0.6 she
+v_139 v_131 0.7 she v_145 v_131 0.6 she v_115 v_132 0.6 she v_122 v_133 0.7 she
+v_123 v_133 0.6 she v_141 v_133 0.6 she v_146 v_133 0.7 she v_109 v_134 0.6 she
+v_136 v_134 0.6 she v_109 v_135 0.7 she v_139 v_135 0.6 she v_110 v_136 0.6 she
+v_122 v_136 0.7 she v_123 v_136 0.6 she v_134 v_136 0.6 she v_141 v_136 0.7 she
+v_142 v_136 0.6 she v_148 v_136 0.6 she v_149 v_136 0.7 she v_114 v_137 0.6 she
+v_115 v_137 0.6 she v_131 v_137 0.7 she v_140 v_138 0.6 she v_145 v_138 0.6 she
+v_121 v_139 0.7 she v_124 v_139 0.6 she v_131 v_139 0.6 she v_135 v_139 0.7 she
+v_146 v_139 0.6 she v_116 v_140 0.6 she v_138 v_140 0.7 she v_116 v_141 0.6 she
+v_133 v_141 0.6 she v_136 v_141 0.7 she v_136 v_142 0.6 she v_112 v_143 0.6 she
+v_113 v_143 0.7 she v_118 v_143 0.6 she v_129 v_143 0.6 she v_112 v_144 0.7 she
+v_118 v_144 0.6 she v_129 v_144 0.6 she v_131 v_145 0.7 she v_138 v_145 0.6 she
+v_147 v_145 0.6 she v_120 v_146 0.7 she v_121 v_146 0.6 she v_129 v_146 0.6 she
+v_133 v_146 0.7 she v_139 v_146 0.6 she v_145 v_147 0.6 she v_122 v_148 0.7 she
+v_123 v_148 0.6 she v_124 v_148 0.6 she v_136 v_148 0.7 she v_122 v_149 0.6 she
+v_123 v_149 0.6 she v_124 v_149 0.7 she v_136 v_149 0.6 she v_19 v_0 0.6 she
+v_2 v_1 0.5 she v_12 v_1 0.6 she v_20 v_1 0.5 she v_1 v_2 0.5 she v_18 v_2 0.6
+she v_4 v_3 0.5 she v_5 v_3 0.5 she v_3 v_4 0.5 she v_21 v_4 0.6 she v_3 v_5
+0.5 she v_24 v_6 0.5 she v_26 v_6 0.6 she v_14 v_7 0.5 she v_27 v_7 0.5 she
+v_27 v_8 0.5 she v_11 v_9 0.6 she v_19 v_9 0.5 she v_11 v_10 0.5 she v_19 v_10
+0.6 she v_28 v_10 0.5 she v_29 v_10 0.5 she v_9 v_11 0.5 she v_10 v_11 0.6 she
+v_17 v_11 0.5 she v_21 v_11 0.5 she v_1 v_12 0.6 she v_18 v_12 0.5 she v_30
+v_13 0.5 she v_31 v_13 0.6 she v_7 v_14 0.5 she v_25 v_14 0.5 she v_26 v_15 0.5
+she v_24 v_16 0.6 she v_33 v_16 0.5 she v_34 v_16 0.5 she v_36 v_16 0.6 she
+v_11 v_17 0.5 she v_28 v_17 0.5 she v_29 v_17 0.6 she v_2 v_18 0.5 she v_12
+v_18 0.5 she v_20 v_18 0.5 she v_0 v_19 0.6 she v_9 v_19 0.5 she v_10 v_19 0.5
+she v_37 v_19 0.6 she v_1 v_20 0.5 she v_18 v_20 0.5 she v_39 v_20 0.6 she v_4
+v_21 0.5 she v_11 v_21 0.5 she v_22 v_21 0.5 she v_39 v_21 0.6 she v_40 v_21
+0.5 she v_21 v_22 0.5 she v_31 v_22 0.6 she v_39 v_22 0.5 she v_40 v_22 0.5 she
+v_41 v_22 0.6 she v_31 v_23 0.5 she v_32 v_23 0.5 she v_34 v_23 0.5 she v_6
+v_24 0.6 she v_16 v_24 0.5 she v_25 v_24 0.5 she v_32 v_24 0.6 she v_14 v_25
+0.5 she v_24 v_25 0.5 she v_33 v_25 0.6 she v_6 v_26 0.5 she v_15 v_26 0.5 she
+v_34 v_26 0.5 she v_7 v_27 0.6 she v_8 v_27 0.5 she v_10 v_28 0.5 she v_17 v_28
+0.6 she v_37 v_28 0.5 she v_10 v_29 0.5 she v_17 v_29 0.6 she v_37 v_29 0.5 she
+v_13 v_30 0.5 she v_31 v_30 0.5 she v_42 v_30 0.6 she v_13 v_31 0.5 she v_22
+v_31 0.5 she v_23 v_31 0.6 she v_30 v_31 0.5 she v_46 v_31 0.5 she v_48 v_31
+0.6 she v_23 v_32 0.5 she v_24 v_32 0.5 she v_33 v_32 0.5 she v_41 v_32 0.6 she
+v_48 v_32 0.5 she v_16 v_33 0.5 she v_25 v_33 0.6 she v_32 v_33 0.5 she v_49
+v_33 0.5 she v_16 v_34 0.6 she v_23 v_34 0.5 she v_26 v_34 0.5 she v_35 v_34
+0.5 she v_34 v_35 0.6 she v_50 v_35 0.5 she v_16 v_36 0.5 she v_50 v_36 0.6 she
+v_19 v_37 0.5 she v_28 v_37 0.5 she v_29 v_37 0.6 she v_43 v_38 0.5 she v_20
+v_39 0.5 she v_21 v_39 0.5 she v_22 v_39 0.6 she v_41 v_39 0.5 she v_21 v_40
+0.5 she v_22 v_40 0.6 she v_41 v_40 0.5 she v_22 v_41 0.5 she v_32 v_41 0.6 she
+v_39 v_41 0.5 she v_40 v_41 0.5 she v_45 v_41 0.5 she v_48 v_41 0.6 she v_53
+v_41 0.5 she v_30 v_42 0.5 she v_46 v_42 0.6 she v_54 v_42 0.5 she v_38 v_43
+0.5 she v_62 v_43 0.6 she v_68 v_43 0.5 she v_46 v_44 0.5 she v_62 v_44 0.5 she
+v_41 v_45 0.6 she v_31 v_46 0.5 she v_42 v_46 0.5 she v_44 v_46 0.6 she v_47
+v_46 0.5 she v_46 v_47 0.5 she v_55 v_47 0.6 she v_31 v_48 0.5 she v_32 v_48
+0.5 she v_41 v_48 0.5 she v_65 v_48 0.6 she v_33 v_49 0.5 she v_56 v_49 0.5 she
+v_57 v_49 0.6 she v_73 v_49 0.5 she v_35 v_50 0.5 she v_36 v_50 0.6 she v_56
+v_50 0.5 she v_75 v_50 0.5 she v_62 v_51 0.5 she v_63 v_52 0.6 she v_68 v_52
+0.5 she v_69 v_52 0.5 she v_41 v_53 0.6 she v_65 v_53 0.5 she v_42 v_54 0.5 she
+v_66 v_54 0.6 she v_71 v_54 0.5 she v_72 v_54 0.5 she v_47 v_55 0.5 she v_56
+v_55 0.6 she v_72 v_55 0.5 she v_73 v_55 0.5 she v_49 v_56 0.6 she v_50 v_56
+0.5 she v_55 v_56 0.5 she v_59 v_56 0.6 she v_65 v_56 0.5 she v_72 v_56 0.5 she
+v_73 v_56 0.5 she v_74 v_56 0.6 she v_49 v_57 0.5 she v_66 v_57 0.5 she v_74
+v_57 0.6 she v_75 v_57 0.5 she v_56 v_59 0.5 she v_82 v_59 0.6 she v_63 v_60
+0.5 she v_76 v_60 0.5 she v_77 v_60 0.5 she v_78 v_60 0.6 she v_64 v_61 0.5 she
+v_43 v_62 0.5 she v_44 v_62 0.6 she v_51 v_62 0.5 she v_52 v_63 0.5 she v_60
+v_63 0.6 she v_70 v_63 0.5 she v_61 v_64 0.5 she v_70 v_64 0.5 she v_71 v_64
+0.6 she v_78 v_64 0.5 she v_48 v_65 0.5 she v_53 v_65 0.6 she v_56 v_65 0.5 she
+v_79 v_65 0.5 she v_80 v_65 0.6 she v_54 v_66 0.5 she v_57 v_66 0.5 she v_79
+v_66 0.5 she v_80 v_66 0.6 she v_81 v_67 0.5 she v_43 v_68 0.5 she v_52 v_68
+0.6 she v_78 v_68 0.5 she v_52 v_69 0.5 she v_84 v_69 0.6 she v_85 v_69 0.5 she
+v_63 v_70 0.5 she v_64 v_70 0.5 she v_85 v_70 0.6 she v_95 v_70 0.5 she v_54
+v_71 0.5 she v_64 v_71 0.6 she v_95 v_71 0.5 she v_54 v_72 0.5 she v_55 v_72
+0.6 she v_56 v_72 0.5 she v_87 v_72 0.5 she v_88 v_72 0.5 she v_49 v_73 0.6 she
+v_55 v_73 0.5 she v_56 v_73 0.5 she v_81 v_73 0.6 she v_87 v_73 0.5 she v_56
+v_74 0.5 she v_57 v_74 0.6 she v_79 v_74 0.5 she v_81 v_74 0.5 she v_88 v_74
+0.5 she v_50 v_75 0.6 she v_57 v_75 0.5 she v_98 v_75 0.5 she v_60 v_76 0.6 she
+v_60 v_77 0.5 she v_60 v_78 0.5 she v_64 v_78 0.6 she v_68 v_78 0.5 she v_93
+v_78 0.5 she v_65 v_79 0.5 she v_66 v_79 0.6 she v_74 v_79 0.5 she v_96 v_79
+0.5 she v_65 v_80 0.6 she v_66 v_80 0.5 she v_81 v_80 0.5 she v_97 v_80 0.6 she
+v_67 v_81 0.5 she v_73 v_81 0.5 she v_74 v_81 0.5 she v_80 v_81 0.6 she v_88
+v_81 0.5 she v_97 v_81 0.5 she v_59 v_82 0.6 she v_99 v_83 0.5 she v_101 v_83
+0.5 she v_69 v_84 0.6 she v_69 v_85 0.5 she v_70 v_85 0.5 she v_103 v_86 0.5
+she v_72 v_87 0.6 she v_73 v_87 0.5 she v_103 v_87 0.5 she v_109 v_87 0.6 she
+v_72 v_88 0.5 she v_74 v_88 0.5 she v_81 v_88 0.6 she v_104 v_88 0.5 she v_105
+v_89 0.5 she v_101 v_90 0.6 she v_101 v_91 0.5 she v_106 v_92 0.5 she v_78 v_93
+0.5 she v_103 v_94 0.6 she v_70 v_95 0.5 she v_71 v_95 0.5 she v_79 v_96 0.6
+she v_104 v_96 0.5 she v_105 v_96 0.5 she v_110 v_96 0.6 she v_111 v_96 0.5 she
+v_80 v_97 0.5 she v_81 v_97 0.5 she v_75 v_98 0.6 she v_110 v_98 0.5 she v_83
+v_99 0.5 she v_106 v_99 0.6 she v_112 v_99 0.5 she v_113 v_99 0.5 she v_114
+v_99 0.6 she v_107 v_100 0.5 she v_112 v_100 0.5 she v_113 v_100 0.6 she v_114
+v_100 0.5 she v_83 v_101 0.5 she v_90 v_101 0.6 she v_91 v_101 0.5 she v_114
+v_101 0.5 she v_115 v_101 0.6 she v_115 v_102 0.5 she v_86 v_103 0.5 she v_87
+v_103 0.6 she v_94 v_103 0.5 she v_116 v_103 0.5 she v_88 v_104 0.6 she v_96
+v_104 0.5 she v_108 v_104 0.5 she v_89 v_105 0.6 she v_96 v_105 0.5 she v_125
+v_105 0.5 she v_92 v_106 0.6 she v_99 v_106 0.5 she v_113 v_106 0.5 she v_119
+v_106 0.6 she v_129 v_106 0.5 she v_100 v_107 0.5 she v_114 v_107 0.6 she v_120
+v_107 0.5 she v_104 v_108 0.5 she v_87 v_109 0.6 she v_122 v_109 0.5 she v_96
+v_110 0.5 she v_98 v_110 0.6 she v_126 v_110 0.5 she v_127 v_110 0.5 she v_96
+v_111 0.6 she v_136 v_111 0.5 she v_142 v_111 0.5 she v_99 v_112 0.6 she v_100
+v_112 0.5 she v_99 v_113 0.5 she v_100 v_113 0.6 she v_106 v_113 0.5 she v_119
+v_113 0.5 she v_129 v_113 0.6 she v_99 v_114 0.5 she v_100 v_114 0.5 she v_101
+v_114 0.6 she v_107 v_114 0.5 she v_120 v_114 0.5 she v_129 v_114 0.6 she v_101
+v_115 0.5 she v_102 v_115 0.5 she v_129 v_115 0.6 she v_130 v_115 0.5 she v_131
+v_115 0.5 she v_103 v_116 0.6 she v_134 v_116 0.5 she v_136 v_116 0.5 she v_129
+v_118 0.6 she v_106 v_119 0.5 she v_113 v_119 0.5 she v_145 v_119 0.6 she v_107
+v_120 0.5 she v_114 v_120 0.5 she v_145 v_120 0.6 she v_147 v_121 0.5 she v_109
+v_122 0.5 she v_139 v_122 0.6 she v_139 v_123 0.5 she v_141 v_123 0.5 she v_140
+v_124 0.6 she v_141 v_124 0.5 she v_105 v_125 0.5 she v_110 v_126 0.6 she v_110
+v_127 0.5 she v_136 v_127 0.5 she v_106 v_129 0.6 she v_113 v_129 0.5 she v_114
+v_129 0.5 she v_115 v_129 0.6 she v_118 v_129 0.5 she v_115 v_130 0.5 she v_133
+v_130 0.6 she v_115 v_131 0.5 she v_139 v_132 0.5 she v_130 v_133 0.6 she v_134
+v_133 0.5 she v_140 v_133 0.5 she v_116 v_134 0.6 she v_133 v_134 0.5 she v_111
+v_136 0.5 she v_116 v_136 0.6 she v_127 v_136 0.5 she v_139 v_138 0.5 she v_122
+v_139 0.6 she v_123 v_139 0.5 she v_132 v_139 0.5 she v_138 v_139 0.6 she v_147
+v_139 0.5 she v_148 v_139 0.5 she v_149 v_139 0.6 she v_124 v_140 0.5 she v_133
+v_140 0.5 she v_123 v_141 0.6 she v_124 v_141 0.5 she v_111 v_142 0.5 she v_119
+v_145 0.6 she v_120 v_145 0.5 she v_121 v_147 0.5 she v_139 v_147 0.6 she v_139
+v_148 0.5 she v_139 v_149 0.5 she v_11 v_0 0.6 she v_18 v_0 0.5 she v_9 v_1 0.4
+she v_11 v_1 0.4 she v_17 v_1 0.5 she v_18 v_1 0.4 she v_19 v_1 0.4 she v_19
+v_2 0.5 she v_21 v_2 0.4 she v_11 v_3 0.4 she v_19 v_3 0.6 she v_21 v_3 0.5 she
+v_14 v_6 0.4 she v_25 v_6 0.4 she v_25 v_7 0.5 she v_26 v_7 0.6 she v_15 v_8
+0.4 she v_25 v_8 0.4 she v_26 v_8 0.5 she v_1 v_9 0.4 she v_18 v_9 0.4 she v_28
+v_9 0.5 she v_29 v_9 0.4 she v_18 v_10 0.4 she v_0 v_11 0.6 she v_1 v_11 0.5
+she v_3 v_11 0.4 she v_18 v_11 0.4 she v_19 v_11 0.5 she v_21 v_12 0.4 she v_6
+v_14 0.4 she v_16 v_14 0.4 she v_33 v_14 0.5 she v_34 v_14 0.4 she v_8 v_15 0.4
+she v_16 v_15 0.5 she v_23 v_15 0.4 she v_24 v_15 0.4 she v_25 v_15 0.5 she
+v_33 v_15 0.4 she v_34 v_15 0.4 she v_14 v_16 0.4 she v_15 v_16 0.5 she v_25
+v_16 0.4 she v_26 v_16 0.4 she v_27 v_16 0.5 she v_35 v_16 0.6 she v_1 v_17 0.4
+she v_19 v_17 0.6 she v_37 v_17 0.5 she v_38 v_17 0.4 she v_0 v_18 0.4 she v_1
+v_18 0.5 she v_9 v_18 0.4 she v_10 v_18 0.4 she v_11 v_18 0.5 she v_19 v_18 0.4
+she v_37 v_18 0.4 she v_38 v_18 0.5 she v_1 v_19 0.4 she v_2 v_19 0.4 she v_3
+v_19 0.6 she v_11 v_19 0.5 she v_17 v_19 0.6 she v_18 v_19 0.4 she v_21 v_19
+0.5 she v_38 v_19 0.4 she v_2 v_21 0.4 she v_3 v_21 0.4 she v_12 v_21 0.5 she
+v_19 v_21 0.4 she v_30 v_22 0.4 she v_15 v_23 0.5 she v_15 v_24 0.4 she v_6
+v_25 0.4 she v_7 v_25 0.4 she v_8 v_25 0.5 she v_15 v_25 0.4 she v_16 v_25 0.4
+she v_34 v_25 0.5 she v_36 v_25 0.4 she v_7 v_26 0.6 she v_8 v_26 0.4 she v_16
+v_26 0.5 she v_16 v_27 0.4 she v_9 v_28 0.4 she v_43 v_28 0.5 she v_9 v_29 0.4
+she v_43 v_29 0.4 she v_22 v_30 0.4 she v_39 v_30 0.6 she v_40 v_30 0.5 she
+v_41 v_30 0.4 she v_45 v_30 0.5 she v_46 v_30 0.6 she v_32 v_31 0.4 she v_41
+v_31 0.5 she v_47 v_31 0.4 she v_31 v_32 0.4 she v_47 v_32 0.6 she v_14 v_33
+0.5 she v_15 v_33 0.4 she v_34 v_33 0.4 she v_14 v_34 0.5 she v_15 v_34 0.4 she
+v_25 v_34 0.4 she v_33 v_34 0.5 she v_16 v_35 0.6 she v_25 v_36 0.4 she v_17
+v_37 0.4 she v_18 v_37 0.5 she v_43 v_37 0.4 she v_52 v_37 0.4 she v_17 v_38
+0.5 she v_18 v_38 0.4 she v_19 v_38 0.4 she v_52 v_38 0.6 she v_30 v_39 0.5 she
+v_44 v_39 0.5 she v_46 v_39 0.5 she v_30 v_40 0.5 she v_30 v_41 0.4 she v_31
+v_41 0.4 she v_42 v_41 0.5 she v_46 v_41 0.4 she v_47 v_41 0.4 she v_41 v_42
+0.5 she v_48 v_42 0.4 she v_53 v_42 0.4 she v_28 v_43 0.4 she v_29 v_43 0.5 she
+v_37 v_43 0.4 she v_52 v_43 0.4 she v_60 v_43 0.5 she v_61 v_43 0.4 she v_39
+v_44 0.4 she v_63 v_44 0.5 she v_64 v_44 0.4 she v_30 v_45 0.4 she v_30 v_46
+0.6 she v_39 v_46 0.6 she v_41 v_46 0.5 she v_31 v_47 0.4 she v_32 v_47 0.6 she
+v_41 v_47 0.5 she v_48 v_47 0.4 she v_54 v_47 0.5 she v_42 v_48 0.4 she v_47
+v_48 0.4 she v_49 v_48 0.6 she v_54 v_48 0.5 she v_55 v_48 0.4 she v_48 v_49
+0.6 she v_54 v_49 0.6 she v_55 v_49 0.5 she v_65 v_49 0.4 she v_66 v_49 0.5 she
+v_67 v_50 0.4 she v_52 v_51 0.6 she v_61 v_51 0.4 she v_37 v_52 0.5 she v_38
+v_52 0.6 she v_43 v_52 0.4 she v_51 v_52 0.6 she v_42 v_53 0.5 she v_55 v_53
+0.4 she v_71 v_53 0.6 she v_47 v_54 0.5 she v_48 v_54 0.4 she v_49 v_54 0.5 she
+v_55 v_54 0.5 she v_65 v_54 0.4 she v_48 v_55 0.4 she v_49 v_55 0.5 she v_53
+v_55 0.4 she v_54 v_55 0.4 she v_65 v_55 0.5 she v_66 v_55 0.4 she v_57 v_56
+0.4 she v_58 v_56 0.4 she v_66 v_56 0.5 she v_56 v_57 0.4 she v_67 v_57 0.4 she
+v_56 v_58 0.5 she v_75 v_58 0.4 she v_43 v_60 0.4 she v_62 v_60 0.5 she v_69
+v_60 0.6 she v_43 v_61 0.4 she v_51 v_61 0.4 she v_63 v_61 0.5 she v_78 v_61
+0.6 she v_60 v_62 0.4 she v_68 v_62 0.5 she v_44 v_63 0.4 she v_61 v_63 0.4 she
+v_78 v_63 0.6 she v_44 v_64 0.5 she v_69 v_64 0.4 she v_49 v_65 0.4 she v_54
+v_65 0.5 she v_55 v_65 0.4 she v_66 v_65 0.4 she v_72 v_65 0.5 she v_73 v_65
+0.4 she v_74 v_65 0.6 she v_49 v_66 0.5 she v_55 v_66 0.4 she v_56 v_66 0.4 she
+v_65 v_66 0.4 she v_72 v_66 0.5 she v_73 v_66 0.4 she v_74 v_66 0.4 she v_50
+v_67 0.5 she v_57 v_67 0.4 she v_62 v_68 0.4 she v_69 v_68 0.6 she v_76 v_68
+0.5 she v_77 v_68 0.4 she v_60 v_69 0.5 she v_64 v_69 0.5 she v_68 v_69 0.6 she
+v_53 v_71 0.5 she v_65 v_72 0.5 she v_66 v_72 0.4 she v_74 v_72 0.4 she v_79
+v_72 0.5 she v_80 v_72 0.4 she v_65 v_73 0.4 she v_66 v_73 0.4 she v_88 v_73
+0.5 she v_65 v_74 0.6 she v_66 v_74 0.4 she v_72 v_74 0.5 she v_80 v_74 0.4 she
+v_58 v_75 0.4 she v_81 v_75 0.6 she v_89 v_75 0.5 she v_68 v_76 0.5 she v_83
+v_76 0.4 she v_90 v_76 0.5 she v_92 v_76 0.4 she v_68 v_77 0.4 she v_83 v_77
+0.5 she v_90 v_77 0.4 she v_91 v_77 0.4 she v_92 v_77 0.5 she v_61 v_78 0.6 she
+v_63 v_78 0.5 she v_84 v_78 0.4 she v_85 v_78 0.5 she v_72 v_79 0.4 she v_87
+v_79 0.4 she v_88 v_79 0.5 she v_72 v_80 0.4 she v_74 v_80 0.4 she v_87 v_80
+0.5 she v_96 v_80 0.4 she v_75 v_81 0.6 she v_82 v_81 0.4 she v_89 v_81 0.5 she
+v_98 v_81 0.6 she v_81 v_82 0.4 she v_98 v_82 0.5 she v_76 v_83 0.4 she v_77
+v_83 0.4 she v_90 v_83 0.5 she v_100 v_83 0.4 she v_78 v_84 0.4 she v_102 v_84
+0.4 she v_78 v_85 0.5 she v_94 v_85 0.6 she v_79 v_87 0.4 she v_80 v_87 0.5 she
+v_88 v_87 0.4 she v_96 v_87 0.6 she v_104 v_87 0.5 she v_73 v_88 0.4 she v_79
+v_88 0.4 she v_87 v_88 0.4 she v_97 v_88 0.5 she v_75 v_89 0.6 she v_81 v_89
+0.4 she v_97 v_89 0.5 she v_76 v_90 0.4 she v_77 v_90 0.4 she v_83 v_90 0.5 she
+v_99 v_90 0.4 she v_100 v_90 0.4 she v_77 v_91 0.4 she v_76 v_92 0.5 she v_77
+v_92 0.4 she v_101 v_92 0.4 she v_94 v_93 0.5 she v_102 v_93 0.4 she v_85 v_94
+0.6 she v_93 v_94 0.5 she v_103 v_95 0.4 she v_80 v_96 0.4 she v_87 v_96 0.6
+she v_97 v_96 0.5 she v_88 v_97 0.4 she v_89 v_97 0.4 she v_96 v_97 0.5 she
+v_98 v_97 0.4 she v_105 v_97 0.4 she v_110 v_97 0.6 she v_111 v_97 0.5 she v_81
+v_98 0.5 she v_82 v_98 0.4 she v_97 v_98 0.5 she v_105 v_98 0.4 she v_111 v_98
+0.6 she v_90 v_99 0.5 she v_101 v_99 0.4 she v_83 v_100 0.4 she v_90 v_100 0.5
+she v_106 v_100 0.4 she v_92 v_101 0.4 she v_99 v_101 0.5 she v_102 v_101 0.4
+she v_106 v_101 0.4 she v_84 v_102 0.5 she v_93 v_102 0.4 she v_101 v_102 0.4
+she v_106 v_102 0.5 she v_107 v_102 0.4 she v_95 v_103 0.4 she v_108 v_103 0.5
+she v_87 v_104 0.4 she v_116 v_104 0.6 she v_97 v_105 0.5 she v_98 v_105 0.4
+she v_117 v_105 0.4 she v_100 v_106 0.5 she v_101 v_106 0.4 she v_102 v_106 0.4
+she v_114 v_106 0.6 she v_115 v_106 0.5 she v_120 v_106 0.5 she v_102 v_107 0.5
+she v_115 v_107 0.4 she v_119 v_107 0.6 she v_103 v_108 0.5 she v_116 v_109 0.4
+she v_123 v_109 0.4 she v_124 v_109 0.5 she v_97 v_110 0.6 she v_125 v_110 0.4
+she v_97 v_111 0.5 she v_98 v_111 0.6 she v_126 v_111 0.4 she v_127 v_111 0.5
+she v_106 v_114 0.6 she v_119 v_114 0.4 she v_128 v_114 0.5 she v_106 v_115 0.4
+she v_107 v_115 0.4 she v_119 v_115 0.5 she v_120 v_115 0.4 she v_104 v_116 0.6
+she v_109 v_116 0.5 she v_122 v_116 0.4 she v_135 v_116 0.4 she v_105 v_117 0.5
+she v_136 v_117 0.4 she v_142 v_117 0.4 she v_119 v_118 0.5 she v_107 v_119 0.6
+she v_114 v_119 0.4 she v_115 v_119 0.5 she v_118 v_119 0.4 she v_137 v_119 0.4
+she v_106 v_120 0.6 she v_115 v_120 0.5 she v_137 v_120 0.4 she v_133 v_121 0.5
+she v_138 v_121 0.4 she v_116 v_122 0.4 she v_124 v_122 0.5 she v_135 v_122 0.6
+she v_140 v_122 0.4 she v_141 v_122 0.6 she v_109 v_123 0.5 she v_134 v_123 0.4
+she v_135 v_123 0.5 she v_140 v_123 0.6 she v_109 v_124 0.4 she v_122 v_124 0.5
+she v_134 v_124 0.4 she v_136 v_124 0.4 she v_110 v_125 0.5 she v_111 v_126 0.4
+she v_136 v_126 0.4 she v_111 v_127 0.5 she v_114 v_128 0.4 she v_145 v_129 0.4
+she v_137 v_130 0.6 she v_138 v_130 0.5 she v_145 v_130 0.4 she v_147 v_130 0.5
+she v_133 v_131 0.4 she v_146 v_131 0.4 she v_146 v_132 0.5 she v_121 v_133 0.4
+she v_131 v_133 0.4 she v_139 v_133 0.6 she v_147 v_133 0.5 she v_123 v_134 0.4
+she v_124 v_134 0.5 she v_135 v_134 0.4 she v_139 v_134 0.4 she v_148 v_134 0.5
+she v_149 v_134 0.4 she v_116 v_135 0.4 she v_122 v_135 0.6 she v_123 v_135 0.5
+she v_134 v_135 0.4 she v_136 v_135 0.5 she v_140 v_135 0.6 she v_141 v_135 0.4
+she v_148 v_135 0.5 she v_117 v_136 0.4 she v_124 v_136 0.4 she v_126 v_136 0.5
+she v_135 v_136 0.4 she v_119 v_137 0.4 she v_120 v_137 0.5 she v_130 v_137 0.6
+she v_121 v_138 0.4 she v_130 v_138 0.5 she v_133 v_139 0.6 she v_134 v_139 0.4
+she v_141 v_139 0.5 she v_122 v_140 0.4 she v_123 v_140 0.6 she v_135 v_140 0.6
+she v_122 v_141 0.5 she v_135 v_141 0.5 she v_139 v_141 0.5 she v_117 v_142 0.4
+she v_129 v_145 0.4 she v_130 v_145 0.5 she v_131 v_146 0.4 she v_132 v_146 0.4
+she v_147 v_146 0.5 she v_130 v_147 0.4 she v_133 v_147 0.4 she v_146 v_147 0.5
+she v_134 v_148 0.4 she v_135 v_148 0.4 she v_134 v_149 0.5 she v_1 v_0 0.4 she
+v_9 v_0 0.3 she v_17 v_0 0.3 she v_0 v_1 0.5 she v_10 v_1 0.3 she v_3 v_2 0.4
+she v_11 v_2 0.5 she v_20 v_2 0.3 she v_2 v_3 0.4 she v_12 v_3 0.3 she v_20 v_3
+0.5 she v_22 v_4 0.3 she v_7 v_6 0.3 she v_8 v_6 0.5 she v_15 v_6 0.4 she v_16
+v_6 0.3 she v_6 v_7 0.3 she v_15 v_7 0.5 she v_16 v_7 0.3 she v_6 v_8 0.4 she
+v_16 v_8 0.3 she v_0 v_9 0.3 she v_17 v_9 0.3 she v_1 v_10 0.3 she v_17 v_10
+0.3 she v_2 v_11 0.5 she v_12 v_11 0.4 she v_20 v_11 0.5 she v_3 v_12 0.3 she
+v_11 v_12 0.4 she v_19 v_12 0.4 she v_20 v_12 0.3 she v_22 v_13 0.3 she v_15
+v_14 0.5 she v_23 v_14 0.5 she v_24 v_14 0.3 she v_6 v_15 0.4 she v_7 v_15 0.5
+she v_14 v_15 0.4 she v_6 v_16 0.3 she v_7 v_16 0.3 she v_8 v_16 0.3 she v_0
+v_17 0.3 she v_9 v_17 0.3 she v_10 v_17 0.3 she v_18 v_17 0.5 she v_17 v_18 0.4
+she v_12 v_19 0.4 she v_20 v_19 0.5 she v_2 v_20 0.3 she v_3 v_20 0.4 she v_11
+v_20 0.5 she v_12 v_20 0.3 she v_19 v_20 0.4 she v_21 v_20 0.5 she v_20 v_21
+0.4 she v_4 v_22 0.3 she v_13 v_22 0.3 she v_14 v_23 0.5 she v_24 v_23 0.3 she
+v_33 v_23 0.4 she v_14 v_24 0.3 she v_23 v_24 0.3 she v_33 v_24 0.3 she v_34
+v_24 0.5 she v_26 v_25 0.4 she v_27 v_25 0.4 she v_35 v_25 0.4 she v_25 v_26
+0.5 she v_35 v_26 0.3 she v_25 v_27 0.4 she v_42 v_31 0.3 she v_42 v_32 0.5 she
+v_23 v_33 0.4 she v_24 v_33 0.3 she v_24 v_34 0.5 she v_25 v_35 0.4 she v_26
+v_35 0.3 she v_45 v_39 0.3 she v_44 v_40 0.3 she v_46 v_40 0.3 she v_31 v_42
+0.3 she v_32 v_42 0.5 she v_47 v_42 0.4 she v_51 v_43 0.3 she v_40 v_44 0.3 she
+v_45 v_44 0.5 she v_39 v_45 0.3 she v_44 v_45 0.5 she v_46 v_45 0.4 she v_40
+v_46 0.3 she v_45 v_46 0.5 she v_42 v_47 0.4 she v_53 v_47 0.4 she v_53 v_48
+0.5 she v_57 v_50 0.3 she v_59 v_50 0.3 she v_43 v_51 0.3 she v_68 v_51 0.3 she
+v_60 v_52 0.5 she v_61 v_52 0.3 she v_62 v_52 0.3 she v_47 v_53 0.5 she v_48
+v_53 0.4 she v_54 v_53 0.3 she v_53 v_54 0.3 she v_50 v_57 0.3 she v_59 v_57
+0.3 she v_50 v_59 0.3 she v_57 v_59 0.3 she v_75 v_59 0.3 she v_52 v_60 0.5 she
+v_61 v_60 0.3 she v_68 v_60 0.3 she v_52 v_61 0.3 she v_60 v_61 0.3 she v_62
+v_61 0.3 she v_68 v_61 0.5 she v_69 v_61 0.5 she v_52 v_62 0.3 she v_61 v_62
+0.3 she v_69 v_62 0.3 she v_78 v_62 0.5 she v_69 v_63 0.3 she v_82 v_67 0.3 she
+v_51 v_68 0.3 she v_60 v_68 0.3 she v_61 v_68 0.5 she v_61 v_69 0.5 she v_62
+v_69 0.3 she v_63 v_69 0.3 she v_78 v_69 0.5 she v_73 v_72 0.4 she v_72 v_73
+0.4 she v_74 v_73 0.3 she v_79 v_73 0.5 she v_80 v_73 0.4 she v_73 v_74 0.3 she
+v_59 v_75 0.3 she v_91 v_76 0.3 she v_62 v_78 0.5 she v_69 v_78 0.5 she v_73
+v_79 0.4 she v_80 v_79 0.4 she v_73 v_80 0.5 she v_79 v_80 0.4 she v_88 v_80
+0.3 she v_67 v_82 0.3 she v_89 v_82 0.3 she v_91 v_83 0.3 she v_92 v_83 0.5 she
+v_102 v_85 0.3 she v_108 v_86 0.3 she v_80 v_88 0.3 she v_96 v_88 0.5 she v_82
+v_89 0.3 she v_92 v_90 0.3 she v_76 v_91 0.3 she v_83 v_91 0.3 she v_92 v_91
+0.3 she v_99 v_91 0.5 she v_100 v_91 0.5 she v_83 v_92 0.4 she v_90 v_92 0.3
+she v_91 v_92 0.3 she v_99 v_92 0.5 she v_100 v_92 0.4 she v_88 v_96 0.4 she
+v_91 v_99 0.5 she v_92 v_99 0.4 she v_100 v_99 0.3 she v_91 v_100 0.5 she v_92
+v_100 0.4 she v_99 v_100 0.3 she v_101 v_100 0.5 she v_100 v_101 0.4 she v_107
+v_101 0.4 she v_85 v_102 0.3 she v_110 v_105 0.5 she v_107 v_106 0.3 she v_101
+v_107 0.5 she v_106 v_107 0.3 she v_86 v_108 0.3 she v_105 v_110 0.5 she v_117
+v_110 0.3 she v_125 v_111 0.4 she v_114 v_112 0.3 she v_128 v_112 0.5 she v_114
+v_113 0.3 she v_112 v_114 0.3 she v_113 v_114 0.3 she v_118 v_114 0.3 she v_123
+v_116 0.3 she v_110 v_117 0.3 she v_127 v_117 0.3 she v_114 v_118 0.3 she v_128
+v_118 0.5 she v_129 v_120 0.4 she v_130 v_121 0.3 she v_123 v_122 0.5 she v_134
+v_122 0.4 she v_116 v_123 0.3 she v_122 v_123 0.5 she v_124 v_123 0.3 she v_123
+v_124 0.3 she v_135 v_124 0.5 she v_111 v_125 0.4 she v_136 v_125 0.5 she v_117
+v_127 0.3 she v_112 v_128 0.4 she v_118 v_128 0.5 she v_120 v_129 0.4 she v_137
+v_129 0.3 she v_121 v_130 0.3 she v_132 v_130 0.5 she v_146 v_130 0.4 she v_138
+v_131 0.3 she v_147 v_131 0.3 she v_130 v_132 0.5 she v_133 v_132 0.3 she v_132
+v_133 0.3 she v_138 v_133 0.5 she v_122 v_134 0.5 she v_140 v_134 0.4 she v_141
+v_134 0.4 she v_124 v_135 0.5 she v_149 v_135 0.4 she v_125 v_136 0.4 she v_129
+v_137 0.3 she v_146 v_137 0.5 she v_131 v_138 0.3 she v_133 v_138 0.5 she v_146
+v_138 0.4 she v_140 v_139 0.4 she v_134 v_140 0.5 she v_139 v_140 0.4 she v_141
+v_140 0.3 she v_149 v_140 0.5 she v_134 v_141 0.4 she v_140 v_141 0.3 she v_146
+v_145 0.3 she v_130 v_146 0.5 she v_137 v_146 0.4 she v_138 v_146 0.5 she v_145
+v_146 0.3 she v_131 v_147 0.3 she v_135 v_149 0.5 she v_140 v_149 0.4 she v_10
+v_0 0.2 she v_12 v_2 0.3 she v_22 v_5 0.3 she v_8 v_7 0.3 she v_7 v_8 0.3 she
+v_10 v_9 0.2 she v_0 v_10 0.2 she v_9 v_10 0.2 she v_2 v_12 0.3 she v_5 v_22
+0.3 she v_27 v_26 0.3 she v_26 v_27 0.3 she v_35 v_27 0.3 she v_36 v_27 0.3 she
+v_27 v_35 0.3 she v_36 v_35 0.2 she v_27 v_36 0.3 she v_35 v_36 0.2 she v_38
+v_37 0.3 she v_37 v_38 0.3 she v_40 v_39 0.3 she v_39 v_40 0.3 she v_45 v_40
+0.3 she v_40 v_45 0.3 she v_58 v_50 0.2 she v_58 v_57 0.3 she v_50 v_58 0.2 she
+v_57 v_58 0.3 she v_67 v_58 0.3 she v_67 v_59 0.2 she v_63 v_62 0.2 she v_64
+v_62 0.3 she v_62 v_63 0.2 she v_64 v_63 0.3 she v_62 v_64 0.3 she v_63 v_64
+0.3 she v_58 v_67 0.3 she v_59 v_67 0.2 she v_75 v_67 0.2 she v_71 v_70 0.2 she
+v_86 v_70 0.3 she v_70 v_71 0.2 she v_86 v_71 0.3 she v_67 v_75 0.2 she v_77
+v_76 0.3 she v_76 v_77 0.3 she v_93 v_84 0.2 she v_70 v_86 0.3 she v_71 v_86
+0.3 she v_98 v_89 0.3 she v_91 v_90 0.2 she v_90 v_91 0.2 she v_84 v_93 0.2 she
+v_108 v_94 0.2 she v_89 v_98 0.3 she v_109 v_103 0.3 she v_109 v_104 0.3 she
+v_111 v_105 0.3 she v_94 v_108 0.2 she v_103 v_109 0.3 she v_104 v_109 0.3 she
+v_111 v_110 0.3 she v_105 v_111 0.3 she v_110 v_111 0.3 she v_117 v_111 0.3 she
+v_118 v_112 0.3 she v_118 v_113 0.2 she v_128 v_113 0.3 she v_124 v_116 0.3 she
+v_111 v_117 0.3 she v_125 v_117 0.3 she v_126 v_117 0.3 she v_112 v_118 0.3 she
+v_113 v_118 0.2 she v_120 v_119 0.3 she v_129 v_119 0.3 she v_119 v_120 0.3 she
+v_132 v_121 0.2 she v_116 v_124 0.3 she v_117 v_125 0.3 she v_117 v_126 0.3 she
+v_113 v_128 0.3 she v_119 v_129 0.3 she v_131 v_130 0.3 she v_130 v_131 0.3 she
+v_132 v_131 0.2 she v_121 v_132 0.2 she v_131 v_132 0.2 she v_138 v_132 0.2 she
+v_147 v_132 0.2 she v_132 v_138 0.2 she v_147 v_138 0.2 she v_148 v_140 0.3 she
+v_148 v_141 0.2 she v_149 v_141 0.2 she v_132 v_147 0.2 she v_138 v_147 0.2 she
+v_140 v_148 0.3 she v_141 v_148 0.2 she v_149 v_148 0.2 she v_141 v_149 0.2 she
+v_148 v_149 0.2 she v_13 v_4 0.2 she v_4 v_13 0.2 she v_36 v_26 0.2 she v_26
+v_36 0.2 she v_59 v_58 0.2 she v_58 v_59 0.2 she v_82 v_75 0.2 she v_75 v_82
+0.2 she v_85 v_84 0.2 she v_84 v_85 0.2 she v_93 v_85 0.1 she v_94 v_86 0.2 she
+v_85 v_93 0.1 she v_86 v_94 0.2 she v_104 v_103 0.2 she v_103 v_104 0.2 she
+v_113 v_112 0.2 she v_112 v_113 0.2 she v_131 v_121 0.2 she v_126 v_125 0.2 she
+v_142 v_125 0.1 she v_125 v_126 0.2 she v_143 v_128 0.1 she v_144 v_128 0.2 she
+v_121 v_131 0.2 she v_125 v_142 0.1 she v_128 v_143 0.1 she v_128 v_144 0.2 she
+v_13 v_5 0.1 she v_5 v_13 0.1 she v_60 v_51 0.1 she v_51 v_60 0.1 she v_108
+v_95 0.1 she v_95 v_108 0.1 she v_127 v_125 0.1 she v_127 v_126 0.1 she v_125
+v_127 0.1 she v_126 v_127 0.1 she v_145 v_137 0.1 she v_137 v_145 0.1 she v_5
+v_4 0.0 she v_4 v_5 0.0 she v_95 v_86 0.0 she v_95 v_94 0.0 she v_86 v_95 0.0
+she v_94 v_95 0.0 she v_142 v_126 0.0 she v_142 v_127 0.0 she v_126 v_142 0.0
+she v_127 v_142 0.0 she v_29 v_28 0.0 she v_28 v_29 0.0 she v_144 v_143 0.0 she
+v_143 v_144 0.0 she
+
+v_0 0.6 shn v_1 0.6 shn v_2 0.6 shn v_3 0.6 shn v_4 0.7 shn v_5 0.6 shn v_6 0.6
+shn v_7 0.5 shn v_8 0.7 shn v_9 0.6 shn v_10 0.5 shn v_11 0.4 shn v_12 0.5 shn
+v_13 0.7 shn v_14 0.6 shn v_15 0.4 shn v_16 0.4 shn v_17 0.4 shn v_18 0.4 shn
+v_19 0.4 shn v_20 0.4 shn v_21 0.5 shn v_22 0.5 shn v_23 0.7 shn v_24 0.5 shn
+v_25 0.4 shn v_26 0.5 shn v_27 0.6 shn v_28 0.7 shn v_29 0.6 shn v_30 0.5 shn
+v_31 0.5 shn v_32 0.6 shn v_33 0.6 shn v_34 0.6 shn v_35 0.6 shn v_36 0.7 shn
+v_37 0.6 shn v_38 0.6 shn v_39 0.6 shn v_40 0.5 shn v_41 0.5 shn v_42 0.4 shn
+v_43 0.6 shn v_44 0.8 shn v_45 0.6 shn v_46 0.6 shn v_47 0.4 shn v_48 0.5 shn
+v_49 0.7 shn v_50 0.7 shn v_51 0.9 shn v_52 0.5 shn v_53 0.5 shn v_54 0.4 shn
+v_55 0.5 shn v_56 0.6 shn v_57 0.5 shn v_58 0.5 shn v_59 0.6 shn v_60 0.4 shn
+v_61 0.4 shn v_62 0.3 shn v_63 0.5 shn v_64 0.6 shn v_65 0.4 shn v_66 0.5 shn
+v_67 0.5 shn v_68 0.5 shn v_69 0.4 shn v_70 0.8 shn v_71 0.8 shn v_72 0.4 shn
+v_73 0.4 shn v_74 0.5 shn v_75 0.6 shn v_76 0.7 shn v_77 0.6 shn v_78 0.5 shn
+v_79 0.5 shn v_80 0.4 shn v_81 0.6 shn v_82 0.7 shn v_83 0.5 shn v_84 0.6 shn
+v_85 0.5 shn v_86 0.5 shn v_87 0.7 shn v_88 0.5 shn v_89 0.7 shn v_90 0.7 shn
+v_91 0.5 shn v_92 0.4 shn v_93 0.6 shn v_94 0.5 shn v_95 0.5 shn v_96 0.5 shn
+v_97 0.5 shn v_98 0.6 shn v_99 0.5 shn v_100 0.4 shn v_101 0.4 shn v_102 0.7
+shn v_103 0.6 shn v_104 0.6 shn v_105 0.6 shn v_106 0.4 shn v_107 0.5 shn v_108
+0.8 shn v_109 0.6 shn v_110 0.6 shn v_111 0.4 shn v_112 0.7 shn v_113 0.4 shn
+v_114 0.4 shn v_115 0.6 shn v_116 0.6 shn v_117 0.5 shn v_118 0.6 shn v_119 0.4
+shn v_120 0.5 shn v_121 0.7 shn v_122 0.5 shn v_123 0.5 shn v_124 0.5 shn v_125
+0.5 shn v_126 0.5 shn v_127 0.6 shn v_128 0.7 shn v_129 0.5 shn v_130 0.5 shn
+v_131 0.4 shn v_132 0.4 shn v_133 0.6 shn v_134 0.4 shn v_135 0.5 shn v_136 0.7
+shn v_137 0.6 shn v_138 0.5 shn v_139 0.5 shn v_140 0.5 shn v_141 0.5 shn v_142
+0.8 shn v_143 0.6 shn v_144 0.6 shn v_145 0.7 shn v_146 0.7 shn v_147 0.6 shn
+v_148 0.6 shn v_149 0.7 shn grestore
+
+% iterand6
+
+hdist 0 translate
+gsave
+scalef scalef -1 mul scale
+
+v_3 v_0 0.7 she v_21 v_0 0.7 she v_28 v_1 0.7 she v_4 v_2 0.7 she v_9 v_2 0.7
+she v_22 v_2 0.7 she v_38 v_2 0.6 she v_39 v_2 0.7 she v_0 v_3 0.7 she v_4 v_3
+0.7 she v_5 v_3 0.7 she v_13 v_3 0.7 she v_22 v_3 0.7 she v_2 v_4 0.7 she v_3
+v_4 0.7 she v_11 v_4 0.7 she v_12 v_4 0.7 she v_19 v_4 0.7 she v_20 v_4 0.7 she
+v_21 v_4 0.7 she v_31 v_4 0.7 she v_40 v_4 0.7 she v_41 v_4 0.7 she v_42 v_4
+0.7 she v_3 v_5 0.7 she v_20 v_5 0.7 she v_21 v_5 0.7 she v_31 v_5 0.7 she v_39
+v_5 0.7 she v_40 v_5 0.7 she v_41 v_5 0.7 she v_42 v_5 0.7 she v_45 v_5 0.7 she
+v_46 v_5 0.7 she v_47 v_5 0.7 she v_32 v_6 0.7 she v_32 v_7 0.7 she v_23 v_8
+0.7 she v_32 v_8 0.7 she v_33 v_8 0.7 she v_34 v_8 0.6 she v_36 v_8 0.7 she v_2
+v_9 0.7 she v_21 v_9 0.7 she v_38 v_9 0.6 she v_43 v_10 0.7 she v_4 v_11 0.7
+she v_28 v_11 0.7 she v_39 v_11 0.7 she v_4 v_12 0.7 she v_22 v_12 0.7 she v_29
+v_12 0.7 she v_39 v_12 0.7 she v_40 v_12 0.7 she v_3 v_13 0.7 she v_21 v_13 0.7
+she v_31 v_13 0.7 she v_32 v_13 0.7 she v_39 v_13 0.7 she v_40 v_13 0.7 she
+v_41 v_13 0.7 she v_42 v_13 0.7 she v_45 v_13 0.7 she v_46 v_13 0.7 she v_47
+v_13 0.7 she v_32 v_14 0.7 she v_36 v_14 0.6 she v_32 v_15 0.6 she v_32 v_16
+0.7 she v_50 v_16 0.7 she v_21 v_17 0.6 she v_43 v_17 0.6 she v_52 v_17 0.7 she
+v_43 v_18 0.7 she v_52 v_18 0.7 she v_4 v_19 0.7 she v_39 v_19 0.6 she v_40
+v_19 0.7 she v_4 v_20 0.7 she v_5 v_20 0.7 she v_22 v_20 0.7 she v_29 v_20 0.7
+she v_40 v_20 0.7 she v_45 v_20 0.7 she v_0 v_21 0.7 she v_4 v_21 0.7 she v_5
+v_21 0.7 she v_9 v_21 0.7 she v_13 v_21 0.7 she v_17 v_21 0.6 she v_22 v_21 0.6
+she v_30 v_21 0.7 she v_40 v_21 0.6 she v_45 v_21 0.7 she v_46 v_21 0.7 she v_2
+v_22 0.7 she v_3 v_22 0.7 she v_12 v_22 0.7 she v_20 v_22 0.7 she v_21 v_22 0.6
+she v_44 v_22 0.7 she v_8 v_23 0.7 she v_27 v_23 0.7 she v_32 v_23 0.7 she v_35
+v_23 0.7 she v_36 v_23 0.7 she v_42 v_23 0.7 she v_32 v_25 0.7 she v_50 v_25
+0.7 she v_50 v_26 0.7 she v_23 v_27 0.7 she v_33 v_27 0.7 she v_34 v_27 0.6 she
+v_50 v_27 0.7 she v_1 v_28 0.7 she v_11 v_28 0.7 she v_38 v_28 0.7 she v_52
+v_28 0.7 she v_60 v_28 0.7 she v_61 v_28 0.7 she v_12 v_29 0.7 she v_20 v_29
+0.7 she v_38 v_29 0.7 she v_43 v_29 0.6 she v_52 v_29 0.7 she v_21 v_30 0.7 she
+v_53 v_30 0.7 she v_54 v_30 0.7 she v_4 v_31 0.7 she v_5 v_31 0.7 she v_13 v_31
+0.7 she v_39 v_31 0.6 she v_55 v_31 0.6 she v_65 v_31 0.7 she v_6 v_32 0.7 she
+v_7 v_32 0.7 she v_8 v_32 0.7 she v_13 v_32 0.7 she v_14 v_32 0.7 she v_15 v_32
+0.6 she v_16 v_32 0.7 she v_23 v_32 0.7 she v_25 v_32 0.7 she v_33 v_32 0.7 she
+v_34 v_32 0.7 she v_46 v_32 0.6 she v_8 v_33 0.7 she v_27 v_33 0.7 she v_32
+v_33 0.7 she v_35 v_33 0.7 she v_36 v_33 0.7 she v_8 v_34 0.6 she v_27 v_34 0.6
+she v_32 v_34 0.7 she v_36 v_34 0.7 she v_23 v_35 0.7 she v_33 v_35 0.7 she
+v_50 v_35 0.7 she v_8 v_36 0.7 she v_14 v_36 0.6 she v_23 v_36 0.7 she v_33
+v_36 0.7 she v_34 v_36 0.7 she v_50 v_36 0.7 she v_43 v_37 0.7 she v_51 v_37
+0.7 she v_60 v_37 0.7 she v_2 v_38 0.6 she v_9 v_38 0.6 she v_28 v_38 0.7 she
+v_29 v_38 0.7 she v_43 v_38 0.7 she v_51 v_38 0.7 she v_52 v_38 0.7 she v_61
+v_38 0.7 she v_62 v_38 0.7 she v_2 v_39 0.7 she v_5 v_39 0.7 she v_11 v_39 0.7
+she v_12 v_39 0.7 she v_13 v_39 0.7 she v_19 v_39 0.6 she v_31 v_39 0.6 she
+v_64 v_39 0.7 she v_4 v_40 0.7 she v_5 v_40 0.7 she v_12 v_40 0.7 she v_13 v_40
+0.7 she v_19 v_40 0.7 she v_20 v_40 0.7 she v_21 v_40 0.6 she v_48 v_40 0.7 she
+v_53 v_40 0.7 she v_64 v_40 0.7 she v_4 v_41 0.7 she v_5 v_41 0.7 she v_13 v_41
+0.7 she v_55 v_41 0.6 she v_65 v_41 0.7 she v_4 v_42 0.7 she v_5 v_42 0.7 she
+v_13 v_42 0.7 she v_23 v_42 0.7 she v_65 v_42 0.7 she v_66 v_42 0.7 she v_71
+v_42 0.7 she v_10 v_43 0.7 she v_17 v_43 0.6 she v_18 v_43 0.7 she v_29 v_43
+0.6 she v_37 v_43 0.7 she v_38 v_43 0.7 she v_51 v_43 0.7 she v_64 v_43 0.7 she
+v_22 v_44 0.7 she v_52 v_44 0.7 she v_64 v_44 0.6 she v_78 v_44 0.7 she v_5
+v_45 0.7 she v_13 v_45 0.7 she v_20 v_45 0.7 she v_21 v_45 0.7 she v_48 v_45
+0.7 she v_53 v_45 0.7 she v_54 v_45 0.7 she v_63 v_45 0.7 she v_64 v_45 0.7 she
+v_5 v_46 0.7 she v_13 v_46 0.7 she v_21 v_46 0.7 she v_32 v_46 0.6 she v_54
+v_46 0.6 she v_55 v_46 0.7 she v_5 v_47 0.7 she v_13 v_47 0.7 she v_66 v_47 0.7
+she v_71 v_47 0.7 she v_72 v_47 0.7 she v_40 v_48 0.7 she v_45 v_48 0.7 she
+v_71 v_48 0.7 she v_72 v_48 0.6 she v_73 v_48 0.6 she v_74 v_48 0.7 she v_79
+v_48 0.7 she v_80 v_48 0.7 she v_56 v_49 0.7 she v_57 v_49 0.7 she v_79 v_49
+0.6 she v_16 v_50 0.7 she v_25 v_50 0.7 she v_26 v_50 0.7 she v_27 v_50 0.7 she
+v_35 v_50 0.7 she v_36 v_50 0.7 she v_56 v_50 0.6 she v_66 v_50 0.7 she v_73
+v_50 0.7 she v_74 v_50 0.7 she v_82 v_50 0.6 she v_37 v_51 0.7 she v_38 v_51
+0.7 she v_43 v_51 0.7 she v_64 v_51 0.7 she v_77 v_51 0.7 she v_83 v_51 0.7 she
+v_91 v_51 0.7 she v_92 v_51 0.7 she v_17 v_52 0.7 she v_18 v_52 0.7 she v_28
+v_52 0.7 she v_29 v_52 0.7 she v_38 v_52 0.7 she v_44 v_52 0.7 she v_76 v_52
+0.7 she v_77 v_52 0.7 she v_83 v_52 0.7 she v_30 v_53 0.7 she v_40 v_53 0.7 she
+v_45 v_53 0.7 she v_71 v_53 0.7 she v_72 v_53 0.6 she v_73 v_53 0.6 she v_30
+v_54 0.7 she v_45 v_54 0.7 she v_46 v_54 0.6 she v_71 v_54 0.6 she v_74 v_54
+0.6 she v_79 v_54 0.7 she v_80 v_54 0.6 she v_88 v_54 0.7 she v_31 v_55 0.6 she
+v_41 v_55 0.6 she v_46 v_55 0.7 she v_57 v_55 0.7 she v_71 v_55 0.7 she v_87
+v_55 0.7 she v_88 v_55 0.7 she v_49 v_56 0.7 she v_50 v_56 0.6 she v_75 v_56
+0.6 she v_49 v_57 0.7 she v_55 v_57 0.7 she v_65 v_57 0.7 she v_66 v_57 0.6 she
+v_72 v_57 0.7 she v_74 v_57 0.7 she v_79 v_57 0.7 she v_80 v_57 0.7 she v_65
+v_58 0.7 she v_66 v_58 0.7 she v_72 v_58 0.7 she v_73 v_58 0.7 she v_74 v_58
+0.7 she v_80 v_58 0.7 she v_81 v_58 0.7 she v_65 v_59 0.7 she v_66 v_59 0.7 she
+v_72 v_59 0.7 she v_73 v_59 0.7 she v_74 v_59 0.7 she v_80 v_59 0.7 she v_81
+v_59 0.7 she v_28 v_60 0.7 she v_37 v_60 0.7 she v_76 v_60 0.6 she v_83 v_60
+0.7 she v_84 v_60 0.7 she v_85 v_60 0.7 she v_90 v_60 0.7 she v_91 v_60 0.7 she
+v_92 v_60 0.7 she v_28 v_61 0.7 she v_38 v_61 0.7 she v_70 v_61 0.7 she v_76
+v_61 0.6 she v_83 v_61 0.7 she v_84 v_61 0.7 she v_85 v_61 0.7 she v_90 v_61
+0.7 she v_92 v_61 0.7 she v_93 v_61 0.7 she v_38 v_62 0.7 she v_70 v_62 0.7 she
+v_76 v_62 0.7 she v_83 v_62 0.7 she v_85 v_62 0.6 she v_93 v_62 0.7 she v_45
+v_63 0.7 she v_70 v_63 0.7 she v_77 v_63 0.7 she v_83 v_63 0.7 she v_84 v_63
+0.7 she v_85 v_63 0.7 she v_93 v_63 0.7 she v_39 v_64 0.7 she v_40 v_64 0.7 she
+v_43 v_64 0.7 she v_44 v_64 0.6 she v_45 v_64 0.7 she v_51 v_64 0.7 she v_70
+v_64 0.7 she v_84 v_64 0.7 she v_85 v_64 0.7 she v_31 v_65 0.7 she v_41 v_65
+0.7 she v_42 v_65 0.7 she v_57 v_65 0.7 she v_58 v_65 0.7 she v_59 v_65 0.7 she
+v_67 v_65 0.7 she v_71 v_65 0.7 she v_42 v_66 0.7 she v_47 v_66 0.7 she v_50
+v_66 0.7 she v_57 v_66 0.6 she v_58 v_66 0.7 she v_59 v_66 0.7 she v_67 v_66
+0.7 she v_75 v_66 0.7 she v_65 v_67 0.7 she v_66 v_67 0.7 she v_73 v_67 0.7 she
+v_74 v_67 0.7 she v_80 v_67 0.7 she v_98 v_67 0.6 she v_76 v_68 0.6 she v_83
+v_68 0.7 she v_84 v_68 0.7 she v_90 v_68 0.7 she v_91 v_68 0.7 she v_92 v_68
+0.7 she v_100 v_68 0.7 she v_70 v_69 0.7 she v_76 v_69 0.7 she v_77 v_69 0.7
+she v_83 v_69 0.7 she v_93 v_69 0.6 she v_94 v_69 0.7 she v_61 v_70 0.7 she
+v_62 v_70 0.7 she v_63 v_70 0.7 she v_64 v_70 0.7 she v_69 v_70 0.7 she v_71
+v_70 0.7 she v_78 v_70 0.7 she v_84 v_70 0.7 she v_93 v_70 0.6 she v_103 v_70
+0.7 she v_108 v_70 0.7 she v_42 v_71 0.7 she v_47 v_71 0.7 she v_48 v_71 0.7
+she v_53 v_71 0.7 she v_54 v_71 0.6 she v_55 v_71 0.7 she v_65 v_71 0.7 she
+v_70 v_71 0.7 she v_85 v_71 0.7 she v_93 v_71 0.7 she v_103 v_71 0.7 she v_108
+v_71 0.7 she v_47 v_72 0.7 she v_48 v_72 0.6 she v_53 v_72 0.6 she v_57 v_72
+0.7 she v_58 v_72 0.7 she v_59 v_72 0.7 she v_48 v_73 0.6 she v_50 v_73 0.7 she
+v_53 v_73 0.6 she v_58 v_73 0.7 she v_59 v_73 0.7 she v_67 v_73 0.7 she v_75
+v_73 0.7 she v_82 v_73 0.7 she v_104 v_73 0.7 she v_105 v_73 0.7 she v_48 v_74
+0.7 she v_50 v_74 0.7 she v_54 v_74 0.6 she v_57 v_74 0.7 she v_58 v_74 0.7 she
+v_59 v_74 0.7 she v_67 v_74 0.7 she v_75 v_74 0.7 she v_82 v_74 0.7 she v_97
+v_74 0.7 she v_56 v_75 0.6 she v_66 v_75 0.7 she v_73 v_75 0.7 she v_74 v_75
+0.7 she v_80 v_75 0.7 she v_97 v_75 0.7 she v_52 v_76 0.7 she v_60 v_76 0.6 she
+v_61 v_76 0.6 she v_62 v_76 0.7 she v_68 v_76 0.6 she v_69 v_76 0.7 she v_106
+v_76 0.7 she v_51 v_77 0.7 she v_52 v_77 0.7 she v_63 v_77 0.7 she v_69 v_77
+0.7 she v_78 v_77 0.7 she v_106 v_77 0.7 she v_44 v_78 0.7 she v_70 v_78 0.7
+she v_77 v_78 0.7 she v_83 v_78 0.7 she v_86 v_78 0.7 she v_94 v_78 0.7 she
+v_95 v_78 0.7 she v_102 v_78 0.6 she v_48 v_79 0.7 she v_49 v_79 0.6 she v_54
+v_79 0.7 she v_57 v_79 0.7 she v_104 v_79 0.7 she v_105 v_79 0.7 she v_48 v_80
+0.7 she v_54 v_80 0.6 she v_57 v_80 0.7 she v_58 v_80 0.7 she v_59 v_80 0.7 she
+v_67 v_80 0.7 she v_75 v_80 0.7 she v_82 v_80 0.7 she v_103 v_80 0.7 she v_105
+v_80 0.7 she v_110 v_80 0.7 she v_111 v_80 0.7 she v_117 v_80 0.7 she v_58 v_81
+0.7 she v_59 v_81 0.7 she v_87 v_81 0.7 she v_105 v_81 0.7 she v_110 v_81 0.7
+she v_111 v_81 0.7 she v_117 v_81 0.7 she v_50 v_82 0.6 she v_73 v_82 0.7 she
+v_74 v_82 0.7 she v_80 v_82 0.7 she v_97 v_82 0.7 she v_105 v_82 0.7 she v_111
+v_82 0.7 she v_51 v_83 0.7 she v_52 v_83 0.7 she v_60 v_83 0.7 she v_61 v_83
+0.7 she v_62 v_83 0.7 she v_63 v_83 0.7 she v_68 v_83 0.7 she v_69 v_83 0.7 she
+v_78 v_83 0.7 she v_107 v_83 0.7 she v_113 v_83 0.7 she v_114 v_83 0.7 she v_60
+v_84 0.7 she v_61 v_84 0.7 she v_63 v_84 0.7 she v_64 v_84 0.7 she v_68 v_84
+0.7 she v_70 v_84 0.7 she v_86 v_84 0.7 she v_94 v_84 0.6 she v_95 v_84 0.7 she
+v_101 v_84 0.7 she v_106 v_84 0.7 she v_107 v_84 0.7 she v_108 v_84 0.7 she
+v_60 v_85 0.7 she v_61 v_85 0.7 she v_62 v_85 0.6 she v_63 v_85 0.7 she v_64
+v_85 0.7 she v_71 v_85 0.7 she v_86 v_85 0.7 she v_101 v_85 0.7 she v_106 v_85
+0.7 she v_107 v_85 0.7 she v_108 v_85 0.7 she v_78 v_86 0.7 she v_84 v_86 0.7
+she v_85 v_86 0.7 she v_87 v_86 0.7 she v_93 v_86 0.7 she v_102 v_86 0.7 she
+v_104 v_86 0.7 she v_109 v_86 0.7 she v_116 v_86 0.7 she v_55 v_87 0.7 she v_81
+v_87 0.7 she v_86 v_87 0.7 she v_95 v_87 0.7 she v_97 v_87 0.7 she v_103 v_87
+0.7 she v_109 v_87 0.7 she v_54 v_88 0.7 she v_55 v_88 0.7 she v_103 v_88 0.7
+she v_105 v_88 0.6 she v_109 v_88 0.7 she v_110 v_88 0.7 she v_111 v_88 0.7 she
+v_117 v_88 0.7 she v_125 v_88 0.7 she v_126 v_88 0.7 she v_127 v_88 0.7 she
+v_125 v_89 0.7 she v_126 v_89 0.7 she v_127 v_89 0.7 she v_142 v_89 0.7 she
+v_60 v_90 0.7 she v_61 v_90 0.7 she v_68 v_90 0.7 she v_107 v_90 0.7 she v_113
+v_90 0.7 she v_114 v_90 0.7 she v_51 v_91 0.7 she v_60 v_91 0.7 she v_68 v_91
+0.7 she v_102 v_91 0.7 she v_112 v_91 0.6 she v_118 v_91 0.7 she v_119 v_91 0.7
+she v_51 v_92 0.7 she v_60 v_92 0.7 she v_61 v_92 0.7 she v_68 v_92 0.7 she
+v_118 v_92 0.7 she v_119 v_92 0.7 she v_120 v_92 0.7 she v_128 v_92 0.7 she
+v_61 v_93 0.7 she v_62 v_93 0.7 she v_63 v_93 0.7 she v_69 v_93 0.6 she v_70
+v_93 0.6 she v_71 v_93 0.7 she v_86 v_93 0.7 she v_100 v_93 0.7 she v_101 v_93
+0.7 she v_106 v_93 0.7 she v_107 v_93 0.7 she v_108 v_93 0.7 she v_69 v_94 0.7
+she v_78 v_94 0.7 she v_84 v_94 0.6 she v_102 v_94 0.7 she v_104 v_94 0.7 she
+v_107 v_94 0.7 she v_109 v_94 0.7 she v_78 v_95 0.7 she v_84 v_95 0.7 she v_87
+v_95 0.7 she v_102 v_95 0.7 she v_109 v_95 0.7 she v_116 v_95 0.7 she v_103
+v_96 0.7 she v_109 v_96 0.7 she v_110 v_96 0.7 she v_117 v_96 0.7 she v_125
+v_96 0.7 she v_126 v_96 0.7 she v_127 v_96 0.7 she v_142 v_96 0.7 she v_74 v_97
+0.7 she v_75 v_97 0.7 she v_82 v_97 0.7 she v_87 v_97 0.7 she v_126 v_97 0.6
+she v_127 v_97 0.7 she v_142 v_97 0.7 she v_67 v_98 0.6 she v_127 v_98 0.7 she
+v_142 v_98 0.7 she v_102 v_99 0.6 she v_120 v_99 0.6 she v_128 v_99 0.7 she
+v_129 v_99 0.7 she v_143 v_99 0.7 she v_144 v_99 0.7 she v_68 v_100 0.7 she
+v_93 v_100 0.7 she v_128 v_100 0.7 she v_143 v_100 0.7 she v_144 v_100 0.7 she
+v_84 v_101 0.7 she v_85 v_101 0.7 she v_93 v_101 0.7 she v_128 v_101 0.7 she
+v_144 v_101 0.7 she v_78 v_102 0.6 she v_86 v_102 0.7 she v_91 v_102 0.7 she
+v_94 v_102 0.7 she v_95 v_102 0.7 she v_99 v_102 0.6 she v_113 v_102 0.7 she
+v_70 v_103 0.7 she v_71 v_103 0.7 she v_80 v_103 0.7 she v_87 v_103 0.7 she
+v_88 v_103 0.7 she v_96 v_103 0.7 she v_122 v_103 0.6 she v_134 v_103 0.7 she
+v_135 v_103 0.7 she v_73 v_104 0.7 she v_79 v_104 0.7 she v_86 v_104 0.7 she
+v_94 v_104 0.7 she v_108 v_104 0.7 she v_134 v_104 0.6 she v_135 v_104 0.6 she
+v_73 v_105 0.7 she v_79 v_105 0.7 she v_80 v_105 0.7 she v_81 v_105 0.7 she
+v_82 v_105 0.7 she v_88 v_105 0.6 she v_136 v_105 0.7 she v_142 v_105 0.7 she
+v_76 v_106 0.7 she v_77 v_106 0.7 she v_84 v_106 0.7 she v_85 v_106 0.7 she
+v_93 v_106 0.7 she v_128 v_106 0.7 she v_143 v_106 0.7 she v_144 v_106 0.7 she
+v_145 v_106 0.7 she v_83 v_107 0.7 she v_84 v_107 0.7 she v_85 v_107 0.7 she
+v_90 v_107 0.7 she v_93 v_107 0.7 she v_94 v_107 0.7 she v_112 v_107 0.7 she
+v_118 v_107 0.6 she v_128 v_107 0.7 she v_137 v_107 0.7 she v_70 v_108 0.7 she
+v_71 v_108 0.7 she v_84 v_108 0.7 she v_85 v_108 0.7 she v_93 v_108 0.7 she
+v_104 v_108 0.7 she v_109 v_108 0.7 she v_116 v_108 0.7 she v_122 v_108 0.7 she
+v_123 v_108 0.7 she v_124 v_108 0.7 she v_86 v_109 0.7 she v_87 v_109 0.7 she
+v_88 v_109 0.7 she v_94 v_109 0.7 she v_95 v_109 0.7 she v_96 v_109 0.7 she
+v_108 v_109 0.7 she v_139 v_109 0.7 she v_148 v_109 0.7 she v_149 v_109 0.7 she
+v_80 v_110 0.7 she v_81 v_110 0.7 she v_88 v_110 0.7 she v_96 v_110 0.7 she
+v_80 v_111 0.7 she v_81 v_111 0.7 she v_82 v_111 0.7 she v_88 v_111 0.7 she
+v_91 v_112 0.6 she v_107 v_112 0.7 she v_120 v_112 0.7 she v_129 v_112 0.6 she
+v_143 v_112 0.7 she v_144 v_112 0.7 she v_83 v_113 0.7 she v_90 v_113 0.7 she
+v_102 v_113 0.7 she v_143 v_113 0.7 she v_144 v_113 0.7 she v_145 v_113 0.7 she
+v_83 v_114 0.7 she v_90 v_114 0.7 she v_143 v_114 0.7 she v_144 v_114 0.7 she
+v_145 v_114 0.7 she v_121 v_115 0.7 she v_130 v_115 0.7 she v_138 v_115 0.7 she
+v_146 v_115 0.7 she v_147 v_115 0.7 she v_86 v_116 0.7 she v_95 v_116 0.7 she
+v_108 v_116 0.7 she v_133 v_116 0.7 she v_136 v_116 0.7 she v_139 v_116 0.7 she
+v_142 v_116 0.7 she v_149 v_116 0.7 she v_80 v_117 0.7 she v_81 v_117 0.7 she
+v_88 v_117 0.7 she v_96 v_117 0.7 she v_91 v_118 0.7 she v_92 v_118 0.7 she
+v_107 v_118 0.6 she v_137 v_118 0.7 she v_143 v_118 0.7 she v_144 v_118 0.7 she
+v_91 v_119 0.7 she v_92 v_119 0.7 she v_128 v_119 0.6 she v_130 v_119 0.7 she
+v_143 v_119 0.7 she v_144 v_119 0.7 she v_146 v_119 0.7 she v_92 v_120 0.7 she
+v_99 v_120 0.6 she v_112 v_120 0.7 she v_121 v_120 0.7 she v_128 v_120 0.7 she
+v_130 v_120 0.7 she v_131 v_120 0.7 she v_143 v_120 0.7 she v_144 v_120 0.7 she
+v_146 v_120 0.7 she v_115 v_121 0.7 she v_120 v_121 0.7 she v_122 v_121 0.7 she
+v_134 v_121 0.7 she v_137 v_121 0.7 she v_139 v_121 0.7 she v_140 v_121 0.7 she
+v_145 v_121 0.7 she v_103 v_122 0.6 she v_108 v_122 0.7 she v_121 v_122 0.7 she
+v_132 v_122 0.7 she v_133 v_122 0.7 she v_138 v_122 0.7 she v_147 v_122 0.7 she
+v_108 v_123 0.7 she v_132 v_123 0.7 she v_133 v_123 0.7 she v_108 v_124 0.7 she
+v_125 v_124 0.7 she v_126 v_124 0.7 she v_127 v_124 0.7 she v_133 v_124 0.7 she
+v_142 v_124 0.7 she v_88 v_125 0.7 she v_89 v_125 0.7 she v_96 v_125 0.7 she
+v_124 v_125 0.7 she v_135 v_125 0.7 she v_88 v_126 0.7 she v_89 v_126 0.7 she
+v_96 v_126 0.7 she v_97 v_126 0.6 she v_124 v_126 0.7 she v_135 v_126 0.7 she
+v_88 v_127 0.7 she v_89 v_127 0.7 she v_96 v_127 0.7 she v_97 v_127 0.7 she
+v_98 v_127 0.7 she v_124 v_127 0.7 she v_135 v_127 0.7 she v_92 v_128 0.7 she
+v_99 v_128 0.7 she v_100 v_128 0.7 she v_101 v_128 0.7 she v_106 v_128 0.7 she
+v_107 v_128 0.7 she v_119 v_128 0.6 she v_120 v_128 0.7 she v_129 v_128 0.7 she
+v_99 v_129 0.7 she v_112 v_129 0.6 she v_128 v_129 0.7 she v_130 v_129 0.7 she
+v_143 v_129 0.7 she v_144 v_129 0.7 she v_146 v_129 0.7 she v_115 v_130 0.7 she
+v_119 v_130 0.7 she v_120 v_130 0.7 she v_129 v_130 0.7 she v_139 v_130 0.7 she
+v_140 v_130 0.7 she v_120 v_131 0.7 she v_134 v_131 0.7 she v_140 v_131 0.7 she
+v_141 v_131 0.7 she v_148 v_131 0.7 she v_122 v_132 0.7 she v_123 v_132 0.7 she
+v_134 v_132 0.7 she v_135 v_132 0.7 she v_140 v_132 0.7 she v_141 v_132 0.7 she
+v_148 v_132 0.7 she v_149 v_132 0.7 she v_116 v_133 0.7 she v_122 v_133 0.7 she
+v_123 v_133 0.7 she v_124 v_133 0.7 she v_134 v_133 0.6 she v_135 v_133 0.7 she
+v_141 v_133 0.7 she v_145 v_133 0.7 she v_148 v_133 0.7 she v_149 v_133 0.7 she
+v_103 v_134 0.7 she v_104 v_134 0.6 she v_121 v_134 0.7 she v_131 v_134 0.7 she
+v_132 v_134 0.7 she v_133 v_134 0.6 she v_138 v_134 0.7 she v_147 v_134 0.7 she
+v_103 v_135 0.7 she v_104 v_135 0.6 she v_125 v_135 0.7 she v_126 v_135 0.7 she
+v_127 v_135 0.7 she v_132 v_135 0.7 she v_133 v_135 0.7 she v_142 v_135 0.7 she
+v_105 v_136 0.7 she v_116 v_136 0.7 she v_142 v_136 0.7 she v_148 v_136 0.7 she
+v_149 v_136 0.7 she v_107 v_137 0.7 she v_118 v_137 0.7 she v_121 v_137 0.7 she
+v_147 v_137 0.7 she v_115 v_138 0.7 she v_122 v_138 0.7 she v_134 v_138 0.7 she
+v_140 v_138 0.7 she v_141 v_138 0.7 she v_148 v_138 0.7 she v_149 v_138 0.7 she
+v_109 v_139 0.7 she v_116 v_139 0.7 she v_121 v_139 0.7 she v_130 v_139 0.7 she
+v_146 v_139 0.7 she v_147 v_139 0.7 she v_121 v_140 0.7 she v_130 v_140 0.7 she
+v_131 v_140 0.7 she v_132 v_140 0.7 she v_138 v_140 0.7 she v_146 v_140 0.7 she
+v_147 v_140 0.7 she v_131 v_141 0.7 she v_132 v_141 0.7 she v_133 v_141 0.7 she
+v_138 v_141 0.7 she v_147 v_141 0.7 she v_89 v_142 0.7 she v_96 v_142 0.7 she
+v_97 v_142 0.7 she v_98 v_142 0.7 she v_105 v_142 0.7 she v_116 v_142 0.7 she
+v_124 v_142 0.7 she v_135 v_142 0.7 she v_136 v_142 0.7 she v_99 v_143 0.7 she
+v_100 v_143 0.7 she v_106 v_143 0.7 she v_112 v_143 0.7 she v_113 v_143 0.7 she
+v_114 v_143 0.7 she v_118 v_143 0.7 she v_119 v_143 0.7 she v_120 v_143 0.7 she
+v_129 v_143 0.7 she v_99 v_144 0.7 she v_100 v_144 0.7 she v_101 v_144 0.7 she
+v_106 v_144 0.7 she v_112 v_144 0.7 she v_113 v_144 0.7 she v_114 v_144 0.7 she
+v_118 v_144 0.7 she v_119 v_144 0.7 she v_120 v_144 0.7 she v_129 v_144 0.7 she
+v_106 v_145 0.7 she v_113 v_145 0.7 she v_114 v_145 0.7 she v_121 v_145 0.7 she
+v_133 v_145 0.7 she v_147 v_145 0.6 she v_115 v_146 0.7 she v_119 v_146 0.7 she
+v_120 v_146 0.7 she v_129 v_146 0.7 she v_139 v_146 0.7 she v_140 v_146 0.7 she
+v_115 v_147 0.7 she v_122 v_147 0.7 she v_134 v_147 0.7 she v_137 v_147 0.7 she
+v_139 v_147 0.7 she v_140 v_147 0.7 she v_141 v_147 0.7 she v_145 v_147 0.6 she
+v_109 v_148 0.7 she v_131 v_148 0.7 she v_132 v_148 0.7 she v_133 v_148 0.7 she
+v_136 v_148 0.7 she v_138 v_148 0.7 she v_109 v_149 0.7 she v_116 v_149 0.7 she
+v_132 v_149 0.7 she v_133 v_149 0.7 she v_136 v_149 0.7 she v_138 v_149 0.7 she
+v_2 v_0 0.6 she v_28 v_0 0.6 she v_29 v_0 0.6 she v_37 v_0 0.6 she v_38 v_0 0.6
+she v_2 v_1 0.6 she v_3 v_1 0.6 she v_21 v_1 0.6 she v_29 v_1 0.6 she v_37 v_1
+0.6 she v_0 v_2 0.6 she v_1 v_2 0.6 she v_10 v_2 0.6 she v_17 v_2 0.6 she v_1
+v_3 0.6 she v_10 v_3 0.6 she v_17 v_3 0.6 she v_30 v_4 0.6 she v_30 v_5 0.6 she
+v_23 v_6 0.6 she v_27 v_6 0.6 she v_33 v_6 0.6 she v_34 v_6 0.6 she v_35 v_6
+0.6 she v_36 v_6 0.6 she v_14 v_8 0.6 she v_27 v_8 0.6 she v_35 v_8 0.6 she
+v_12 v_9 0.6 she v_20 v_9 0.6 she v_37 v_9 0.6 she v_2 v_10 0.6 she v_3 v_10
+0.6 she v_12 v_10 0.6 she v_20 v_10 0.6 she v_21 v_10 0.6 she v_29 v_11 0.6 she
+v_9 v_12 0.6 she v_10 v_12 0.6 she v_17 v_12 0.6 she v_37 v_12 0.6 she v_38
+v_12 0.6 she v_30 v_13 0.6 she v_8 v_14 0.6 she v_27 v_14 0.6 she v_35 v_14 0.6
+she v_2 v_17 0.6 she v_3 v_17 0.6 she v_12 v_17 0.6 she v_28 v_19 0.6 she v_29
+v_19 0.6 she v_9 v_20 0.6 she v_10 v_20 0.6 she v_37 v_20 0.6 she v_39 v_20 0.6
+she v_1 v_21 0.6 she v_10 v_21 0.6 she v_39 v_21 0.6 she v_31 v_22 0.6 she v_39
+v_22 0.6 she v_41 v_22 0.6 she v_45 v_22 0.6 she v_46 v_22 0.6 she v_47 v_22
+0.6 she v_6 v_23 0.6 she v_34 v_23 0.6 she v_27 v_24 0.6 she v_32 v_24 0.6 she
+v_35 v_24 0.6 she v_36 v_24 0.6 she v_6 v_27 0.6 she v_8 v_27 0.6 she v_14 v_27
+0.6 she v_24 v_27 0.6 she v_0 v_28 0.6 she v_19 v_28 0.6 she v_37 v_28 0.6 she
+v_43 v_28 0.6 she v_0 v_29 0.6 she v_1 v_29 0.6 she v_11 v_29 0.6 she v_19 v_29
+0.6 she v_37 v_29 0.6 she v_4 v_30 0.6 she v_5 v_30 0.6 she v_13 v_30 0.6 she
+v_32 v_30 0.6 she v_48 v_30 0.6 she v_22 v_31 0.6 she v_40 v_31 0.6 she v_45
+v_31 0.6 she v_24 v_32 0.6 she v_30 v_32 0.6 she v_55 v_32 0.6 she v_6 v_33 0.6
+she v_34 v_33 0.6 she v_6 v_34 0.6 she v_23 v_34 0.6 she v_33 v_34 0.6 she v_35
+v_34 0.6 she v_6 v_35 0.6 she v_8 v_35 0.6 she v_14 v_35 0.6 she v_24 v_35 0.6
+she v_34 v_35 0.6 she v_6 v_36 0.6 she v_24 v_36 0.6 she v_0 v_37 0.6 she v_1
+v_37 0.6 she v_9 v_37 0.6 she v_12 v_37 0.6 she v_20 v_37 0.6 she v_28 v_37 0.6
+she v_29 v_37 0.6 she v_38 v_37 0.6 she v_52 v_37 0.6 she v_61 v_37 0.6 she
+v_62 v_37 0.6 she v_0 v_38 0.6 she v_12 v_38 0.6 she v_37 v_38 0.6 she v_20
+v_39 0.6 she v_21 v_39 0.6 she v_22 v_39 0.6 she v_42 v_39 0.6 she v_47 v_39
+0.6 she v_31 v_40 0.6 she v_47 v_40 0.6 she v_22 v_41 0.6 she v_44 v_41 0.6 she
+v_54 v_41 0.6 she v_39 v_42 0.6 she v_49 v_42 0.6 she v_55 v_42 0.6 she v_28
+v_43 0.6 she v_63 v_43 0.6 she v_78 v_43 0.6 she v_41 v_44 0.6 she v_60 v_44
+0.6 she v_22 v_45 0.6 she v_31 v_45 0.6 she v_47 v_45 0.6 she v_22 v_46 0.6 she
+v_48 v_46 0.6 she v_53 v_46 0.6 she v_22 v_47 0.6 she v_39 v_47 0.6 she v_40
+v_47 0.6 she v_45 v_47 0.6 she v_65 v_47 0.6 she v_30 v_48 0.6 she v_46 v_48
+0.6 she v_66 v_48 0.6 she v_42 v_49 0.6 she v_53 v_49 0.6 she v_74 v_49 0.6 she
+v_80 v_49 0.6 she v_63 v_51 0.6 she v_78 v_51 0.6 she v_37 v_52 0.6 she v_64
+v_52 0.6 she v_78 v_52 0.6 she v_46 v_53 0.6 she v_49 v_53 0.6 she v_66 v_53
+0.6 she v_41 v_54 0.6 she v_56 v_54 0.6 she v_32 v_55 0.6 she v_42 v_55 0.6 she
+v_74 v_55 0.6 she v_79 v_55 0.6 she v_54 v_56 0.6 she v_67 v_56 0.6 she v_74
+v_56 0.6 she v_79 v_56 0.6 she v_73 v_57 0.6 she v_89 v_58 0.6 she v_89 v_59
+0.6 she v_44 v_60 0.6 she v_77 v_60 0.6 she v_37 v_61 0.6 she v_77 v_61 0.6 she
+v_37 v_62 0.6 she v_77 v_62 0.6 she v_84 v_62 0.6 she v_43 v_63 0.6 she v_51
+v_63 0.6 she v_52 v_64 0.6 she v_68 v_64 0.6 she v_78 v_64 0.6 she v_47 v_65
+0.6 she v_81 v_65 0.6 she v_96 v_65 0.6 she v_48 v_66 0.6 she v_53 v_66 0.6 she
+v_81 v_66 0.6 she v_96 v_66 0.6 she v_56 v_67 0.6 she v_64 v_68 0.6 she v_77
+v_68 0.6 she v_78 v_68 0.6 she v_84 v_69 0.6 she v_85 v_69 0.6 she v_85 v_70
+0.6 she v_97 v_72 0.6 she v_57 v_73 0.6 she v_49 v_74 0.6 she v_55 v_74 0.6 she
+v_56 v_74 0.6 she v_81 v_74 0.6 she v_87 v_74 0.6 she v_88 v_74 0.6 she v_96
+v_74 0.6 she v_98 v_75 0.6 she v_77 v_76 0.6 she v_101 v_76 0.6 she v_60 v_77
+0.6 she v_61 v_77 0.6 she v_62 v_77 0.6 she v_68 v_77 0.6 she v_76 v_77 0.6 she
+v_101 v_77 0.6 she v_43 v_78 0.6 she v_51 v_78 0.6 she v_52 v_78 0.6 she v_64
+v_78 0.6 she v_68 v_78 0.6 she v_84 v_78 0.6 she v_85 v_78 0.6 she v_93 v_78
+0.6 she v_55 v_79 0.6 she v_56 v_79 0.6 she v_97 v_79 0.6 she v_49 v_80 0.6 she
+v_89 v_80 0.6 she v_98 v_80 0.6 she v_104 v_80 0.6 she v_65 v_81 0.6 she v_66
+v_81 0.6 she v_74 v_81 0.6 she v_82 v_81 0.6 she v_96 v_81 0.6 she v_97 v_81
+0.6 she v_98 v_81 0.6 she v_81 v_82 0.6 she v_98 v_82 0.6 she v_106 v_83 0.6
+she v_62 v_84 0.6 she v_69 v_84 0.6 she v_78 v_84 0.6 she v_69 v_85 0.6 she
+v_70 v_85 0.6 she v_78 v_85 0.6 she v_94 v_85 0.6 she v_95 v_85 0.6 she v_74
+v_87 0.6 she v_96 v_87 0.6 she v_104 v_87 0.6 she v_74 v_88 0.6 she v_89 v_88
+0.6 she v_98 v_88 0.6 she v_104 v_88 0.6 she v_58 v_89 0.6 she v_59 v_89 0.6
+she v_80 v_89 0.6 she v_88 v_89 0.6 she v_96 v_89 0.6 she v_110 v_89 0.6 she
+v_117 v_89 0.6 she v_106 v_90 0.6 she v_107 v_91 0.6 she v_113 v_91 0.6 she
+v_114 v_91 0.6 she v_102 v_92 0.6 she v_112 v_92 0.6 she v_113 v_92 0.6 she
+v_114 v_92 0.6 she v_115 v_92 0.6 she v_78 v_93 0.6 she v_85 v_94 0.6 she v_85
+v_95 0.6 she v_104 v_95 0.6 she v_65 v_96 0.6 she v_66 v_96 0.6 she v_74 v_96
+0.6 she v_81 v_96 0.6 she v_87 v_96 0.6 she v_89 v_96 0.6 she v_98 v_96 0.6 she
+v_104 v_96 0.6 she v_105 v_96 0.6 she v_72 v_97 0.6 she v_79 v_97 0.6 she v_81
+v_97 0.6 she v_110 v_97 0.6 she v_125 v_97 0.6 she v_75 v_98 0.6 she v_80 v_98
+0.6 she v_81 v_98 0.6 she v_82 v_98 0.6 she v_88 v_98 0.6 she v_96 v_98 0.6 she
+v_125 v_98 0.6 she v_126 v_98 0.6 she v_115 v_99 0.6 she v_118 v_99 0.6 she
+v_119 v_99 0.6 she v_120 v_100 0.6 she v_129 v_100 0.6 she v_76 v_101 0.6 she
+v_77 v_101 0.6 she v_112 v_101 0.6 she v_118 v_101 0.6 she v_119 v_101 0.6 she
+v_120 v_101 0.6 she v_129 v_101 0.6 she v_92 v_102 0.6 she v_107 v_102 0.6 she
+v_114 v_102 0.6 she v_119 v_102 0.6 she v_108 v_103 0.6 she v_116 v_103 0.6 she
+v_123 v_103 0.6 she v_124 v_103 0.6 she v_80 v_104 0.6 she v_87 v_104 0.6 she
+v_88 v_104 0.6 she v_95 v_104 0.6 she v_96 v_104 0.6 she v_122 v_104 0.6 she
+v_96 v_105 0.6 she v_127 v_105 0.6 she v_83 v_106 0.6 she v_90 v_106 0.6 she
+v_137 v_106 0.6 she v_91 v_107 0.6 she v_102 v_107 0.6 she v_120 v_107 0.6 she
+v_129 v_107 0.6 she v_103 v_108 0.6 she v_89 v_110 0.6 she v_97 v_110 0.6 she
+v_136 v_110 0.6 she v_142 v_110 0.6 she v_92 v_112 0.6 she v_101 v_112 0.6 she
+v_128 v_112 0.6 she v_91 v_113 0.6 she v_92 v_113 0.6 she v_137 v_113 0.6 she
+v_91 v_114 0.6 she v_92 v_114 0.6 she v_102 v_114 0.6 she v_137 v_114 0.6 she
+v_92 v_115 0.6 she v_99 v_115 0.6 she v_118 v_115 0.6 she v_129 v_115 0.6 she
+v_131 v_115 0.6 she v_132 v_115 0.6 she v_103 v_116 0.6 she v_148 v_116 0.6 she
+v_89 v_117 0.6 she v_99 v_118 0.6 she v_101 v_118 0.6 she v_115 v_118 0.6 she
+v_120 v_118 0.6 she v_128 v_118 0.6 she v_99 v_119 0.6 she v_101 v_119 0.6 she
+v_102 v_119 0.6 she v_100 v_120 0.6 she v_101 v_120 0.6 she v_107 v_120 0.6 she
+v_118 v_120 0.6 she v_146 v_121 0.6 she v_104 v_122 0.6 she v_136 v_122 0.6 she
+v_103 v_123 0.6 she v_136 v_123 0.6 she v_103 v_124 0.6 she v_136 v_124 0.6 she
+v_97 v_125 0.6 she v_98 v_125 0.6 she v_98 v_126 0.6 she v_105 v_127 0.6 she
+v_112 v_128 0.6 she v_118 v_128 0.6 she v_100 v_129 0.6 she v_101 v_129 0.6 she
+v_107 v_129 0.6 she v_115 v_129 0.6 she v_115 v_131 0.6 she v_139 v_131 0.6 she
+v_115 v_132 0.6 she v_139 v_133 0.6 she v_140 v_133 0.6 she v_146 v_133 0.6 she
+v_136 v_134 0.6 she v_136 v_135 0.6 she v_110 v_136 0.6 she v_122 v_136 0.6 she
+v_123 v_136 0.6 she v_124 v_136 0.6 she v_134 v_136 0.6 she v_135 v_136 0.6 she
+v_140 v_136 0.6 she v_141 v_136 0.6 she v_106 v_137 0.6 she v_113 v_137 0.6 she
+v_114 v_137 0.6 she v_138 v_137 0.6 she v_146 v_137 0.6 she v_137 v_138 0.6 she
+v_139 v_138 0.6 she v_131 v_139 0.6 she v_133 v_139 0.6 she v_138 v_139 0.6 she
+v_148 v_139 0.6 she v_149 v_139 0.6 she v_133 v_140 0.6 she v_136 v_140 0.6 she
+v_136 v_141 0.6 she v_110 v_142 0.6 she v_146 v_145 0.6 she v_121 v_146 0.6 she
+v_133 v_146 0.6 she v_137 v_146 0.6 she v_145 v_146 0.6 she v_147 v_146 0.6 she
+v_146 v_147 0.6 she v_116 v_148 0.6 she v_139 v_148 0.6 she v_139 v_149 0.6 she
+v_1 v_0 0.5 she v_9 v_0 0.5 she v_12 v_0 0.5 she v_20 v_0 0.5 she v_0 v_1 0.5
+she v_9 v_1 0.5 she v_12 v_1 0.5 she v_20 v_1 0.5 she v_38 v_1 0.5 she v_21 v_3
+0.5 she v_8 v_6 0.5 she v_14 v_6 0.5 she v_24 v_6 0.5 she v_23 v_7 0.5 she v_24
+v_7 0.5 she v_27 v_7 0.5 she v_33 v_7 0.5 she v_34 v_7 0.5 she v_35 v_7 0.5 she
+v_36 v_7 0.5 she v_6 v_8 0.5 she v_24 v_8 0.5 she v_0 v_9 0.5 she v_1 v_9 0.5
+she v_28 v_9 0.5 she v_29 v_9 0.5 she v_37 v_11 0.5 she v_0 v_12 0.5 she v_1
+v_12 0.5 she v_6 v_14 0.5 she v_26 v_14 0.5 she v_34 v_14 0.5 she v_20 v_17 0.5
+she v_21 v_18 0.5 she v_28 v_18 0.5 she v_0 v_20 0.5 she v_1 v_20 0.5 she v_17
+v_20 0.5 she v_38 v_20 0.5 she v_3 v_21 0.5 she v_18 v_21 0.5 she v_40 v_22 0.5
+she v_42 v_22 0.5 she v_7 v_23 0.5 she v_26 v_23 0.5 she v_33 v_23 0.5 she v_6
+v_24 0.5 she v_7 v_24 0.5 she v_8 v_24 0.5 she v_26 v_24 0.5 she v_14 v_26 0.5
+she v_23 v_26 0.5 she v_24 v_26 0.5 she v_33 v_26 0.5 she v_7 v_27 0.5 she v_35
+v_27 0.5 she v_36 v_27 0.5 she v_9 v_28 0.5 she v_18 v_28 0.5 she v_9 v_29 0.5
+she v_31 v_30 0.5 she v_44 v_30 0.5 she v_30 v_31 0.5 she v_46 v_31 0.5 she
+v_53 v_31 0.5 she v_54 v_31 0.5 she v_53 v_32 0.5 she v_54 v_32 0.5 she v_7
+v_33 0.5 she v_23 v_33 0.5 she v_26 v_33 0.5 she v_7 v_34 0.5 she v_14 v_34 0.5
+she v_7 v_35 0.5 she v_27 v_35 0.5 she v_7 v_36 0.5 she v_27 v_36 0.5 she v_11
+v_37 0.5 she v_1 v_38 0.5 she v_20 v_38 0.5 she v_41 v_39 0.5 she v_44 v_39 0.5
+she v_22 v_40 0.5 she v_42 v_40 0.5 she v_39 v_41 0.5 she v_53 v_41 0.5 she
+v_22 v_42 0.5 she v_40 v_42 0.5 she v_45 v_42 0.5 she v_68 v_43 0.5 she v_30
+v_44 0.5 she v_39 v_44 0.5 she v_46 v_44 0.5 she v_61 v_44 0.5 she v_63 v_44
+0.5 she v_69 v_44 0.5 she v_42 v_45 0.5 she v_31 v_46 0.5 she v_44 v_46 0.5 she
+v_49 v_47 0.5 she v_55 v_47 0.5 she v_49 v_48 0.5 she v_65 v_48 0.5 she v_47
+v_49 0.5 she v_48 v_49 0.5 she v_68 v_51 0.5 she v_63 v_52 0.5 she v_68 v_52
+0.5 she v_31 v_53 0.5 she v_32 v_53 0.5 she v_41 v_53 0.5 she v_65 v_53 0.5 she
+v_31 v_54 0.5 she v_32 v_54 0.5 she v_66 v_54 0.5 she v_72 v_54 0.5 she v_73
+v_54 0.5 she v_47 v_55 0.5 she v_56 v_55 0.5 she v_80 v_55 0.5 she v_55 v_56
+0.5 she v_57 v_56 0.5 she v_59 v_56 0.5 she v_80 v_56 0.5 she v_56 v_57 0.5 she
+v_82 v_57 0.5 she v_56 v_59 0.5 she v_44 v_61 0.5 she v_44 v_63 0.5 she v_52
+v_63 0.5 she v_68 v_63 0.5 she v_78 v_63 0.5 she v_48 v_65 0.5 she v_53 v_65
+0.5 she v_87 v_65 0.5 she v_88 v_65 0.5 she v_54 v_66 0.5 she v_87 v_66 0.5 she
+v_88 v_66 0.5 she v_81 v_67 0.5 she v_43 v_68 0.5 she v_51 v_68 0.5 she v_52
+v_68 0.5 she v_63 v_68 0.5 she v_44 v_69 0.5 she v_54 v_72 0.5 she v_54 v_73
+0.5 she v_97 v_73 0.5 she v_79 v_74 0.5 she v_81 v_75 0.5 she v_90 v_76 0.5 she
+v_90 v_77 0.5 she v_63 v_78 0.5 she v_74 v_79 0.5 she v_81 v_79 0.5 she v_55
+v_80 0.5 she v_56 v_80 0.5 she v_67 v_81 0.5 she v_75 v_81 0.5 she v_79 v_81
+0.5 she v_89 v_81 0.5 she v_57 v_82 0.5 she v_89 v_82 0.5 she v_101 v_83 0.5
+she v_103 v_86 0.5 she v_65 v_87 0.5 she v_66 v_87 0.5 she v_65 v_88 0.5 she
+v_66 v_88 0.5 she v_81 v_89 0.5 she v_82 v_89 0.5 she v_105 v_89 0.5 she v_76
+v_90 0.5 she v_77 v_90 0.5 she v_101 v_90 0.5 she v_106 v_91 0.5 she v_107 v_92
+0.5 she v_94 v_93 0.5 she v_95 v_93 0.5 she v_93 v_94 0.5 she v_93 v_95 0.5 she
+v_97 v_96 0.5 she v_111 v_96 0.5 she v_73 v_97 0.5 she v_96 v_97 0.5 she v_105
+v_97 0.5 she v_117 v_97 0.5 she v_110 v_98 0.5 she v_117 v_98 0.5 she v_107
+v_99 0.5 she v_112 v_99 0.5 she v_113 v_99 0.5 she v_114 v_99 0.5 she v_102
+v_100 0.5 she v_118 v_100 0.5 she v_119 v_100 0.5 she v_83 v_101 0.5 she v_90
+v_101 0.5 she v_113 v_101 0.5 she v_114 v_101 0.5 she v_100 v_102 0.5 she v_86
+v_103 0.5 she v_116 v_104 0.5 she v_123 v_104 0.5 she v_124 v_104 0.5 she v_89
+v_105 0.5 she v_97 v_105 0.5 she v_110 v_105 0.5 she v_91 v_106 0.5 she v_92
+v_107 0.5 she v_99 v_107 0.5 she v_115 v_107 0.5 she v_116 v_109 0.5 she v_135
+v_109 0.5 she v_140 v_109 0.5 she v_141 v_109 0.5 she v_98 v_110 0.5 she v_105
+v_110 0.5 she v_127 v_110 0.5 she v_96 v_111 0.5 she v_99 v_112 0.5 she v_119
+v_112 0.5 she v_99 v_113 0.5 she v_101 v_113 0.5 she v_99 v_114 0.5 she v_101
+v_114 0.5 she v_128 v_114 0.5 she v_107 v_115 0.5 she v_120 v_115 0.5 she v_104
+v_116 0.5 she v_109 v_116 0.5 she v_97 v_117 0.5 she v_98 v_117 0.5 she v_100
+v_118 0.5 she v_129 v_118 0.5 she v_100 v_119 0.5 she v_112 v_119 0.5 she v_115
+v_120 0.5 she v_145 v_120 0.5 she v_133 v_121 0.5 she v_147 v_121 0.5 she v_139
+v_122 0.5 she v_104 v_123 0.5 she v_139 v_123 0.5 she v_104 v_124 0.5 she v_139
+v_124 0.5 she v_110 v_127 0.5 she v_136 v_127 0.5 she v_114 v_128 0.5 she v_118
+v_129 0.5 she v_145 v_129 0.5 she v_133 v_130 0.5 she v_137 v_131 0.5 she v_137
+v_132 0.5 she v_139 v_132 0.5 she v_121 v_133 0.5 she v_130 v_133 0.5 she v_147
+v_133 0.5 she v_109 v_135 0.5 she v_139 v_135 0.5 she v_127 v_136 0.5 she v_131
+v_137 0.5 she v_132 v_137 0.5 she v_145 v_138 0.5 she v_122 v_139 0.5 she v_123
+v_139 0.5 she v_124 v_139 0.5 she v_132 v_139 0.5 she v_135 v_139 0.5 she v_109
+v_140 0.5 she v_109 v_141 0.5 she v_120 v_145 0.5 she v_129 v_145 0.5 she v_138
+v_145 0.5 she v_121 v_147 0.5 she v_133 v_147 0.5 she v_149 v_148 0.5 she v_148
+v_149 0.5 she v_17 v_1 0.4 she v_3 v_2 0.4 she v_18 v_2 0.4 she v_21 v_2 0.4
+she v_2 v_3 0.4 she v_18 v_3 0.4 she v_7 v_6 0.4 she v_26 v_6 0.4 she v_6 v_7
+0.4 she v_8 v_7 0.4 she v_14 v_7 0.5 she v_7 v_8 0.4 she v_11 v_9 0.4 she v_11
+v_10 0.4 she v_9 v_11 0.4 she v_10 v_11 0.4 she v_17 v_11 0.4 she v_38 v_11 0.4
+she v_18 v_12 0.4 she v_7 v_14 0.5 she v_23 v_14 0.4 she v_24 v_14 0.4 she v_33
+v_14 0.4 she v_36 v_15 0.4 she v_1 v_17 0.4 she v_11 v_17 0.4 she v_2 v_18 0.4
+she v_3 v_18 0.4 she v_12 v_18 0.4 she v_20 v_18 0.4 she v_29 v_18 0.4 she v_18
+v_20 0.4 she v_2 v_21 0.4 she v_30 v_22 0.5 she v_14 v_23 0.4 she v_14 v_24 0.4
+she v_34 v_24 0.4 she v_6 v_26 0.4 she v_34 v_26 0.4 she v_18 v_29 0.4 she v_22
+v_30 0.5 she v_39 v_30 0.4 she v_46 v_30 0.4 she v_47 v_30 0.4 she v_32 v_31
+0.4 she v_48 v_31 0.4 she v_31 v_32 0.4 she v_41 v_32 0.4 she v_14 v_33 0.4 she
+v_24 v_34 0.4 she v_26 v_34 0.4 she v_36 v_35 0.5 she v_15 v_36 0.4 she v_35
+v_36 0.5 she v_11 v_38 0.4 she v_30 v_39 0.4 she v_46 v_39 0.4 she v_41 v_40
+0.4 she v_32 v_41 0.4 she v_40 v_41 0.4 she v_45 v_41 0.4 she v_48 v_41 0.5 she
+v_54 v_42 0.4 she v_52 v_43 0.4 she v_69 v_43 0.4 she v_41 v_45 0.4 she v_30
+v_46 0.4 she v_39 v_46 0.4 she v_30 v_47 0.4 she v_31 v_48 0.4 she v_41 v_48
+0.5 she v_55 v_48 0.5 she v_54 v_49 0.4 she v_66 v_49 0.4 she v_72 v_49 0.4 she
+v_75 v_50 0.4 she v_52 v_51 0.5 she v_43 v_52 0.4 she v_51 v_52 0.5 she v_55
+v_53 0.5 she v_42 v_54 0.4 she v_49 v_54 0.4 she v_55 v_54 0.4 she v_65 v_54
+0.4 she v_48 v_55 0.5 she v_53 v_55 0.5 she v_54 v_55 0.4 she v_66 v_55 0.4 she
+v_58 v_56 0.4 she v_65 v_56 0.4 she v_66 v_56 0.4 she v_72 v_56 0.4 she v_75
+v_57 0.4 she v_56 v_58 0.4 she v_63 v_60 0.4 she v_64 v_60 0.5 she v_78 v_60
+0.4 she v_60 v_63 0.4 she v_60 v_64 0.5 she v_54 v_65 0.4 she v_56 v_65 0.4 she
+v_79 v_65 0.4 she v_80 v_65 0.4 she v_49 v_66 0.4 she v_55 v_66 0.4 she v_56
+v_66 0.4 she v_79 v_66 0.4 she v_89 v_67 0.4 she v_43 v_69 0.4 she v_49 v_72
+0.4 she v_56 v_72 0.4 she v_81 v_72 0.5 she v_96 v_72 0.4 she v_50 v_75 0.4 she
+v_57 v_75 0.4 she v_83 v_76 0.4 she v_99 v_76 0.4 she v_83 v_77 0.4 she v_99
+v_77 0.5 she v_60 v_78 0.4 she v_65 v_79 0.4 she v_66 v_79 0.4 she v_87 v_79
+0.4 she v_88 v_79 0.4 she v_96 v_79 0.5 she v_65 v_80 0.4 she v_72 v_81 0.5 she
+v_88 v_81 0.5 she v_76 v_83 0.4 she v_77 v_83 0.4 she v_90 v_83 0.5 she v_79
+v_87 0.4 she v_88 v_87 0.4 she v_79 v_88 0.4 she v_81 v_88 0.5 she v_87 v_88
+0.4 she v_97 v_88 0.4 she v_67 v_89 0.4 she v_97 v_89 0.4 she v_98 v_89 0.4 she
+v_111 v_89 0.4 she v_83 v_90 0.5 she v_106 v_92 0.4 she v_103 v_94 0.5 she v_72
+v_96 0.4 she v_79 v_96 0.5 she v_88 v_97 0.4 she v_89 v_97 0.4 she v_89 v_98
+0.4 she v_105 v_98 0.4 she v_76 v_99 0.4 she v_77 v_99 0.5 she v_101 v_99 0.4
+she v_106 v_99 0.5 she v_112 v_100 0.4 she v_113 v_100 0.4 she v_115 v_100 0.5
+she v_99 v_101 0.4 she v_102 v_101 0.5 she v_115 v_101 0.5 she v_101 v_102 0.5
+she v_106 v_102 0.4 she v_94 v_103 0.5 she v_98 v_105 0.4 she v_126 v_105 0.4
+she v_92 v_106 0.4 she v_99 v_106 0.5 she v_102 v_106 0.4 she v_112 v_106 0.5
+she v_113 v_106 0.4 she v_118 v_106 0.4 she v_129 v_106 0.4 she v_113 v_107 0.4
+she v_114 v_107 0.4 she v_119 v_107 0.4 she v_122 v_109 0.4 she v_134 v_109 0.5
+she v_89 v_111 0.4 she v_100 v_112 0.4 she v_106 v_112 0.5 she v_118 v_112 0.5
+she v_100 v_113 0.4 she v_106 v_113 0.4 she v_107 v_113 0.4 she v_115 v_113 0.4
+she v_107 v_114 0.4 she v_100 v_115 0.5 she v_101 v_115 0.5 she v_113 v_115 0.4
+she v_122 v_116 0.4 she v_106 v_118 0.4 she v_112 v_118 0.5 she v_119 v_118 0.4
+she v_107 v_119 0.4 she v_118 v_119 0.4 she v_129 v_120 0.4 she v_137 v_120 0.4
+she v_130 v_121 0.4 she v_109 v_122 0.4 she v_116 v_122 0.4 she v_148 v_122 0.5
+she v_149 v_122 0.5 she v_148 v_123 0.4 she v_149 v_123 0.4 she v_148 v_124 0.5
+she v_149 v_124 0.5 she v_105 v_126 0.4 she v_106 v_129 0.4 she v_120 v_129 0.4
+she v_137 v_129 0.4 she v_121 v_130 0.4 she v_137 v_130 0.5 she v_147 v_130 0.4
+she v_145 v_132 0.4 she v_109 v_134 0.5 she v_148 v_135 0.4 she v_149 v_135 0.4
+she v_120 v_137 0.4 she v_129 v_137 0.4 she v_130 v_137 0.5 she v_132 v_145 0.4
+she v_130 v_147 0.4 she v_122 v_148 0.5 she v_123 v_148 0.4 she v_124 v_148 0.5
+she v_135 v_148 0.4 she v_122 v_149 0.5 she v_123 v_149 0.4 she v_124 v_149 0.5
+she v_135 v_149 0.4 she v_11 v_0 0.4 she v_17 v_0 0.3 she v_11 v_1 0.3 she v_22
+v_4 0.3 she v_26 v_7 0.4 she v_26 v_8 0.3 she v_19 v_9 0.3 she v_28 v_10 0.3
+she v_38 v_10 0.3 she v_0 v_11 0.4 she v_1 v_11 0.3 she v_18 v_11 0.3 she v_22
+v_13 0.3 she v_26 v_15 0.3 she v_27 v_15 0.4 she v_35 v_15 0.4 she v_0 v_17 0.3
+she v_28 v_17 0.3 she v_11 v_18 0.3 she v_9 v_19 0.3 she v_37 v_19 0.3 she v_4
+v_22 0.3 she v_13 v_22 0.3 she v_25 v_23 0.3 she v_33 v_24 0.3 she v_23 v_25
+0.3 she v_33 v_25 0.3 she v_7 v_26 0.4 she v_8 v_26 0.3 she v_15 v_26 0.3 she
+v_15 v_27 0.4 she v_10 v_28 0.3 she v_17 v_28 0.3 she v_41 v_30 0.4 she v_42
+v_30 0.3 she v_45 v_30 0.4 she v_41 v_31 0.4 she v_48 v_32 0.4 she v_24 v_33
+0.3 she v_25 v_33 0.3 she v_15 v_35 0.4 she v_19 v_37 0.3 she v_10 v_38 0.3 she
+v_30 v_41 0.4 she v_31 v_41 0.4 she v_46 v_41 0.4 she v_30 v_42 0.3 she v_30
+v_45 0.4 she v_46 v_45 0.4 she v_41 v_46 0.4 she v_45 v_46 0.4 she v_47 v_46
+0.4 she v_46 v_47 0.4 she v_32 v_48 0.4 she v_53 v_48 0.3 she v_54 v_48 0.3 she
+v_55 v_49 0.4 she v_69 v_51 0.4 she v_69 v_52 0.3 she v_48 v_53 0.3 she v_54
+v_53 0.3 she v_48 v_54 0.3 she v_53 v_54 0.3 she v_49 v_55 0.4 she v_72 v_55
+0.4 she v_69 v_60 0.3 she v_64 v_63 0.4 she v_63 v_64 0.4 she v_74 v_65 0.4 she
+v_74 v_66 0.4 she v_80 v_66 0.3 she v_69 v_68 0.3 she v_51 v_69 0.4 she v_52
+v_69 0.3 she v_60 v_69 0.3 she v_68 v_69 0.3 she v_55 v_72 0.4 she v_87 v_72
+0.3 she v_88 v_72 0.3 she v_65 v_74 0.4 she v_66 v_74 0.4 she v_89 v_75 0.3 she
+v_100 v_76 0.3 she v_100 v_77 0.3 she v_66 v_80 0.3 she v_97 v_80 0.3 she v_99
+v_83 0.4 she v_102 v_84 0.3 she v_72 v_87 0.3 she v_72 v_88 0.3 she v_96 v_88
+0.3 she v_75 v_89 0.3 she v_99 v_90 0.4 she v_101 v_91 0.3 she v_88 v_96 0.3
+she v_80 v_97 0.3 she v_98 v_97 0.4 she v_97 v_98 0.4 she v_83 v_99 0.4 she
+v_90 v_99 0.4 she v_76 v_100 0.3 she v_77 v_100 0.3 she v_114 v_100 0.4 she
+v_91 v_101 0.3 she v_106 v_101 0.4 she v_107 v_101 0.4 she v_84 v_102 0.3 she
+v_109 v_103 0.4 she v_101 v_106 0.4 she v_114 v_106 0.4 she v_119 v_106 0.3 she
+v_120 v_106 0.3 she v_101 v_107 0.4 she v_103 v_109 0.4 she v_123 v_109 0.3 she
+v_136 v_111 0.3 she v_120 v_113 0.4 she v_128 v_113 0.3 she v_100 v_114 0.4 she
+v_106 v_114 0.4 she v_115 v_114 0.4 she v_120 v_114 0.3 she v_114 v_115 0.4 she
+v_135 v_116 0.4 she v_140 v_116 0.3 she v_141 v_116 0.3 she v_106 v_119 0.3 she
+v_145 v_119 0.4 she v_106 v_120 0.3 she v_113 v_120 0.4 she v_114 v_120 0.3 she
+v_123 v_122 0.3 she v_124 v_122 0.4 she v_135 v_122 0.4 she v_109 v_123 0.3 she
+v_122 v_123 0.3 she v_124 v_123 0.3 she v_135 v_123 0.4 she v_122 v_124 0.4 she
+v_123 v_124 0.3 she v_135 v_124 0.4 she v_142 v_127 0.3 she v_113 v_128 0.3 she
+v_145 v_130 0.4 she v_146 v_130 0.4 she v_145 v_131 0.4 she v_116 v_135 0.4 she
+v_122 v_135 0.4 she v_123 v_135 0.4 she v_124 v_135 0.4 she v_111 v_136 0.3 she
+v_116 v_140 0.3 she v_116 v_141 0.3 she v_127 v_142 0.3 she v_119 v_145 0.4 she
+v_130 v_145 0.4 she v_131 v_145 0.4 she v_130 v_146 0.4 she v_18 v_0 0.2 she
+v_19 v_0 0.3 she v_10 v_1 0.3 she v_18 v_1 0.3 she v_11 v_2 0.2 she v_12 v_2
+0.3 she v_20 v_2 0.3 she v_11 v_3 0.3 she v_12 v_3 0.2 she v_20 v_3 0.2 she
+v_25 v_6 0.2 she v_15 v_8 0.2 she v_17 v_9 0.2 she v_18 v_9 0.2 she v_1 v_10
+0.3 she v_18 v_10 0.2 she v_19 v_10 0.3 she v_29 v_10 0.2 she v_37 v_10 0.3 she
+v_2 v_11 0.2 she v_3 v_11 0.3 she v_12 v_11 0.2 she v_20 v_11 0.2 she v_21 v_11
+0.3 she v_2 v_12 0.3 she v_3 v_12 0.2 she v_11 v_12 0.2 she v_20 v_12 0.3 she
+v_21 v_12 0.2 she v_25 v_14 0.3 she v_8 v_15 0.2 she v_25 v_15 0.2 she v_9 v_17
+0.2 she v_18 v_17 0.2 she v_19 v_17 0.2 she v_29 v_17 0.2 she v_37 v_17 0.2 she
+v_38 v_17 0.3 she v_0 v_18 0.2 she v_1 v_18 0.3 she v_9 v_18 0.2 she v_10 v_18
+0.2 she v_17 v_18 0.2 she v_0 v_19 0.3 she v_10 v_19 0.3 she v_17 v_19 0.2 she
+v_2 v_20 0.3 she v_3 v_20 0.2 she v_11 v_20 0.2 she v_12 v_20 0.3 she v_11 v_21
+0.3 she v_12 v_21 0.2 she v_24 v_23 0.3 she v_23 v_24 0.3 she v_25 v_24 0.3 she
+v_6 v_25 0.2 she v_14 v_25 0.3 she v_15 v_25 0.2 she v_24 v_25 0.3 she v_34
+v_25 0.2 she v_10 v_29 0.2 she v_17 v_29 0.2 she v_40 v_30 0.3 she v_25 v_34
+0.2 she v_10 v_37 0.3 she v_17 v_37 0.2 she v_17 v_38 0.3 she v_30 v_40 0.3 she
+v_46 v_40 0.2 she v_46 v_42 0.3 she v_48 v_42 0.2 she v_53 v_42 0.2 she v_60
+v_43 0.3 she v_45 v_44 0.3 she v_62 v_44 0.2 she v_44 v_45 0.3 she v_40 v_46
+0.2 she v_42 v_46 0.3 she v_54 v_47 0.3 she v_42 v_48 0.2 she v_65 v_49 0.3 she
+v_73 v_49 0.3 she v_57 v_50 0.3 she v_60 v_52 0.3 she v_42 v_53 0.2 she v_47
+v_54 0.3 she v_65 v_55 0.3 she v_73 v_55 0.3 she v_73 v_56 0.2 she v_50 v_57
+0.3 she v_82 v_58 0.2 she v_82 v_59 0.3 she v_43 v_60 0.3 she v_52 v_60 0.3 she
+v_68 v_60 0.3 she v_44 v_62 0.2 she v_69 v_63 0.2 she v_69 v_64 0.2 she v_49
+v_65 0.3 she v_55 v_65 0.3 she v_66 v_65 0.3 she v_72 v_65 0.3 she v_65 v_66
+0.3 she v_72 v_66 0.2 she v_60 v_68 0.3 she v_63 v_69 0.2 she v_64 v_69 0.2 she
+v_78 v_69 0.2 she v_65 v_72 0.3 she v_66 v_72 0.2 she v_74 v_72 0.2 she v_79
+v_72 0.2 she v_80 v_72 0.3 she v_49 v_73 0.3 she v_55 v_73 0.3 she v_56 v_73
+0.2 she v_81 v_73 0.3 she v_96 v_73 0.3 she v_72 v_74 0.2 she v_80 v_74 0.2 she
+v_69 v_78 0.2 she v_72 v_79 0.2 she v_72 v_80 0.3 she v_74 v_80 0.2 she v_81
+v_80 0.2 she v_73 v_81 0.3 she v_80 v_81 0.2 she v_58 v_82 0.2 she v_59 v_82
+0.3 she v_101 v_92 0.3 she v_102 v_93 0.3 she v_73 v_96 0.3 she v_111 v_97 0.2
+she v_106 v_100 0.2 she v_107 v_100 0.3 she v_92 v_101 0.3 she v_93 v_102 0.3
+she v_117 v_105 0.2 she v_125 v_105 0.3 she v_100 v_106 0.2 she v_100 v_107 0.3
+she v_124 v_109 0.3 she v_126 v_110 0.2 she v_97 v_111 0.2 she v_127 v_111 0.3
+she v_142 v_111 0.3 she v_119 v_113 0.2 she v_129 v_113 0.3 she v_119 v_114 0.3
+she v_129 v_114 0.3 she v_119 v_115 0.2 she v_123 v_116 0.3 she v_124 v_116 0.2
+she v_134 v_116 0.3 she v_105 v_117 0.2 she v_136 v_117 0.3 she v_113 v_119 0.2
+she v_114 v_119 0.3 she v_115 v_119 0.2 she v_134 v_122 0.2 she v_141 v_122 0.2
+she v_116 v_123 0.3 she v_134 v_123 0.2 she v_140 v_123 0.2 she v_141 v_123 0.3
+she v_109 v_124 0.3 she v_116 v_124 0.2 she v_134 v_124 0.2 she v_140 v_124 0.2
+she v_141 v_124 0.3 she v_105 v_125 0.3 she v_110 v_126 0.2 she v_111 v_127 0.3
+she v_113 v_129 0.3 she v_114 v_129 0.3 she v_116 v_134 0.3 she v_122 v_134 0.2
+she v_123 v_134 0.2 she v_124 v_134 0.2 she v_135 v_134 0.2 she v_139 v_134 0.3
+she v_134 v_135 0.2 she v_117 v_136 0.3 she v_134 v_139 0.3 she v_141 v_139 0.3
+she v_123 v_140 0.2 she v_124 v_140 0.2 she v_122 v_141 0.2 she v_123 v_141 0.3
+she v_124 v_141 0.3 she v_139 v_141 0.3 she v_111 v_142 0.3 she v_10 v_0 0.2
+she v_19 v_1 0.2 she v_15 v_6 0.2 she v_15 v_7 0.2 she v_25 v_7 0.2 she v_25
+v_8 0.2 she v_0 v_10 0.2 she v_17 v_10 0.2 she v_15 v_14 0.2 she v_16 v_14 0.1
+she v_6 v_15 0.2 she v_7 v_15 0.2 she v_14 v_15 0.2 she v_24 v_15 0.1 she v_33
+v_15 0.1 she v_34 v_15 0.2 she v_14 v_16 0.1 she v_23 v_16 0.2 she v_24 v_16
+0.2 she v_27 v_16 0.1 she v_33 v_16 0.2 she v_34 v_16 0.1 she v_35 v_16 0.1 she
+v_36 v_16 0.2 she v_10 v_17 0.2 she v_19 v_18 0.2 she v_37 v_18 0.2 she v_38
+v_18 0.2 she v_1 v_19 0.2 she v_18 v_19 0.2 she v_21 v_19 0.2 she v_38 v_19 0.2
+she v_21 v_20 0.2 she v_19 v_21 0.2 she v_20 v_21 0.2 she v_16 v_23 0.2 she
+v_15 v_24 0.1 she v_16 v_24 0.2 she v_7 v_25 0.2 she v_8 v_25 0.2 she v_26 v_25
+0.2 she v_27 v_25 0.1 she v_35 v_25 0.2 she v_36 v_25 0.1 she v_25 v_26 0.2 she
+v_27 v_26 0.2 she v_35 v_26 0.2 she v_16 v_27 0.1 she v_25 v_27 0.1 she v_26
+v_27 0.2 she v_15 v_33 0.1 she v_16 v_33 0.2 she v_15 v_34 0.2 she v_16 v_34
+0.1 she v_16 v_35 0.1 she v_25 v_35 0.2 she v_26 v_35 0.2 she v_16 v_36 0.2 she
+v_25 v_36 0.1 she v_18 v_37 0.2 she v_18 v_38 0.2 she v_19 v_38 0.2 she v_45
+v_39 0.2 she v_47 v_41 0.2 she v_39 v_45 0.2 she v_41 v_47 0.2 she v_67 v_50
+0.2 she v_60 v_51 0.2 she v_59 v_57 0.2 she v_67 v_57 0.2 she v_57 v_59 0.2 she
+v_75 v_59 0.2 she v_51 v_60 0.2 she v_50 v_67 0.2 she v_57 v_67 0.2 she v_94
+v_71 0.1 she v_59 v_75 0.2 she v_80 v_79 0.2 she v_79 v_80 0.2 she v_100 v_83
+0.2 she v_100 v_90 0.2 she v_99 v_91 0.2 she v_100 v_91 0.2 she v_99 v_92 0.2
+she v_100 v_92 0.1 she v_71 v_94 0.1 she v_111 v_98 0.1 she v_91 v_99 0.2 she
+v_92 v_99 0.2 she v_83 v_100 0.2 she v_90 v_100 0.2 she v_91 v_100 0.2 she v_92
+v_100 0.1 she v_109 v_104 0.2 she v_107 v_106 0.2 she v_115 v_106 0.2 she v_106
+v_107 0.2 she v_104 v_109 0.2 she v_117 v_110 0.1 she v_98 v_111 0.1 she v_126
+v_111 0.2 she v_114 v_112 0.2 she v_112 v_114 0.2 she v_118 v_114 0.2 she v_106
+v_115 0.2 she v_110 v_117 0.1 she v_127 v_117 0.1 she v_142 v_117 0.2 she v_114
+v_118 0.2 she v_137 v_119 0.2 she v_138 v_121 0.1 she v_140 v_122 0.2 she v_111
+v_126 0.2 she v_136 v_126 0.1 she v_117 v_127 0.1 she v_138 v_130 0.2 she v_138
+v_133 0.2 she v_140 v_134 0.2 she v_141 v_134 0.2 she v_148 v_134 0.2 she v_149
+v_134 0.2 she v_140 v_135 0.2 she v_141 v_135 0.2 she v_126 v_136 0.1 she v_119
+v_137 0.2 she v_145 v_137 0.1 she v_121 v_138 0.1 she v_130 v_138 0.2 she v_133
+v_138 0.2 she v_146 v_138 0.2 she v_140 v_139 0.2 she v_122 v_140 0.2 she v_134
+v_140 0.2 she v_135 v_140 0.2 she v_139 v_140 0.2 she v_141 v_140 0.1 she v_134
+v_141 0.2 she v_135 v_141 0.2 she v_140 v_141 0.1 she v_117 v_142 0.2 she v_137
+v_145 0.1 she v_138 v_146 0.2 she v_134 v_148 0.2 she v_134 v_149 0.2 she v_19
+v_2 0.1 she v_19 v_3 0.1 she v_22 v_5 0.1 she v_16 v_6 0.1 she v_16 v_7 0.1 she
+v_16 v_8 0.1 she v_10 v_9 0.1 she v_9 v_10 0.1 she v_19 v_11 0.1 she v_19 v_12
+0.1 she v_16 v_15 0.1 she v_23 v_15 0.1 she v_6 v_16 0.1 she v_7 v_16 0.1 she
+v_8 v_16 0.1 she v_15 v_16 0.1 she v_25 v_16 0.1 she v_26 v_16 0.1 she v_2 v_19
+0.1 she v_3 v_19 0.1 she v_11 v_19 0.1 she v_12 v_19 0.1 she v_20 v_19 0.1 she
+v_19 v_20 0.1 she v_5 v_22 0.1 she v_15 v_23 0.1 she v_16 v_25 0.1 she v_16
+v_26 0.1 she v_36 v_26 0.1 she v_47 v_31 0.1 she v_47 v_32 0.1 she v_26 v_36
+0.1 she v_44 v_40 0.1 she v_42 v_41 0.1 she v_41 v_42 0.1 she v_47 v_42 0.1 she
+v_40 v_44 0.1 she v_31 v_47 0.1 she v_32 v_47 0.1 she v_42 v_47 0.1 she v_48
+v_47 0.1 she v_53 v_47 0.1 she v_47 v_48 0.1 she v_59 v_50 0.1 she v_47 v_53
+0.1 she v_50 v_59 0.1 she v_67 v_59 0.1 she v_63 v_61 0.1 she v_64 v_61 0.1 she
+v_78 v_61 0.1 she v_61 v_63 0.1 she v_61 v_64 0.1 she v_73 v_65 0.1 she v_59
+v_67 0.1 she v_94 v_70 0.1 she v_65 v_73 0.1 she v_87 v_73 0.1 she v_88 v_73
+0.1 she v_82 v_75 0.1 she v_92 v_76 0.0 she v_92 v_77 0.1 she v_61 v_78
+0.1 she v_87 v_80 0.1 she v_88 v_80 0.0 she v_96 v_80 0.1 she v_75 v_82
+0.1 she v_93 v_84 0.1 she v_108 v_86 0.1 she v_73 v_87 0.1 she v_80 v_87 0.1
+she v_73 v_88 0.1 she v_80 v_88 0.0 she v_76 v_92 0.0 she v_77 v_92
+0.1 she v_84 v_93 0.1 she v_70 v_94 0.1 she v_80 v_96 0.1 she v_100 v_99 0.1
+she v_99 v_100 0.1 she v_101 v_100 0.1 she v_100 v_101 0.1 she v_104 v_103 0.1
+she v_103 v_104 0.1 she v_86 v_108 0.1 she v_125 v_110 0.1 she v_117 v_111 0.1
+she v_125 v_111 0.0 she v_114 v_113 0.1 she v_113 v_114 0.1 she v_111
+v_117 0.1 she v_120 v_119 0.1 she v_129 v_119 0.1 she v_119 v_120 0.1 she v_110
+v_125 0.1 she v_111 v_125 0.0 she v_136 v_125 0.1 she v_119 v_129 0.1 she
+v_125 v_136 0.1 she v_147 v_138 0.1 she v_148 v_140 0.1 she v_149 v_140 0.1 she
+v_148 v_141 0.1 she v_149 v_141 0.1 she v_138 v_147 0.1 she v_140 v_148 0.1 she
+v_141 v_148 0.1 she v_140 v_149 0.1 she v_141 v_149 0.1 she v_13 v_4 0.0 she
+v_4 v_13 0.0 she v_42 v_31 0.0 she v_42 v_32 0.0 she v_31 v_42 0.0 she v_32
+v_42 0.0 she v_61 v_43 0.0 she v_62 v_43 0.0 she v_61 v_52 0.0 she v_75 v_58
+0.0 she v_61 v_60 0.0 she v_43 v_61 0.0 she v_52 v_61 0.0 she v_60 v_61 0.0 she
+v_68 v_61 0.0 she v_69 v_61 0.0 she v_43 v_62 0.0 she v_73 v_66 0.0 she v_75
+v_67 0.0 she v_82 v_67 0.0 she v_61 v_68 0.0 she v_61 v_69 0.0 she v_86 v_70
+0.0 she v_73 v_72 0.0 she v_66 v_73 0.0 she v_72 v_73 0.0 she v_74 v_73 0.0 she
+v_79 v_73 0.0 she v_80 v_73 0.0 she v_73 v_74 0.0 she v_58 v_75 0.0 she v_67
+v_75 0.0 she v_91 v_76 0.0 she v_91 v_77 0.0 she v_73 v_79 0.0 she v_73 v_80
+0.0 she v_67 v_82 0.0 she v_91 v_83 0.0 she v_92 v_83 0.0 she v_70 v_86 0.0 she
+v_94 v_86 0.0 she v_91 v_90 0.0 she v_92 v_90 0.0 she v_76 v_91 0.0 she v_77
+v_91 0.0 she v_83 v_91 0.0 she v_90 v_91 0.0 she v_92 v_91 0.0 she v_83 v_92
+0.0 she v_90 v_92 0.0 she v_91 v_92 0.0 she v_86 v_94 0.0 she v_108 v_94 0.0
+she v_94 v_108 0.0 she v_126 v_117 0.0 she v_117 v_126 0.0 she v_133 v_131 0.0
+she v_131 v_133 0.0 she v_40 v_39 0.0 she v_39 v_40 0.0 she v_45 v_40 0.0 she
+v_40 v_45 0.0 she v_61 v_51 0.0 she v_62 v_51 0.0 she v_67 v_58 0.0 she v_51
+v_61 0.0 she v_51 v_62 0.0 she v_68 v_62 0.0 she v_58 v_67 0.0 she v_62 v_68
+0.0 she v_86 v_71 0.0 she v_102 v_85 0.0 she v_71 v_86 0.0 she v_103 v_95 0.0
+she v_85 v_102 0.0 she v_95 v_103 0.0 she v_111 v_105 0.0 she v_111 v_110 0.0
+she v_105 v_111 0.0 she v_110 v_111 0.0 she v_113 v_112 0.0 she v_112 v_113 0.0
+she v_118 v_113 0.0 she v_125 v_117 0.0 she v_113 v_118 0.0 she v_117 v_125 0.0
+she v_146 v_131 0.0 she v_131 v_146 0.0 she v_62 v_52 0.0 she v_58 v_57 0.0 she
+v_57 v_58 0.0 she v_59 v_58 0.0 she v_58 v_59 0.0 she v_62 v_60 0.0 she v_62
+v_61 0.0 she v_52 v_62 0.0 she v_60 v_62 0.0 she v_61 v_62 0.0 she v_78 v_62
+0.0 she v_62 v_78 0.0 she v_131 v_121 0.0 she v_126 v_125 0.0 she v_127 v_125
+0.0 she v_142 v_125 0.0 she v_125 v_126 0.0 she v_127 v_126 0.0 she v_142 v_126
+0.0 she v_125 v_127 0.0 she v_126 v_127 0.0 she v_144 v_128 0.0 she v_131 v_130
+0.0 she v_121 v_131 0.0 she v_130 v_131 0.0 she v_138 v_131 0.0 she v_147 v_131
+0.0 she v_133 v_132 0.0 she v_146 v_132 0.0 she v_132 v_133 0.0 she v_131 v_138
+0.0 she v_125 v_142 0.0 she v_126 v_142 0.0 she v_128 v_144 0.0 she v_132 v_146
+0.0 she v_131 v_147 0.0 she v_29 v_28 0.0 she v_28 v_29 0.0 she v_58 v_50 0.0
+she v_50 v_58 0.0 she v_63 v_62 0.0 she v_69 v_62 0.0 she v_62 v_63 0.0 she
+v_62 v_69 0.0 she v_132 v_121 0.0 she v_132 v_130 0.0 she v_132 v_131 0.0 she
+v_121 v_132 0.0 she v_130 v_132 0.0 she v_131 v_132 0.0 she v_138 v_132 0.0 she
+v_147 v_132 0.0 she v_132 v_138 0.0 she v_132 v_147 0.0 she v_64 v_62 0.0 she
+v_62 v_64 0.0 she v_13 v_5 0.0 she v_5 v_13 0.0 she v_85 v_84 0.0 she v_84 v_85
+0.0 she v_93 v_85 0.0 she v_85 v_93 0.0 she v_143 v_128 0.0 she v_128 v_143 0.0
+she v_5 v_4 0.0 she v_4 v_5 0.0 she v_95 v_70 0.0 she v_70 v_95 0.0 she v_95
+v_71 0.0 she v_71 v_95 0.0 she v_95 v_86 0.0 she v_95 v_94 0.0 she v_86 v_95
+0.0 she v_94 v_95 0.0 she v_144 v_143 0.0 she v_143 v_144 0.0 she v_108 v_95
+0.0 she v_95 v_108 0.0 she
+
+v_0 0.7 shn v_1 0.6 shn v_2 0.7 shn v_3 0.9 shn v_4 0.7 shn v_5 0.4 shn v_6 0.7
+shn v_7 0.5 shn v_8 0.9 shn v_9 0.9 shn v_10 0.1 shn v_11 0.2 shn v_12 0.4 shn
+v_13 0.7 shn v_14 0.6 shn v_15 0.0 shn v_16 0.0 shn v_17 0.2 shn v_18 0.0 shn
+v_19 0.0 shn v_20 0.3 shn v_21 0.8 shn v_22 0.7 shn v_23 1.0 shn v_24 0.5 shn
+v_25 0.0 shn v_26 0.2 shn v_27 0.8 shn v_28 0.9 shn v_29 0.7 shn v_30 0.6 shn
+v_31 0.7 shn v_32 0.9 shn v_33 0.8 shn v_34 0.8 shn v_35 0.8 shn v_36 0.9 shn
+v_37 0.9 shn v_38 1.0 shn v_39 0.8 shn v_40 0.3 shn v_41 0.5 shn v_42 0.1 shn
+v_43 1.0 shn v_44 1.0 shn v_45 0.6 shn v_46 0.7 shn v_47 0.1 shn v_48 0.5 shn
+v_49 1.0 shn v_50 0.9 shn v_51 1.0 shn v_52 0.7 shn v_53 0.7 shn v_54 0.5 shn
+v_55 0.5 shn v_56 0.9 shn v_57 0.6 shn v_58 0.1 shn v_59 0.4 shn v_60 0.3 shn
+v_61 0.0 shn v_62 0.0 shn v_63 0.6 shn v_64 1.0 shn v_65 0.2 shn v_66 0.4 shn
+v_67 0.3 shn v_68 0.7 shn v_69 0.3 shn v_70 1.0 shn v_71 1.0 shn v_72 0.1 shn
+v_73 0.0 shn v_74 0.7 shn v_75 0.5 shn v_76 1.0 shn v_77 0.9 shn v_78 0.7 shn
+v_79 0.6 shn v_80 0.0 shn v_81 0.9 shn v_82 0.9 shn v_83 0.7 shn v_84 0.7 shn
+v_85 0.3 shn v_86 0.4 shn v_87 1.0 shn v_88 0.6 shn v_89 0.9 shn v_90 0.8 shn
+v_91 0.1 shn v_92 0.0 shn v_93 0.6 shn v_94 0.3 shn v_95 0.0 shn v_96 0.8 shn
+v_97 0.7 shn v_98 0.9 shn v_99 0.4 shn v_100 0.0 shn v_101 0.4 shn v_102 0.9
+shn v_103 0.8 shn v_104 0.7 shn v_105 0.8 shn v_106 0.2 shn v_107 0.8 shn v_108
+1.0 shn v_109 0.8 shn v_110 0.8 shn v_111 0.0 shn v_112 0.9 shn v_113 0.1 shn
+v_114 0.2 shn v_115 1.0 shn v_116 0.8 shn v_117 0.2 shn v_118 0.8 shn v_119 0.3
+shn v_120 0.7 shn v_121 0.9 shn v_122 0.5 shn v_123 0.4 shn v_124 0.4 shn v_125
+0.0 shn v_126 0.1 shn v_127 0.7 shn v_128 0.9 shn v_129 0.8 shn v_130 0.6 shn
+v_131 0.0 shn v_132 0.0 shn v_133 0.8 shn v_134 0.2 shn v_135 0.4 shn v_136 1.0
+shn v_137 0.8 shn v_138 0.3 shn v_139 0.8 shn v_140 0.1 shn v_141 0.2 shn v_142
+1.0 shn v_143 0.4 shn v_144 0.5 shn v_145 0.9 shn v_146 0.9 shn v_147 0.8 shn
+v_148 0.8 shn v_149 0.9 shn grestore
+
+%iterand12
+
+hdist -1 mul vdist -1 mul translate
+gsave
+scalef scalef -1 mul scale
+
+v_10 v_0 0.57 she v_12 v_0 0.57 she v_20 v_0 0.57 she v_10 v_1 0.57 she v_12 v_1
+0.57 she v_20 v_1 0.57 she v_10 v_2 0.57 she v_12 v_2 0.57 she v_20 v_2 0.57 she
+v_10 v_3 0.57 she v_12 v_3 0.57 she v_20 v_3 0.57 she v_13 v_4 0.57 she v_22 v_4
+0.57 she v_26 v_6 0.57 she v_8 v_7 0.57 she v_26 v_7 0.57 she v_27 v_7 0.57 she v_35
+v_7 0.57 she v_36 v_7 0.57 she v_7 v_8 0.57 she v_26 v_8 0.57 she v_10 v_9 0.57 she
+v_12 v_9 0.57 she v_20 v_9 0.57 she v_0 v_10 0.57 she v_1 v_10 0.57 she v_2 v_10
+0.57 she v_3 v_10 0.57 she v_9 v_10 0.57 she v_12 v_10 0.57 she v_17 v_10 0.57 she
+v_20 v_10 0.57 she v_21 v_10 0.57 she v_28 v_10 0.57 she v_29 v_10 0.57 she v_37
+v_10 0.57 she v_38 v_10 0.57 she v_0 v_12 0.57 she v_1 v_12 0.57 she v_2 v_12 0.57
+she v_3 v_12 0.57 she v_9 v_12 0.57 she v_10 v_12 0.57 she v_17 v_12 0.57 she v_20
+v_12 0.57 she v_21 v_12 0.57 she v_28 v_12 0.57 she v_29 v_12 0.57 she v_37 v_12
+0.57 she v_38 v_12 0.57 she v_4 v_13 0.57 she v_22 v_13 0.57 she v_26 v_14 0.57 she
+v_10 v_17 0.57 she v_12 v_17 0.57 she v_20 v_17 0.57 she v_28 v_17 0.57 she v_29
+v_17 0.57 she v_0 v_20 0.57 she v_1 v_20 0.57 she v_2 v_20 0.57 she v_3 v_20 0.57
+she v_9 v_20 0.57 she v_10 v_20 0.57 she v_12 v_20 0.57 she v_17 v_20 0.57 she v_21
+v_20 0.57 she v_28 v_20 0.57 she v_29 v_20 0.57 she v_37 v_20 0.57 she v_38 v_20
+0.57 she v_10 v_21 0.57 she v_12 v_21 0.57 she v_20 v_21 0.57 she v_4 v_22 0.57 she
+v_13 v_22 0.57 she v_26 v_23 0.57 she v_26 v_24 0.57 she v_6 v_26 0.57 she v_7 v_26
+0.57 she v_8 v_26 0.57 she v_14 v_26 0.57 she v_23 v_26 0.57 she v_24 v_26 0.57 she
+v_27 v_26 0.57 she v_33 v_26 0.57 she v_34 v_26 0.57 she v_35 v_26 0.57 she v_36
+v_26 0.57 she v_7 v_27 0.57 she v_26 v_27 0.57 she v_10 v_28 0.57 she v_12 v_28 0.57
+she v_17 v_28 0.57 she v_20 v_28 0.57 she v_10 v_29 0.57 she v_12 v_29 0.57 she
+v_17 v_29 0.57 she v_20 v_29 0.57 she v_39 v_30 0.57 she v_40 v_30 0.57 she v_41
+v_30 0.57 she v_48 v_30 0.57 she v_54 v_30 0.57 she v_73 v_30 0.57 she v_41 v_31
+0.57 she v_48 v_31 0.57 she v_54 v_31 0.57 she v_73 v_31 0.57 she v_41 v_32 0.57 she
+v_48 v_32 0.57 she v_54 v_32 0.57 she v_73 v_32 0.57 she v_26 v_33 0.57 she v_26
+v_34 0.57 she v_7 v_35 0.57 she v_26 v_35 0.57 she v_7 v_36 0.57 she v_26 v_36 0.57
+she v_10 v_37 0.57 she v_12 v_37 0.57 she v_20 v_37 0.57 she v_10 v_38 0.57 she
+v_12 v_38 0.57 she v_20 v_38 0.57 she v_30 v_39 0.57 she v_40 v_39 0.56 she v_41
+v_39 0.57 she v_45 v_39 0.57 she v_48 v_39 0.57 she v_54 v_39 0.57 she v_30 v_40
+0.57 she v_39 v_40 0.56 she v_41 v_40 0.57 she v_44 v_40 0.57 she v_45 v_40 0.57 she
+v_46 v_40 0.57 she v_48 v_40 0.57 she v_54 v_40 0.57 she v_73 v_40 0.57 she v_30
+v_41 0.57 she v_31 v_41 0.57 she v_32 v_41 0.57 she v_39 v_41 0.57 she v_40 v_41
+0.57 she v_44 v_41 0.57 she v_45 v_41 0.57 she v_46 v_41 0.57 she v_48 v_41 0.57 she
+v_53 v_41 0.57 she v_54 v_41 0.57 she v_73 v_41 0.57 she v_55 v_42 0.57 she v_73
+v_42 0.57 she v_40 v_44 0.57 she v_41 v_44 0.57 she v_48 v_44 0.57 she v_60 v_44
+0.57 she v_69 v_44 0.57 she v_39 v_45 0.57 she v_40 v_45 0.57 she v_41 v_45 0.57 she
+v_48 v_45 0.57 she v_54 v_45 0.57 she v_73 v_45 0.57 she v_40 v_46 0.57 she v_41
+v_46 0.57 she v_48 v_46 0.57 she v_54 v_46 0.57 she v_73 v_46 0.57 she v_49 v_47
+0.57 she v_55 v_47 0.57 she v_73 v_47 0.57 she v_30 v_48 0.57 she v_31 v_48 0.57 she
+v_32 v_48 0.57 she v_39 v_48 0.57 she v_40 v_48 0.57 she v_41 v_48 0.57 she v_44
+v_48 0.57 she v_45 v_48 0.57 she v_46 v_48 0.57 she v_53 v_48 0.57 she v_54 v_48
+0.57 she v_65 v_48 0.57 she v_72 v_48 0.57 she v_80 v_48 0.57 she v_47 v_49 0.57 she
+v_65 v_49 0.57 she v_66 v_49 0.57 she v_41 v_53 0.57 she v_48 v_53 0.57 she v_54
+v_53 0.57 she v_65 v_53 0.57 she v_72 v_53 0.57 she v_80 v_53 0.57 she v_30 v_54
+0.57 she v_31 v_54 0.57 she v_32 v_54 0.57 she v_39 v_54 0.57 she v_40 v_54 0.57 she
+v_41 v_54 0.57 she v_45 v_54 0.57 she v_46 v_54 0.57 she v_48 v_54 0.57 she v_53
+v_54 0.57 she v_55 v_54 0.57 she v_65 v_54 0.57 she v_66 v_54 0.57 she v_72 v_54
+0.56 she v_80 v_54 0.56 she v_42 v_55 0.57 she v_47 v_55 0.57 she v_54 v_55 0.57 she
+v_65 v_55 0.57 she v_66 v_55 0.57 she v_58 v_56 0.57 she v_65 v_56 0.57 she v_66
+v_56 0.57 she v_67 v_56 0.57 she v_89 v_57 0.57 she v_56 v_58 0.57 she v_81 v_58
+0.57 she v_44 v_60 0.57 she v_48 v_65 0.57 she v_49 v_65 0.57 she v_53 v_65 0.57 she
+v_54 v_65 0.57 she v_55 v_65 0.57 she v_56 v_65 0.57 she v_66 v_65 0.57 she v_74
+v_65 0.57 she v_79 v_65 0.57 she v_81 v_65 0.57 she v_87 v_65 0.57 she v_88 v_65
+0.57 she v_96 v_65 0.57 she v_97 v_65 0.57 she v_49 v_66 0.57 she v_54 v_66 0.57 she
+v_55 v_66 0.57 she v_56 v_66 0.57 she v_65 v_66 0.57 she v_74 v_66 0.57 she v_79
+v_66 0.57 she v_81 v_66 0.57 she v_96 v_66 0.57 she v_97 v_66 0.57 she v_56 v_67
+0.57 she v_44 v_69 0.57 she v_48 v_72 0.57 she v_53 v_72 0.57 she v_54 v_72 0.56 she
+v_89 v_72 0.57 she v_30 v_73 0.57 she v_31 v_73 0.57 she v_32 v_73 0.57 she v_40
+v_73 0.57 she v_41 v_73 0.57 she v_42 v_73 0.57 she v_45 v_73 0.57 she v_46 v_73
+0.57 she v_47 v_73 0.57 she v_89 v_73 0.57 she v_98 v_73 0.57 she v_104 v_73 0.57
+she v_65 v_74 0.57 she v_66 v_74 0.57 she v_89 v_75 0.57 she v_99 v_76 0.57 she
+v_101 v_76 0.57 she v_106 v_76 0.57 she v_113 v_76 0.57 she v_99 v_77 0.57 she
+v_101 v_77 0.57 she v_106 v_77 0.57 she v_113 v_77 0.57 she v_65 v_79 0.57 she v_66
+v_79 0.57 she v_48 v_80 0.57 she v_53 v_80 0.57 she v_54 v_80 0.56 she v_89 v_80
+0.57 she v_58 v_81 0.57 she v_65 v_81 0.57 she v_66 v_81 0.57 she v_99 v_83 0.57 she
+v_93 v_84 0.57 she v_95 v_84 0.57 she v_102 v_84 0.57 she v_95 v_85 0.57 she v_65
+v_87 0.57 she v_65 v_88 0.57 she v_57 v_89 0.57 she v_72 v_89 0.57 she v_73 v_89
+0.57 she v_75 v_89 0.57 she v_80 v_89 0.57 she v_111 v_89 0.57 she v_117 v_89 0.57
+she v_126 v_89 0.56 she v_99 v_90 0.57 she v_137 v_91 0.57 she v_137 v_92 0.56 she
+v_84 v_93 0.57 she v_95 v_93 0.57 she v_102 v_93 0.57 she v_104 v_94 0.57 she v_84
+v_95 0.57 she v_85 v_95 0.57 she v_93 v_95 0.57 she v_102 v_95 0.57 she v_65 v_96
+0.57 she v_66 v_96 0.57 she v_65 v_97 0.57 she v_66 v_97 0.57 she v_111 v_97 0.56
+she v_117 v_97 0.56 she v_73 v_98 0.57 she v_76 v_99 0.57 she v_77 v_99 0.57 she
+v_83 v_99 0.57 she v_90 v_99 0.57 she v_101 v_99 0.57 she v_106 v_99 0.57 she v_107
+v_99 0.57 she v_112 v_99 0.57 she v_113 v_99 0.57 she v_114 v_99 0.57 she v_115
+v_99 0.57 she v_118 v_99 0.57 she v_119 v_99 0.57 she v_120 v_99 0.57 she v_129
+v_99 0.57 she v_137 v_99 0.57 she v_76 v_101 0.57 she v_77 v_101 0.57 she v_99
+v_101 0.57 she v_115 v_101 0.57 she v_120 v_101 0.57 she v_129 v_101 0.57 she v_84
+v_102 0.57 she v_93 v_102 0.57 she v_95 v_102 0.57 she v_73 v_104 0.57 she v_94
+v_104 0.57 she v_122 v_104 0.57 she v_123 v_104 0.57 she v_124 v_104 0.57 she v_135
+v_104 0.57 she v_76 v_106 0.57 she v_77 v_106 0.57 she v_99 v_106 0.57 she v_115
+v_106 0.57 she v_120 v_106 0.57 she v_129 v_106 0.57 she v_137 v_106 0.57 she v_99
+v_107 0.57 she v_122 v_109 0.57 she v_123 v_109 0.57 she v_124 v_109 0.57 she v_135
+v_109 0.57 she v_127 v_110 0.57 she v_142 v_110 0.57 she v_89 v_111 0.57 she v_97
+v_111 0.56 she v_99 v_112 0.57 she v_113 v_112 0.57 she v_76 v_113 0.57 she v_77
+v_113 0.57 she v_99 v_113 0.57 she v_112 v_113 0.57 she v_114 v_113 0.57 she v_115
+v_113 0.57 she v_118 v_113 0.56 she v_119 v_113 0.56 she v_120 v_113 0.56 she v_137
+v_113 0.57 she v_99 v_114 0.57 she v_113 v_114 0.57 she v_115 v_114 0.57 she v_120
+v_114 0.57 she v_129 v_114 0.57 she v_137 v_114 0.57 she v_99 v_115 0.57 she v_101
+v_115 0.57 she v_106 v_115 0.57 she v_113 v_115 0.57 she v_114 v_115 0.57 she v_123
+v_116 0.57 she v_124 v_116 0.57 she v_135 v_116 0.57 she v_89 v_117 0.57 she v_97
+v_117 0.56 she v_99 v_118 0.57 she v_113 v_118 0.56 she v_99 v_119 0.57 she v_113
+v_119 0.56 she v_99 v_120 0.57 she v_101 v_120 0.57 she v_106 v_120 0.57 she v_113
+v_120 0.56 she v_114 v_120 0.57 she v_138 v_121 0.57 she v_104 v_122 0.57 she v_109
+v_122 0.57 she v_123 v_122 0.57 she v_124 v_122 0.57 she v_135 v_122 0.57 she v_104
+v_123 0.57 she v_109 v_123 0.57 she v_116 v_123 0.57 she v_122 v_123 0.57 she v_124
+v_123 0.57 she v_135 v_123 0.57 she v_139 v_123 0.57 she v_148 v_123 0.57 she v_149
+v_123 0.57 she v_104 v_124 0.57 she v_109 v_124 0.57 she v_116 v_124 0.57 she v_122
+v_124 0.57 she v_123 v_124 0.57 she v_135 v_124 0.57 she v_139 v_124 0.57 she v_148
+v_124 0.57 she v_149 v_124 0.57 she v_89 v_126 0.56 she v_110 v_127 0.57 she v_142
+v_127 0.57 she v_99 v_129 0.57 she v_101 v_129 0.57 she v_106 v_129 0.57 she v_114
+v_129 0.57 she v_138 v_130 0.57 she v_138 v_133 0.57 she v_104 v_135 0.57 she v_109
+v_135 0.57 she v_116 v_135 0.57 she v_122 v_135 0.57 she v_123 v_135 0.57 she v_124
+v_135 0.57 she v_139 v_135 0.57 she v_148 v_135 0.57 she v_149 v_135 0.57 she v_91
+v_137 0.57 she v_92 v_137 0.56 she v_99 v_137 0.57 she v_106 v_137 0.57 she v_113
+v_137 0.57 she v_114 v_137 0.57 she v_138 v_137 0.57 she v_121 v_138 0.57 she v_130
+v_138 0.57 she v_133 v_138 0.57 she v_137 v_138 0.57 she v_145 v_138 0.57 she v_146
+v_138 0.57 she v_147 v_138 0.57 she v_123 v_139 0.57 she v_124 v_139 0.57 she v_135
+v_139 0.57 she v_110 v_142 0.57 she v_127 v_142 0.57 she v_138 v_145 0.57 she v_138
+v_146 0.57 she v_138 v_147 0.57 she v_123 v_148 0.57 she v_124 v_148 0.57 she v_135
+v_148 0.57 she v_123 v_149 0.57 she v_124 v_149 0.57 she v_135 v_149 0.57 she v_44
+v_42 0.56 she v_42 v_44 0.56 she v_47 v_44 0.56 she v_44 v_47 0.56 she v_73 v_48
+0.56 she v_72 v_49 0.56 she v_80 v_49 0.56 she v_59 v_50 0.56 she v_73 v_53 0.56 she
+v_72 v_55 0.56 she v_80 v_55 0.56 she v_72 v_56 0.56 she v_80 v_56 0.56 she v_59
+v_57 0.56 she v_50 v_59 0.56 she v_57 v_59 0.56 she v_75 v_59 0.56 she v_82 v_59
+0.56 she v_89 v_59 0.56 she v_72 v_65 0.56 she v_80 v_65 0.56 she v_72 v_66 0.56 she
+v_80 v_66 0.56 she v_49 v_72 0.56 she v_55 v_72 0.56 she v_56 v_72 0.56 she v_65
+v_72 0.56 she v_66 v_72 0.56 she v_74 v_72 0.56 she v_79 v_72 0.56 she v_80 v_72
+0.56 she v_81 v_72 0.56 she v_87 v_72 0.56 she v_88 v_72 0.56 she v_96 v_72 0.56 she
+v_97 v_72 0.56 she v_48 v_73 0.56 she v_53 v_73 0.56 she v_72 v_74 0.56 she v_80
+v_74 0.56 she v_59 v_75 0.56 she v_72 v_79 0.56 she v_80 v_79 0.56 she v_49 v_80
+0.56 she v_55 v_80 0.56 she v_56 v_80 0.56 she v_65 v_80 0.56 she v_66 v_80 0.56 she
+v_72 v_80 0.56 she v_74 v_80 0.56 she v_79 v_80 0.56 she v_81 v_80 0.56 she v_87
+v_80 0.56 she v_88 v_80 0.56 she v_96 v_80 0.56 she v_97 v_80 0.56 she v_72 v_81
+0.56 she v_80 v_81 0.56 she v_59 v_82 0.56 she v_72 v_87 0.56 she v_80 v_87 0.56 she
+v_72 v_88 0.56 she v_80 v_88 0.56 she v_59 v_89 0.56 she v_72 v_96 0.56 she v_80
+v_96 0.56 she v_72 v_97 0.56 she v_80 v_97 0.56 she v_137 v_100 0.56 she v_129
+v_113 0.56 she v_113 v_129 0.56 she v_100 v_137 0.56 she v_67 v_50 0.50 she v_67
+v_57 0.50 she v_67 v_59 0.50 she v_50 v_67 0.50 she v_57 v_67 0.50 she v_59 v_67
+0.50 she v_75 v_67 0.50 she v_82 v_67 0.50 she v_89 v_67 0.50 she v_67 v_75 0.50 she
+v_67 v_82 0.50 she v_67 v_89 0.50 she v_125 v_89 0.50 she v_111 v_98 0.50 she v_117
+v_98 0.50 she v_111 v_105 0.50 she v_117 v_105 0.50 she v_111 v_110 0.50 she v_117
+v_110 0.50 she v_98 v_111 0.50 she v_105 v_111 0.50 she v_110 v_111 0.50 she v_117
+v_111 0.50 she v_127 v_111 0.50 she v_136 v_111 0.50 she v_142 v_111 0.50 she v_98
+v_117 0.50 she v_105 v_117 0.50 she v_110 v_117 0.50 she v_111 v_117 0.50 she v_127
+v_117 0.50 she v_136 v_117 0.50 she v_142 v_117 0.50 she v_89 v_125 0.50 she v_111
+v_127 0.50 she v_117 v_127 0.50 she v_111 v_136 0.50 she v_117 v_136 0.50 she v_111
+v_142 0.50 she v_117 v_142 0.50 she v_11 v_0 0.44 she v_18 v_0 0.50 she v_11 v_1
+0.44 she v_18 v_1 0.50 she v_11 v_2 0.44 she v_18 v_2 0.50 she v_11 v_3 0.44 she
+v_18 v_3 0.50 she v_11 v_9 0.44 she v_18 v_9 0.50 she v_11 v_10 0.44 she v_18 v_10
+0.50 she v_0 v_11 0.44 she v_1 v_11 0.44 she v_2 v_11 0.44 she v_3 v_11 0.44 she v_9
+v_11 0.44 she v_10 v_11 0.44 she v_12 v_11 0.44 she v_17 v_11 0.44 she v_18 v_11
+0.44 she v_20 v_11 0.44 she v_21 v_11 0.44 she v_28 v_11 0.44 she v_29 v_11 0.44 she
+v_37 v_11 0.44 she v_38 v_11 0.44 she v_11 v_12 0.44 she v_18 v_12 0.50 she v_11
+v_17 0.44 she v_18 v_17 0.50 she v_0 v_18 0.50 she v_1 v_18 0.50 she v_2 v_18 0.50
+she v_3 v_18 0.50 she v_9 v_18 0.50 she v_10 v_18 0.50 she v_11 v_18 0.44 she v_12
+v_18 0.50 she v_17 v_18 0.50 she v_20 v_18 0.50 she v_21 v_18 0.50 she v_28 v_18
+0.44 she v_29 v_18 0.44 she v_37 v_18 0.50 she v_38 v_18 0.50 she v_11 v_20 0.44 she
+v_18 v_20 0.50 she v_11 v_21 0.44 she v_18 v_21 0.50 she v_11 v_28 0.44 she v_18
+v_28 0.44 she v_11 v_29 0.44 she v_18 v_29 0.44 she v_11 v_37 0.44 she v_18 v_37
+0.50 she v_11 v_38 0.44 she v_18 v_38 0.50 she v_61 v_43 0.44 she v_61 v_44 0.44 she
+v_61 v_51 0.44 she v_61 v_52 0.44 she v_61 v_60 0.44 she v_43 v_61 0.44 she v_44
+v_61 0.44 she v_51 v_61 0.44 she v_52 v_61 0.44 she v_60 v_61 0.44 she v_63 v_61
+0.44 she v_64 v_61 0.44 she v_68 v_61 0.44 she v_69 v_61 0.44 she v_78 v_61 0.44 she
+v_61 v_63 0.44 she v_61 v_64 0.44 she v_61 v_68 0.44 she v_61 v_69 0.44 she v_61
+v_78 0.44 she v_144 v_128 0.44 she v_128 v_144 0.44 she v_126 v_97 0.44 she v_97
+v_126 0.44 she v_15 v_6 0.38 she v_15 v_7 0.38 she v_15 v_8 0.38 she v_15 v_14 0.38
+she v_6 v_15 0.38 she v_7 v_15 0.38 she v_8 v_15 0.38 she v_14 v_15 0.38 she v_23
+v_15 0.38 she v_24 v_15 0.38 she v_26 v_15 0.38 she v_27 v_15 0.38 she v_33 v_15
+0.38 she v_34 v_15 0.38 she v_35 v_15 0.38 she v_36 v_15 0.38 she v_15 v_23 0.38 she
+v_15 v_24 0.38 she v_15 v_26 0.38 she v_15 v_27 0.38 she v_15 v_33 0.38 she v_15
+v_34 0.38 she v_15 v_35 0.38 she v_15 v_36 0.38 she v_104 v_95 0.38 she v_95 v_104
+0.38 she v_25 v_6 0.22 she v_25 v_7 0.22 she v_25 v_8 0.22 she v_25 v_14 0.22 she
+v_25 v_15 0.22 she v_25 v_23 0.22 she v_25 v_24 0.22 she v_6 v_25 0.22 she v_7 v_25
+0.22 she v_8 v_25 0.22 she v_14 v_25 0.22 she v_15 v_25 0.22 she v_23 v_25 0.22 she
+v_24 v_25 0.22 she v_26 v_25 0.22 she v_27 v_25 0.22 she v_33 v_25 0.22 she v_34
+v_25 0.22 she v_35 v_25 0.22 she v_36 v_25 0.22 she v_25 v_26 0.22 she v_25 v_27
+0.22 she v_25 v_33 0.22 she v_25 v_34 0.22 she v_25 v_35 0.22 she v_25 v_36 0.22 she
+v_54 v_42 0.22 she v_42 v_54 0.22 she v_134 v_104 0.22 she v_104 v_134 0.22 she
+v_120 v_91 0.10 she v_129 v_91 0.10 she v_125 v_97 0.10 she v_134 v_109 0.10 she
+v_134 v_116 0.10 she v_91 v_120 0.10 she v_134 v_122 0.10 she v_134 v_123 0.10 she
+v_134 v_124 0.10 she v_97 v_125 0.10 she v_91 v_129 0.10 she v_109 v_134 0.10 she
+v_116 v_134 0.10 she v_122 v_134 0.10 she v_123 v_134 0.10 she v_124 v_134 0.10 she
+v_135 v_134 0.10 she v_139 v_134 0.10 she v_148 v_134 0.10 she v_149 v_134 0.10 she
+v_134 v_135 0.10 she v_134 v_139 0.10 she v_134 v_148 0.10 she v_134 v_149 0.10 she
+v_112 v_91 0.10 she v_113 v_91 0.10 she v_115 v_91 0.10 she v_118 v_91 0.10 she
+v_119 v_91 0.10 she v_91 v_112 0.10 she v_91 v_113 0.10 she v_91 v_115 0.10 she
+v_91 v_118 0.10 she v_91 v_119 0.10 she v_137 v_131 0.10 she v_131 v_137 0.10 she
+v_54 v_47 0.10 she v_47 v_54 0.10 she v_114 v_91 0.10 she v_119 v_92 0.10 she v_120
+v_92 0.10 she v_129 v_92 0.10 she v_141 v_104 0.10 she v_91 v_114 0.10 she v_92
+v_119 0.10 she v_92 v_120 0.10 she v_131 v_121 0.10 she v_92 v_129 0.10 she v_131
+v_130 0.10 she v_121 v_131 0.10 she v_130 v_131 0.10 she v_133 v_131 0.10 she v_138
+v_131 0.10 she v_145 v_131 0.10 she v_146 v_131 0.10 she v_147 v_131 0.10 she v_131
+v_133 0.10 she v_131 v_138 0.10 she v_104 v_141 0.10 she v_131 v_145 0.10 she v_131
+v_146 0.10 she v_131 v_147 0.10 she v_91 v_76 0.10 she v_91 v_77 0.10 she v_91 v_83
+0.10 she v_91 v_90 0.10 she v_76 v_91 0.10 she v_77 v_91 0.10 she v_83 v_91 0.10 she
+v_90 v_91 0.10 she v_99 v_91 0.10 she v_101 v_91 0.10 she v_106 v_91 0.10 she v_107
+v_91 0.10 she v_112 v_92 0.10 she v_113 v_92 0.10 she v_114 v_92 0.10 she v_115
+v_92 0.10 she v_118 v_92 0.10 she v_126 v_98 0.10 she v_91 v_99 0.10 she v_91 v_101
+0.10 she v_126 v_105 0.10 she v_91 v_106 0.10 she v_91 v_107 0.10 she v_126 v_110
+0.10 she v_126 v_111 0.10 she v_92 v_112 0.10 she v_92 v_113 0.10 she v_92 v_114
+0.10 she v_92 v_115 0.10 she v_126 v_117 0.10 she v_92 v_118 0.10 she v_98 v_126
+0.10 she v_105 v_126 0.10 she v_110 v_126 0.10 she v_111 v_126 0.10 she v_117 v_126
+0.10 she v_127 v_126 0.10 she v_136 v_126 0.10 she v_142 v_126 0.10 she v_126 v_127
+0.10 she v_126 v_136 0.10 she v_126 v_142 0.10 she v_106 v_92 0.10 she v_107 v_92
+0.10 she v_92 v_106 0.10 she v_92 v_107 0.10 she v_141 v_109 0.10 she v_141 v_116
+0.10 she v_141 v_122 0.10 she v_141 v_123 0.10 she v_141 v_124 0.10 she v_141 v_134
+0.10 she v_141 v_135 0.10 she v_141 v_139 0.10 she v_109 v_141 0.10 she v_116 v_141
+0.10 she v_122 v_141 0.10 she v_123 v_141 0.10 she v_124 v_141 0.10 she v_134 v_141
+0.10 she v_135 v_141 0.10 she v_139 v_141 0.10 she v_148 v_141 0.10 she v_149 v_141
+0.10 she v_141 v_148 0.10 she v_141 v_149 0.10 she v_92 v_76 0.10 she v_92 v_77 0.10
+she v_92 v_83 0.10 she v_92 v_90 0.10 she v_92 v_91 0.10 she v_76 v_92 0.10 she
+v_77 v_92 0.10 she v_83 v_92 0.10 she v_90 v_92 0.10 she v_91 v_92 0.10 she v_99
+v_92 0.10 she v_101 v_92 0.10 she v_92 v_99 0.10 she v_92 v_101 0.10 she v_100 v_76
+0.10 she v_100 v_77 0.10 she v_100 v_83 0.10 she v_100 v_90 0.10 she v_100 v_91 0.10
+she v_100 v_92 0.10 she v_100 v_99 0.10 she v_76 v_100 0.10 she v_77 v_100 0.10 she
+v_83 v_100 0.10 she v_90 v_100 0.10 she v_91 v_100 0.10 she v_92 v_100 0.10 she
+v_99 v_100 0.10 she v_101 v_100 0.10 she v_100 v_101 0.10 she v_106 v_100 0.10 she
+v_107 v_100 0.10 she v_140 v_104 0.10 she v_100 v_106 0.10 she v_100 v_107 0.10 she
+v_104 v_140 0.10 she v_42 v_31 0.10 she v_42 v_32 0.10 she v_42 v_41 0.10 she v_31
+v_42 0.10 she v_32 v_42 0.10 she v_41 v_42 0.10 she v_48 v_42 0.10 she v_53 v_42
+0.10 she v_42 v_48 0.10 she v_42 v_53 0.10 she v_42 v_30 0.10 she v_30 v_42 0.10 she
+v_46 v_42 0.10 she v_42 v_46 0.10 she v_113 v_100 0.10 she v_114 v_100 0.10 she
+v_115 v_100 0.10 she v_140 v_109 0.10 she v_100 v_113 0.10 she v_100 v_114 0.10 she
+v_100 v_115 0.10 she v_140 v_116 0.10 she v_140 v_122 0.10 she v_140 v_123 0.10 she
+v_140 v_124 0.10 she v_140 v_134 0.10 she v_140 v_135 0.10 she v_140 v_139 0.10 she
+v_109 v_140 0.10 she v_116 v_140 0.10 she v_122 v_140 0.10 she v_123 v_140 0.10 she
+v_124 v_140 0.10 she v_134 v_140 0.10 she v_135 v_140 0.10 she v_139 v_140 0.10 she
+v_141 v_140 0.10 she v_148 v_140 0.10 she v_149 v_140 0.10 she v_140 v_141 0.10 she
+v_140 v_148 0.10 she v_140 v_149 0.10 she v_42 v_39 0.10 she v_42 v_40 0.10 she
+v_39 v_42 0.10 she v_40 v_42 0.10 she v_45 v_42 0.10 she v_42 v_45 0.10 she v_112
+v_100 0.10 she v_118 v_100 0.10 she v_119 v_100 0.10 she v_120 v_100 0.10 she v_100
+v_112 0.10 she v_100 v_118 0.10 she v_100 v_119 0.10 she v_100 v_120 0.10 she v_47
+v_39 0.10 she v_39 v_47 0.10 she v_129 v_100 0.10 she v_100 v_129 0.10 she v_47
+v_40 0.10 she v_47 v_45 0.10 she v_40 v_47 0.10 she v_45 v_47 0.10 she v_73 v_54
+0.10 she v_54 v_73 0.10 she v_48 v_47 0.10 she v_47 v_48 0.10 she v_47 v_30 0.10 she
+v_47 v_31 0.10 she v_47 v_32 0.10 she v_47 v_41 0.10 she v_47 v_42 0.10 she v_47
+v_46 0.10 she v_30 v_47 0.10 she v_31 v_47 0.10 she v_32 v_47 0.10 she v_41 v_47
+0.10 she v_42 v_47 0.10 she v_46 v_47 0.10 she v_53 v_47 0.10 she v_47 v_53 0.10 she
+v_97 v_73 0.10 she v_73 v_97 0.10 she v_125 v_98 0.10 she v_125 v_105 0.10 she
+v_125 v_110 0.10 she v_125 v_111 0.10 she v_125 v_117 0.10 she v_98 v_125 0.10 she
+v_105 v_125 0.10 she v_110 v_125 0.10 she v_111 v_125 0.10 she v_117 v_125 0.10 she
+v_126 v_125 0.10 she v_127 v_125 0.10 she v_136 v_125 0.10 she v_142 v_125 0.10 she
+v_125 v_126 0.10 she v_125 v_127 0.10 she v_125 v_136 0.10 she v_125 v_142 0.10 she
+v_16 v_6 0.10 she v_16 v_7 0.10 she v_16 v_8 0.10 she v_16 v_14 0.10 she v_16 v_15
+0.10 she v_6 v_16 0.10 she v_7 v_16 0.10 she v_8 v_16 0.10 she v_14 v_16 0.10 she
+v_15 v_16 0.10 she v_23 v_16 0.10 she v_24 v_16 0.10 she v_25 v_16 0.10 she v_26
+v_16 0.10 she v_27 v_16 0.10 she v_33 v_16 0.10 she v_34 v_16 0.10 she v_35 v_16
+0.10 she v_36 v_16 0.10 she v_16 v_23 0.10 she v_16 v_24 0.10 she v_16 v_25 0.10 she
+v_16 v_26 0.10 she v_16 v_27 0.10 she v_16 v_33 0.10 she v_16 v_34 0.10 she v_16
+v_35 0.10 she v_16 v_36 0.10 she v_137 v_132 0.10 she v_132 v_137 0.10 she v_132
+v_121 0.10 she v_132 v_130 0.10 she v_132 v_131 0.10 she v_121 v_132 0.10 she v_130
+v_132 0.10 she v_131 v_132 0.10 she v_133 v_132 0.10 she v_138 v_132 0.10 she v_145
+v_132 0.10 she v_146 v_132 0.10 she v_147 v_132 0.10 she v_132 v_133 0.10 she v_132
+v_138 0.10 she v_132 v_145 0.10 she v_132 v_146 0.10 she v_132 v_147 0.10 she v_19
+v_0 0.10 she v_19 v_1 0.10 she v_19 v_2 0.10 she v_19 v_3 0.10 she v_19 v_9 0.10 she
+v_19 v_10 0.10 she v_19 v_11 0.10 she v_19 v_12 0.10 she v_19 v_17 0.10 she v_19
+v_18 0.10 she v_0 v_19 0.10 she v_1 v_19 0.10 she v_2 v_19 0.10 she v_3 v_19 0.10
+she v_9 v_19 0.10 she v_10 v_19 0.10 she v_11 v_19 0.10 she v_12 v_19 0.10 she v_17
+v_19 0.10 she v_18 v_19 0.10 she v_20 v_19 0.10 she v_21 v_19 0.10 she v_28 v_19
+0.10 she v_29 v_19 0.10 she v_37 v_19 0.10 she v_38 v_19 0.10 she v_19 v_20 0.10 she
+v_19 v_21 0.10 she v_19 v_28 0.10 she v_19 v_29 0.10 she v_19 v_37 0.10 she v_19
+v_38 0.10 she v_62 v_44 0.10 she v_89 v_58 0.10 she v_44 v_62 0.10 she v_58 v_89
+0.10 she v_73 v_55 0.10 she v_73 v_56 0.10 she v_55 v_73 0.10 she v_56 v_73 0.10 she
+v_62 v_43 0.10 she v_73 v_49 0.10 she v_58 v_50 0.10 she v_62 v_51 0.10 she v_62
+v_52 0.10 she v_58 v_57 0.10 she v_50 v_58 0.10 she v_57 v_58 0.10 she v_59 v_58
+0.10 she v_67 v_58 0.10 she v_75 v_58 0.10 she v_82 v_58 0.10 she v_58 v_59 0.10 she
+v_62 v_60 0.10 she v_62 v_61 0.10 she v_43 v_62 0.10 she v_51 v_62 0.10 she v_52
+v_62 0.10 she v_60 v_62 0.10 she v_61 v_62 0.10 she v_63 v_62 0.10 she v_64 v_62
+0.10 she v_68 v_62 0.10 she v_69 v_62 0.10 she v_78 v_62 0.10 she v_62 v_63 0.10 she
+v_62 v_64 0.10 she v_73 v_65 0.10 she v_73 v_66 0.10 she v_58 v_67 0.10 she v_62
+v_68 0.10 she v_62 v_69 0.10 she v_73 v_72 0.10 she v_49 v_73 0.10 she v_65 v_73
+0.10 she v_66 v_73 0.10 she v_72 v_73 0.10 she v_74 v_73 0.10 she v_79 v_73 0.10 she
+v_80 v_73 0.10 she v_81 v_73 0.10 she v_87 v_73 0.10 she v_88 v_73 0.10 she v_96
+v_73 0.10 she v_73 v_74 0.10 she v_58 v_75 0.10 she v_62 v_78 0.10 she v_73 v_79
+0.10 she v_73 v_80 0.10 she v_73 v_81 0.10 she v_58 v_82 0.10 she v_73 v_87 0.10 she
+v_73 v_88 0.10 she v_73 v_96 0.10 she v_143 v_128 0.10 she v_128 v_143 0.10 she
+v_144 v_143 0.10 she v_143 v_144 0.10 she v_93 v_85 0.10 she v_85 v_93 0.10 she v_5
+v_4 0.10 she v_4 v_5 0.10 she v_13 v_5 0.10 she v_22 v_5 0.10 she v_5 v_13 0.10 she
+v_5 v_22 0.10 she v_95 v_70 0.10 she v_95 v_71 0.10 she v_85 v_84 0.10 she v_84
+v_85 0.10 she v_102 v_85 0.10 she v_95 v_86 0.10 she v_95 v_94 0.10 she v_70 v_95
+0.10 she v_71 v_95 0.10 she v_86 v_95 0.10 she v_94 v_95 0.10 she v_103 v_95 0.10
+she v_108 v_95 0.10 she v_85 v_102 0.10 she v_95 v_103 0.10 she v_95 v_108 0.10 she
+
+v_0 1.0 shn v_1 1.0 shn v_2 1.0 shn v_3 1.0 shn v_4 1.0 shn v_5 0.0 shn v_6 1.0
+shn v_7 1.0 shn v_8 1.0 shn v_9 1.0 shn v_10 0.9 shn v_11 0.4 shn v_12 1.0 shn
+v_13 1.0 shn v_14 1.0 shn v_15 0.0 shn v_16 0.0 shn v_17 1.0 shn v_18 0.4 shn
+v_19 0.0 shn v_20 1.0 shn v_21 1.0 shn v_22 1.0 shn v_23 1.0 shn v_24 1.0 shn
+v_25 0.0 shn v_26 0.9 shn v_27 1.0 shn v_28 1.0 shn v_29 1.0 shn v_30 1.0 shn
+v_31 1.0 shn v_32 1.0 shn v_33 1.0 shn v_34 1.0 shn v_35 1.0 shn v_36 1.0 shn
+v_37 1.0 shn v_38 1.0 shn v_39 1.0 shn v_40 1.0 shn v_41 1.0 shn v_42 0.0 shn
+v_43 1.0 shn v_44 1.0 shn v_45 1.0 shn v_46 1.0 shn v_47 0.0 shn v_48 1.0 shn
+v_49 1.0 shn v_50 1.0 shn v_51 1.0 shn v_52 1.0 shn v_53 1.0 shn v_54 1.0 shn
+v_55 1.0 shn v_56 1.0 shn v_57 1.0 shn v_58 0.0 shn v_59 0.9 shn v_60 1.0 shn
+v_61 0.5 shn v_62 0.0 shn v_63 1.0 shn v_64 1.0 shn v_65 1.0 shn v_66 1.0 shn
+v_67 0.8 shn v_68 1.0 shn v_69 1.0 shn v_70 1.0 shn v_71 1.0 shn v_72 0.7 shn
+v_73 0.0 shn v_74 1.0 shn v_75 1.0 shn v_76 1.0 shn v_77 1.0 shn v_78 1.0 shn
+v_79 1.0 shn v_80 0.7 shn v_81 1.0 shn v_82 1.0 shn v_83 1.0 shn v_84 1.0 shn
+v_85 0.0 shn v_86 1.0 shn v_87 1.0 shn v_88 1.0 shn v_89 1.0 shn v_90 1.0 shn
+v_91 0.0 shn v_92 0.0 shn v_93 1.0 shn v_94 1.0 shn v_95 0.0 shn v_96 1.0 shn
+v_97 1.0 shn v_98 1.0 shn v_99 1.0 shn v_100 0.0 shn v_101 1.0 shn v_102 1.0
+shn v_103 1.0 shn v_104 1.0 shn v_105 1.0 shn v_106 1.0 shn v_107 1.0 shn v_108
+1.0 shn v_109 1.0 shn v_110 1.0 shn v_111 0.7 shn v_112 1.0 shn v_113 1.0 shn
+v_114 1.0 shn v_115 1.0 shn v_116 1.0 shn v_117 0.7 shn v_118 1.0 shn v_119 1.0
+shn v_120 1.0 shn v_121 1.0 shn v_122 1.0 shn v_123 1.0 shn v_124 1.0 shn v_125
+0.0 shn v_126 0.0 shn v_127 1.0 shn v_128 1.0 shn v_129 1.0 shn v_130 1.0 shn
+v_131 0.0 shn v_132 0.0 shn v_133 1.0 shn v_134 0.0 shn v_135 1.0 shn v_136 1.0
+shn v_137 1.0 shn v_138 1.0 shn v_139 1.0 shn v_140 0.0 shn v_141 0.0 shn v_142
+1.0 shn v_143 0.0 shn v_144 0.9 shn v_145 1.0 shn v_146 1.0 shn v_147 1.0 shn
+v_148 1.0 shn v_149 1.0 shn grestore
+
+%iterand26
+
+hdist  0 translate
+gsave
+scalef scalef -1 mul scale
+
+v_19 v_0 0.0 she v_19 v_1 0.0 she v_19 v_2 0.0 she v_19 v_3 0.0 she v_5 v_4 0.0
+she v_22 v_5 0.0 she v_13 v_5 0.0 she v_16 v_6 0.0 she v_16 v_7 0.0 she v_16
+v_8 0.0 she v_19 v_9 0.0 she v_19 v_10 0.0 she v_19 v_11 0.0 she v_19 v_12 0.0
+she v_5 v_13 0.0 she v_16 v_14 0.0 she v_16 v_15 0.0 she v_33 v_16 0.0 she v_23
+v_16 0.0 she v_24 v_16 0.0 she v_36 v_16 0.0 she v_35 v_16 0.0 she v_34 v_16
+0.0 she v_25 v_16 0.0 she v_27 v_16 0.0 she v_26 v_16 0.0 she v_19 v_17 0.0 she
+v_19 v_18 0.0 she v_21 v_19 0.0 she v_28 v_19 0.0 she v_29 v_19 0.0 she v_37
+v_19 0.0 she v_38 v_19 0.0 she v_20 v_19 0.0 she v_19 v_20 0.0 she v_19 v_21
+0.0 she v_5 v_22 0.0 she v_16 v_23 0.0 she v_16 v_24 0.0 she v_16 v_25 0.0 she
+v_16 v_26 0.0 she v_16 v_27 0.0 she v_19 v_28 0.0 she v_19 v_29 0.0 she v_47
+v_30 0.0 she v_47 v_31 0.0 she v_47 v_32 0.0 she v_16 v_33 0.0 she v_16 v_34
+0.0 she v_16 v_35 0.0 she v_16 v_36 0.0 she v_19 v_37 0.0 she v_19 v_38 0.0 she
+v_47 v_39 0.0 she v_47 v_40 0.0 she v_47 v_41 0.0 she v_47 v_42 0.0 she v_62
+v_43 0.0 she v_62 v_44 0.0 she v_47 v_45 0.0 she v_47 v_46 0.0 she v_48 v_47
+0.0 she v_53 v_47 0.0 she v_46 v_47 0.0 she v_47 v_48 0.0 she v_73 v_49 0.0 she
+v_58 v_50 0.0 she v_62 v_51 0.0 she v_62 v_52 0.0 she v_47 v_53 0.0 she v_73
+v_54 0.0 she v_73 v_55 0.0 she v_73 v_56 0.0 she v_58 v_57 0.0 she v_67 v_58
+0.0 she v_59 v_58 0.0 she v_89 v_58 0.0 she v_75 v_58 0.0 she v_82 v_58 0.0 she
+v_58 v_59 0.0 she v_62 v_60 0.0 she v_62 v_61 0.0 she v_69 v_62 0.0 she v_78
+v_62 0.0 she v_63 v_62 0.0 she v_68 v_62 0.0 she v_64 v_62 0.0 she v_62 v_63
+0.0 she v_62 v_64 0.0 she v_73 v_65 0.0 she v_73 v_66 0.0 she v_58 v_67 0.0 she
+v_62 v_68 0.0 she v_62 v_69 0.0 she v_95 v_70 0.0 she v_95 v_71 0.0 she v_73
+v_72 0.0 she v_87 v_73 0.0 she v_74 v_73 0.0 she v_97 v_73 0.0 she v_96 v_73
+0.0 she v_88 v_73 0.0 she v_79 v_73 0.0 she v_81 v_73 0.0 she v_80 v_73 0.0 she
+v_73 v_74 0.0 she v_58 v_75 0.0 she v_100 v_76 0.0 she v_100 v_77 0.0 she v_62
+v_78 0.0 she v_73 v_79 0.0 she v_73 v_80 0.0 she v_73 v_81 0.0 she v_58 v_82
+0.0 she v_100 v_83 0.0 she v_85 v_84 0.0 she v_102 v_85 0.0 she v_93 v_85 0.0
+she v_95 v_86 0.0 she v_73 v_87 0.0 she v_73 v_88 0.0 she v_58 v_89 0.0 she
+v_100 v_90 0.0 she v_100 v_91 0.0 she v_100 v_92 0.0 she v_85 v_93 0.0 she v_95
+v_94 0.0 she v_108 v_95 0.0 she v_103 v_95 0.0 she v_73 v_96 0.0 she v_73 v_97
+0.0 she v_125 v_98 0.0 she v_100 v_99 0.0 she v_107 v_100 0.0 she v_101 v_100
+0.0 she v_106 v_100 0.0 she v_118 v_100 0.0 she v_119 v_100 0.0 she v_120 v_100
+0.0 she v_129 v_100 0.0 she v_115 v_100 0.0 she v_114 v_100 0.0 she v_112 v_100
+0.0 she v_113 v_100 0.0 she v_100 v_101 0.0 she v_85 v_102 0.0 she v_95 v_103
+0.0 she v_140 v_104 0.0 she v_125 v_105 0.0 she v_100 v_106 0.0 she v_100 v_107
+0.0 she v_95 v_108 0.0 she v_140 v_109 0.0 she v_125 v_110 0.0 she v_125 v_111
+0.0 she v_100 v_112 0.0 she v_100 v_113 0.0 she v_100 v_114 0.0 she v_100 v_115
+0.0 she v_140 v_116 0.0 she v_125 v_117 0.0 she v_100 v_118 0.0 she v_100 v_119
+0.0 she v_100 v_120 0.0 she v_132 v_121 0.0 she v_140 v_122 0.0 she v_140 v_123
+0.0 she v_140 v_124 0.0 she v_142 v_125 0.0 she v_126 v_125 0.0 she v_136 v_125
+0.0 she v_127 v_125 0.0 she v_125 v_126 0.0 she v_125 v_127 0.0 she v_143 v_128
+0.0 she v_100 v_129 0.0 she v_132 v_130 0.0 she v_132 v_131 0.0 she v_147 v_132
+0.0 she v_133 v_132 0.0 she v_137 v_132 0.0 she v_138 v_132 0.0 she v_146 v_132
+0.0 she v_145 v_132 0.0 she v_132 v_133 0.0 she v_140 v_134 0.0 she v_140 v_135
+0.0 she v_125 v_136 0.0 she v_132 v_137 0.0 she v_132 v_138 0.0 she v_140 v_139
+0.0 she v_141 v_140 0.0 she v_149 v_140 0.0 she v_148 v_140 0.0 she v_139 v_140
+0.0 she v_140 v_141 0.0 she v_125 v_142 0.0 she v_144 v_143 0.0 she v_143 v_144
+0.0 she v_132 v_145 0.0 she v_132 v_146 0.0 she v_132 v_147 0.0 she v_140 v_148
+0.0 she v_140 v_149 0.0 she
+
+v_0 1.0 shn v_1 1.0 shn v_2 1.0 shn v_3 1.0 shn v_4 1.0 shn v_5 0.0 shn v_6 1.0
+shn v_7 1.0 shn v_8 1.0 shn v_9 1.0 shn v_10 1.0 shn v_11 1.0 shn v_12 1.0 shn
+v_13 1.0 shn v_14 1.0 shn v_15 1.0 shn v_16 0.0 shn v_17 1.0 shn v_18 1.0 shn
+v_19 0.0 shn v_20 1.0 shn v_21 1.0 shn v_22 1.0 shn v_23 1.0 shn v_24 1.0 shn
+v_25 1.0 shn v_26 1.0 shn v_27 1.0 shn v_28 1.0 shn v_29 1.0 shn v_30 1.0 shn
+v_31 1.0 shn v_32 1.0 shn v_33 1.0 shn v_34 1.0 shn v_35 1.0 shn v_36 1.0 shn
+v_37 1.0 shn v_38 1.0 shn v_39 1.0 shn v_40 1.0 shn v_41 1.0 shn v_42 1.0 shn
+v_43 1.0 shn v_44 1.0 shn v_45 1.0 shn v_46 1.0 shn v_47 0.0 shn v_48 1.0 shn
+v_49 1.0 shn v_50 1.0 shn v_51 1.0 shn v_52 1.0 shn v_53 1.0 shn v_54 1.0 shn
+v_55 1.0 shn v_56 1.0 shn v_57 1.0 shn v_58 0.0 shn v_59 1.0 shn v_60 1.0 shn
+v_61 1.0 shn v_62 0.0 shn v_63 1.0 shn v_64 1.0 shn v_65 1.0 shn v_66 1.0 shn
+v_67 1.0 shn v_68 1.0 shn v_69 1.0 shn v_70 1.0 shn v_71 1.0 shn v_72 1.0 shn
+v_73 0.0 shn v_74 1.0 shn v_75 1.0 shn v_76 1.0 shn v_77 1.0 shn v_78 1.0 shn
+v_79 1.0 shn v_80 1.0 shn v_81 1.0 shn v_82 1.0 shn v_83 1.0 shn v_84 1.0 shn
+v_85 0.0 shn v_86 1.0 shn v_87 1.0 shn v_88 1.0 shn v_89 1.0 shn v_90 1.0 shn
+v_91 1.0 shn v_92 1.0 shn v_93 1.0 shn v_94 1.0 shn v_95 0.0 shn v_96 1.0 shn
+v_97 1.0 shn v_98 1.0 shn v_99 1.0 shn v_100 0.0 shn v_101 1.0 shn v_102 1.0
+shn v_103 1.0 shn v_104 1.0 shn v_105 1.0 shn v_106 1.0 shn v_107 1.0 shn v_108
+1.0 shn v_109 1.0 shn v_110 1.0 shn v_111 1.0 shn v_112 1.0 shn v_113 1.0 shn
+v_114 1.0 shn v_115 1.0 shn v_116 1.0 shn v_117 1.0 shn v_118 1.0 shn v_119 1.0
+shn v_120 1.0 shn v_121 1.0 shn v_122 1.0 shn v_123 1.0 shn v_124 1.0 shn v_125
+0.0 shn v_126 1.0 shn v_127 1.0 shn v_128 1.0 shn v_129 1.0 shn v_130 1.0 shn
+v_131 1.0 shn v_132 0.0 shn v_133 1.0 shn v_134 1.0 shn v_135 1.0 shn v_136 1.0
+shn v_137 1.0 shn v_138 1.0 shn v_139 1.0 shn v_140 0.0 shn v_141 1.0 shn v_142
+1.0 shn v_143 0.0 shn v_144 1.0 shn v_145 1.0 shn v_146 1.0 shn v_147 1.0 shn
+v_148 1.0 shn v_149 1.0 shn grestore showpage

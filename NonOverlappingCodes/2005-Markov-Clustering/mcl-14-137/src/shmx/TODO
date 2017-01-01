@@ -1,0 +1,16 @@
+
+
+mcxarray speed up using metric inequality:
+   The choice of reference objects, from which all object distances will be
+   calculated, can vary in different approaches. Examples of metric trees include
+   the Vantage Point (VP) tree (Yianilos, 1992), M-tree (Ciaccia et al., 1997)
+   and GNAT (Brin, 1995). All variations of such trees, exploit the distances to
+   the reference points in conjunction with the triangle inequality to prune
+   parts of the tree, where no closer matches (to the ones already discovered)
+   can be found. A recent use of VP-trees for time-series search under Euclidean
+   distance using compressed Fourier descriptors can be found in (Vlachos et al.,
+   2004).
+
+   mcxtest utilised a flat collection of vantage points.
+   Incorporating a tree might add significant power?
+

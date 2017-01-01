@@ -1,0 +1,417 @@
+#!/usr/local/bin/perl -w
+
+#  (C) Copyright 2007 Stijn van Dongen
+ #
+#  This file is part of MCL.  You can redistribute and/or modify MCL under the
+#  terms of the GNU General Public License; either version 3 of the License or
+#  (at your option) any later version.  You should have received a copy of the
+#  GPL along with MCL, in the file COPYING.
+
+use Getopt::Long;
+use Data::Dumper;
+use strict;
+
+my @ARGV_COPY  = @ARGV;
+my $n_args = @ARGV;
+
+my $help  =  0;
+my $progname = 'mlmfifofum';
+
+
+##
+##    cone and stack encode the same thing;
+##    both avenues are available mostly as a stress-test.
+
+my $fnstack = "";
+my $fncone  = "";
+my $fnclsout   = "-";
+my $fnclsin   = "-";
+my $fntab   = "";
+my $fninfo  = "";
+my $fninterpro  = "";
+my $force_up   = 0;
+my $debug   = 0;
+my $info_type = 'cov';
+my $consensus = 2;
+my $ignore_size = 0;
+my $single_in = 0;
+
+
+
+
+sub help {
+   print <<EOH;
+Usage:
+   $progname [options]
+Options:
+--fnstack=<name>     stack file name
+--fninfo=<name>      input info file (clm info -cl-stack <stack-file>)
+--fnipro=<name>      input interpro file (tab ID <interpro ID>*)
+--fntab=<name>       tab file name
+--force-up=<num>     <num> in 0..10 (nudge bigger clusters)
+--consensus=<num>    <num> * domain-count > cluster-size
+--ignore-size=<num>  ignore clusters of size <= <num>
+--use=<string>       'info' or 'interpro'
+--clout=<name>       output matrix file name
+--nodes=<name>       output node file name
+--info-type=<str>    'cov' or 'covmax'; coverage mode
+--debug=1/0          print debugging information
+--fn
+--help               this
+cookbook:
+   1 mclcm falkner.mci --shadow=y -a "-I 3" -- "-I 4 --shadow=y"
+   2  | clm info -o mcl.info -cl-stack mcl.stack falkner.mci
+      | mcxdump -imx-cat mcl.stack -o mcl.sdump
+   3 mlmfifofum --force-up=8 --fnstack=mcl.sdump --fninfo=mcl.info --clout=mcl.c08 --nodes=nodes.c08
+   4 mlmfifofum --force-up=2 --fnstack=mcl.sdump --fninfo=mcl.info --clout=mcl.c02 --nodes=nodes.c02 --dump=dump.c02
+   5 mlmfifofum --fnipro=tab.ipro --clin=mcl.c03         # compute measures
+   6 mlmfifofum --fnipro=tab.ipro --fnstack=mcl.sdump --clout=mcl.ipro
+EOH
+}
+
+
+if
+(! GetOptions
+   (  "fnstack=s"       =>    \$fnstack
+   ,  "fncone=s"        =>    \$fncone
+   ,  "fninfo=s"        =>    \$fninfo
+   ,  "fnipro=s"        =>    \$fninterpro
+   ,  "fntab=s"         =>    \$fntab
+   ,  "clout=s"         =>    \$fnclsout
+   ,  "clin=s"          =>    \$fnclsin
+   ,  "force-up=i"      =>    \$force_up
+   ,  "consensus=f"     =>    \$consensus
+   ,  "ignore-size=i"   =>    \$ignore_size
+   ,  "single-in"       =>    \$single_in
+   ,  "debug=i"         =>    \$debug
+   ,  "info-type=s"     =>    \$info_type
+   ,  "help"            =>    \$help
+   )
+)
+   {  print STDERR "option processing failed\n";
+      exit(1);
+   }
+
+
+if (!@ARGV_COPY || $help) {
+   help();
+   exit(0);
+}
+
+my $fhcls = \*STDOUT;
+
+die "need cone and info" unless $fninfo && $fncone;
+
+if ($fnclsout ne '-') {
+   open (OUT, ">$fnclsout") || die "cannot open $fnclsout for writing";
+   $fhcls = \*OUT;
+}
+
+my %tab = ();
+
+if ($fntab)
+{  open (T, "<$fntab") || die "failure opening $fntab";
+   {  local $/ = undef;
+      %tab = map { chomp; split; } <T>;
+   }
+}
+
+die "unknown mode $info_type" unless grep { $_ eq $info_type } qw ( cov covmax );
+
+
+
+
+
+sub get_genuine_split {
+   my ($tree, $level, $clid) = @_;
+   if (!defined($::cache->{$level}{$clid}{GENSPLIT})) {
+      $::cache->{$level}{$clid}{GENSPLIT}
+      = have_non_singleton_split($tree, $level, [$clid]);
+   }
+   return $::cache->{$level}{$clid}{GENSPLIT};
+}
+
+
+sub get_leave_sizes {
+
+   my ($tree, $qlevel, $qid) = @_;
+   my @todo = [$qlevel, $qid];
+   my @leaves = ();
+
+   while (@todo) {
+      my $next = shift @todo;
+      my ($level, $id) = @$next;
+
+      if ($level == 0) {
+         push @leaves, $tree->{0}{$id}{SIZE};
+      }
+      else {
+         push @todo, map { [$level-1, $_] } @{$tree->{$level}{$id}{CHILDREN}};
+      }
+   }
+   return \@leaves;
+}
+
+
+sub get_leaves {
+
+   my ($tree, $qlevel, $qid) = @_;
+   my @todo = [$qlevel, $qid];
+   my @leaves = ();
+
+   while (@todo) {
+      my $next = shift @todo;
+      my ($level, $id) = @$next;
+
+      if ($level == 0) {
+         push @leaves, @{$tree->{0}{$id}{CHILDREN}};
+      }
+      else {
+         push @todo, map { [$level-1, $_] } @{$tree->{$level}{$id}{CHILDREN}};
+      }
+   }
+   return [ sort { $a <=> $b } @leaves ];
+}
+
+
+
+
+      ##
+      ##    in this mode we fill keep right away.
+
+my %keep = ();
+
+
+# sub have_non_singleton_split {
+# 
+#    my ($level, $clids) = @_;
+#    return 0 if $level <= 0 || @$clids < 2;
+#    my @clids_sorted
+#    =  sort { $acc->{$level}{$b}{SIZE} <=> $acc->{$level}{$a}{SIZE} }
+#       @$clids;
+#    return 0 if $acc->{$level}{$clids_sorted[0]}{SIZE} < 2;
+#    return 1 if $acc->{$level}{$clids_sorted[1]}{SIZE} > 1;
+#    return have_non_singleton_split($level-1, [$clids_sorted[0]]);
+# }
+
+
+sub have_non_singleton_split {
+
+   my ($tree, $level, $clids) = @_;
+   return 0 if $level < 0;
+   my $children0 =  $tree->{$level}{$clids->[0]}{CHILDREN};
+# print STDERR "-> $level [@$clids] @$children0\n";
+   return have_non_singleton_split($tree, $level-1, $children0) if @$clids == 1;
+   my @clids_sorted
+   =  sort { $tree->{$level}{$b}{SIZE} <=> $tree->{$level}{$a}{SIZE} } @$clids;
+   return 0 if $tree->{$level}{$clids_sorted[0]}{SIZE} < 2;
+   return 1 if $tree->{$level}{$clids_sorted[1]}{SIZE} > 1;
+   return have_non_singleton_split($tree, $level-1, $tree->{$level}{$clids_sorted[0]}{CHILDREN});
+}
+
+
+%::cache = ();
+$::SINGLE_IN = 0;
+
+
+sub new_descend {
+
+   ## return the best value we can get from this node onwards
+   ##
+
+   my ($tree, $level, $clid) = @_;
+   my $children = $tree->{$level}{$clid}{CHILDREN};
+   my $value_hi =    defined($tree->{$level}{$clid}{COV})
+                  ?  $tree->{$level}{$clid}{SIZE} * $tree->{$level}{$clid}{COV}
+                  :  0
+                  ;
+
+   $::cache->{$level}{$clid}{STAY} = 0;
+
+   ## fixme: below is a bit of a stopgap to cover for the TRIVIAL case.
+   ## It cannot be computed during parsing (as parents arrive later)
+   ## but should probably be computed before entering new_descend.
+
+   if ($level && @$children == 1) {
+      my $c = $children->[0];
+      $tree->{$level-1}{$c}{SIZE} = $tree->{$level}{$clid}{SIZE};
+      $tree->{$level-1}{$c}{COV} = $tree->{$level}{$clid}{COV};
+   }
+
+   if ($level == 0) {
+      $::cache->{$level}{$clid}{STAY} = 1;
+      return $value_hi;
+   }
+   if (!get_genuine_split($tree, $level, $clid) && !$::SINGLE_IN) {
+      $::cache->{$level}{$clid}{STAY} = 1;
+      my $sizes = get_leave_sizes($tree, $level, $clid);
+      # print STDERR "avoid descend at level $level $clid [@$sizes]\n";
+      return $value_hi;
+   }
+   if (@$children == 1) {
+      my $onlychild = $tree->{$level}{$clid}{CHILDREN}[0];
+      my $value_hi = new_descend($tree, $level-1, $onlychild);
+      $::cache->{$level}{$clid}{STAY} = $::cache->{$level-1}{$onlychild}{STAY};
+      return $value_hi;
+   }
+
+   my $ssq = 0;
+   my $value_lo = 0;
+
+   for my $c (@$children) {
+      $value_lo += new_descend($tree, $level-1, $c);
+   }
+   my @leave_sizes = @{get_leave_sizes($tree, $level, $clid)};
+   for my $s (@leave_sizes) {
+      $ssq += $s * $s;
+   }
+   my $N_effective = ($tree->{$level}{$clid}{SIZE} ** 2) / $ssq;
+   my $factor = (1-(1/($N_effective**(1-$force_up/10)))) ** ($force_up/10);
+   # $factor = 1;
+
+# print "cmp $level $clid [hi $value_hi lo $value_lo $factor]\n";
+   if ($value_hi > $factor * $value_lo) {
+      $::cache->{$level}{$clid}{STAY} = 1;
+      return $value_hi;
+   }
+   else {
+      # for my $c (@$children) {
+      #    $::cache->{$level-1}{$c}{STAY} = 0;
+      # }
+      $::cache->{$level}{$clid}{STAY} = 0;
+      return $value_lo;
+   }
+}
+
+
+
+sub new_collect {
+   my ($tree, $level, $clid, $clustering) = @_;
+   if ($::cache->{$level}{$clid}{STAY} == 1) {
+      push @$clustering, get_leaves($tree, $level, $clid);
+   }
+   else {
+      for my $c (@{$tree->{$level}{$clid}{CHILDREN}}) {
+         new_collect($tree, $level-1, $c, $clustering);
+      }
+   }
+}
+
+
+
+sub print_cluster_file {
+
+   my ($keep) = @_;
+   my $n_nodes = 0;
+   for my $k (@$keep) {
+      $n_nodes += @$k;
+   }
+   my $dim = $n_nodes . 'x' . scalar @$keep;
+
+   open (MCI, ">$fnclsout") || die "cannot open HHH.mci";
+print MCI <<EOH;
+(mclheader
+mcltype matrix
+dimensions $dim
+)
+(mclmatrix
+begin
+EOH
+
+   my @keep = sort { @$b <=> @$a } @$keep;
+   my $i = 0;
+
+   for my $crf (sort { @$b <=> @$b } @keep) {
+      local $" = ' ';
+      my @nodes = @$crf;
+      print MCI "$i @nodes \$\n";
+      $i++;
+   }
+
+   print MCI ")\n";
+   close MCI;
+   return $n_nodes;
+}
+
+
+open(CONE, "<$fncone") || die "cannot open $fncone for reading";
+open (INFO, "<$fninfo") || die "cannot open $fninfo for reading";
+
+
+my $acc   = {};
+my $level = 0;
+
+while (<CONE>) {
+   ++$level && next if /^===/;
+   die "cone format violates <num> <num> pattern" unless /^(\d+)\s+(\d+)/;
+   my ($clid, $node) = ($1, $2);
+   push @{$acc->{$level}{$clid}{CHILDREN}}, $node;
+   if (!$level) {
+      $acc->{$level}{$clid}{SIZE}++;
+   }
+   elsif (!defined($acc->{$level-1}{$node}{SIZE})) {
+      die "cone format violation, I think, therefore I die";
+   }
+   else {
+      $acc->{$level}{$clid}{SIZE} += $acc->{$level-1}{$node}{SIZE};
+   }
+}
+close CONE;
+if (keys %{$acc->{$level}} > 1) {
+   for my $c (keys %{$acc->{$level}}) {
+      push @{$acc->{$level+1}{0}{CHILDREN}}, $c;
+      $acc->{$level+1}{0}{SIZE} += $acc->{$level}{$c}{SIZE};
+   }
+   $level++;
+}
+
+my $level_max = $level;
+
+
+$level = 0;
+
+while (<INFO>) {
+
+   ++$level && next if /^===/;
+   die "uhhh" unless /^(\d+)/;
+   my $clid = $1;
+
+   my ($glo, $loc) = ("", "");
+
+   # hierverder.
+
+   if (/TRIVIAL\[sz=(\d+)\]/) {
+      die "TRIVIAL conflict at $level $clid: info $1 cone $acc->{$level}{$clid}{SIZE}"
+         unless $acc->{$level}{$clid}{SIZE} == $1;
+      $acc->{$level}{$clid}{SKIP} = 1;
+      next;
+   }
+
+   next unless /GLOBAL\[(.*?)\]/;
+   $glo = $1;
+
+   if ($glo =~ /sz=(\S+).*$info_type=(\S+)/o) {
+      die "conflict at $level $clid: info $1 cone $acc->{$level}{$clid}{SIZE}"
+         unless $acc->{$level}{$clid}{SIZE} == $1;
+      $acc->{$level}{$clid}{COV} = $2;
+   }
+   else {
+      die "global mismatch";
+   }
+# print STDERR "$level $clid $acc->{$level}{$clid}{SIZE}\n";
+}
+close INFO;
+
+$level = $level_max;
+$acc->{$level}{0}{COV} = 0.0;
+
+
+my $value = new_descend($acc, $level, 0);
+# print Dumper($::cache);
+my @keep = ();
+new_collect($acc, $level, 0, \@keep);
+my $n_nodes = print_cluster_file(\@keep);
+
+
+printf STDERR "   fff $force_up => %.4f\n", $value/$n_nodes;
+

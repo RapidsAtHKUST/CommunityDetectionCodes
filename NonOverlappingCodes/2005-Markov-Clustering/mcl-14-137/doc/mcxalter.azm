@@ -1,0 +1,108 @@
+\import{mcx.zmm}
+
+\begin{pud::man}{
+
+   {name}{mcxalter}
+   {html_title}{The mcxalter manual}
+   {author}{Stijn van Dongen}
+   {section}{1}
+   {synstyle}{long}
+   {defstyle}{long}
+
+   \man_share
+}
+
+\${html}{\"pud::man::maketoc"}
+
+\sec{name}{NAME}
+\NAME{mcxalter}{various network transformations}
+
+\sec{synopsis}{SYNOPSIS}
+\par{
+   \mcxalter
+   \synoptopt{-imx}{<fname>}{specify matrix/graph input}
+   \synoptopt{-abc}{<fname>}{specify label input}
+   \synoptopt{-tab}{<fname>}{use tab file}
+   \synoptopt{-icl}{<fname>}{specify cluster input}
+   \synoptopt{--block}{use within-cluster edges}
+   \synoptopt{--blockc}{use between-cluster edges}
+   \synoptopt{-o}{<fname>}{output}
+   \shared_synoptopt{-tf}
+
+   }
+
+\sec{description}{DESCRIPTION}
+
+\par{
+   This utility supplies various transformations of networks.
+
+   }
+
+
+\sec{options}{OPTIONS}
+
+\begin{itemize}{\mcx_itemopts}
+
+\item{\defopt{-abc}{<fname>}{label input}}
+\car{
+   The file name for input that is in label format.}
+
+\item{\defopt{-imx}{<fname>}{input matrix}}
+\car{
+   The file name for input that is in mcl native matrix format.}
+
+\item{\defopt{-tab}{<fname>}{use tab file}}
+\car{
+   This option causes the output to be printed with the labels
+   found in the tab file.
+   With \genopt{-abc} this option will, additionally, construct
+   a graph only on the labels found in the tab file.
+   If this option is used in conjunction with \genopt{-imx} the
+   tab domain and the matrix domain are required to be identical.
+   }
+
+
+\item{\defopt{-icl}{<fname>}{specify cluster input}}
+\car{
+   Read in a cluster file for use with either \genopt{--block} or \genopt{--blockc}.
+   }
+
+\item{\defopt{--block}{use within-cluster edges}}
+\car{
+   Remove between-cluster edges from the network. This is done first, before
+   other transformations take effect.
+   }
+
+\item{\defopt{--blockc}{use between-cluster edges}}
+\car{
+   Remove within-cluster edges from the network. This is done first, before
+   other transformations take effect.
+   }
+
+
+\shared_itemopt{-tf}
+\car{\shared_defopt{-tf}}
+
+\item{\defopt{-o}{fname}{output file}}
+\car{
+   Output file.}
+
+\end{itemize}
+
+
+\sec{author}{AUTHOR}
+\par{
+   Stijn van Dongen.
+   }
+
+\sec{seealso}{SEE ALSO}
+\par{
+   \mysib{mcxio},
+   \mysib{mcx},
+   \mysib{mcxsubs},
+   and \mysib{mclfamily} for an overview of all the documentation
+   and the utilities in the mcl family.
+   }
+
+\end{pud::man}
+

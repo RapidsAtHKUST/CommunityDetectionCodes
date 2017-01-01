@@ -1,0 +1,178 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html>
+<!-- Copyright (c) 2014 Stijn van Dongen -->
+<head>
+<meta name="keywords" content="manual">
+<style type="text/css">
+/* START aephea.base.css */
+body
+{ text-align: justify;
+margin-left: 0%;
+margin-right: 0%;
+}
+a:link { text-decoration: none; }
+a:active { text-decoration: none; }
+a:visited { text-decoration: none; }
+a:link { color: #1111aa; }
+a:active { color: #1111aa; }
+a:visited { color: #111166; }
+a.local:link { color: #11aa11; }
+a.local:active { color: #11aa11; }
+a.local:visited { color: #116611; }
+a.intern:link { color: #1111aa; }
+a.intern:active { color: #1111aa; }
+a.intern:visited { color: #111166; }
+a.extern:link { color: #aa1111; }
+a.extern:active { color: #aa1111; }
+a.extern:visited { color: #661111; }
+a.quiet:link { color: black; }
+a.quiet:active { color: black; }
+a.quiet:visited { color: black; }
+div.verbatim
+{ font-family: monospace;
+margin-top: 1em;
+margin-bottom: 1em;
+font-size: 10pt;
+margin-left: 2em;
+white-space: pre;
+}
+div.indent
+{ margin-left: 8%;
+margin-right: 0%;
+}
+.right { text-align: right; }
+.left { text-align: left; }
+.nowrap { white-space: nowrap; }
+.item_leader
+{ position: relative;
+margin-left: 8%;
+}
+.item_compact { position: absolute; vertical-align: baseline; }
+.item_cascade { position: relative; }
+.item_leftalign { text-align: left; }
+.item_rightalign
+{ width: 2em;
+text-align: right;
+}
+.item_compact .item_rightalign
+{ position: absolute;
+width: 52em;
+right: -2em;
+text-align: right;
+}
+.item_text
+{ position: relative;
+margin-left: 3em;
+}
+.smallcaps { font-size: smaller; text-transform: uppercase }
+/* END aephea.base.css */
+body { font-family: "Garamond", "Gill Sans", "Verdana", sans-serif; }
+body
+{ text-align: justify;
+margin-left: 8%;
+margin-right: 8%;
+}
+</style>
+<title>The clm vol manual</title>
+</head>
+<body>
+<p style="text-align:right">
+16 May 2014&nbsp;&nbsp;&nbsp;
+<a class="local" href="clmvol.ps"><b>clm vol</b></a>
+14-137
+</p>
+<div class=" itemize " style="margin-top:1em; font-size:100%">
+<div class=" item_compact"><div class=" item_rightalign nowrap " style="right:-3em">1.</div></div>
+<div class=" item_text " style="margin-left:4em">
+<a class="intern" href="#name">NAME</a>
+</div>
+<div class=" item_compact"><div class=" item_rightalign nowrap " style="right:-3em">2.</div></div>
+<div class=" item_text " style="margin-left:4em">
+<a class="intern" href="#synopsis">SYNOPSIS</a>
+</div>
+<div class=" item_compact"><div class=" item_rightalign nowrap " style="right:-3em">3.</div></div>
+<div class=" item_text " style="margin-left:4em">
+<a class="intern" href="#description">DESCRIPTION</a>
+</div>
+<div class=" item_compact"><div class=" item_rightalign nowrap " style="right:-3em">4.</div></div>
+<div class=" item_text " style="margin-left:4em">
+<a class="intern" href="#author">AUTHOR</a>
+</div>
+<div class=" item_compact"><div class=" item_rightalign nowrap " style="right:-3em">5.</div></div>
+<div class=" item_text " style="margin-left:4em">
+<a class="intern" href="#options">OPTIONS</a>
+</div>
+<div class=" item_compact"><div class=" item_rightalign nowrap " style="right:-3em">6.</div></div>
+<div class=" item_text " style="margin-left:4em">
+<a class="intern" href="#seealso">SEE ALSO</a>
+</div>
+</div>
+
+<a name="name"></a>
+<h2>NAME</h2>
+<p style="margin-bottom:0" class="asd_par">
+clm vol &mdash; compute volatile nodes from a set of clusterings</p>
+<p style="margin-bottom:0" class="asd_par">clmvol is not in actual fact a program. This manual
+page documents the behaviour and options of the clm program when
+invoked in mode <i>vol</i>. The options <b>-h</b>, <b>--apropos</b>,
+<b>--version</b>, <b>-set</b>, <b>--nop</b> are accessible
+in all <b>clm</b> modes. They are described
+in the <a class="local sibling" href="clm.html">clm</a> manual page.</p>
+
+<a name="synopsis"></a>
+<h2>SYNOPSIS</h2>
+<p style="margin-bottom:0" class="asd_par">
+<b>clm vol</b>
+<a class="intern" href="#opt-fraction"><b>[-fraction</b> num (<i>nff factor</i>)<b>]</b></a>
+<a class="intern" href="#opt-o"><b>[-o</b> fname (<i>output file</i>)<b>]</b></a>
+&lt;cl file&gt;+
+</p>
+
+<a name="description"></a>
+<h2>DESCRIPTION</h2>
+<p style="margin-bottom:0" class="asd_par">
+<b>clm vol</b> computes a score for each node, which at a minimum is equal to one.
+The output is in the form of a matrix containing a single column. The score
+correlates with what is deemed to be volatile behaviour. For all pairs of
+clusterings the set of all intersections is computed, and these are
+considered in turn.
+An intersection is deemed to be volatile if the size of the intersection is
+less than half the size of the smallest of the two clusters. In that case,
+for each node in the intersection its volatility score is incremented by one
+over the size of the intersection.
+The size comparison can be made more stringent by increasing the
+<b>-fraction</b>&nbsp;<i>&lt;frac&gt;</i> option, which is by default set to <tt>0.5</tt>.
+Volatility occurs if the size of the intersection is less than
+<b>&lt;frac&gt;</b> times the size of the smallest cluster. If the
+<b>-fraction</b> value is increased all the way up to 1.0, the implication
+is that an intersection is considered volatile unless one of the two
+clusteres considered is a subset of the other.
+</p>
+
+<a name="author"></a>
+<h2>AUTHOR</h2>
+<p style="margin-bottom:0" class="asd_par">
+Stijn van Dongen.
+</p>
+
+<a name="options"></a>
+<h2>OPTIONS</h2>
+<div class=" itemize " style="margin-top:1em; font-size:100%">
+<div class=" item_cascade"><div class=" item_leftalign nowrap " ><a name="opt-fraction"></a><b>-fraction</b> num (<i>nff factor</i>)</div></div>
+<div class=" item_text " style="margin-left:2em">
+<p style="margin-top:0em; margin-bottom:0em">See the discussion at <a class="intern" href="#description">DESCRIPTION</a>.
+</p>
+</div>
+<div style="margin-top:0em">&nbsp;</div><div class=" item_cascade"><div class=" item_leftalign nowrap " ><a name="opt-o"></a><b>-o</b> fname (<i>output file</i>)</div></div>
+<div class=" item_text " style="margin-left:2em">
+</div>
+</div>
+
+<a name="seealso"></a>
+<h2>SEE ALSO</h2>
+<p style="margin-bottom:0" class="asd_par">
+<a class="local sibling" href="mclfamily.html">mclfamily</a> for an overview of all the documentation
+and the utilities in the mcl family.
+</p>
+</body>
+</html>

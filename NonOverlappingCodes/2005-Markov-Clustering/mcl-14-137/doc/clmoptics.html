@@ -1,0 +1,218 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html>
+<!-- Copyright (c) 2014 Stijn van Dongen -->
+<head>
+<meta name="keywords" content="manual">
+<style type="text/css">
+/* START aephea.base.css */
+body
+{ text-align: justify;
+margin-left: 0%;
+margin-right: 0%;
+}
+a:link { text-decoration: none; }
+a:active { text-decoration: none; }
+a:visited { text-decoration: none; }
+a:link { color: #1111aa; }
+a:active { color: #1111aa; }
+a:visited { color: #111166; }
+a.local:link { color: #11aa11; }
+a.local:active { color: #11aa11; }
+a.local:visited { color: #116611; }
+a.intern:link { color: #1111aa; }
+a.intern:active { color: #1111aa; }
+a.intern:visited { color: #111166; }
+a.extern:link { color: #aa1111; }
+a.extern:active { color: #aa1111; }
+a.extern:visited { color: #661111; }
+a.quiet:link { color: black; }
+a.quiet:active { color: black; }
+a.quiet:visited { color: black; }
+div.verbatim
+{ font-family: monospace;
+margin-top: 1em;
+margin-bottom: 1em;
+font-size: 10pt;
+margin-left: 2em;
+white-space: pre;
+}
+div.indent
+{ margin-left: 8%;
+margin-right: 0%;
+}
+.right { text-align: right; }
+.left { text-align: left; }
+.nowrap { white-space: nowrap; }
+.item_leader
+{ position: relative;
+margin-left: 8%;
+}
+.item_compact { position: absolute; vertical-align: baseline; }
+.item_cascade { position: relative; }
+.item_leftalign { text-align: left; }
+.item_rightalign
+{ width: 2em;
+text-align: right;
+}
+.item_compact .item_rightalign
+{ position: absolute;
+width: 52em;
+right: -2em;
+text-align: right;
+}
+.item_text
+{ position: relative;
+margin-left: 3em;
+}
+.smallcaps { font-size: smaller; text-transform: uppercase }
+/* END aephea.base.css */
+body { font-family: "Garamond", "Gill Sans", "Verdana", sans-serif; }
+body
+{ text-align: justify;
+margin-left: 8%;
+margin-right: 8%;
+}
+</style>
+<title>The clm optics manual</title>
+</head>
+<body>
+<p style="text-align:right">
+16 May 2014&nbsp;&nbsp;&nbsp;
+<a class="local" href="clmoptics.ps"><b>clm optics</b></a>
+14-137
+</p>
+<div class=" itemize " style="margin-top:1em; font-size:100%">
+<div class=" item_compact"><div class=" item_rightalign nowrap " style="right:-3em">1.</div></div>
+<div class=" item_text " style="margin-left:4em">
+<a class="intern" href="#name">NAME</a>
+</div>
+<div class=" item_compact"><div class=" item_rightalign nowrap " style="right:-3em">2.</div></div>
+<div class=" item_text " style="margin-left:4em">
+<a class="intern" href="#synopsis">SYNOPSIS</a>
+</div>
+<div class=" item_compact"><div class=" item_rightalign nowrap " style="right:-3em">3.</div></div>
+<div class=" item_text " style="margin-left:4em">
+<a class="intern" href="#description">DESCRIPTION</a>
+</div>
+<div class=" item_compact"><div class=" item_rightalign nowrap " style="right:-3em">4.</div></div>
+<div class=" item_text " style="margin-left:4em">
+<a class="intern" href="#options">OPTIONS</a>
+</div>
+<div class=" item_compact"><div class=" item_rightalign nowrap " style="right:-3em">5.</div></div>
+<div class=" item_text " style="margin-left:4em">
+<a class="intern" href="#author">AUTHOR</a>
+</div>
+<div class=" item_compact"><div class=" item_rightalign nowrap " style="right:-3em">6.</div></div>
+<div class=" item_text " style="margin-left:4em">
+<a class="intern" href="#seealso">SEE ALSO</a>
+</div>
+</div>
+
+<a name="name"></a>
+<h2>NAME</h2>
+<p style="margin-bottom:0" class="asd_par">
+clm optics &mdash; implementation of the OPTICS reachability ordering</p>
+<p style="margin-bottom:0" class="asd_par">clmoptics is not in actual fact a program. This manual
+page documents the behaviour and options of the clm program when
+invoked in mode <i>optics</i>. The options <b>-h</b>, <b>--apropos</b>,
+<b>--version</b>, <b>-set</b>, <b>--nop</b> are accessible
+in all <b>clm</b> modes. They are described
+in the <a class="local sibling" href="clm.html">clm</a> manual page.</p>
+
+<a name="synopsis"></a>
+<h2>SYNOPSIS</h2>
+<p style="margin-bottom:0" class="asd_par">
+<b>clm optics</b> -imx &lt;fname&gt; [options]
+</p>
+<p style="margin-bottom:0" class="asd_par">
+<b>clm optics</b>
+<a class="intern" href="#opt-imx"><b>-imx</b> fname (<i>input graph file name</i>)</a>
+<a class="intern" href="#opt-max-eps"><b>-max-eps</b> &lt;num&gt; (<i>maximum distance considered</i>)</a>
+<a class="intern" href="#opt-min-eps"><b>-min-eps</b> &lt;num&gt; (<i>minimum similarity considered</i>)</a>
+<a class="intern" href="#opt-min-pts"><b>-min-pts</b> &lt;int&gt; (<i>minimum eps-neighbourhood size</i>)</a>
+<a class="intern" href="#opt-icl"><b>[-icl</b> fname (<i>input clustering name</i>)<b>]</b></a>
+<a class="intern" href="#opt-o"><b>[-o</b> fname (<i>output name</i>)<b>]</b></a>
+<a class="intern" href="#opt-ps"><b>[-ps</b> fname (<i>PostScript output name</i>)<b>]</b></a>
+<a class="intern" href="#opt-psx"><b>[-psx</b> fname (<i>scaling factor x axis</i>)<b>]</b></a>
+<a class="intern" href="#opt-psy"><b>[-psy</b> fname (<i>scaling factor y axis</i>)<b>]</b></a>
+<a class="intern" href="#opt-ps-rows"><b>[-ps-rows</b> &lt;num&gt; (<i>split reachability plot into &lt;num&gt; rows</i>)<b>]</b></a>
+<a class="intern" href="#opt--ps-labels"><b>[--ps-labels</b> (<i>show identifiers in PS output</i>)<b>]</b></a>
+<a class="intern" href="#opt-h"><b>[-h</b> (<i>print synopsis, exit</i>)<b>]</b></a>
+<a class="intern" href="#opt--apropos"><b>[--apropos</b> (<i>print synopsis, exit</i>)<b>]</b></a>
+<a class="intern" href="#opt--version"><b>[--version</b> (<i>print version, exit</i>)<b>]</b></a>
+</p>
+
+<a name="description"></a>
+<h2>DESCRIPTION</h2>
+<p style="margin-bottom:0" class="asd_par">
+This programs computes the reachability ordering according to the <b>OPTICS</b>
+clustering method. It can additionally output a PostScript plot of the reachability
+landscape. This plot can be annotated with a user-supplied clustering.
+The program does not implement the clustering method that is associated
+with <b>OPTICS</b>. It is part of <b>mcl-edge</b> primarily as a visualisation aid.
+</p>
+
+<a name="options"></a>
+<h2>OPTIONS</h2>
+<div class=" itemize " style="margin-top:1em; font-size:100%">
+<div class=" item_cascade"><div class=" item_leftalign nowrap " ><a name="opt-imx"></a><b>-imx</b> fname (<i>input file</i>)</div></div>
+<div class=" item_text " style="margin-left:2em">
+<p style="margin-top:0em; margin-bottom:0em">
+The input file, encoding a graph in native format.
+</p>
+</div>
+<div style="margin-top:0em">&nbsp;</div><div class=" item_cascade item_leftalign nowrap" ><a name="opt-max-eps"></a><b>-max-eps</b> &lt;num&gt; (<i>maximum distance considered</i>)</div><div class=" item_cascade item_leftalign nowrap" ><a name="opt-min-eps"></a><b>-min-eps</b> &lt;num&gt; (<i>minimum similarity considered</i>)</div><div class=" item_cascade item_leftalign nowrap" ><a name="opt-min-pts"></a><b>-min-pts</b> &lt;int&gt; (<i>minimum eps-neighbourhood size</i>)</div>
+<div class=" item_text " style="margin-left:2em">
+<p style="margin-top:0em; margin-bottom:0em">
+These encode the <b>OPTICS</b> parameters. Use <b>-max-eps</b> if the
+edge weights encode a distance (for example the Euclidean distance between
+points), use <b>-min-eps</b> if the edge weights encode a similarity.
+</p>
+</div>
+<div style="margin-top:0em">&nbsp;</div><div class=" item_cascade item_leftalign nowrap" ><a name="opt-o"></a><b>-o</b> fname (<i>output file name</i>)</div><div class=" item_cascade item_leftalign nowrap" ><a name="opt-ps"></a><b>-ps</b> fname (<i>PostScript file name</i>)</div><div class=" item_cascade item_leftalign nowrap" ><a name="opt-icl"></a><b>-icl</b> fname (<i>input clustering name</i>)</div>
+<div class=" item_text " style="margin-left:2em">
+<p style="margin-top:0em; margin-bottom:0em">
+The <b>-o</b>&nbsp;<i>fname</i> option controls the name of the file in which the reachability
+values are written. By default these values are written to STDOUT.
+</p>
+<p style="margin-bottom:0" class="asd_par">
+If <b>-ps</b>&nbsp;<i>fname</i> is supplied the program will additionally output a visualisation
+of the reachability landscape plot in a PostScript file.
+</p>
+<p style="margin-bottom:0" class="asd_par">
+It is possible, in addition to <b>-ps</b>, to specify a clustering with <b>-icl</b>&nbsp;<i>fname</i>.
+Each vertical bar in the landscape plot will be coloured according to cluster membership,
+that is, nodes in the same cluster will have the same colour. This can be a useful way
+to visualise separation properties of clusterings.
+</p>
+</div>
+<div style="margin-top:0em">&nbsp;</div><div class=" item_cascade item_leftalign nowrap" ><a name="opt-psx"></a><b>-psx</b> fname (<i>scaling factor x axis</i>)</div><div class=" item_cascade item_leftalign nowrap" ><a name="opt-psy"></a><b>-psy</b> fname (<i>scaling factor y axis</i>)</div><div class=" item_cascade item_leftalign nowrap" ><a name="opt--ps-labels"></a><b>--ps-labels</b> (<i>show identifiers in PS output</i>)</div><div class=" item_cascade item_leftalign nowrap" ><a name="opt-ps-rows"></a><b>-ps-rows</b> &lt;num&gt; (<i>split reachability plot into &lt;num&gt; rows</i>)</div>
+<div class=" item_text " style="margin-left:2em">
+<p style="margin-top:0em; margin-bottom:0em">
+By default the PostScript output will be scaled to fit onto an A3 page.
+The scaling options <b>-psx</b> and <b>-psy</b> can be used as additional
+scaling factors. By default these are set <tt>1.0</tt>.
+</p>
+<p style="margin-bottom:0" class="asd_par">
+The <b>--ps-labels</b> can be used to annotate each vertical bar in the landscape
+plot with the <b>mcl-edge</b> identifier of the corresponding node.
+</p>
+<p style="margin-bottom:0" class="asd_par">
+The <b>-ps-rows</b> option sets the number of rows. This is the primary
+option affect the width of a bar.
+</p>
+</div>
+</div>
+
+<a name="author"></a>
+<h2>AUTHOR</h2>
+<p style="margin-bottom:0" class="asd_par">
+Stijn van Dongen.</p>
+
+<a name="seealso"></a>
+<h2>SEE ALSO</h2>
+<p style="margin-bottom:0" class="asd_par">
+<a class="local sibling" href="mclfamily.html">mclfamily</a> for an overview of all the documentation
+and the utilities in the mcl family.</p>
+</body>
+</html>

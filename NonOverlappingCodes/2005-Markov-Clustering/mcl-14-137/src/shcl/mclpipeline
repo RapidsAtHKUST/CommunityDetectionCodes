@@ -1,0 +1,781 @@
+#!/usr/bin/env perl
+
+#                 Copyright (C) 2003 Stijn van Dongen
+#
+# You can redistribute and/or modify this program under the terms of the GNU
+# General Public License;  either version 2 of the License or (at your option)
+# any later  version.
+
+#  This script sets up a pipeline for clustering.  It enables a lot of
+#  customization, and goes a long way to make file names configurable (via
+#  suffix appending) and maintain unique filenames along different
+#  parametrizations.
+#
+#  This implies however that adding certain types of behaviour, esp wrt to
+#  input matrix creation may be difficult - i.e.  mcxassemble only allows
+#  (roughly speaking) local manipulation of edge sets, namely the set of edges
+#  originating from a single node.
+#
+#  If one needs more complex behaviour, it should probably be written in an
+#  application employing some kind of sublanguage, which might be created
+#  as a plugin inbetween mcxassemble and mcl.
+#  Or, one might want to go all the way and establish some kind of resource
+#  manager that shields the user from the underlying files. Ugh.
+#  Or, one might just fork this little app and specialize.
+
+#  TODO
+#  -  --skip-assemble, for parsers that directly write the matrix.
+#        requires some more suffix arithmetic.
+#  -  join progs, clines in a single data structure.
+#  -  all the suffix and file name logic is way too spaghettified.
+#        the --start-mcl=fname makes things that much harder.
+#        can it still be fit into a unified framework?
+#  -  consider adding argument data structure (attach properties to keys).
+#  -  code can use some refactoring and clean-up and generalization. the usual.
+#  ?  add some make magic, look at time stamps [any good?].
+#  -  make the levels 1..4 symbolic constants, e.g. LEVEL_MCL.
+
+my $have_zoem = 'true';
+$have_zoem = 'false' if system 'zoem -e \'zoem version: \\__version__\'';
+
+use strict;
+my $level = -1;
+
+$| = 14;    # nonzero, really => flush output immediately.
+
+
+my $base1 = "";      # parse input base name, possibly full file name.
+
+my $base2 = "";      # parse output / mcxassemble input/output base name
+                     # raw, hdr, tab, sym|mci|cus
+
+my $base3 = "";      # mcl output base name.
+                     # base2.sym|mci|cus, or base2.
+
+my $base4 = "";      # clmformat output base name.
+
+my $startwith = "";
+
+# parse / global file name options.
+# some magic to get the right stem further below.
+#
+my $dat_xo = "";
+
+my $dat_in = "";
+my $parse_options = "";
+my $parser_tag = "";
+my $parser = "";
+
+
+
+#
+# mcxassemble options.
+#
+my $ass_xo = "";
+my $ass_out = "";
+my $assoptions = "";
+
+my $do_map = 1;
+
+my $glob_xi = "";
+
+
+
+# mcl options.
+#
+my $mcl_I = "2.0";   # string because I want the dot.
+my $mcl_i = "2.0";   # string because I want the dot.
+my $mcl_pi = "";
+my $mcl_l = 0;
+my $mcl_scheme = 2;
+my $mcl_out = "";
+my $mcl_in = "";
+my $mcl_xo = "";
+my $mcl_xa = "";
+my $mcl_xe = "";
+my $mcl_xi = "";
+my $mcl_c = "";
+my $mcl_te = "";
+my $mcloptions = "";
+
+
+
+# clmformat options.
+#
+my ($fmt_fancy, $fmt_dir_name, $fmt_dump_name) = (0, "", "");
+
+my $fmt_n_count = 500;
+my $fmt_xo = "fmt";
+
+my $fmt_tab = 1;
+my $fmt_stats = 0;
+my $tab_fname = "";
+
+my $fmtoptions = "--dump";       # always generate a plain dump file.
+
+
+
+
+my $showonly = 0;
+my $debug = 0;
+
+my $startlevel = 0;
+my $endlevel = 4;
+
+
+
+if (!@ARGV || $ARGV[0] =~ /--(help|apropos)/) {
+   help();
+}
+
+
+while (@ARGV && $ARGV[0] =~ /^--/) {
+   my $arg = shift @ARGV;
+   my ($val, $key) = ("", "");
+   if ($arg =~ /^--(.*?)(=(.*))?$/) {
+      $key = $1;
+      $val = $2 ? $3 : "";
+   }
+   else {
+      print "Arguments must be in <--key=val> or <--key> format\n";
+      dang();
+   }
+
+   if ($debug) {
+      print "### <$key> ### <$val> ###\n";
+   }
+
+   if ($key eq 'parser-tag') {    # parse script options tag.
+      reqval($key, $val, '<str>');
+      $parser_tag = $val;
+   }
+   elsif ($parser_tag && $key =~ /\Q$parser_tag\E-/) {
+      my $parse_arg = $arg;
+      $parse_arg =~ s/^--\Q$parser_tag\E-/--/;
+      $parse_options .= " $parse_arg";
+   }
+   elsif ($key eq 'xo-dat') {     # parse script writes this suffix.
+      reqval($key, $val, '<suffix>');
+      $dat_xo = $val;
+      $parse_options .= " $arg";
+   }
+   elsif ($key eq 'parser') {
+      $parser = $val;
+   }
+   elsif ($key eq 'xo-ass') {       # mcxassemble writes this suffix.
+      reqval($key, $val, '<suffix>');
+      $ass_xo = $val;
+   }
+   elsif ($key eq 'xi-mcl') {       # mcl uses this suffix when --start-mcl.
+      $mcl_xi = $val;
+   }
+   elsif ($key eq 'input') {
+      $dat_in = $val;
+   }
+   elsif ($key eq 'xo-mcl') {       # mcl writes this suffix.
+      reqval($key, $val, '<suffix>');
+      $mcl_xo = $val;
+   }
+   elsif ($key eq 'xa-mcl') {       # mcl appends to default suffix.
+      reqval($key, $val, '<suffix>');
+      $mcl_xa = $val;
+   }
+   elsif ($key eq 'xe-mcl') {       # mcl adds this suffix.
+      reqval($key, $val, '<suffix>');
+      $mcl_xe = $val;
+   }
+   elsif ($key eq 'xi') {
+      reqval($key, $val, '<suffix>');
+      $glob_xi = $val;
+   }
+   elsif ($key eq 'xo-fmt') {       # clmformat writes this suffix..
+      reqval($key, $val, '<suffix>');
+      $fmt_xo = $val;
+   }
+   elsif ($key eq 'whatif') {
+      $showonly = 1;
+   }
+   elsif ($key eq 'debug') {
+      $debug = 1;
+   }
+   elsif ($key eq 'help') {
+      help();
+   }
+   elsif ($key eq 'mcl-scheme') {
+      reqval($key, $val, '<num>');
+      $mcl_scheme = $val;
+   }
+   elsif ($key eq 'mcl-te') {
+      reqval($key, $val, '<num>');
+      $mcl_te = $val;
+      $mcloptions .= " -te $mcl_te";
+   }
+   elsif ($key eq 'mcl-c') {
+      reqval($key, $val, '<num>');
+      $mcl_c = dotit($val);
+      $mcloptions .= " -c $mcl_c";
+   }
+   elsif ($key eq 'mcl-l') {
+      reqval($key, $val, '<num>');
+      $mcl_l = $val;
+      $mcloptions .= " -l $val";
+   }
+   elsif ($key eq 'mcl-i') {
+      reqval($key, $val, '<num>');
+      $mcl_i = dotit($val);
+      $mcloptions .= " -i $val";
+   }
+   elsif ($key eq 'mcl-pi') {
+      reqval($key, $val, '<num>');
+      $mcl_pi = dotit($val);
+      $mcloptions .= " -pi $val";
+   }
+   elsif ($key eq 'mcl-I') {
+      reqval($key, $val, '<num>');
+      $mcl_I = dotit($val);
+   }
+
+   elsif ($key eq 'mcl-o') {
+      reqval($key, $val, '<fname>');
+      $mcl_out = $val;
+   }
+   elsif ($key =~ /^mcl(.*)$/) {
+      my $mclkey = $1;
+      $mcloptions .= " $mclkey $val";
+   }
+
+   elsif ($key eq 'prepare-mcl') {
+      $endlevel = 2;
+   }
+   elsif ($key eq 'prepare-format') {
+      $endlevel = 3;
+   }
+   elsif ($key eq 'start-assemble') {
+      $startlevel = 1;
+      if ($val) {
+         $startwith = $val;
+      }
+   }
+   elsif ($key eq 'start-mcl') {
+      $startlevel = 2;
+      if ($val) {
+         $startwith = $val;
+      }
+   }
+   elsif ($key eq 'start-format') {
+      $startlevel = 3;
+   }
+
+   elsif ($key eq 'ass-repeat') {
+      $assoptions .= " -r $val";
+   }
+   elsif ($key eq 'ass-nomap') {
+      $do_map = 0;
+   }
+   elsif ($key =~ /^ass(.*)$/) {
+      my $asskey = $1;
+      $assoptions .= " $asskey $val";
+   }
+
+   elsif ($key eq 'fmt-dir') {
+      $fmt_dir_name = $val;
+   }
+   elsif ($key eq 'fmt-dump') {
+      $fmt_dump_name = $val;
+   }
+   elsif ($key eq 'fmt-notab') {
+      $fmt_tab = 0;
+   }
+   elsif ($key eq 'fmt-dump-stats') {
+      $fmt_stats = 1;
+   }
+   elsif ($key eq 'fmt-tab') {
+      reqval($key, $val, '<fname>');
+      $tab_fname = $val;
+   }
+   elsif ($key eq 'fmt-lump-count') {
+      $fmt_n_count = $val;
+   }
+   elsif ($key eq 'fmt-fancy') {
+      $fmt_fancy = 1;
+      $endlevel = 5;
+   }
+   elsif ($key =~ /^fmt(.*)$/) {
+      my $fmtkey = $1;
+      $fmtoptions .= " $fmtkey $val";
+   }
+
+   else {
+      print "Unsupported option: --$key\n";
+      dang();
+   }
+}
+
+if (!@ARGV) {
+   if (!$startwith && !$dat_in) {
+      print "Submit name of data file to be fed to the pipeline\n";
+      dang();
+   }
+}
+elsif (@ARGV > 1) {
+   local $" = ' ';
+   print "Too many left over options when looking at: @ARGV\n";
+   print "All options have the format --key[=val]\n";
+   print "Supply no arguments at all to get list of supported options\n";
+   dang();
+}
+elsif ($startlevel == 0 && !$parser) {
+   print "--parser=<executable> option is required\n";
+   dang();
+}
+
+
+
+if ($dat_in) {
+}
+elsif (!$startwith) {
+   $dat_in = shift @ARGV;
+}
+elsif ($startlevel == 1) {
+   goto level1;
+}
+elsif ($startlevel == 2) {
+   goto level2;
+}
+
+
+#
+#  !$startwith: resumed or full run.
+#
+
+if (!$startwith && $glob_xi) {
+   ($base1, $dat_in) = matchsuffix($dat_in, $glob_xi);
+} else {
+   $base1 = $dat_in;
+}
+
+#
+#  $base1 is the basename of parse input.
+#  It is either a file name or a file name stripped of a suffix.
+#
+
+
+
+#  $base2 is the basename of parse output and mcxassemble input.
+#  the file names stripped of 'raw' and 'hdr'.
+#
+#     $base1.[$dat_xo.]raw
+#     $base1.[$dat_xo.]hdr
+#     $base1.[$dat_xo.]tab
+
+if ($dat_xo) {
+   $base2 = "$base1.$dat_xo";
+}
+else {
+   $base2 = $base1;
+}
+
+
+#  mcxassemble reads $base2.raw and $base2.hdr.
+#  It generates one of:
+#
+#  / $base2.sym   (default)
+#  \ $base2.$ass_xo (custom)
+
+#  In the two cases mcl writes respectively to basename
+#
+#  / $base2[.$mcl_xo]
+#  \ $base2.$ass_xo[.$mcl_xo]
+
+
+level1:
+
+if ($startlevel == 1 && $startwith) {
+   if ($glob_xi) {
+      ($base2, undef) = matchsuffix($startwith, $glob_xi);
+   } else {
+      $base2 = $startwith;
+   }
+   $base3 = $base2;
+}
+if ($ass_xo) {
+   $ass_out = "$base2.$ass_xo";
+   $base3  = "$base2.$ass_xo";
+   $assoptions .= " -xo $ass_xo";
+}
+else {
+   $ass_out = "$base2.sym";
+   $base3  = $base2;
+}
+$mcl_in = $ass_out;
+
+
+level2:
+
+if ($startlevel == 2 && $startwith) {
+   if ($glob_xi) {
+      ($base2, $mcl_in) = matchsuffix($startwith, $glob_xi);
+   } else {
+      $mcl_in = $startwith;
+      $base2 = $startwith;
+   }
+   $base3 = $base2;
+}
+
+
+
+#  $base3 is the basename of mcl output.
+#  It generates
+#
+#  $base3.label
+#
+#  where label is either user or custom defined - see below.
+
+
+my $cl_mcl     =     "mcl $mcl_in"
+                  .  " -scheme $mcl_scheme -I $mcl_I"
+                  .  " --append-log=yes"
+                  .  "$mcloptions";
+
+if (!$mcl_out) {
+   my $label = "";
+   if ($mcl_xo) {
+      $label = $mcl_xo;
+   }
+   else {
+      $label = `$cl_mcl -ax`;
+      if ($mcl_xa) {
+         $label .= "$mcl_xa";
+      }
+      if ($mcl_xe) {
+         $label = "$mcl_xe.$label";
+      }
+   }
+   $mcl_out = "out.$base3.$label";
+}
+
+$cl_mcl .= " -o $mcl_out";
+
+
+
+$base4 = $mcl_out;
+
+#  $base4 is the basename of clmformat output, simply the mcl output name.
+#  It generates
+#
+#  $base4.$fmt_xo or
+#  $base4.$fmt_xo.0 $base4.$fmt_xo.0 etc etc.
+
+
+if ($glob_xi && $startlevel == 0) {
+   $parse_options .= " --xi-dat=$glob_xi";
+}
+my $cl_parse   =     "$parser"
+                  .  $parse_options
+                  .  " $dat_in";
+
+if ($do_map) {
+   $assoptions .= " --map";
+}
+my $cl_assemble =    "mcxassemble -b $base2 -q"
+                  .  "$assoptions";
+
+
+
+if ($fmt_tab) {
+   if ($tab_fname) {
+      $fmtoptions .= " -tab $tab_fname";
+   }
+   else {
+      $fmtoptions .= " -tab $base2.tab";
+   }
+}
+if ($fmt_n_count) {
+   $fmtoptions .= " -lump-count $fmt_n_count";
+}
+if ($fmt_stats) {
+   $fmtoptions .= " --dump-measures";
+}
+if ($fmt_fancy) {
+   $fmtoptions .= " --fancy";
+}
+$fmtoptions .= " -imx $mcl_in";
+
+$fmt_dir_name  =  "$fmt_xo.$base4" unless $fmt_dir_name;
+$fmt_dump_name =  ($fmt_fancy ? "dump" : "dump.$base4") unless $fmt_dump_name;
+
+
+my $cl_format  =   "clmformat $fmtoptions -dump $fmt_dump_name -icl $mcl_out -dir $fmt_dir_name";
+
+
+my $cl_zoem    =     "$have_zoem && (cd $fmt_dir_name && zoem -i fmt -d html && zoem -i fmt -d txt)";
+
+
+my @progs  = ($parser, 'mcxassemble', 'mcl', 'clmformat', 'zoem');
+my @clines = ($cl_parse, $cl_assemble, $cl_mcl, $cl_format, $cl_zoem);
+
+
+if ($showonly) {
+   report_clines(-2);
+   hrule();
+   report_files(1);
+   exit(0);
+}
+
+report_clines(-1);
+hrule('==');
+
+my $ok = {};
+
+for ($level=$startlevel;$level<$endlevel;$level++) {
+   my $cline = $clines[$level];
+   if (!$cline) {
+      next;
+   }
+   print $cline, "\n";
+   hrule('==');
+   if (system $cline) {
+      print "error $? ($!)\n";
+      dang();
+   }
+   $ok->{$level} = 1;
+}
+
+done();
+
+
+sub done {
+
+   my $i;
+   hrule();
+   report_clines($level);
+   hrule();
+   report_files(0);
+
+   hrule();
+
+   print "Run finished ok\n";
+   exit(0);
+}
+
+
+sub report_files {
+   my $whatif = $_[0];
+   my $todo = {};
+   my $create = $whatif ? "is to create" : "created";
+
+   for ($startlevel..$endlevel-1) {
+      $todo->{$_} = 1;
+   }
+   if (($whatif && $todo->{'0'}) || defined($ok->{'0'})) {
+      print "Parse: $parser $create (among others)\n";
+      printfile("$base2.tab","(index file)");
+      printfile("$base2.raw","(raw data file)");
+      printfile("$base2.hdr","(header file)");
+   }
+   if (($whatif && $todo->{'1'}) || defined($ok->{'1'})) {
+      print "Assembly: mcxassemble $create\n";
+      printfile("$ass_out","(mcl input file)");
+   }
+   if (($whatif && $todo->{'2'}) || defined($ok->{'2'})) {
+      print "Clustering: mcl $create\n";
+      printfile("$mcl_out","(mcl output file)");
+   }
+   if (($whatif && $todo->{'3'}) || defined($ok->{'3'})) {
+      print "Formatting: clmformat $create\n";
+      my $dump_location = "";
+      $dump_location .= "$fmt_dir_name/" if $fmt_fancy;
+      $dump_location .= $fmt_dump_name;
+      printfile($dump_location, "(clmformat dump file)");
+      if ($fmt_fancy) {
+         print "Formatting: clmformat $create two master files in this directory\n";
+         printfile("$fmt_dir_name","(formatted output)");
+      }
+   }
+   if ($whatif && $todo->{'4'}) {
+      if ($have_zoem eq 'true') {
+         print "zoem will further process the files in $fmt_dir_name\n";
+      }
+      else {
+         print "zoem should further process the files in $fmt_dir_name\n";
+         print "but you don't seem to have zoem installed --\n";
+         print "visit http://micans.org/zoem if you like\n";
+      }
+   }
+   elsif ($todo->{'4'}) {
+      if (defined($ok->{'4'})) {
+         print "zoem processed the files to yield final html and txt output\n";
+      }
+      else {
+         if ($have_zoem eq 'true') {
+            print "zoem should further process the files in $fmt_dir_name\n";
+            print "but  you don't seem to have zoem installed --\n";
+            print "visit http://micans.org/zoem if you like\n";
+         }
+         else {
+            print "zoem seems to have failed along the road - sorry\n";
+         }
+      }
+   }
+}
+
+
+sub dang {
+
+   my $culprit =
+   {  -1 => "initialization"
+   ,  0  => $parser
+   ,  1  => "mcxassemble"
+   ,  2  => "mcl"
+   ,  3  => "clmformat"
+   }  ;
+
+   if ($level == 3) {
+      print "\n";
+   }
+
+   print "\n$level Run did not succeed, error in $culprit->{$level} part\n";
+   exit(1);
+}
+
+# dot-it, not the other one.
+
+sub dotit {
+   my $arg = shift;
+   if ($arg !~ /\./) {
+      $arg .= ".0";
+   }
+   return $arg;
+}
+
+
+sub reqval {
+   my $key = shift;
+   my $val = shift;
+   my $sth = shift;
+   if (!$val) {
+      print "required syntax for $key option: --$key=$sth\n";
+      dang();
+   }
+}
+
+sub hrule {
+   my $tok = shift;
+   my $len = shift;
+   if (!$tok) { $tok = '=='; }
+   if (!$len) { $len = 39; }
+   print $tok x $len, "\n";
+}
+
+sub report_clines {
+   my $level = shift;
+   my ($do, $be, $bound);
+   my $i;
+
+   if ($level >= 0) {
+      $do = "ran";
+      $be = "were";
+      $bound = $level;
+   }
+   elsif ($level == -1) {
+      $do = "am about to run";
+      $be = "are";
+      $bound = $endlevel;
+   }
+   elsif ($level == -2) {
+      $do = "would run";
+      $be = "would be";
+      $bound = $endlevel;
+   }
+
+   if ($endlevel - $startlevel > 0) {
+      print "Programs: these are the programs I $do for you.\n";
+      for ($i=$startlevel;$i<$bound;$i++) {
+         if ($clines[$i]) { print "  $progs[$i]"; }
+      }
+      print "\n";
+      print "Command lines: these $be the respective command lines.\n";
+      for ($i=$startlevel;$i<$bound;$i++) {
+         if ($clines[$i]) { print "  $clines[$i]\n"; }
+      }
+   }
+}
+
+sub printfile {
+   printf "  %-25s  %s\n", $_[0], $_[1];
+}
+
+sub matchsuffix {
+   my $name = $_[0];
+   my $suf = $_[1];
+   my $base;
+   if ($name =~ /(.*?)\.\Q$suf\E$/) {
+      $base = $1;
+   } else {
+      $base = $name;
+      $name .= ".$suf";
+   }
+   return ($base, $name);
+}
+
+
+sub help  {
+   print <<_help_;
+
+Usage: mclpipeline --parser=<executable> --parser-tag=<str> [options] file-name
+
+This will successively call four programs,
+   $parser , mcxassemble , mcl , clmformat
+These programs write by default to files with names sharing a common base.
+The parser should implement the behaviour expected by mclpipeline.
+,_______ global options:
+   --whatif          shows only what would be done.
+   --start-assemble  skip the parse step, assume needed files exist already.
+   --start-mcl       start running mcl immediately, as above.
+   --start-format    only (re)do the formatting stage, as above.
+   --prepare-mcl     create the input file for mcl, then quit.
+   --help            show this.
+,_______ global options (affecting shared base name of created files):
+   --xi=<suf>        strip <suf> from file-name for use as base stem.
+   --xo-dat=<suf>    attach <suf> to parse result.
+   --xo-ass=<suf>    attach <suf> to mcxassemble result.
+   --xo-mcl=<suf>    use <suf> as mcl result attachment.
+   --xa-mcl=<suf>    append to mcl suffix.
+   --xe-mcl=<suf>    append to mcl file name.
+   --xo-fmt=<suf>    attach <suf> to clmformat result.
+     mnemonics: eXtension In, Out, Append, Extra.
+,_______ parse options
+   --parser=<script> name of parse script
+   --parser-tag=<str>   tag of options to pass to parse script.
+,_______ mcxassemble options:
+   --ass-repeat=<str>str in <add|max|mul|left|right>
+   --ass-nomap       map file does not exist or should be ignored.
+and GENERALLY,
+   --ass<-opt[=val]> add '-opt [val]' to mcxassemble command line.
+   --start-assemble=<base-name>  start running mcxassemble with base-name.
+,_______ mcl options:
+   --mcl-te=<num>    number of expansion threads.
+   --mcl-I=<float>   inflation value, MAIN mcl handle.
+   --mcl-i=<float>   initial inflation value.
+   --mcl-l=<int>     initial loop length.
+   --mcl-pi=<float>  pre-inflation value.
+   --mcl-c=<float>   center value.
+   --mcl-scheme=<i>  i in 1..5, resource allocation level.
+   --mcl-o=<fname>   if you *need* to use this, I must be improved.
+and GENERALLY,
+   --mcl<-opt[=val]> add '-opt [val]' to mcl command line, e.g.
+                           --mcl-v=all adds '-v all' to the mcl command line.
+   --start-mcl=<file-name>
+                     start running mcl with file-name.  optionally combines
+                     with the --xi option.
+,_______ clmformat options:
+   --fmt-lump-size=<num>   collect clusters of size lq <num> in a single file.
+   --fmt-lump-count=<num>  make batches containing approximately <num> nodes.
+   --fmt-notab             tab file does not exist or should be ignored.
+   --fmt-tab=<fname>       use tab file fname.
+and GENERALLY,
+   --fmt<-opt[=val]>       add '-opt [val]' to clmformat command line.
+_help_
+exit 0;
+}
+

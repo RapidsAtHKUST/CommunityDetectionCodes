@@ -1,0 +1,127 @@
+\import{mcx.zmm}
+
+\begin{pud::man}{
+
+   {name}{clm close}
+   {html_title}{The clm close manual}
+   {author}{Stijn van Dongen}
+   {section}{1}
+   {synstyle}{long}
+   {defstyle}{long}
+
+   \man_share
+}
+
+\${html}{\"pud::man::maketoc"}
+
+\sec{name}{NAME}
+\NAME{clm close}{Fetch connected components from graphs or subgraphs}
+
+\disclaim_clm{close}
+
+\sec{synopsis}{SYNOPSIS}
+\par{
+   \clm{close} -imx <fname> [options]
+   }
+
+\par{
+   \clm{close}
+   \synreqopt{-imx}{fname}{specify matrix input}
+   \synreqopt{-abc}{fname}{specify label input}
+   \synreqopt{-dom}{fname}{input domain/cluster file}
+   \synoptopt{-o}{fname}{output file}
+   \synoptopt{--is-undirected}{trust input graph to be undirected}
+   \synoptopt{--write-count}{output component count}
+   \synoptopt{--write-sizes}{output component sizes (default)}
+   \synoptopt{--write-cc}{output components as clustering}
+   \synoptopt{--write-block}{output graph restricted to -dom argument}
+   \synoptopt{--write-blockc}{output graph complement of -dom argument}
+   \synoptopt{-cc-bound}{num}{select components with size at least num}
+   \shared_synoptopt{-tf}
+   \stdsynopt
+   }
+
+\sec{description}{DESCRIPTION}
+
+\par{
+   Use \clm{close} to fetch the connected components from a graph.  Different
+   output modes are supported (see below).  In matrix mode (i.e. using
+   the \genopt{-imx} option) the output returned with
+   \genopt{--write-cc} can be used in conjunction with \mcxsubs
+   to retrieve individual subgraphs corresponding to connected components. 
+
+   }
+
+
+\sec{options}{OPTIONS}
+
+\begin{itemize}{\mcx_itemopts}
+
+\item{\defopt{-abc}{<fname>}{label input}}
+\car{
+   The file name for input that is in label format.}
+
+\item{\defopt{-imx}{<fname>}{input matrix}}
+\car{
+   The file name for input that is in mcl native matrix format.}
+
+\item{\defopt{-o}{fname}{output file}}
+\car{
+   Specify the file where output is sent to. The default is STDOUT.
+   }
+
+\item{\defopt{-dom}{fname}{input domain/cluster file}}
+\car{
+   If this option is used, clm close will, as a first step,
+   for each of the domains in file\~\genarg{fname} retrieve the associated
+   subgraph from the input graph.  These are then further decomposed into
+   connected components, and the program will process these in the normal
+   manner.
+
+   }
+
+\items{
+   {\defopt{--write-count}{output component count}}
+   {\defopt{--write-sizes}{output component sizes (default)}}
+   {\defopt{--write-cc}{output components as clustering}}
+   {\defopt{--write-block}{output graph restricted to -dom argument}}
+   {\defopt{--write-blockc}{output graph complement of -dom argument}}
+}
+\car{
+   The default behaviour is currently to output the sizes of the
+   connected components. It is also possible to simply output
+   the number of components with \genopt{--write-count} or to
+   write the components as a clustering in mcl format with
+   \genopt{-write-cc}. Even more options exist: it is possible
+   to output the restriction of the input graph to a domain, or
+   to output the complement of this restriction.
+   }
+
+\item{\defopt{--is-undirected}{omit graph undirected check}}
+\car{
+   With this option the transformation to make sure
+   that the input is undirected is omitted. This will
+   be slightly faster. Using this option while the
+   input is directed may lead to erronenous results.
+   }
+
+\item{\defopt{-cc-bound}{num}{select components with size at least num}}
+
+\shared_defopt{-tf}
+
+\stddefopt
+
+\end{itemize}
+
+\sec{author}{AUTHOR}
+\par{
+   Stijn van Dongen.
+   }
+
+\sec{seealso}{SEE ALSO}
+\par{
+   \mysib{mclfamily} for an overview of all the documentation
+   and the utilities in the mcl family.
+   }
+
+\end{pud::man}

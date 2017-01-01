@@ -1,0 +1,95 @@
+#!/usr/local/bin/perl -w
+
+#  (C) Copyright 2009 Stijn van Dongen
+ #
+#  This file is part of MCL.  You can redistribute and/or modify MCL under the
+#  terms of the GNU General Public License; either version 3 of the License or
+#  (at your option) any later version.  You should have received a copy of the
+#  GPL along with MCL, in the file COPYING.
+
+
+sub explain {
+print <<EOH;
+to be written
+EOH
+}
+
+use strict;
+use Getopt::Long;
+
+
+my $mul     = 1;
+my $div     = 1;
+my $mov     = 0;
+
+my $xmul    = 1;
+my $xdiv    = 1;
+my $xmov    = 0;
+
+my $ymul    = 1;
+my $ydiv    = 1;
+my $ymov    = 0;
+
+my $wmul    = 1;
+my $wdiv    = 1;
+my $wmov    = 0;
+
+my $help    = 0;
+
+
+if
+(! GetOptions
+   (  "mov=i"        =>   \$mov
+   ,  "div=i"        =>   \$div
+   ,  "mul=i"        =>   \$mul
+
+   ,  "wmov=f"       =>   \$wmov
+   ,  "wdiv=f"       =>   \$wdiv
+   ,  "wmul=f"       =>   \$wmul
+
+   ,  "xmov=f"       =>   \$xmov
+   ,  "xdiv=f"       =>   \$xdiv
+   ,  "xmul=f"       =>   \$xdiv
+
+   ,  "ymov=f"       =>   \$ymov
+   ,  "ydiv=f"       =>   \$ydiv
+   ,  "ymul=f"       =>   \$ydiv
+   )
+)
+   {  print STDERR "option processing failed\n";
+      exit(1);
+   }
+
+&explain && exit(0) if $help;
+
+my $x_apart = $xmov != 0 || $xmul != 1 || $xdiv != 1;
+my $y_apart = $ymov != 0 || $ymul != 1 || $ydiv != 1;
+
+
+sub mov {
+   my ($n, $mov, $mul, $div) = @_;
+   $n += $mov;
+   $n *= $mul if $mul != 1;
+   $n /= $div if $div != 1;
+   return $n;
+}
+
+
+sub rescale {
+   my ($w, $mov, $mul, $div) = shift;
+   $w += $wmov;
+   $w *= $wmul if $wmul != 1;
+   $w /= $wdiv if $wdiv != 1;
+   return $w;
+}
+
+
+while (<>) {
+   chomp;
+   my ($x, $y, $w) = split;
+   $x = $x_apart ? mov($x, $xmov, $xmul, $xdiv) : mov($x, $mov, $mul, $div);
+   $y = $y_apart ? mov($y, $ymov, $ymul, $ydiv) : mov($y, $mov, $mul, $div);
+   $w = rescale($w);
+   print "$x\t$y\t$w\n";
+}
+

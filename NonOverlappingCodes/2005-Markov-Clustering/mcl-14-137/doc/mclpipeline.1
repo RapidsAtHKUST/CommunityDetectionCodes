@@ -1,0 +1,551 @@
+.\" Copyright (c) 2014 Stijn van Dongen
+.TH "mclpipeline" 1 "16 May 2014" "mclpipeline 14-137" "USER COMMANDS "
+.po 2m
+.de ZI
+.\" Zoem Indent/Itemize macro I.
+.br
+'in +\\$1
+.nr xa 0
+.nr xa -\\$1
+.nr xb \\$1
+.nr xb -\\w'\\$2'
+\h'|\\n(xau'\\$2\h'\\n(xbu'\\
+..
+.de ZJ
+.br
+.\" Zoem Indent/Itemize macro II.
+'in +\\$1
+'in +\\$2
+.nr xa 0
+.nr xa -\\$2
+.nr xa -\\w'\\$3'
+.nr xb \\$2
+\h'|\\n(xau'\\$3\h'\\n(xbu'\\
+..
+.if n .ll -2m
+.am SH
+.ie n .in 4m
+.el .in 8m
+..
+.SH NAME
+mclpipeline \- a generic pipeline for generating and scrutinizing mcl clusterings\&.
+
+\fBNOTE\fP
+.br
+\fBmcl\fP has acquired the ability to manipulate label input directly\&. This
+enables a very lightweight mechanism of generating clusterings by teaming up
+mcl with a lightweight parser\&. You might want to use this mechanism\&.
+Example invocations using the \fBmcxdeblast\fP BLAST parser are documented in the
+\fBmcl manual\fP\&.
+.SH SYNOPSIS
+
+\fBmclpipeline\fP [options] <file-name>
+.br
+
+where <file-name> is either the name of the data input file, or its base
+name\&. In the latter case the \fB--xi-dat\fP option is required\&. In case
+mclpipeline is indeed used to control all stages from the data input file
+onwards, usage will often be like this:
+
+.nf \fC
+   mclpipeline [prepare options] --prepare-mcl <file-name>
+   mclpipeline [cluster options 1] --start-mcl <file-name>
+   mclpipeline [cluster options 2] --start-mcl <file-name>
+   \&.\&. etc
+.fi \fR
+
+\fBmclpipeline\fP can also be used to control shorter pipelines, i\&.e\&. in
+case the input matrix was already created or in case pre-assembled parts
+of the input matrix were already created\&. In this case, usage will
+often be like this:
+
+.nf \fC
+   mclpipeline [cluster options 1] --start-mcl=<fname>
+   mclpipeline [cluster options 2] --start-mcl=<fname>
+or
+   mclpipeline [assembly options] --start-assemble=<fname> --prepare-mcl
+.fi \fR
+
+\fBNOTE\fP
+.br
+It is possible to make mclpipeline output a large arrary
+of performance measures related to nodes and clusters
+in hyperlinked output by supplying the \fB--fmt-fancy\fP option\&.
+This can be useful if one wants to scrutinize a clustering in greater
+detail and navigate within the clustering\&. The output then includes
+listings of external nodes that are relevant/close to a given cluster,
+and vice versa, listings of external clusters that are relevant/close
+to a given node\&.
+
+Generating this more intricate output requires the presence of the \fBzoem\fP macro
+processor\&. Refer to the \fBSEE ALSO\fP section and the
+\fBclmformat manual\fP for more information on zoem\&. By default
+zoem is not required, and the return result is a file where each line contains
+a clustering consisting of tab-separated labels\&.
+
+If this program does not work as expected, please file a bug report with the
+developer and/or subscribe to mcl-devel as indicated on
+http://micans\&.org/mcl/\&. The problem will then be fixed\&.
+
+The full list of pipeline options is given below\&. Start simple,
+and if you need some behaviour, try to see if there is an option
+that fits your needs\&.
+If you use a wrapper pipeline such as \fBmclblastline(1)\fP, you
+can ignore the \fB--parser\fP and \fB--parser-tag\fP options
+as they are provided by the wrapper\&.
+
+\fBmclpipeline\fP
+\fB--parser=\fPapplication (\fIdata parser\fP)
+\fB--parser-tag=\fPstr (\fIparse option transporter\fP)
+
+\fB[--whatif\fP (\fIdo not execute\fP)\fB]\fP
+.br
+\fB[--start-assemble\fP (\fIskip parse stage\fP)\fB]\fP
+.br
+\fB[--start-mcl\fP (\fIskip earlier stages\fP)\fB]\fP
+.br
+\fB[--start-format\fP (\fIskip earlier stages\fP)\fB]\fP
+.br
+\fB[--prepare-mcl\fP (\fIdo preparatory stages\fP)\fB]\fP
+.br
+\fB[--help\fP (\fIsummary of options\fP)\fB]\fP
+.br
+\fB[--xi=\fPsuf (\fIstrip suf from input file\fP)\fB]\fP
+.br
+\fB[--xo-dat=\fPsuf (\fIattach suf to parse output\fP)\fB]\fP
+.br
+\fB[--xo-ass=\fPsuf (\fIattach suf to assembly output\fP)\fB]\fP
+.br
+\fB[--xi-mcl=\fPsuf (\fIuse with --start-mcl\fP)\fB]\fP
+.br
+\fB[--xo-mcl=\fPsuf (\fIreplace mcl output suffix\fP)\fB]\fP
+.br
+\fB[--xa-mcl=\fPstr (\fIappend to mcl output suffix\fP)\fB]\fP
+.br
+\fB[--xe-mcl=\fPsuf (\fIappend to mcl output\fP)\fB]\fP
+.br
+\fB[--xo-fmt=\fPsuf (\fIattach suf to clmformat output\fP)\fB]\fP
+.br
+\fB[--ass-repeat=\fPstr (\fIassembly repeat option\fP)\fB]\fP
+.br
+\fB[--ass-nomap\fP (\fIignore map file\fP)\fB]\fP
+.br
+\fB[--ass-opt=\fPval (\fIassembly option transporter\fP)\fB]\fP
+.br
+\fB[--mcl-te=\fPnum (\fI#expansion threads\fP)\fB]\fP
+.br
+\fB[--mcl-I=\fPfloat (\fImcl inflation value\fP)\fB]\fP
+.br
+\fB[--mcl-i=\fPfloat (\fImcl initial inflation value\fP)\fB]\fP
+.br
+\fB[--mcl-l=\fPfloat (\fImcl initial loop length\fP)\fB]\fP
+.br
+\fB[--mcl-c=\fPfloat (\fImcl center value\fP)\fB]\fP
+.br
+\fB[--mcl-pi=\fPfloat (\fImcl pre-inflation value\fP)\fB]\fP
+.br
+\fB[--mcl-scheme=\fPi (\fImcl scheme index\fP)\fB]\fP
+.br
+\fB[--mcl-o=\fPfname (\fIdo not use\fP)\fB]\fP
+.br
+\fB[--mcl-opt=\fPval (\fImcl option transporter\fP)\fB]\fP
+.br
+\fB[--fmt-lump-count=\fPnum (\fIcollect formatted output\fP)\fB]\fP
+.br
+\fB[--fmt-opt\fP val (\fIclmformat option transporter\fP)\fB]\fP
+.br
+\fB[--fmt-tab\fP fname (\fIuse this tab file\fP)\fB]\fP
+.br
+\fB[--fmt-notab\fP (\fIignore tab file\fP)\fB]\fP
+.br
+<file-name>
+.SH DESCRIPTION
+
+\fBmclpipeline\fP encapsulates a sequence of programs to be run on some
+input data in order to obtain clusterings and formatted output
+representing the clusterings, while maintaining unique file names
+and file name ensembles corresponding with differently parametrized runs\&.
+
+The script can behave in several ways\&. By default, the pipeline
+consists of the stages of \fIparsing\fP, \fIassembly\fP,
+\fIclustering\fP, and \fIformatting\fP\&.
+The parsing stage is to be
+represented by some parser script obeying the interface
+rules described below\&. The assembly stage is done by
+\fBmcxassemble(1)\fP, the clustering stage is done by \fBmcl(1)\fP,
+and the formatting stage is done by \fBclmformat(1)\fP\&.
+
+The script can also be put to simpler uses, e\&.g\&. letting the script take
+care of unique file names for differently parametrized mcl runs\&. In this
+case there is no need to specify either the parser or the data file, and
+subsequent invocations might look like this:
+
+.nf \fC
+
+   mclpipeline --start-mcl=<fname> --mcl-I=1\&.6 --mcl-scheme=4
+   mclpipeline --start-mcl=<fname> --mcl-I=2\&.0 --mcl-scheme=4
+   mclpipeline --start-mcl=<fname> --mcl-I=2\&.4 --mcl-scheme=4
+   \&.\&. etc
+.fi \fR
+
+It is easiest if for each parser a wrapper script is written
+encapsulating the parser and \fBmclpipeline\fP\&. A mechanism is provided
+through which mclpipeline can recognize options that are meant to be
+passed to the parser\&. An example of such a wrapper script is the BLAST
+pipeline \fBmclblastline\fP that basically calls mclpipeline with the
+parameters \fB--parser\fP=\fBmcxdeblast\fP \fB--parser-tag\fP=\fBblast\fP\&.
+In this case the parser is \fBmcxdeblast\fP, and mclpipeline will
+pass any options of the forms \fB--blast-foo\fP and \fB--blast-bar=zut\fP
+to the parser (respectively as \fB--foo\fP and \fB--bar=zut\fP)\&.
+
+For a given data set the stages of parsing and assembling
+will often not need to be repeated, especially if there
+is a well established way of creating a matrix from
+the input data\&. In this case, usage
+will look like
+
+.nf \fC
+
+   mclpipeline [parse/assembly options] --prepare-mcl <file-name>
+   mclpipeline [cluster options 1] --start-mcl <file-name>
+   mclpipeline [cluster options 2] --start-mcl <file-name>
+   mclpipeline [cluster options 3] --start-mcl <file-name>
+   \&.\&.\&.
+.fi \fR
+
+Note that \fBmclpipeline\fP will store the output of those runs
+in unique file names derived from the parametrizations\&.
+
+There are some options that affect the file names of intermediate
+results\&. In the above setup of repeated runs, if used in one run,
+they must be used in all runs, as \fBmclpipeline\fP uses them to compute the
+file names it needs\&.
+For the setup above, these options are
+\fB--xi\fP=\fIsuf\fP,
+\fB--xo-dat\fP=\fIsuf\fP, and
+\fB--xo-ass\fP=\fIsuf\fP\&.
+
+There are other ways of resuming the pipeline, and one must always take care
+that options starting with \fB--xi-\fP, \fB--xo-\fP, \fB--xa\fP, or
+\fB--xe\fP are repeated among preparatory and subsequent runs\&.
+These tags respectively mnemonize \fIextension in\fP, \fIextension out\fP,
+\fIextension append\fP, and \fIextension extra\fP\&.
+
+Should one want to experiment with various ways of creating input
+matrices, then \fBmclpipeline\fP supplies options to create unique file
+names and file name ensembles corresponding with different setups and
+parametrizations\&. These are \fB--xo-dat\fP=\fIsuf\fP for the parsing
+stage and \fB--xo-ass\fP=\fIsuf\fP for the assembly stage\&. mclpipeline
+\fIautomatically\fP generates unique file names for the cluster results,
+but it does not do so for the parse and assembly results\&.
+
+\fBParser interface requirements\fP
+.br
+The parser should recognize its last argument as a file name
+or as the base name of a file\&.
+It should produce the files \fCbase\&.raw\fP, \fCbase\&.hdr\fP,
+and preferably \fCbase\&.tab\fP and \fCbase\&.map\fP, where the base name
+\fCbase\fP is determined as described below\&.
+
+\fBmclpipeline\fP will pass its last argument <file-name> to the parser\&.
+The parser should recognize the \fB--xi-dat\fP=\fIsuf\fP
+and \fB--xo-dat\fP=\fIsuf\fP options\&. If the first is present,
+it should try to strip <file-name> of the suffix specified in
+the value and use the result as the initial part of the base name
+for the files it constructs\&. If stripping does not succeed, it
+must interpret <file-name> as the base name and append the suffix
+in order to construct the name of the file it will try to read\&.
+If the \fB--xo-dat\fP=\fIsuf\fP option is present, it must append the
+suffix specified in the value to the base part as described above\&.
+The result is then the full base name to which the \fCraw\fP, \fChdr\fP,
+and other suffixes will be appended\&.
+
+\fBParser interface examples\fP
+.br
+
+.nf \fC
+<parser> --xi-dat=abc --xo-dat=xyz foo
+ *  parser reads foo\&.abc, writes foo\&.xyz\&.raw, foo\&.xyz\&.hdr et cetera\&.
+<parser> --xi-dat=abc --xo-dat=xyz foo\&.abc
+ *  idem
+<parser> --xo-dat=xyz foo\&.abc
+ *  parser reads foo\&.abc, writes foo\&.abc\&.xyz\&.raw et cetera\&.
+<parser> --xi-dat=abc foo\&.abc
+ *  parser reads foo\&.abc, writes foo\&.raw, foo\&.hdr et cetera\&.
+<parser> foo\&.abc
+ *  parser reads foo\&.abc, writes foo\&.abc\&.raw, foo\&.abc\&.hdr et cetera\&.
+.fi \fR
+
+\fBOutput file names construction\fP
+.br
+The files of primary interest are the mcl output file and
+the formatted output produced by clmformat\&.
+The pipeline constructs a file name for the mcl output
+in which several parameters are encoded\&. The first
+part of the file name is either the base name for the assembly
+stage, or simply the name of the input file, depending on
+whether the option \fB--xo-ass\fP=\fIsuf\fP was used or not\&.
+
+A suffix encoding key-value pairs is appended\&. By default
+it has the form \fCI\&.\&.s\&.\fP, e\&.g\&. \fCI20s2\fP\&. The latter examples
+denotes primary inflation value 2\&.0 and scheme 2\&.
+The pipeline will automatically append several other mcl parameters
+if they are used\&. These correspond with the pipeline options
+\fB--mcl-i\fP=\fIf\fP, \fB--mcl-l\fP=\fIi\fP, \fB--mcl-c\fP=\fIf\fP,
+and \fB--mcl-pi\fP=\fIf\fP,
+which in turn correspond with the mcl options \fB-i\fP\ \&\fIf\fP,
+\fB-l\fP\ \&\fIi\fP, \fB-c\fP\ \&\fIf\fP, and \fB-pi\fP\ \&\fIf\fP\&.
+The order of appending is alphabetical with capitals preceding
+lowercase, so a full example is \fCI25c30i35l2pi28s3\fP\&.
+.SH OPTIONS
+
+.ZI 2m "\fB--whatif\fP (\fIdo not execute\fP)"
+\&
+.br
+Shows only what would be done without executing it\&.
+Hugely useful!
+.in -2m
+
+.ZI 2m "\fB--start-assemble\fP (\fIskip parse stage\fP)"
+\&
+.br
+Skip the parse stage, assume the necessary files have been created in a
+previous run\&.
+.in -2m
+
+.ZI 2m "\fB--prepare-mcl\fP (\fIdo preparatory stages\fP)"
+\&
+.br
+Do the parsing and assembly stage, then quit\&. Useful if you
+want to do multiple cluster runs for a given graph - use
+\fB--start-mcl\fP
+.in -2m
+
+.ZI 2m "\fB--start-mcl\fP (\fIskip earlier stages\fP)"
+\&
+.br
+Immediately start the mcl stage\&.
+Assume the necessary files have been created in a previous run\&.
+
+\fBNOTE\fP
+.br
+This option can be used as \fB--start-mcl\fP=\fIfname\fP\&.
+In this case, no final file name argument need be given, and
+mcl will use \fIfname\fP as the file name for its input\&.
+
+The difference with \fB--start-mcl\fP is that the latter
+will assume it is picking up the results of a previous run\&.
+The names of those results might include suffixes corresponding
+with the parse and assembly stage (cf\&. \fB--xo-dat\fP and
+\fB--xo-ass\fP)\&.
+If you are not clear on this (and you should not be), exercise
+the \fB--whatif\fP option to be sure\&.
+.in -2m
+
+.ZI 2m "\fB--start-format\fP (\fIskip earlier stages\fP)"
+\&
+.br
+Immediately start the format stage\&.
+Assume the necessary files have been created in a previous run\&.
+.in -2m
+
+.ZI 2m "\fB--help\fP (\fIsummary of options\fP)"
+\&
+.br
+Print a terse summary of options\&.
+.in -2m
+
+.ZI 2m "\fB--xi\fP suf (\fIstrip suffix from data file\fP)"
+\&
+.br
+In normal usage, this will strip the specified suffix from the data file
+to obtain the base name for further output\&.
+When used with \fB--start-mcl\fP=\fIfname\fP the same behaviour is applied
+to the mcl input file name specified in \fIfname\fP\&.
+.in -2m
+
+.ZI 2m "\fB--xo-dat\fP suf (\fIattach suf to parse output\fP)"
+\&
+.br
+This suffix will be attached to the base name of the parse output\&.
+It can be used to distinguish between different parse parametrizations
+if this is applicable\&.
+.in -2m
+
+.ZI 2m "\fB--xo-ass\fP suf (\fIattach suf to assembly output\fP)"
+\&
+.br
+This suffix will be attached to the base name of the assembly output\&.
+It can be used to distinguish between different assembly parametrizations
+if this is applicable\&.
+.in -2m
+
+.ZI 2m "\fB--xo-mcl\fP suf (\fIreplace mcl output suffix\fP)"
+\&
+.br
+This suffix will be used instead of the suffix by default created
+by the pipeline\&.
+.in -2m
+
+.ZI 2m "\fB--xa-mcl\fP str (\fIappend to mcl output suffix\fP)"
+\&
+.br
+This string will be appended to the suffix by default created
+by the pipeline\&.
+.in -2m
+
+.ZI 2m "\fB--xe-mcl\fP suf (\fIappend to mcl output\fP)"
+\&
+.br
+This string will be appended as a single suffix to the output base
+name before mclpipeline appends its own suffix\&.
+.in -2m
+
+.ZI 2m "\fB--xo-fmt\fP suf (\fIattach suf to clmformat output\fP)"
+\&
+.br
+This suffix will be used instead of the suffix by default used
+by the formatting stage\&.
+.in -2m
+
+.ZI 2m "\fB--ass-repeat\fP str (\fIassembly repeat option\fP)"
+\&
+.br
+Corresponds with the \fBmcxassemble\fP \fB-r\fP\ \&\fImode\fP option\&.
+Refer to the \fBmcxassemble(1)\fP manual\&.
+.in -2m
+
+.ZI 2m "\fB--ass-opt\fP val (\fIassembly option transporter\fP)"
+\&
+.br
+Transfer \fB-opt\fP\ \&\fIval\fP to \fBmcxassemble\fP\&.
+.in -2m
+
+.ZI 2m "\fB--ass-nomap\fP (\fIignore map file\fP)"
+\&
+.br
+Either no map file is present or it should be ignored\&.
+For parsers that don\&'t write map files\&.
+.in -2m
+
+.ZI 2m "\fB--mcl-I\fP float (\fImcl inflation value\fP)"
+\&
+.br
+The (main) inflation value mcl should use\&.
+\fIThis is the primary mcl option\fP\&.
+.in -2m
+
+.ZI 2m "\fB--mcl-scheme\fP i (\fImcl scheme index\fP)"
+\&
+.br
+The scheme index to use\&. This options is also important\&.
+Refer to the \fBmcl(1)\fP manual\&.
+.in -2m
+
+.ZI 2m "\fB--mcl-te\fP num (\fI#expansion threads\fP)"
+\&
+.br
+The number of threads \fBmcl\fP should use\&.
+.in -2m
+
+.ZI 2m "\fB--mcl-i\fP float (\fImcl initial inflation value\fP)"
+\&
+.br
+The initial inflation value mcl should use\&.
+Only for fine-tuning or testing\&.
+.in -2m
+
+.ZI 2m "\fB--mcl-l\fP float (\fImcl initial loop length\fP)"
+\&
+.br
+The length of the loop in which initial inflation
+is applied\&. By default zero\&.
+.in -2m
+
+.ZI 2m "\fB--mcl-c\fP float (\fImcl center value\fP)"
+\&
+.br
+The center value\&. One may attempt to affect granularity
+by exercising this option, which controls the loop weights
+in the input matrix\&. Refer to the \fBmcl(1)\fP manual\&.
+.in -2m
+
+.ZI 2m "\fB--mcl-pi\fP float (\fImcl pre-inflation value\fP)"
+\&
+.br
+Pre-inflation, another option which may possibly affect granularity by
+changing the input matrix\&. It makes the edge weight
+distribution either more or less homogeneous\&.
+Refer to the \fBmcl(1)\fP manual\&.
+.in -2m
+
+.ZI 2m "\fB--mcl-o\fP fname (\fIdo not use\fP)"
+\&
+.br
+Set the mcl output name\&.
+.in -2m
+
+.ZI 2m "\fB--mcl-opt\fP val (\fImcl option transporter\fP)"
+\&
+.br
+Transfer \fB-opt\fP\ \&\fIval\fP to \fBmcl\fP\&.
+.in -2m
+
+.ZI 2m "\fB--fmt-dump-stats\fP (\fIadd simple measures to dump file\fP)"
+\&
+.br
+This adds some simple performance measures to the dump file\&. For each
+cluster, five columns proceed the label listing\&. These are the cluster ID,
+the number of elements in the cluster, the projection (percentage of
+within-cluster edge weight relative to total outgoing edge weight), the
+efficiency of the cluster (which is the average of the efficiency of all its
+nodes), and the maximum efficiency (average of the max-efficiency of all the
+nodes)\&. Look into the \fBclmformat manual\fP for more
+information on and references to the efficiency measures\&.
+.in -2m
+
+.ZI 2m "\fB--fmt-fancy\fP (\fIcreate detailed output (requires zoem)\fP)"
+\&
+.br
+Creates extensive description of node/cluster and cluster/cluster
+relationships\&.
+.in -2m
+
+.ZI 2m "\fB--fmt-lump-count\fP num (\fIcollect formatted output\fP)"
+\&
+.br
+Collect clusters in the same file until the total number
+of nodes has exceeded \fInum\fP (in the formatted output)\&.
+Only meaninful when \fB--fmt-fancy\fP is given\&.
+.in -2m
+
+.ZI 2m "\fB--fmt-tab\fP (\fIuse this tab file\fP)"
+\&
+.br
+Explicitly specify the tab file to use\&.
+.in -2m
+
+.ZI 2m "\fB--fmt-notab\fP (\fIignore tab file\fP)"
+\&
+.br
+Either no tab file is present or it should be ignored\&.
+For parsers that don\&'t write tab files\&.
+.in -2m
+
+.ZI 2m "\fB--fmt-opt\fP val (\fIclmformat option transporter\fP)"
+\&
+.br
+Transfer \fB-opt\fP\ \&\fIval\fP to \fBclm format\fP\&.
+.in -2m
+.SH AUTHOR
+
+Stijn van Dongen
+.SH SEE ALSO
+
+\fBmcxdeblast(1)\fP, \fBmclblastline(1)\fP,
+and \fBmclfamily(7)\fP for an overview of all the documentation
+and the utilities in the mcl family\&.
+
+With default settings, \fBmclpipeline\fP depends on the presence
+of \fBzoem\fP\&. It can be obtained from
+http://micans\&.org/zoem/ \&.

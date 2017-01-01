@@ -1,0 +1,107 @@
+\import{mcx.zmm}
+
+\begin{pud::man}{
+
+   {name}{mcx convert}
+   {html_title}{The mcx convert manual}
+   {author}{Stijn van Dongen}
+   {section}{1}
+   {synstyle}{long}
+   {defstyle}{long}
+
+   \man_share
+}
+
+\${html}{\"pud::man::maketoc"}
+
+\sec{name}{NAME}
+\NAME{mcx convert}{convert between mcx storage types}
+
+\sec{synopsis}{SYNOPSIS}
+\par{
+   \mcx{convert} <matrix-file-in> <matrix-file-out>\|
+   \mcx{convert} [--write-binary] --cone-to-stack <cat-file-in> <cat-file-out>\|
+   \mcx{convert} [--write-binary] --stack-to-cone <cat-file-in> <cat-file-out>
+   }
+
+\disclaim_mcx{convert}
+
+\par{
+   \mcx{convert}
+   \synoptopt{--cone-to-stack}{transform cone file to stack file}
+   \synoptopt{--stack-to-cone}{transform stack file to cone file}
+   \synoptopt{--write-binary}{output native binary format}
+   \synoptopt{--cat}{read and write cat format}
+   \synoptopt{-cat-max}{<num>}{limit the stack conversion to <num> matrices}
+   }
+
+\par{
+   In the two-argument invocation without additional arguments, \mcx{convert}
+   converts from the format found in the first file to the other format, i.e.
+   from native interchange to native binary format or the other way around.  When
+   querying with the \genopt{-q} option, mcx{convert} will output a one-line
+   synopsis describing the matrix in the argument.  The
+   \genopt{--cone-to-stack} and \genopt{--stack-to-cone} options convert
+   between the two types of concatenated output provided by \mclcm.
+   }
+
+\sec{description}{DESCRIPTION}
+
+\par{
+   The \mcl libraries make extensive use of matrices. Matrices
+   are used to encode graphs, matrices and clusterings.
+   They can be stored either in interchange or in binary format. The latter is
+   somewhat more efficient in storage and much faster in both reading and
+   writing, but the default is interchange format.
+   }
+
+\par{
+   The \mcl input routines recognize the type of storage they are dealing
+   with. If you want to convert a matrix to the other storage type,
+   simply specify the file name of the matrix you want to convert.
+   \mcx{convert} will recognize its type, and write the other type
+   to the file specified as the second argument.
+   }
+
+\sec{options}{OPTIONS}
+
+\'begin{itemize}{\mcx_itemopts}
+
+\item{\defopt{--cone-to-stack}{transform cone file to stack file}}
+\car{
+   This option requires two trailing options, the names of respectively the
+   source cone file and the target stack file.}
+
+\item{\defopt{--stack-to-cone}{transform stack file to cone file}}
+\car{
+   This option requires two trailing options, the names of respectively the
+   source stack file and the target cone file.}
+
+\item{\defopt{--cat}{read and write cat format}}
+
+\item{\defopt{-cat-max}{<num>}{limit the stack conversion to <num> matrices}}
+
+\item{\defopt{--write-binary}{output native binary format}}
+\car{
+   This option is only useful with either of the options \genoptref{--cone-to-stack},
+   \genoptref{--stack-to-cone}, or \genoptref{--cat}.
+   }
+
+
+\'end{itemize}
+
+\sec{author}{AUTHOR}
+\par{
+   Stijn van Dongen.
+   }
+
+\sec{seealso}{SEE ALSO}
+
+\par{
+   \mysib{mcxio},
+   and \mysib{mclfamily} for an overview of all the documentation
+   and the utilities in the mcl family.
+   }
+
+\end{pud::man}
+

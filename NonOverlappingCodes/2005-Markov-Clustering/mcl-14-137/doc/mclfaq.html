@@ -1,0 +1,1487 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html>
+<!-- Copyright (c) 2014 Stijn van Dongen -->
+<head>
+<meta name="keywords" content="manual">
+<style type="text/css">
+/* START aephea.base.css */
+body
+{ text-align: justify;
+margin-left: 0%;
+margin-right: 0%;
+}
+a:link { text-decoration: none; }
+a:active { text-decoration: none; }
+a:visited { text-decoration: none; }
+a:link { color: #1111aa; }
+a:active { color: #1111aa; }
+a:visited { color: #111166; }
+a.local:link { color: #11aa11; }
+a.local:active { color: #11aa11; }
+a.local:visited { color: #116611; }
+a.intern:link { color: #1111aa; }
+a.intern:active { color: #1111aa; }
+a.intern:visited { color: #111166; }
+a.extern:link { color: #aa1111; }
+a.extern:active { color: #aa1111; }
+a.extern:visited { color: #661111; }
+a.quiet:link { color: black; }
+a.quiet:active { color: black; }
+a.quiet:visited { color: black; }
+div.verbatim
+{ font-family: monospace;
+margin-top: 1em;
+margin-bottom: 1em;
+font-size: 10pt;
+margin-left: 2em;
+white-space: pre;
+}
+div.indent
+{ margin-left: 8%;
+margin-right: 0%;
+}
+.right { text-align: right; }
+.left { text-align: left; }
+.nowrap { white-space: nowrap; }
+.item_leader
+{ position: relative;
+margin-left: 8%;
+}
+.item_compact { position: absolute; vertical-align: baseline; }
+.item_cascade { position: relative; }
+.item_leftalign { text-align: left; }
+.item_rightalign
+{ width: 2em;
+text-align: right;
+}
+.item_compact .item_rightalign
+{ position: absolute;
+width: 52em;
+right: -2em;
+text-align: right;
+}
+.item_text
+{ position: relative;
+margin-left: 3em;
+}
+.smallcaps { font-size: smaller; text-transform: uppercase }
+/* END aephea.base.css */
+body { font-family: "Garamond", "Gill Sans", "Verdana", sans-serif; }
+body
+{ text-align: justify;
+margin-left: 8%;
+margin-right: 8%;
+}
+</style>
+<title>The MCL FAQ</title>
+</head>
+<body>
+<p style="text-align:right">
+16 May 2014&nbsp;&nbsp;&nbsp;
+<a class="local" href="mclfaq.ps"><b>MCL&nbsp;FAQ</b></a>
+14-137
+</p>
+<div class=" itemize " style="margin-top:1em; font-size:100%">
+<div class=" item_compact"><div class=" item_rightalign nowrap " style="right:-3em">1.</div></div>
+<div class=" item_text " style="margin-left:4em">
+<a class="intern" href="#name">NAME</a>
+</div>
+<div class=" item_compact"><div class=" item_rightalign nowrap " style="right:-3em">2.</div></div>
+<div class=" item_text " style="margin-left:4em">
+<a class="intern" href="#resources">RESOURCES</a>
+</div>
+<div class=" item_compact"><div class=" item_rightalign nowrap " style="right:-3em">3.</div></div>
+<div class=" item_text " style="margin-left:4em">
+<a class="intern" href="#toc">TOC</a>
+</div>
+<div class=" item_compact"><div class=" item_rightalign nowrap " style="right:-3em">4.</div></div>
+<div class=" item_text " style="margin-left:4em">
+<a class="intern" href="#faq">FAQ</a>
+</div>
+<div class=" item_compact"><div class=" item_rightalign nowrap " style="right:-3em">5.</div></div>
+<div class=" item_text " style="margin-left:4em">
+<a class="intern" href="#bugs">BUGS</a>
+</div>
+<div class=" item_compact"><div class=" item_rightalign nowrap " style="right:-3em">6.</div></div>
+<div class=" item_text " style="margin-left:4em">
+<a class="intern" href="#author">AUTHOR</a>
+</div>
+<div class=" item_compact"><div class=" item_rightalign nowrap " style="right:-3em">7.</div></div>
+<div class=" item_text " style="margin-left:4em">
+<a class="intern" href="#seealso">SEE ALSO</a>
+</div>
+<div class=" item_compact"><div class=" item_rightalign nowrap " style="right:-3em">8.</div></div>
+<div class=" item_text " style="margin-left:4em">
+<a class="intern" href="#references">REFERENCES</a>
+</div>
+<div class=" item_compact"><div class=" item_rightalign nowrap " style="right:-3em">9.</div></div>
+<div class=" item_text " style="margin-left:4em">
+<a class="intern" href="#notes">NOTES</a>
+</div>
+</div>
+
+<a name="name"></a>
+<h2>NAME</h2>
+<p style="margin-bottom:0" class="asd_par">
+mclfaq &mdash; faqs and facts about the MCL cluster algorithm.</p>
+<p style="margin-bottom:0" class="asd_par">
+MCL refers to the generic MCL algorithm and the MCL process on which the
+algorithm is based. <b>mcl</b> refers to the implementation. This FAQ answers
+questions related to both. In some places MCL is written where MCL or mcl
+can be read. This is the case for example in
+<a class="intern" href="#kind">section 3,&nbsp;What kind of graphs</a>.
+It should in general be obvious from the context.</p>
+<p style="margin-bottom:0" class="asd_par">
+This FAQ does not begin to attempt to explain the motivation
+and mathematics behind the MCL algorithm - the internals are not
+explained. A broad view is given in faq&nbsp;<a class="intern" href="#overview">1.2</a>,
+and see also faq&nbsp;<a class="intern" href="#innards">1.5</a> and section <a class="intern" href="#references">REFERENCES</a>.</p>
+<p style="margin-bottom:0" class="asd_par">
+Some additional sections preceed the actual faq entries.
+The TOC section contains a listing of all questions.
+<b>Clicking on the number of a question</b>
+(where it is answered) will take you to
+the corresponding section of the table of contents.
+</p>
+
+<a name="resources"></a>
+<h2>RESOURCES</h2>
+<p style="margin-bottom:0" class="asd_par">
+The manual pages for all the utilities that come with <b>mcl</b>;
+refer to <a class="local sibling" href="mclfamily.html">mclfamily</a> for an overview.</p>
+<p style="margin-bottom:0" class="asd_par">
+See the <a class="intern" href="#references">REFERENCES</a> Section for publications detailing the
+mathematics behind the MCL algorithm.</p>
+
+<a name="toc"></a>
+<h2>TOC</h2>
+<hr>
+<div class=" itemize " style="margin-top:0em; font-size:100%">
+<div class=" item_compact"><div class=" item_leftalign nowrap " ><a name="toc-general"></a><a class="quiet" href="#general"><b>1</b></a></div></div>
+<div class=" item_text " style="margin-left:2em">
+<a class="quiet" href="#general"><b>General questions</b></a>
+</div>
+<div class=" item_compact"><div class=" item_rightalign nowrap " style="right:-1em"><a name="toc-faq1.1"></a> <a class="intern" href="#faq1.1"><b>1.1</b></a></div></div>
+<div class=" item_text " style="margin-left:2em">
+<a class="intern" href="#faq1.1"><b>For whom is mcl and for whom is this FAQ?</b></a>
+</div>
+<div class=" item_compact"><div class=" item_rightalign nowrap " style="right:-1em"><a name="toc-overview"></a> <a class="intern" href="#overview"><b>1.2</b></a></div></div>
+<div class=" item_text " style="margin-left:2em">
+<a class="intern" href="#overview"><b>What is the relationship between the MCL process, the MCL algorithm, and the 'mcl' implementation?</b></a>
+</div>
+<div class=" item_compact"><div class=" item_rightalign nowrap " style="right:-1em"><a name="toc-faq1.3"></a> <a class="intern" href="#faq1.3"><b>1.3</b></a></div></div>
+<div class=" item_text " style="margin-left:2em">
+<a class="intern" href="#faq1.3"><b>What do the letters MCL stand for?</b></a>
+</div>
+<div class=" item_compact"><div class=" item_rightalign nowrap " style="right:-1em"><a name="toc-faq1.4"></a> <a class="intern" href="#faq1.4"><b>1.4</b></a></div></div>
+<div class=" item_text " style="margin-left:2em">
+<a class="intern" href="#faq1.4"><b>How could you be so feebleminded to use MCL as abbreviation? Why
+is it labeled 'Markov cluster' anyway?</b></a>
+</div>
+<div class=" item_compact"><div class=" item_rightalign nowrap " style="right:-1em"><a name="toc-innards"></a> <a class="intern" href="#innards"><b>1.5</b></a></div></div>
+<div class=" item_text " style="margin-left:2em">
+<a class="intern" href="#innards"><b>Where can I learn about the innards of the MCL algorithm/process?</b></a>
+</div>
+<div class=" item_compact"><div class=" item_rightalign nowrap " style="right:-1em"><a name="toc-faq1.6"></a> <a class="intern" href="#faq1.6"><b>1.6</b></a></div></div>
+<div class=" item_text " style="margin-left:2em">
+<a class="intern" href="#faq1.6"><b>For which platforms is mcl available?</b></a>
+</div>
+<div class=" item_compact"><div class=" item_rightalign nowrap " style="right:-1em"><a name="toc-versioning"></a> <a class="intern" href="#versioning"><b>1.7</b></a></div></div>
+<div class=" item_text " style="margin-left:2em">
+<a class="intern" href="#versioning"><b>How does mcl's versioning scheme work?</b></a>
+</div>
+</div>
+<hr>
+<div class=" itemize " style="margin-top:0em; font-size:100%">
+<div class=" item_compact"><div class=" item_leftalign nowrap " ><a name="toc-ioformat"></a><a class="quiet" href="#ioformat"><b>2</b></a></div></div>
+<div class=" item_text " style="margin-left:2em">
+<a class="quiet" href="#ioformat"><b>Input format</b></a>
+</div>
+<div class=" item_compact"><div class=" item_rightalign nowrap " style="right:-1em"><a name="toc-faq2.1"></a> <a class="intern" href="#faq2.1"><b>2.1</b></a></div></div>
+<div class=" item_text " style="margin-left:2em">
+<a class="intern" href="#faq2.1"><b>How can I get my data into the MCL matrix format?</b></a>
+</div>
+</div>
+<hr>
+<div class=" itemize " style="margin-top:0em; font-size:100%">
+<div class=" item_compact"><div class=" item_leftalign nowrap " ><a name="toc-kind"></a><a class="quiet" href="#kind"><b>3</b></a></div></div>
+<div class=" item_text " style="margin-left:2em">
+<a class="quiet" href="#kind"><b>What kind of graphs</b></a>
+</div>
+<div class=" item_compact"><div class=" item_rightalign nowrap " style="right:-1em"><a name="toc-faq3.1"></a> <a class="intern" href="#faq3.1"><b>3.1</b></a></div></div>
+<div class=" item_text " style="margin-left:2em">
+<a class="intern" href="#faq3.1"><b>What is legal input for MCL?</b></a>
+</div>
+<div class=" item_compact"><div class=" item_rightalign nowrap " style="right:-1em"><a name="toc-faq3.2"></a> <a class="intern" href="#faq3.2"><b>3.2</b></a></div></div>
+<div class=" item_text " style="margin-left:2em">
+<a class="intern" href="#faq3.2"><b>What is sensible input for MCL?</b></a>
+</div>
+<div class=" item_compact"><div class=" item_rightalign nowrap " style="right:-1em"><a name="toc-faq3.3"></a> <a class="intern" href="#faq3.3"><b>3.3</b></a></div></div>
+<div class=" item_text " style="margin-left:2em">
+<a class="intern" href="#faq3.3"><b>Does MCL work for weighted graphs?</b></a>
+</div>
+<div class=" item_compact"><div class=" item_rightalign nowrap " style="right:-1em"><a name="toc-faq3.4"></a> <a class="intern" href="#faq3.4"><b>3.4</b></a></div></div>
+<div class=" item_text " style="margin-left:2em">
+<a class="intern" href="#faq3.4"><b>Does MCL work for directed graphs?</b></a>
+</div>
+<div class=" item_compact"><div class=" item_rightalign nowrap " style="right:-1em"><a name="toc-faq3.5"></a> <a class="intern" href="#faq3.5"><b>3.5</b></a></div></div>
+<div class=" item_text " style="margin-left:2em">
+<a class="intern" href="#faq3.5"><b>Can MCL work for lattices / directed acyclic graphs / DAGs?</b></a>
+</div>
+<div class=" item_compact"><div class=" item_rightalign nowrap " style="right:-1em"><a name="toc-faq3.6"></a> <a class="intern" href="#faq3.6"><b>3.6</b></a></div></div>
+<div class=" item_text " style="margin-left:2em">
+<a class="intern" href="#faq3.6"><b>Does MCL work for tree graphs?</b></a>
+</div>
+<div class=" item_compact"><div class=" item_rightalign nowrap " style="right:-1em"><a name="toc-whatkind"></a> <a class="intern" href="#whatkind"><b>3.7</b></a></div></div>
+<div class=" item_text " style="margin-left:2em">
+<a class="intern" href="#whatkind"><b>For what kind of graphs does MCL work well and for which does it not?</b></a>
+</div>
+<div class=" item_compact"><div class=" item_rightalign nowrap " style="right:-1em"><a name="toc-goodinput"></a> <a class="intern" href="#goodinput"><b>3.8</b></a></div></div>
+<div class=" item_text " style="margin-left:2em">
+<a class="intern" href="#goodinput"><b>What makes a good input graph?
+How do I construct the similarities?
+How to make them satisfy this Markov condition?</b></a>
+</div>
+<div class=" item_compact"><div class=" item_rightalign nowrap " style="right:-1em"><a name="toc-directedinput"></a> <a class="intern" href="#directedinput"><b>3.9</b></a></div></div>
+<div class=" item_text " style="margin-left:2em">
+<a class="intern" href="#directedinput"><b>My input graph is directed. Is that bad?</b></a>
+</div>
+<div class=" item_compact"><div class=" item_rightalign nowrap " style="right:-1em"><a name="toc-faq3.10"></a> <a class="intern" href="#faq3.10"><b>3.10</b></a></div></div>
+<div class=" item_text " style="margin-left:2em">
+<a class="intern" href="#faq3.10"><b>Why does mcl like undirected graphs and why does it
+dislike uni-directed graphs so much?</b></a>
+</div>
+<div class=" item_compact"><div class=" item_rightalign nowrap " style="right:-1em"><a name="toc-checksymmetry"></a> <a class="intern" href="#checksymmetry"><b>3.11</b></a></div></div>
+<div class=" item_text " style="margin-left:2em">
+<a class="intern" href="#checksymmetry"><b>How do I check that my graph/matrix is symmetric/undirected?</b></a>
+</div>
+</div>
+<hr>
+<div class=" itemize " style="margin-top:0em; font-size:100%">
+<div class=" item_compact"><div class=" item_leftalign nowrap " ><a name="toc-speed"></a><a class="quiet" href="#speed"><b>4</b></a></div></div>
+<div class=" item_text " style="margin-left:2em">
+<a class="quiet" href="#speed"><b>Speed and complexity</b></a>
+</div>
+<div class=" item_compact"><div class=" item_rightalign nowrap " style="right:-1em"><a name="toc-howfast"></a> <a class="intern" href="#howfast"><b>4.1</b></a></div></div>
+<div class=" item_text " style="margin-left:2em">
+<a class="intern" href="#howfast"><b>How fast is mcl/MCL?</b></a>
+</div>
+<div class=" item_compact"><div class=" item_rightalign nowrap " style="right:-1em"><a name="toc-stats"></a> <a class="intern" href="#stats"><b>4.2</b></a></div></div>
+<div class=" item_text " style="margin-left:2em">
+<a class="intern" href="#stats"><b>What statistics are available?</b></a>
+</div>
+<div class=" item_compact"><div class=" item_rightalign nowrap " style="right:-1em"><a name="toc-colsort"></a> <a class="intern" href="#colsort"><b>4.3</b></a></div></div>
+<div class=" item_text " style="margin-left:2em">
+<a class="intern" href="#colsort"><b>Does this implementation need to sort vectors?</b></a>
+</div>
+<div class=" item_compact"><div class=" item_rightalign nowrap " style="right:-1em"><a name="toc-approx"></a> <a class="intern" href="#approx"><b>4.4</b></a></div></div>
+<div class=" item_text " style="margin-left:2em">
+<a class="intern" href="#approx"><b>mcl does not compute the ideal MCL process!</b></a>
+</div>
+</div>
+<hr>
+<div class=" itemize " style="margin-top:0em; font-size:100%">
+<div class=" item_compact"><div class=" item_leftalign nowrap " ><a name="toc-comparison"></a><a class="quiet" href="#comparison"><b>5</b></a></div></div>
+<div class=" item_text " style="margin-left:2em">
+<a class="quiet" href="#comparison"><b>Comparison with other algorithms</b></a>
+</div>
+<div class=" item_compact"><div class=" item_rightalign nowrap " style="right:-1em"><a name="toc-xyzbetter"></a> <a class="intern" href="#xyzbetter"><b>5.1</b></a></div></div>
+<div class=" item_text " style="margin-left:2em">
+<a class="intern" href="#xyzbetter"><b>I've read someplace that XYZ is much better than MCL</b></a>
+</div>
+<div class=" item_compact"><div class=" item_rightalign nowrap " style="right:-1em"><a name="toc-xyzslower"></a> <a class="intern" href="#xyzslower"><b>5.2</b></a></div></div>
+<div class=" item_text " style="margin-left:2em">
+<a class="intern" href="#xyzslower"><b>I've read someplace that MCL is slow [compared with XYZ]</b></a>
+</div>
+</div>
+<hr>
+<div class=" itemize " style="margin-top:0em; font-size:100%">
+<div class=" item_compact"><div class=" item_leftalign nowrap " ><a name="toc-resource"></a><a class="quiet" href="#resource"><b>6</b></a></div></div>
+<div class=" item_text " style="margin-left:2em">
+<a class="quiet" href="#resource"><b>Resource tuning / accuracy</b></a>
+</div>
+<div class=" item_compact"><div class=" item_rightalign nowrap " style="right:-1em"><a name="toc-wdymbrt"></a> <a class="intern" href="#wdymbrt"><b>6.1</b></a></div></div>
+<div class=" item_text " style="margin-left:2em">
+<a class="intern" href="#wdymbrt"><b>What do you mean by resource tuning?</b></a>
+</div>
+<div class=" item_compact"><div class=" item_rightalign nowrap " style="right:-1em"><a name="toc-faq6.2"></a> <a class="intern" href="#faq6.2"><b>6.2</b></a></div></div>
+<div class=" item_text " style="margin-left:2em">
+<a class="intern" href="#faq6.2"><b>How do I compute the maximum amount of RAM needed by mcl?</b></a>
+</div>
+<div class=" item_compact"><div class=" item_rightalign nowrap " style="right:-1em"><a name="toc-pcmp"></a> <a class="intern" href="#pcmp"><b>6.3</b></a></div></div>
+<div class=" item_text " style="margin-left:2em">
+<a class="intern" href="#pcmp"><b>How much does the mcl clustering differ from the clustering resulting
+from a perfectly computed MCL process?</b></a>
+</div>
+<div class=" item_compact"><div class=" item_rightalign nowrap " style="right:-1em"><a name="toc-enoughresources"></a> <a class="intern" href="#enoughresources"><b>6.4</b></a></div></div>
+<div class=" item_text " style="margin-left:2em">
+<a class="intern" href="#enoughresources"><b>How do I know that I am using enough resources?</b></a>
+</div>
+<div class=" item_compact"><div class=" item_rightalign nowrap " style="right:-1em"><a name="toc-nmap"></a> <a class="intern" href="#nmap"><b>6.5</b></a></div></div>
+<div class=" item_text " style="margin-left:2em">
+<a class="intern" href="#nmap"><b>Where is the mathematical analysis of this mcl pruning strategy?</b></a>
+</div>
+<div class=" item_compact"><div class=" item_rightalign nowrap " style="right:-1em"><a name="toc-qsep"></a> <a class="intern" href="#qsep"><b>6.6</b></a></div></div>
+<div class=" item_text " style="margin-left:2em">
+<a class="intern" href="#qsep"><b>What qualitative statements can be made about the effect of pruning?</b></a>
+</div>
+<div class=" item_compact"><div class=" item_rightalign nowrap " style="right:-1em"><a name="toc-faq6.7"></a> <a class="intern" href="#faq6.7"><b>6.7</b></a></div></div>
+<div class=" item_text " style="margin-left:2em">
+<a class="intern" href="#faq6.7"><b>At different high resource levels my clusterings are not identical.
+How can I trust the output clustering?</b></a>
+</div>
+</div>
+<hr>
+<div class=" itemize " style="margin-top:0em; font-size:100%">
+<div class=" item_compact"><div class=" item_leftalign nowrap " ><a name="toc-granularity"></a><a class="quiet" href="#granularity"><b>7</b></a></div></div>
+<div class=" item_text " style="margin-left:2em">
+<a class="quiet" href="#granularity"><b>Tuning cluster granularity</b></a>
+</div>
+<div class=" item_compact"><div class=" item_rightalign nowrap " style="right:-1em"><a name="toc-faq7.1"></a> <a class="intern" href="#faq7.1"><b>7.1</b></a></div></div>
+<div class=" item_text " style="margin-left:2em">
+<a class="intern" href="#faq7.1"><b>How do I tune cluster granularity?</b></a>
+</div>
+<div class=" item_compact"><div class=" item_rightalign nowrap " style="right:-1em"><a name="toc-faq7.2"></a> <a class="intern" href="#faq7.2"><b>7.2</b></a></div></div>
+<div class=" item_text " style="margin-left:2em">
+<a class="intern" href="#faq7.2"><b>The effect of inflation on cluster granularity.</b></a>
+</div>
+<div class=" item_compact"><div class=" item_rightalign nowrap " style="right:-1em"><a name="toc-degree_granul"></a> <a class="intern" href="#degree_granul"><b>7.3</b></a></div></div>
+<div class=" item_text " style="margin-left:2em">
+<a class="intern" href="#degree_granul"><b>The effect of node degrees on cluster granularity.</b></a>
+</div>
+<div class=" item_compact"><div class=" item_rightalign nowrap " style="right:-1em"><a name="toc-simil_granul"></a> <a class="intern" href="#simil_granul"><b>7.4</b></a></div></div>
+<div class=" item_text " style="margin-left:2em">
+<a class="intern" href="#simil_granul"><b>The effect of edge weight differentiation on cluster granularity.</b></a>
+</div>
+</div>
+<hr>
+<div class=" itemize " style="margin-top:0em; font-size:100%">
+<div class=" item_compact"><div class=" item_leftalign nowrap " ><a name="toc-implement"></a><a class="quiet" href="#implement"><b>8</b></a></div></div>
+<div class=" item_text " style="margin-left:2em">
+<a class="quiet" href="#implement"><b>Implementing the MCL algorithm</b></a>
+</div>
+<div class=" item_compact"><div class=" item_rightalign nowrap " style="right:-1em"><a name="toc-faq8.1"></a> <a class="intern" href="#faq8.1"><b>8.1</b></a></div></div>
+<div class=" item_text " style="margin-left:2em">
+<a class="intern" href="#faq8.1"><b>How easy is it to implement the MCL algorithm?</b></a>
+</div>
+</div>
+<hr>
+<div class=" itemize " style="margin-top:0em; font-size:100%">
+<div class=" item_compact"><div class=" item_leftalign nowrap " ><a name="toc-overlap"></a><a class="quiet" href="#overlap"><b>9</b></a></div></div>
+<div class=" item_text " style="margin-left:2em">
+<a class="quiet" href="#overlap"><b>Cluster overlap / MCL iterand cluster interpretation</b></a>
+</div>
+<div class=" item_compact"><div class=" item_rightalign nowrap " style="right:-1em"><a name="toc-olapintro"></a> <a class="intern" href="#olapintro"><b>9.1</b></a></div></div>
+<div class=" item_text " style="margin-left:2em">
+<a class="intern" href="#olapintro"><b>Introduction</b></a>
+</div>
+<div class=" item_compact"><div class=" item_rightalign nowrap " style="right:-1em"><a name="toc-ccco"></a> <a class="intern" href="#ccco"><b>9.2</b></a></div></div>
+<div class=" item_text " style="margin-left:2em">
+<a class="intern" href="#ccco"><b>Can the clusterings returned by mcl contain overlap?</b></a>
+</div>
+<div class=" item_compact"><div class=" item_rightalign nowrap " style="right:-1em"><a name="toc-imac"></a> <a class="intern" href="#imac"><b>9.3</b></a></div></div>
+<div class=" item_text " style="margin-left:2em">
+<a class="intern" href="#imac"><b>How do I obtain the clusterings associated with MCL iterands?</b></a>
+</div>
+</div>
+<hr>
+<div class=" itemize " style="margin-top:0em; font-size:100%">
+<div class=" item_compact"><div class=" item_leftalign nowrap " ><a name="toc-misc"></a><a class="quiet" href="#misc"><b>10</b></a></div></div>
+<div class=" item_text " style="margin-left:2em">
+<a class="quiet" href="#misc"><b>Miscellaneous</b></a>
+</div>
+<div class=" item_compact"><div class=" item_rightalign nowrap " style="right:-1em"><a name="toc-defaults"></a> <a class="intern" href="#defaults"><b>10.1</b></a></div></div>
+<div class=" item_text " style="margin-left:2em">
+<a class="intern" href="#defaults"><b>How do I find the default settings of mcl?</b></a>
+</div>
+<div class=" item_compact"><div class=" item_rightalign nowrap " style="right:-1em"><a name="toc-next"></a> <a class="intern" href="#next"><b>10.2</b></a></div></div>
+<div class=" item_text " style="margin-left:2em">
+<a class="intern" href="#next"><b>What's next?</b></a>
+</div>
+</div>
+<br><br>
+
+<a name="faq"></a>
+<h2>FAQ</h2>
+
+<div align=center>
+<h3><a name="general"></a><a class="quiet" href="#toc-general">1</a><br>General questions
+</h3>
+</div>
+
+<div class=" itemize " style="margin-top:1em; font-size:100%">
+<div class=" item_compact"><div class=" item_leftalign nowrap " ><a name="faq1.1"></a> <a class="quiet" href="#toc-general">1.1</a></div></div>
+<div class=" item_text " style="margin-left:2em">
+<b>For whom is mcl and for whom is this FAQ?</b>
+<p style="margin-top:0em; margin-bottom:0em">
+For everybody with an appetite for graph clustering.
+Regarding the FAQ, I have kept the amount of
+mathematics as low as possible, as far as matrix analysis is concerned.
+Inevitably, some terminology pops up and some references are made to the
+innards of the MCL algorithm, especially in the section on resources and
+accuracy. Graph terminology is used somewhat more carelessly though. The
+future might bring definition entries, right now you have to do without.
+Mathematically inclined people may be interested in the pointers found in
+the <a class="intern" href="#references">REFERENCES</a> section.</p>
+<p style="margin-bottom:0" class="asd_par">
+Given this mention of mathematics, let me point out this one time only that
+using <b>mcl</b> is extremely straightforward anyway. You need only mcl and an
+input graph (refer to the <a class="local sibling" href="mcl.html">mcl manual page</a>), and many people
+trained in something else than mathematics are using mcl happily.</p>
+</div>
+<div style="margin-top:0em">&nbsp;</div><div class=" item_compact"><div class=" item_leftalign nowrap " ><a name="overview"></a> <a class="quiet" href="#toc-general">1.2</a></div></div>
+<div class=" item_text " style="margin-left:2em">
+<b>What is the relationship between the MCL process, the MCL algorithm, and the 'mcl' implementation?</b>
+<p style="margin-top:0em; margin-bottom:0em">
+<b>mcl</b> is what you use for clustering. It implements the MCL algorithm,
+which is a cluster algorithm for graphs. The MCL algorithm is basically
+a shell in which the MCL process is computed and interpreted. I will
+describe them in the natural, reverse, order.</p>
+<p style="margin-bottom:0" class="asd_par">
+The MCL process generates a sequence of stochastic matrices given some initial
+stochastic matrix. The elements with even index are obtained by
+<i>expanding</i> the previous element, and the elements with odd index are
+obtained by <i>inflating</i> the previous element given some inflation
+constant. Expansion is nothing but normal matrix squaring, and inflation is
+a particular way of rescaling the entries of a stochastic matrix such that
+it remains stochastic.</p>
+<p style="margin-bottom:0" class="asd_par">
+The sequence of MCL elements (from the MCL process) is in principle without end,
+but what happens is that the elements converge to some specific kind of
+matrix, called the <i>limit</i> of the process. The heuristic underlying MCL
+predicts that the interaction of expansion with inflation will lead to a
+limit exhibiting cluster structure in the graph associated with the
+initial matrix. This is indeed the case, and several mathematical results
+tie MCL iterands and limits and the MCL interpretation together
+(<a class="intern" href="#references">REFERENCES</a>).</p>
+<p style="margin-bottom:0" class="asd_par">
+The MCL algorithm is simply a shell around the MCL process. It
+transforms an input graph into an initial matrix suitable for
+starting the process. It sets inflation parameters and stops the
+MCL process once a limit is reached, i.e. convergence is detected.
+The result is then interpreted as a clustering.</p>
+<p style="margin-bottom:0" class="asd_par">
+The <b>mcl</b> implementation supplies the functionality of the MCL algorithm,
+with some extra facilities for manipulation of the input graph, interpreting
+the result, manipulating resources while computing the process, and
+monitoring the state of these manipulations.</p>
+</div>
+<div style="margin-top:0em">&nbsp;</div><div class=" item_compact"><div class=" item_leftalign nowrap " ><a name="faq1.3"></a> <a class="quiet" href="#toc-general">1.3</a></div></div>
+<div class=" item_text " style="margin-left:2em">
+<b>What do the letters MCL stand for?</b>
+<p style="margin-top:0em; margin-bottom:0em">
+For <i>Markov Cluster</i>. The MCL algorithm is a <b>cluster</b> algorithm
+that is basically a shell in which an algebraic process is computed.
+This process iteratively generates stochastic matrices, also known
+as <b>Markov</b> matrices, named after the famous Russian
+mathematician Andrei Markov.</p>
+</div>
+<div style="margin-top:0em">&nbsp;</div><div class=" item_compact"><div class=" item_leftalign nowrap " ><a name="faq1.4"></a> <a class="quiet" href="#toc-general">1.4</a></div></div>
+<div class=" item_text " style="margin-left:2em">
+<b>How could you be so feebleminded to use MCL as abbreviation? Why
+is it labeled 'Markov cluster' anyway?</b>
+<p style="margin-top:0em; margin-bottom:0em">
+Sigh. It is a widely known fact that a TLA or Three-Letter-Acronym
+is <i>the canonical self-describing abbreviation for the name
+of a species with which computing terminology is infested</i> (quoted
+from the Free Online Dictionary of Computing). Back when I was
+thinking of a nice tag for this cute algorithm, I was
+totally unaware of this. I naturally dismissed <i>MC</i>
+(and would still do that today). Then <i>MCL</i> occurred
+to me, and without giving it much thought I started using it.
+A Google search (or was I still using Alta-Vista back then?)
+might have kept me from going astray.</p>
+<p style="margin-bottom:0" class="asd_par">
+Indeed, <i>MCL</i> is used as a tag for <i>Macintosh Common Lisp</i>,
+<i>Mission Critical Linux</i>, <i>Monte Carlo Localization</i>, <i>MUD Client
+for Linux</i>, <i>Movement for Canadian Literacy</i>, and a gazillion other
+things &mdash; refer to the file <a class="extern" href="mclmcl.txt">mclmcl.txt</a>. Confusing. It seems that
+the three characters <tt>MCL</tt> possess otherworldly magical powers making
+them an ever so strange and strong attractor in the space of TLAs. It
+probably helps that Em-See-Ell (Em-Say-Ell in Dutch) has some rhythm
+to it as well. Anyway MCL stuck, and it's here to stay.</p>
+<p style="margin-bottom:0" class="asd_par">
+On a more general level, the label <i>Markov Cluster</i> is not an entirely
+fortunate choice either. Although phrased in the language of stochastic
+matrices, MCL theory bears very little relation to Markov theory, and is
+much closer to matrix analysis (including Hilbert's distance) and the theory
+of dynamical systems. No results have been derived in the latter framework,
+but many conjectures are naturally posed in the language of dynamical
+systems.</p>
+</div>
+<div style="margin-top:0em">&nbsp;</div><div class=" item_compact"><div class=" item_leftalign nowrap " ><a name="innards"></a> <a class="quiet" href="#toc-general">1.5</a></div></div>
+<div class=" item_text " style="margin-left:2em">
+<b>Where can I learn about the innards of the MCL algorithm/process?</b>
+<p style="margin-top:0em; margin-bottom:0em">
+Currently, the most basic explanation of the MCL algorithm is found in the
+technical report <a class="intern" href="#cafg">[2]</a>. It contains sections on several other
+(related) subjects though, and it assumes some working knowledge on graphs,
+matrix arithmetic, and stochastic matrices.</p>
+</div>
+<div style="margin-top:0em">&nbsp;</div><div class=" item_compact"><div class=" item_leftalign nowrap " ><a name="faq1.6"></a> <a class="quiet" href="#toc-general">1.6</a></div></div>
+<div class=" item_text " style="margin-left:2em">
+<b>For which platforms is mcl available?</b>
+<p style="margin-top:0em; margin-bottom:0em">
+It should compile and run on virtually any flavour of UNIX (including Linux
+and the BSD variants of course). Following the instructions in the INSTALL
+file shipped with mcl should be straightforward and sufficient. Courtesy to
+Joost van Baal who completely autofooled <b>mcl</b>.</p>
+<p style="margin-bottom:0" class="asd_par">
+Building MCL on Wintel (Windows on Intel chip) should be straightforward if
+you use the full suite of cygwin tools. Install cygwin if you do not have it
+yet. In the cygwin shell, unpack mcl and simply issue the commands
+<i>./configure, make, make install</i>, i.e. follow the instructions in
+INSTALL.</p>
+<p style="margin-bottom:0" class="asd_par">
+This MCL implementation should also build successfully on Mac OS X.</p>
+</div>
+<div style="margin-top:0em">&nbsp;</div><div class=" item_compact"><div class=" item_leftalign nowrap " ><a name="versioning"></a> <a class="quiet" href="#toc-general">1.7</a></div></div>
+<div class=" item_text " style="margin-left:2em">
+<b>How does mcl's versioning scheme work?</b>
+<p style="margin-top:0em; margin-bottom:0em">
+The current setup, which I hope to continue, is this. All releases are
+identified by a date stamp. For example 02-095 denotes day 95 in the year
+2002. This date stamp agrees (as of April 2000) with the (differently
+presented) date stamp used in all manual pages shipped with that release.
+For example, the date stamp of the FAQ you are reading is <b>16 May 2014</b>,
+which corresponds with the MCL stamp <b>14-137</b>.
+The Changelog file contains a list of what's changed/added with each
+release. Currently, the date stamp is the primary way of identifying an <b>mcl</b>
+release. When asked for its version by using <b>--version</b>, mcl
+outputs both the date stamp and a version tag (see below).</p>
+</div>
+</div>
+
+<div align=center>
+<h3><a name="ioformat"></a><a class="quiet" href="#toc-ioformat">2</a><br>Input format
+</h3>
+</div>
+
+<div class=" itemize " style="margin-top:1em; font-size:100%">
+<div class=" item_compact"><div class=" item_leftalign nowrap " ><a name="faq2.1"></a> <a class="quiet" href="#toc-ioformat">2.1</a></div></div>
+<div class=" item_text " style="margin-left:2em">
+<b>How can I get my data into the MCL matrix format?</b>
+<p style="margin-top:0em; margin-bottom:0em">
+This is described in the <a class="local" href="clmprotocols.html">protocols manual page</a>.
+</p>
+</div>
+</div>
+
+<div align=center>
+<h3><a name="kind"></a><a class="quiet" href="#toc-kind">3</a><br>What kind of graphs
+</h3>
+</div>
+
+<div class=" itemize " style="margin-top:1em; font-size:100%">
+<div class=" item_compact"><div class=" item_leftalign nowrap " ><a name="faq3.1"></a> <a class="quiet" href="#toc-kind">3.1</a></div></div>
+<div class=" item_text " style="margin-left:2em">
+<b>What is legal input for MCL?</b>
+<p style="margin-top:0em; margin-bottom:0em">
+Any graph (encoded as a matrix of similarities) that is nonnegative,
+i.e. all similarities are greater than or equal to zero.</p>
+</div>
+<div style="margin-top:0em">&nbsp;</div><div class=" item_compact"><div class=" item_leftalign nowrap " ><a name="faq3.2"></a> <a class="quiet" href="#toc-kind">3.2</a></div></div>
+<div class=" item_text " style="margin-left:2em">
+<b>What is sensible input for MCL?</b>
+<p style="margin-top:0em; margin-bottom:0em">
+Graphs can be weighted, and they should preferably be symmetric. Weights
+should carry the meaning of similarity, <i>not</i> distance. These weights or
+similarities are incorporated into the MCL algorithm in a meaningful way.
+Graphs should certainly not contain parts that are (almost) cyclic, although
+nothing stops you from experimenting with such input.
+</p>
+</div>
+<div style="margin-top:0em">&nbsp;</div><div class=" item_compact"><div class=" item_leftalign nowrap " ><a name="faq3.3"></a> <a class="quiet" href="#toc-kind">3.3</a></div></div>
+<div class=" item_text " style="margin-left:2em">
+<b>Does MCL work for weighted graphs?</b>
+<p style="margin-top:0em; margin-bottom:0em">
+Yes, unequivocally. They should preferably be symmetric/undirected though.
+See entries&nbsp;<a class="intern" href="#whatkind">3.7</a> and&nbsp;<a class="intern" href="#goodinput">3.8</a>.</p>
+</div>
+<div style="margin-top:0em">&nbsp;</div><div class=" item_compact"><div class=" item_leftalign nowrap " ><a name="faq3.4"></a> <a class="quiet" href="#toc-kind">3.4</a></div></div>
+<div class=" item_text " style="margin-left:2em">
+<b>Does MCL work for directed graphs?</b>
+<p style="margin-top:0em; margin-bottom:0em">
+Maybe, with a big caveat. See entries&nbsp;<a class="intern" href="#goodinput">3.8</a>
+and&nbsp;<a class="intern" href="#directedinput">3.9</a>.</p>
+</div>
+<div style="margin-top:0em">&nbsp;</div><div class=" item_compact"><div class=" item_leftalign nowrap " ><a name="faq3.5"></a> <a class="quiet" href="#toc-kind">3.5</a></div></div>
+<div class=" item_text " style="margin-left:2em">
+<b>Can MCL work for lattices / directed acyclic graphs / DAGs?</b>
+<p style="margin-top:0em; margin-bottom:0em">
+Such graphs [term] can surely exhibit clear cluster structure. If they
+do, there is only one way for mcl to find out. You have to change all arcs
+to edges, i.e. if there is an arc from i to j with similarity s(i,j) &mdash; by
+the DAG property this implies s(j,i) = 0 &mdash; then make s(j,i) equal to s(i,j).</p>
+<p style="margin-bottom:0" class="asd_par">
+This may feel like throwing away valuable information, but in truth the
+information that is thrown away (direction) is <i>not</i> informative with
+respect to the presence of cluster structure. This may well deserve a longer
+discussion than would be justified here.</p>
+<p style="margin-bottom:0" class="asd_par">
+If your graph is directed and acyclic (or parts of it are), you can
+transform it before clustering with mcl by using <b>-tf</b>&nbsp;<b>'#max()'</b>, e.g.
+</p>
+<div class="verbatim">   mcl YOUR-GRAPH -I 3.0 -tf '#max()'</div>
+</div>
+<div style="margin-top:0em">&nbsp;</div><div class=" item_compact"><div class=" item_leftalign nowrap " ><a name="faq3.6"></a> <a class="quiet" href="#toc-kind">3.6</a></div></div>
+<div class=" item_text " style="margin-left:2em">
+<b>Does MCL work for tree graphs?</b>
+<p style="margin-top:0em; margin-bottom:0em">
+Nah, I don't think so. More info at entry&nbsp;<a class="intern" href="#whatkind">3.7</a>.
+You could consider the <a target="_parent" class="extern" href="http://en.wikipedia.org/wiki/Strahler_number">Strahler number</a>,
+which is numerical measure of branching complexity.
+</p>
+</div>
+<div style="margin-top:0em">&nbsp;</div><div class=" item_compact"><div class=" item_leftalign nowrap " ><a name="whatkind"></a> <a class="quiet" href="#toc-kind">3.7</a></div></div>
+<div class=" item_text " style="margin-left:2em">
+<b>For what kind of graphs does MCL work well and for which does it not?</b>
+<p style="margin-top:0em; margin-bottom:0em">
+Graphs in which the diameter [term] of (subgraphs induced by) natural
+clusters is not too large. Additionally, graphs should preferably be
+(almost) undirected (see entry below) and not so sparse that the cardinality
+of the edge set is close to the number of nodes.</p>
+<p style="margin-bottom:0" class="asd_par">
+A class of such very sparse graphs is that of tree graphs. You might look
+into <i>graph visualization</i> software and research if you are interested
+in decomposing trees into 'tight' subtrees.</p>
+<p style="margin-bottom:0" class="asd_par">
+The diameter criterion could be violated by
+neighbourhood graphs derived from vector data. In the specific case
+of 2 and 3 dimensional data, you might be interested
+in <i>image segmentation</i> and <i>boundary detection</i>, and for
+the general case there is a host of other algorithms out there. [add]</p>
+<p style="margin-bottom:0" class="asd_par">
+In case of weighted graphs, the notion of <i>diameter</i> is sometimes not
+applicable. Generalizing this notion requires inspecting the <i>mixing
+properties</i> of a subgraph induced by a natural cluster in terms of its
+spectrum. However, the diameter statement is something grounded on heuristic
+considerations (confirmed by practical evidence <a class="intern" href="#pcfgcmce">[4]</a>)
+to begin with, so you should probably forget about mixing properties.</p>
+</div>
+<div style="margin-top:0em">&nbsp;</div><div class=" item_compact"><div class=" item_leftalign nowrap " ><a name="goodinput"></a> <a class="quiet" href="#toc-kind">3.8</a></div></div>
+<div class=" item_text " style="margin-left:2em">
+<b>What makes a good input graph?
+How do I construct the similarities?
+How to make them satisfy this Markov condition?</b>
+<p style="margin-top:0em; margin-bottom:0em">
+To begin with the last one: you <i>need not and must not</i> make the
+input graph such that it is stochastic aka Markovian [term]. What you
+need to do is make a graph that is preferably symmetric/undirected,
+i.e. where s(i,j) = s(j,i) for all nodes i and j. It need not be
+perfectly undirected, see the following faq for a discussion of that.
+<b>mcl</b> will work with the graph of random walks that is associated
+with your input graph, and that is the natural state of affairs.</p>
+<p style="margin-bottom:0" class="asd_par">
+The input graph should preferably be honest in the sense that if <tt>s(x,y)=N</tt>
+and <tt>s(x,z)=200N</tt> (i.e. the similarities differ by a factor 200), then
+this should really reflect that the similarity of <tt>y</tt> to <tt>x</tt> is neglectible
+compared with the similarity of <tt>z</tt> to <tt>x</tt>.</p>
+<p style="margin-bottom:0" class="asd_par">
+For the rest, anything goes. Try to get a feeling by experimenting.
+Sometimes it is a good idea to filter out high-frequency
+and/or low-frequency data, i.e. nodes with either very many neighbours
+or extremely few neighbours.</p>
+</div>
+<div style="margin-top:0em">&nbsp;</div><div class=" item_compact"><div class=" item_leftalign nowrap " ><a name="directedinput"></a> <a class="quiet" href="#toc-kind">3.9</a></div></div>
+<div class=" item_text " style="margin-left:2em">
+<b>My input graph is directed. Is that bad?</b>
+<p style="margin-top:0em; margin-bottom:0em">
+It depends. The class of directed graphs can be viewed as a spectrum going
+from undirected graphs to uni-directed graphs. <i>Uni-directed</i> is
+terminology I am inventing here, which I define as the property that
+for all node pairs i, j, at least one of s(i,j) or s(j,i) is zero. In other
+words, if there is an arc going from i to j in a uni-directed graph, then
+there is no arc going from j to i. I call a node pair i, j,
+<i>almost uni-directed</i> if s(i,j) &lt;&lt; s(j,i) or vice versa,
+i.e. if the similarities differ by an order of magnitude.</p>
+<p style="margin-bottom:0" class="asd_par">
+If a graph does not have (large) subparts that are (almost) uni-directed,
+have a go with mcl. Otherwise, try to make your graph less uni-directed.
+You are in charge, so do anything with your graph as you see fit,
+but preferably abstain from feeding mcl uni-directed graphs.</p>
+</div>
+<div style="margin-top:0em">&nbsp;</div><div class=" item_compact"><div class=" item_leftalign nowrap " ><a name="faq3.10"></a> <a class="quiet" href="#toc-kind">3.10</a></div></div>
+<div class=" item_text " style="margin-left:2em">
+<b>Why does mcl like undirected graphs and why does it
+dislike uni-directed graphs so much?</b>
+<p style="margin-top:0em; margin-bottom:0em">
+Mathematically, the mcl iterands will be <i>nice</i> when the input graph is
+symmetric, where <i>nice</i> is in this case <i>diagonally symmetric to a
+semi-positive definite matrix</i> (ignore as needed). For one thing, such nice
+matrices can be interpreted as clusterings in a way that generalizes the
+interpretation of the mcl limit as a clustering (if you are curious to these
+intermediate clusterings, see <a class="intern" href="#imac">faq entry&nbsp;9.3</a>).
+See the <a class="intern" href="#references">REFERENCES</a> section for pointers to mathematical
+publications.</p>
+<p style="margin-bottom:0" class="asd_par">
+The reason that mcl dislikes uni-directed graphs is not very mcl specific,
+it has more to do with the clustering problem itself.
+Somehow, directionality thwarts the notion of cluster structure.
+[add].</p>
+</div>
+<div style="margin-top:0em">&nbsp;</div><div class=" item_compact"><div class=" item_leftalign nowrap " ><a name="checksymmetry"></a> <a class="quiet" href="#toc-kind">3.11</a></div></div>
+<div class=" item_text " style="margin-left:2em">
+<b>How do I check that my graph/matrix is symmetric/undirected?</b>
+<p style="margin-top:0em; margin-bottom:0em">
+Whether your graph is created by third-party software or by custom sofware
+written by someone you know (e.g. yourself), it is advisable to test whether
+the software generates symmetric matrices. This can be done as follows
+using the <a class="local sibling" href="mcxi.html">mcxi utility</a>, assuming that you want to test the
+matrix stored in file <tt>matrix.mci</tt>. The mcxi utility should be available
+on your system if mcl was installed in the normal way.</p>
+<div class="verbatim">mcxi /matrix.mci lm tp -1 mul add /check wm</div>
+<p style="margin-top:0em; margin-bottom:0em">
+This loads the graph/matrix stored in <tt>matrix.mci</tt> into <b>mcxi</b>'s memory with
+the <b>mcxi</b> <i>lm</i> primitive. &mdash; the leading slash is how strings are
+introduced in the stack language interpreted by <b>mcxi</b>. The transpose of
+that matrix is then pushed on the stack with the <i>tp</i> primitive and
+multiplied by minus one. The two matrices are added, and the result is
+written to the file <tt>check</tt>.
+The transposed matrix is the mirrored version of the original matrix stored
+in <tt>matrix.mci</tt>. If a graph/matrix is undirected/symmetric, the mirrored
+image is necessarily the same, so if you subtract one from the other it
+should yield an all zero matrix.</p>
+<p style="margin-bottom:0" class="asd_par">
+Thus, the file <tt>check</tt> <i>should look like this</i>:</p>
+<div class="verbatim">(mclheader
+mcltype matrix
+dimensions &lt;num&gt;x&lt;num&gt;
+)
+(mclmatrix
+begin
+)</div>
+<p style="margin-top:0em; margin-bottom:0em">
+Where <tt>&lt;num&gt;</tt> is the same as in the file <tt>matrix.mci</tt>. If this is not
+the case, find out what's prohibiting you from feeding mcl symmetric
+matrices. Note that any nonzero entries found in the matrix stored as
+<tt>check</tt> correspond to node pairs for which the arcs in the two possible
+directions have different weight.</p>
+</div>
+</div>
+
+<div align=center>
+<h3><a name="speed"></a><a class="quiet" href="#toc-speed">4</a><br>Speed and complexity
+</h3>
+</div>
+
+<div class=" itemize " style="margin-top:1em; font-size:100%">
+<div class=" item_compact"><div class=" item_leftalign nowrap " ><a name="howfast"></a> <a class="quiet" href="#toc-speed">4.1</a></div></div>
+<div class=" item_text " style="margin-left:2em">
+<b>How fast is mcl/MCL?</b>
+<p style="margin-top:0em; margin-bottom:0em">
+It's fast - here is how and why. Let <tt>N</tt> be the number of nodes in the input
+graph. A straigtforward implementation of MCL will have time and space
+complexity respecively <tt>O(N^3)</tt> (i.e. cubic in <tt>N</tt>) and <tt>O(N^2)</tt>
+(quadratic in <tt>N</tt>). So you don't want one of those.</p>
+<p style="margin-bottom:0" class="asd_par">
+<b>mcl</b> implements a slightly perturbed version of the MCL process,
+as discussed in section <a class="intern" href="#resource">Resource tuning / accuracy</a>.
+Refer to that section for a more extensive discussion of all
+the aspects involved. This section is only concerned with the high-level
+view of things <i>and</i> the nitty gritty complexity details.</p>
+<p style="margin-bottom:0" class="asd_par">
+While computing the square of a matrix
+(the product of that matrix with itself), mcl keeps the matrix sparse
+by allowing a certain maximum number of nonzero entries
+per stochastic column. The maximum is one of the mcl parameters, and
+it is typically set somewhere between 500 and 1500.
+Call the maximum <tt>K</tt>.</p>
+<p style="margin-bottom:0" class="asd_par">
+mcl's time complexity is governed by the complexity of matrix squaring.
+There are two sub-algorithms to consider. The first is the
+algorithm responsible for assembling a new vector during matrix
+multiplication. This algorithm has worst case complexity <tt>O(K^2)</tt>.
+The pruning algorithm (which uses heap selection) has worst case complexity
+<tt>O(L*log(K))</tt>, where <tt>L</tt> is how large a newly computed matrix column can get
+before it is reduced to at most <tt>K</tt> entries. <tt>L</tt> is <i>bound by</i> the smallest
+of the two numbers <tt>N</tt> and <tt>K^2</tt> (the square of <tt>K</tt>), but on average
+<tt>L</tt> will be much smaller than that, as the presence of cluster structure aids in
+keeping the factor <tt>L</tt> low. [Related to this is the fact that clustering
+algorithms are actually used to compute matrix splittings that minimize
+the number of cross-computations when carrying out matrix
+multiplication among multiple processors.]
+In actual cases of heavy usage, <tt>L</tt> is of order in the tens of thousands, and
+<tt>K</tt> is in the order of several hundreds up to a thousand.</p>
+<p style="margin-bottom:0" class="asd_par">
+It is safe to say that in general the worst case complexity of mcl
+is of order O(N*K^2); for extremely tight and dense graphs this
+might become O(N*N*log(K)). Still, these are worst case estimates,
+and observed running times for actual usage are much better than that.
+(refer to faq&nbsp;<a class="intern" href="#stats">4.2</a>).</p>
+<p style="margin-bottom:0" class="asd_par">
+In this analysis, the number of iterations required by mcl was not
+included. It is nearly always far below 100. Only the first
+few (less than ten) iterations are genuinely time consuming, and they are
+usually responsible for more than 95 percent of the running time.</p>
+<p style="margin-bottom:0" class="asd_par">
+The process of removing the smallest entries of a vector is called
+pruning. mcl outputs a summary of this once it
+is done. More information is provided in the pruning section of the
+<a class="local sibling" href="mcl.html">mcl manual</a> and <a class="intern" href="#resource">Section&nbsp;6</a>
+in this FAQ.</p>
+<p style="margin-bottom:0" class="asd_par">
+The space complexity is of order <tt>O(N*K)</tt>.</p>
+</div>
+<div style="margin-top:0em">&nbsp;</div><div class=" item_compact"><div class=" item_leftalign nowrap " ><a name="stats"></a> <a class="quiet" href="#toc-speed">4.2</a></div></div>
+<div class=" item_text " style="margin-left:2em">
+<b>What statistics are available?</b>
+<p style="margin-top:0em; margin-bottom:0em">
+Few. Some experiments are described in <a class="intern" href="#pcfgcmce">[4]</a>, and
+<a class="intern" href="#eaflsdopf">[5]</a> mentions large graphs being clustered in very reasonable
+time. In protein clustering, <b>mcl</b> has been applied to graphs with up to one
+million nodes, and on high-end hardware such graphs can be clustered within
+a few hours.</p>
+</div>
+<div style="margin-top:0em">&nbsp;</div><div class=" item_compact"><div class=" item_leftalign nowrap " ><a name="colsort"></a> <a class="quiet" href="#toc-speed">4.3</a></div></div>
+<div class=" item_text " style="margin-left:2em">
+<b>Does this implementation need to sort vectors?</b>
+<p style="margin-top:0em; margin-bottom:0em">
+No, it does not. You might expect that one needs to sort
+a vector in order to obtain the <tt>K</tt> largest entries, but a simpler
+mechanism called <i>heap selection</i> does the job nicely.
+Selecting the <tt>K</tt> largest entries from a set of <tt>L</tt> by sorting
+would require <tt>O(L*log(L))</tt> operations; heap selection
+requires <tt>O(L*log(K))</tt> operations.
+Alternatively, the <tt>K</tt> largest entries can be also be
+determined in <tt>O(N) + O(K log(K))</tt> asymptotic time by using partition
+selection (more <a target="_parent" class="extern" href="http://en.wikipedia.org/wiki/Selection_algorithm#Optimised_sorting_algorithms">here</a>
+and <a target="_parent" class="extern" href="http://wordaligned.org/articles/top-ten-percent">there</a>). It is
+possible to enable this mode of operaton in mcl with the option
+<b>--partition-selection</b>. However, benchmarking so far has shown this
+to be equivalent in speed to heap selection. This is explained by
+the bounded nature of <tt>K</tt> and <tt>L</tt> in practice.
+</p>
+</div>
+<div style="margin-top:0em">&nbsp;</div><div class=" item_compact"><div class=" item_leftalign nowrap " ><a name="approx"></a> <a class="quiet" href="#toc-speed">4.4</a></div></div>
+<div class=" item_text " style="margin-left:2em">
+<b>mcl does not compute the ideal MCL process!</b>
+<p style="margin-top:0em; margin-bottom:0em">
+Indeed it does not. What are the ramifications? Several entries in section
+<a class="intern" href="#resource">Resource tuning / accuracy</a> discuss this issue. For a synopsis,
+consider two ends of a spectrum.</p>
+<p style="margin-bottom:0" class="asd_par">
+On the one end, a graph that has very strong cluster structure,
+with clearly (and not necessarity fully) separated clusters. This
+mcl implementation will certainly retrieve those clusters if the
+graphs falls into <a class="intern" href="#whatkind">the category of graphs</a> for which
+mcl is applicable.
+On the other end, consider a graph that has only weak cluster
+structure superimposed on a background of a more or less random
+graph. There might sooner be a difference between the clustering
+that should ideally result and the one computed by mcl. Such
+a graph will have a large number of whimsical nodes that might end up
+either here or there, nodes that are of a peripheral nature,
+and for which the (cluster) destination is very sensitive to
+fluctutations in edge weights or algorithm parametrizations (any
+algorithm, not just mcl).</p>
+<p style="margin-bottom:0" class="asd_par">
+In short, the perturbation effect of the pruning process applied by mcl is a
+source of noise. It is small compared to the effect of
+changing the inflation parametrization or perturbing the edge weights. If
+the change is larger, this is because the computed process tends to converge
+prematurely, leading to finer-grained clusterings. As a result the
+clustering will be close to a <i>subclustering</i> of the clustering resulting
+from more conservative resource settings, and in that respect be consistent.
+All this can be measured using the program
+<a class="local" href="http://micans.org/mcl/man/clmdist.html">clm dist</a>. It is possible to
+offset such a change by slightly lowering the inflation parameter.
+</p>
+<p style="margin-bottom:0" class="asd_par">
+There is the issue of very large and very dense graphs.
+The act of pruning will have a larger impact as graphs grow
+larger and denser.
+Obviously, mcl will have trouble dealing with such very large and very dense
+graphs &mdash; so will other methods.</p>
+<p style="margin-bottom:0" class="asd_par">
+Finally, there is the engineering approach, which offers the possibility of
+pruning a whole lot of speculation. Do the experiments with <b>mcl</b>, try it
+out, and see what's there to like and dislike.</p>
+</div>
+</div>
+
+<div align=center>
+<h3><a name="comparison"></a><a class="quiet" href="#toc-comparison">5</a><br>Comparison with other algorithms
+</h3>
+</div>
+
+<div class=" itemize " style="margin-top:1em; font-size:100%">
+<div class=" item_compact"><div class=" item_leftalign nowrap " ><a name="xyzbetter"></a> <a class="quiet" href="#toc-comparison">5.1</a></div></div>
+<div class=" item_text " style="margin-left:2em">
+<b>I've read someplace that XYZ is much better than MCL</b>
+<p style="margin-top:0em; margin-bottom:0em">
+XYZ might well be the bees knees of all things clustering. Bear in mind
+though that comparing cluster algorithms is a very tricky affair.
+One particular trap is the following. Sometimes a new cluster algorithm is proposed based
+on some optimization criterion. The algorithm is then compared with
+previous algorithms (e.g. MCL). But how to compare? Quite often the
+comparison will be done by computing a criterion and astoundingly,
+quite often the chosen criterion is simply the optimization criterion again.
+<i>Of course</i> XYZ will do very well. It would be a very poor algorithm
+it if did not score well on its own optimization criterion, and it
+would be a very poor algorithm if it did not perform better than other
+algorithms which are built on different principles.</p>
+<p style="margin-bottom:0" class="asd_par">
+There are some further issues that have to be considered here.
+First, there is not a single optimization criterion that
+fully captures the notion of cluster structure, let alone best cluster
+structure. Second, leaving optimization approaches aside, it is not
+possible to speak of a best clustering. Best always depends on context -
+application field, data characteristics, scale (granularity), and
+practitioner to name but a few aspects.
+Accordingly, the best a clustering algorithm can hope for is to
+be a good fit for a certain class of problems. The class should not be
+too narrow, but no algorithm can cater for the broad spectre of
+problems for which clustering solutions are sought.
+The class of problems to which MCL is applicable is discussed
+in section <a class="intern" href="#kind">What kind of graphs</a>.</p>
+</div>
+<div style="margin-top:0em">&nbsp;</div><div class=" item_compact"><div class=" item_leftalign nowrap " ><a name="xyzslower"></a> <a class="quiet" href="#toc-comparison">5.2</a></div></div>
+<div class=" item_text " style="margin-left:2em">
+<b>I've read someplace that MCL is slow [compared with XYZ]</b>
+<p style="margin-top:0em; margin-bottom:0em">
+Presumably, they did not know mcl, and did not read the parts
+in <a class="intern" href="#gcbfs">[1]</a> and <a class="intern" href="#cafg">[2]</a> that discuss implementation. Perhaps
+they assume or insist that the only way to implement MCL is to implement the
+ideal process. And there is always the genuine possibility
+of a <i>really</i> stupifyingly fast algorithm. It is certainly not the
+case that MCL has a time complexity of <tt>O(N^3)</tt> as is sometimes erroneously
+stated.</p>
+</div>
+</div>
+
+<div align=center>
+<h3><a name="resource"></a><a class="quiet" href="#toc-resource">6</a><br>Resource tuning / accuracy
+</h3>
+</div>
+
+<div class=" itemize " style="margin-top:1em; font-size:100%">
+<div class=" item_compact"><div class=" item_leftalign nowrap " ><a name="wdymbrt"></a> <a class="quiet" href="#toc-resource">6.1</a></div></div>
+<div class=" item_text " style="margin-left:2em">
+<b>What do you mean by resource tuning?</b>
+<p style="margin-top:0em; margin-bottom:0em">
+<b>mcl</b> computes a process in which stochastic matrices are alternately
+expanded and inflated. Expansion is nothing but standard matrix
+multiplication, inflation is a particular way of rescaling the matrix
+entries.</p>
+<p style="margin-bottom:0" class="asd_par">
+Expansion causes problems in terms of both time and space. mcl works with
+matrices of dimension <tt>N</tt>, where <tt>N</tt> is the number of nodes in the input graph.
+If no precautions are taken, the number of entries in the mcl iterands
+(which are stochastic matrices) will soon approach the square of <tt>N</tt>. The
+time it takes to compute such a matrix will be proportional to the cube of
+<tt>N</tt>. If your input graph has 100.000 nodes, the memory requirements become
+infeasible and the time requirements become impossible.</p>
+<p style="margin-bottom:0" class="asd_par">
+What mcl does is perturbing the process it computes a little
+by removing the smallest entries &mdash; it keeps its matrices <i>sparse</i>.
+This is a natural thing to do, because the matrices are sparse in
+a weighted sense (a very high proportion of the stochastic mass
+is contained in relatively few entries), and the process converges
+to matrices that are extremely sparse, with usually no more than <tt>N</tt> entries.
+It is thus known that the MCL iterands are sparse in a weighted
+sense and are usually very close to truly sparse matrices.
+The way mcl perturbs its matrices is by the strategy
+of pruning, selection, and recovery that is extensively described
+in the <a class="local sibling" href="mcl.html">mcl manual page</a>.
+The question then is: What is the effect of this perturbation
+on the resulting clustering, i.e. how would the clustering
+resulting from a <i>perfectly computed</i> mcl process compare with
+the clustering I have on disk?
+<a class="intern" href="#pcmp">Faq entry&nbsp;6.3</a> discusses this issue.</p>
+<p style="margin-bottom:0" class="asd_par">
+The amount of <i>resources</i> used by mcl is bounded in terms of the maximum
+number of neighbours a node is allowed to have during all computations.
+Equivalently, this is the maximum number of nonzero entries a matrix column
+can possibly have. This number, finally, is the maximum of the
+the values corresponding with the <b>-S</b> and <b>-R</b> options.
+The latter two are listed when using the <b>-z</b> option
+(see faq&nbsp;<a class="intern" href="#defaults">10.1</a>).</p>
+</div>
+<div style="margin-top:0em">&nbsp;</div><div class=" item_compact"><div class=" item_leftalign nowrap " ><a name="faq6.2"></a> <a class="quiet" href="#toc-resource">6.2</a></div></div>
+<div class=" item_text " style="margin-left:2em">
+<b>How do I compute the maximum amount of RAM needed by mcl?</b>
+<p style="margin-top:0em; margin-bottom:0em">
+It is rougly equal to</p>
+<div class="verbatim">2 * s * K * N</div>
+<p style="margin-top:0em; margin-bottom:0em">
+bytes, where 2 is the number of matrices held in memory by <b>mcl</b>, s is the
+size of a single cell (c.q. matrix entry or node/arc specification), <tt>N</tt> is
+the number of nodes in the input graph, and where <tt>K</tt> is the maximum of the
+values corresponding with the <b>-S</b> and <b>-R</b> options (and this
+assumes that the average node degree in the input graph does not exceed <tt>K</tt>
+either). The value of s can be found by using the <b>-z</b> option. It
+is listed in one of the first lines of the resulting output. s equals the
+size of an int plus the size of a float, which will be 8 on most systems.
+The estimate above will in most cases be way too pessimistic (meaning
+you do not need that amount of memory).</p>
+<p style="margin-bottom:0" class="asd_par">
+The <b>-how-much-ram</b> option is provided by mcl for computing
+the bound given above. This options takes as argument the number of
+nodes in the input graph.</p>
+<p style="margin-bottom:0" class="asd_par">
+The theoretically more precise upper bound is slightly larger due to
+overhead. It is something like</p>
+<div class="verbatim">( 2 * s * (K + c)) * N</div>
+where c is 5 or so, but one should not pay attention to such a small
+difference anyway.
+</div>
+<div style="margin-top:0em">&nbsp;</div><div class=" item_compact"><div class=" item_leftalign nowrap " ><a name="pcmp"></a> <a class="quiet" href="#toc-resource">6.3</a></div></div>
+<div class=" item_text " style="margin-left:2em">
+<b>How much does the mcl clustering differ from the clustering resulting
+from a perfectly computed MCL process?</b>
+<p style="margin-top:0em; margin-bottom:0em">
+For graphs with up until a few thousand nodes a <i>perfectly computed</i>
+MCL process can be achieved by abstaining from pruning and doing
+full-blown matrix arithmetic. Of course, this still leaves the
+issue of machine precision, but let us wholeheartedly ignore that.</p>
+<p style="margin-bottom:0" class="asd_par">
+Such experiments give evidence (albeit incidental) that pruning is indeed
+really what it is thought to be - a small perturbation. In many cases, the
+'approximated' clustering is identical to the 'exact' clustering. In other
+cases, they are very close to each other in terms of the metric
+split/join distance as computed by <a class="local sibling" href="clmdist.html">clm&nbsp;dist</a>.
+Some experiments with randomly generated test graphs, clustering,
+and pruning are described in <a class="intern" href="#pcfgcmce">[4]</a>.</p>
+<p style="margin-bottom:0" class="asd_par">
+On a different level of abstraction, note that perturbations of the
+inflation parameter will also lead to perturbations in the resulting
+clusterings, and surely, large changes in the inflation parameter will in
+general lead to large shifts in the clusterings. Node/cluster pairs that
+are different for the approximated and the exact clustering will very
+likely correspond with nodes that are in a boundary region between two or
+more clusters anyway, as the perturbation is not likely to move a node from
+one core of attraction to another.</p>
+<p style="margin-bottom:0" class="asd_par">
+<a class="intern" href="#qsep">Faq entry 6.6</a> has more to say about this subject.</p>
+</div>
+<div style="margin-top:0em">&nbsp;</div><div class=" item_compact"><div class=" item_leftalign nowrap " ><a name="enoughresources"></a> <a class="quiet" href="#toc-resource">6.4</a></div></div>
+<div class=" item_text " style="margin-left:2em">
+<b>How do I know that I am using enough resources?</b>
+<p style="margin-top:0em; margin-bottom:0em">
+In <b>mcl</b> parlance, this becomes <i>how do I know that my</i> <b>-scheme</b>
+<i>parameter is high enough</i> or more elaborately <i>how do I know
+that the values of the {-P, -S, -R, -pct} combo are high enough?</i></p>
+<p style="margin-bottom:0" class="asd_par">
+There are several aspects. First, watch the <i>jury marks</i> reported by <b>mcl</b>
+when it's done.
+The jury marks are three grades, each out of 100. They indicate how well
+pruning went. If the marks are in the seventies, eighties, or nineties, mcl
+is probably doing fine. If they are in the eighties or lower, try to see if
+you can get the marks higher by spending more resources (e.g. increase the
+parameter to the <b>-scheme</b> option).</p>
+<p style="margin-bottom:0" class="asd_par">
+Second, you can do multiple <b>mcl</b> runs for different resource schemes,
+and compare the resulting clusterings using <b>clm dist</b>. See
+the <a class="local sibling" href="clmdist.html">clmdist manual</a> for a case study.</p>
+</div>
+<div style="margin-top:0em">&nbsp;</div><div class=" item_compact"><div class=" item_leftalign nowrap " ><a name="nmap"></a> <a class="quiet" href="#toc-resource">6.5</a></div></div>
+<div class=" item_text " style="margin-left:2em">
+<b>Where is the mathematical analysis of this mcl pruning strategy?</b>
+<p style="margin-top:0em; margin-bottom:0em">
+There is none. [add]</p>
+<p style="margin-bottom:0" class="asd_par">
+Ok, the next entry gives an engineer's rule of thumb.</p>
+</div>
+<div style="margin-top:0em">&nbsp;</div><div class=" item_compact"><div class=" item_leftalign nowrap " ><a name="qsep"></a> <a class="quiet" href="#toc-resource">6.6</a></div></div>
+<div class=" item_text " style="margin-left:2em">
+<b>What qualitative statements can be made about the effect of pruning?</b>
+<p style="margin-top:0em; margin-bottom:0em">
+The more severe pruning is, the more the computed process will tend to
+converge prematurely. This will generally lead to finer-grained clusterings.
+In cases where pruning was severe, the <b>mcl</b> clustering will likely be closer
+to a clustering ideally resulting from another MCL process with higher
+inflation value, than to the clustering ideally resulting from the same MCL
+process. Strong support for this is found in a general observation
+illustrated by the following example. Suppose u is a stochastic vector
+resulting from expansion:</p>
+<div class="verbatim">u   =  0.300 0.200 0.200 0.100 0.050 0.050 0.050 0.050</div>
+<p style="margin-top:0em; margin-bottom:0em">
+Applying inflation with inflation value 2.0 to u gives</p>
+<div class="verbatim">v   =  0.474 0.211 0.211 0.053 0.013 0.013 0.013 0.013</div>
+<p style="margin-top:0em; margin-bottom:0em">
+Now suppose we first apply pruning to u such that the 3 largest entries
+0.300, 0.200 and 0.200 survive,
+throwing away 30 percent of the stochastic mass
+(which is quite a lot by all means).
+We rescale those three entries and obtain</p>
+<div class="verbatim">u'  =  0.429 0.286 0.286 0.000 0.000 0.000 0.000 0.000</div>
+<p style="margin-top:0em; margin-bottom:0em">
+Applying inflation with inflation value 2.0 to u' gives</p>
+<div class="verbatim">v'  =  0.529 0.235 0.235 0.000 0.000 0.000 0.000 0.000</div>
+<p style="margin-top:0em; margin-bottom:0em">
+If we had applied inflation with inflation value 2.5 to u, we would
+have obtained</p>
+<div class="verbatim">v'' =  0.531 0.201 0.201 0.038 0.007 0.007 0.007 0.007</div>
+<p style="margin-top:0em; margin-bottom:0em">
+The vectors v' and v'' are much closer to each other
+than the vectors v' and v, illustrating the general idea.</p>
+<p style="margin-bottom:0" class="asd_par">
+In practice, <b>mcl</b> should (on average) do much better than in this
+example.</p>
+</div>
+<div style="margin-top:0em">&nbsp;</div><div class=" item_compact"><div class=" item_leftalign nowrap " ><a name="faq6.7"></a> <a class="quiet" href="#toc-resource">6.7</a></div></div>
+<div class=" item_text " style="margin-left:2em">
+<b>At different high resource levels my clusterings are not identical.
+How can I trust the output clustering?</b>
+<p style="margin-top:0em; margin-bottom:0em">
+Did you read all other entries in this section? That should have
+reassured you somewhat, except perhaps for
+<a class="intern" href="#nmap">Faq answer&nbsp;6.5</a>.</p>
+<p style="margin-bottom:0" class="asd_par">
+You need not feel uncomfortable with the clusterings still being different
+at high resource levels, if ever so slightly. In all likelihood, there
+are anyway nodes which are not in any core of attraction, and that are on
+the boundary between two or more clusterings. They may go one way or
+another, and these are the nodes which will go different ways even at high
+resource levels. Such nodes may be stable in clusterings obtained for
+lower inflation values (i.e. coarser clusterings), in which the different
+clusters to which they are attracted are merged.</p>
+<p style="margin-bottom:0" class="asd_par">
+By the way, you do know all about <a class="local sibling" href="clmdist.html">clm&nbsp;dist</a>, don't you? Because the
+statement that clusterings are not identical should be quantified: <i>How
+much do they differ?</i> This issue is discussed in the <a class="local sibling" href="clmdist.html">clm&nbsp;dist</a> manual
+page &mdash; <b>clm dist</b> gives you a robust measure for the distance (dissimilarity)
+between two clusterings.</p>
+<p style="margin-bottom:0" class="asd_par">
+There are other means of gaining trust in a clustering, and there are
+different issues at play. There is the matter of how accurately this <b>mcl</b>
+computed the mcl process, and there is the matter of how well the chosen
+inflation parameter fits the data. The first can be judged by looking at
+the jury marks (<a class="intern" href="#enoughresources">faq&nbsp;6.4</a>)
+and applying <b>clm dist</b> to different clusterings. The
+second can be judged by measurement (e.g. use <a class="local sibling" href="clminfo.html">clm&nbsp;info</a>) and/or
+inspection (use your judgment).</p>
+</div>
+</div>
+
+<div align=center>
+<h3><a name="granularity"></a><a class="quiet" href="#toc-granularity">7</a><br>Tuning cluster granularity
+</h3>
+</div>
+
+<div class=" itemize " style="margin-top:1em; font-size:100%">
+<div class=" item_compact"><div class=" item_leftalign nowrap " ><a name="faq7.1"></a> <a class="quiet" href="#toc-granularity">7.1</a></div></div>
+<div class=" item_text " style="margin-left:2em">
+<b>How do I tune cluster granularity?</b>
+<p style="margin-top:0em; margin-bottom:0em">
+There are several ways for influencing cluster granularity. These ways and
+their relative merits are successively discussed below.
+Reading <a class="local sibling" href="clmprotocols.html">clmprotocols</a> is also a good idea.
+</p>
+</div>
+<div style="margin-top:0em">&nbsp;</div><div class=" item_compact"><div class=" item_leftalign nowrap " ><a name="faq7.2"></a> <a class="quiet" href="#toc-granularity">7.2</a></div></div>
+<div class=" item_text " style="margin-left:2em">
+<b>The effect of inflation on cluster granularity.</b>
+<p style="margin-top:0em; margin-bottom:0em">
+The main handle for changing inflation is the <b>-I</b> option. This is
+also <i>the</i> principal handle for regulating cluster granularity. Unless
+you are mangling huge graphs it could be the only <b>mcl</b> option you ever need
+besides the output redirection option <b>-o</b>.</p>
+<p style="margin-bottom:0" class="asd_par">
+Increasing the value of <b>-I</b> will increase cluster granularity.
+Conceivable values are from 1.1 to 10.0 or so, but the range of suitable
+values will certainly depend on your input graph. For many graphs, 1.1 will
+be far too low, and for many other graphs, 8.0 will be far too high. You
+will have to find the right value or range of values by experimenting, using
+your judgment, and using measurement tools such as <a class="local sibling" href="clmdist.html">clm&nbsp;dist</a> and
+<a class="local sibling" href="clminfo.html">clm&nbsp;info</a>. A good set of values to start with is 1.4, 2 and 6.
+</p>
+</div>
+<div style="margin-top:0em">&nbsp;</div><div class=" item_compact"><div class=" item_leftalign nowrap " ><a name="degree_granul"></a> <a class="quiet" href="#toc-granularity">7.3</a></div></div>
+<div class=" item_text " style="margin-left:2em">
+<b>The effect of node degrees on cluster granularity.</b>
+<p style="margin-top:0em; margin-bottom:0em">
+Preferably the network should not have nodes of very high degree,
+that is, with exorbitantly many neighbours. Such nodes tend to
+obscure cluster structure and contribute to coarse clusters.
+The ways to combat this using <b>mcl</b> and sibling programs are documented
+in <a class="local sibling" href="clmprotocols.html">clmprotocols</a>. Briefly, they are the
+transformations <tt>#knn()</tt> and <tt>#ceilnb()</tt> available
+to <b>mcl</b>, <b>mcx&nbsp;alter</b> and several more programs.
+</p>
+</div>
+<div style="margin-top:0em">&nbsp;</div><div class=" item_compact"><div class=" item_leftalign nowrap " ><a name="simil_granul"></a> <a class="quiet" href="#toc-granularity">7.4</a></div></div>
+<div class=" item_text " style="margin-left:2em">
+<b>The effect of edge weight differentiation on cluster granularity.</b>
+<p style="margin-top:0em; margin-bottom:0em">
+How similarities in the input graph were derived, constructed,
+adapted, filtered (et cetera) will affect cluster granularity.
+It is important that the similarities are honest;
+refer to <a class="intern" href="#goodinput">faq&nbsp;3.8</a>.</p>
+<p style="margin-bottom:0" class="asd_par">
+Another issue is that homogeneous similarities tend to result in more
+coarse-grained clusterings. You can make a set of similarities more
+homogeneous by applying some function to all of them, e.g. for all pairs of
+nodes (x y) replace S(x,y) by the square root, the logarithm, or some other
+convex function. Note that you need not worry about scaling, i.e. the
+possibly large changes in magnitude of the similarities. MCL is not affected
+by absolute magnitudes, it is only affected by magnitudes taken relative to
+each other.</p>
+<p style="margin-bottom:0" class="asd_par">
+As of version 03-154, mcl supports the pre-inflation <b>-pi</b>&nbsp;<i>f</i> option.
+Make a graph more homogeneous with respect to the weight
+function by using <b>-pi</b> with argument <i>f</i> somewhere
+in the interval [0,1] &mdash; 0.5 can be considered a reasonable first try.
+Make it less homogeneous by setting <i>f</i> somewhere in the interval [1,10].
+In this case 3 is a reasonable starting point.</p>
+</div>
+</div>
+
+<div align=center>
+<h3><a name="implement"></a><a class="quiet" href="#toc-implement">8</a><br>Implementing the MCL algorithm
+</h3>
+</div>
+
+<div class=" itemize " style="margin-top:1em; font-size:100%">
+<div class=" item_compact"><div class=" item_leftalign nowrap " ><a name="faq8.1"></a> <a class="quiet" href="#toc-implement">8.1</a></div></div>
+<div class=" item_text " style="margin-left:2em">
+<b>How easy is it to implement the MCL algorithm?</b>
+<p style="margin-top:0em; margin-bottom:0em">
+Very easy, if you will be doing small graphs only, say up to a few thousand
+entries at most. These are the basic ingredients:</p>
+<div class=" itemize " style="margin-top:1em; font-size:100%">
+<div class=" item_compact"><div class=" item_leftalign nowrap " >o</div></div>
+<div class=" item_text " style="margin-left:2em">
+<p style="margin-top:0em; margin-bottom:0em">
+Adding loops to the input graph, conversion to a stochastic matrix.
+</p>
+</div>
+<div class=" item_compact"><div class=" item_leftalign nowrap " >o</div></div>
+<div class=" item_text " style="margin-left:2em">
+<p style="margin-top:0em; margin-bottom:0em">
+Matrix multiplication and matrix inflation.
+</p>
+</div>
+<div class=" item_compact"><div class=" item_leftalign nowrap " >o</div></div>
+<div class=" item_text " style="margin-left:2em">
+<p style="margin-top:0em; margin-bottom:0em">
+The interpretation function mapping MCL limits onto clusterings.
+</p>
+</div>
+</div>
+<p style="margin-bottom:0" class="asd_par">
+These must be wrapped in a program that does graph input and cluster output,
+alternates multiplication (i.e. expansion) and inflation in a loop, monitors
+the matrix iterands thus found, quits the loop when convergence is detected,
+and interprets the last iterand.</p>
+<p style="margin-bottom:0" class="asd_par">
+Implementing matrix muliplication is a standard exercise. Implementing
+inflation is nearly trivial. The hardest part may actually be the
+interpretation function, because you need to cover the corner cases of
+overlap and attractor systems of cardinality greater than one. Note that
+MCL does not use intricate and expensive operations such as matrix inversion
+or matrix reductions.</p>
+<p style="margin-bottom:0" class="asd_par">
+In Mathematica or Maple, mcl should be doable in at most 100 lines of code.
+For perl you may need twice that amount. In lower level languages such as C
+or Fortran a basic MCL program may need a few hundred lines, but the largest
+part will probably be input/output and interpretation.</p>
+<p style="margin-bottom:0" class="asd_par">
+To illustrate all these points, mcl now ships with <a class="local" href="minimcl">minimcl</a>,
+a small perl script that implements mcl for educational purposes.
+Its structure is very simple and should be easy to follow.</p>
+<p style="margin-bottom:0" class="asd_par">
+Implementing the basic MCL algorithm makes a
+nice programming exercise. However, if you need an implementation that
+scales to several hundreds of thousands of nodes and possibly beyond, then
+your duties become much heavier. This is because one needs to prune MCL
+iterands (c.q. matrices) such that they remain sparse. This must be done
+carefully and preferably in such a way that a trade-off between speed,
+memory usage, and potential losses or gains in accuracy can be controlled
+via monitoring and logging of relevant characteristics.
+Some other points are
+i) support for threading via pthreads, openMP, or some other parallel
+programming API.
+ii) a robust and generic interpretation function is written in
+terms of weakly connected components.</p>
+</div>
+</div>
+
+<div align=center>
+<h3><a name="overlap"></a><a class="quiet" href="#toc-overlap">9</a><br>Cluster overlap / MCL iterand cluster interpretation
+</h3>
+</div>
+
+<div class=" itemize " style="margin-top:1em; font-size:100%">
+<div class=" item_compact"><div class=" item_leftalign nowrap " ><a name="olapintro"></a> <a class="quiet" href="#toc-overlap">9.1</a></div></div>
+<div class=" item_text " style="margin-left:2em">
+<b>Introduction</b>
+A natural mapping exists of MCL iterands to DAGs
+(directed acyclic graphs). This is because MCL iterands are generally
+<i>diagonally positive semi-definite</i> &mdash; see <a class="intern" href="#supfg">[3]</a>.
+Such a DAG can be interpreted as a clustering, simply by taking
+as cores all endnodes (sinks) of the DAG, and by attaching to each
+core all the nodes that reach it. This procedure may result
+in clusterings containing overlap.
+<p style="margin-bottom:0" class="asd_par">
+In the MCL limit, the associated DAG has in general a very degenerated
+form, which induces overlap only on very rare occasions (see
+<a class="intern" href="#ccco">faq entry 9.2</a>).</p>
+<p style="margin-bottom:0" class="asd_par">
+Interpreting <b>mcl</b> iterands as clusterings may well be interesting.
+Few experiments have been done so far. It is clear though that
+early iterands generally contain the most overlap (when interpreted
+as clusterings). Overlap dissappears soon as the iterand
+index increases. For more information, consult the other entries
+in this section and the <a class="local sibling" href="clmimac.html">clmimac manual page</a>.</p>
+</div>
+<div style="margin-top:0em">&nbsp;</div><div class=" item_compact"><div class=" item_leftalign nowrap " ><a name="ccco"></a> <a class="quiet" href="#toc-overlap">9.2</a></div></div>
+<div class=" item_text " style="margin-left:2em">
+<b>Can the clusterings returned by mcl contain overlap?</b>
+<p style="margin-top:0em; margin-bottom:0em">
+No. Clusterings resulting from the abstract MCL algorithm may in theory
+contain overlap, but the default behaviour in <b>mcl</b> is to remove it should it
+occur, by allocating the nodes in overlap to the first cluster in which they
+are seen. <b>mcl</b> will warn you if this occurs. This behaviour is switched
+off by supplying <b>--keep-overlap=yes</b>.</p>
+<p style="margin-bottom:0" class="asd_par">
+Do note that overlap is mostly a theoretical possibility.
+It is conjectured that it requires the presence of very strong
+symmetries in the input graph, to the extent that there <i>exists
+an automorphism of the input graph mapping the overlapping part
+onto itself</i>.</p>
+<p style="margin-bottom:0" class="asd_par">
+It is possible to construct (highly symmetric) input graphs leading to
+cluster overlap. Examples of overlap in which a few nodes are involved are
+easy to construct; examples with many nodes are exceptionally hard to
+construct.</p>
+<p style="margin-bottom:0" class="asd_par">
+Clusterings associated with intermediate/early MCL iterands
+may very well contain overlap, see the
+<a class="intern" href="#olapintro">introduction in this section</a> and other entries.</p>
+</div>
+<div style="margin-top:0em">&nbsp;</div><div class=" item_compact"><div class=" item_leftalign nowrap " ><a name="imac"></a> <a class="quiet" href="#toc-overlap">9.3</a></div></div>
+<div class=" item_text " style="margin-left:2em">
+<b>How do I obtain the clusterings associated with MCL iterands?</b>
+<p style="margin-top:0em; margin-bottom:0em">
+There are two options. If
+you are interested in clusterings containing overlap, you
+should go for the second. If not, use the first, but beware
+that the resulting clusterings may contain overlap.</p>
+<p style="margin-bottom:0" class="asd_par">
+The first solution is to use <b>-dump</b>&nbsp;<b>cls</b> (probably in conjunction
+with either <b>-L</b> or <b>-dumpi</b> in order to limit the number of
+matrices written). This will cause <b>mcl</b> to write the clustering generically
+associated with each iterand to file. The <b>-dumpstem</b> option may be
+convenient as well.</p>
+<p style="margin-bottom:0" class="asd_par">
+The second solution is to use the <b>-dump</b>&nbsp;<b>ite</b> option
+(<b>-dumpi</b> and <b>-dumpstem</b> may be of use again). This will
+cause <b>mcl</b> to write the intermediate iterands to file. After that, you can
+apply <a class="local sibling" href="clmimac.html">clm&nbsp;imac</a> (interpret matrix as clustering) to those iterands. <b>clm imac</b>
+has a <b>-strict</b> parameter which affects the mapping of matrices to
+clusterings. It takes a value between 0.0 and 1.0 as argument. The default is
+0.001 and corresponds with promoting overlap. Increasing the <b>-strict</b>
+value will generally result in clusterings containing less overlap. This
+will have the largest effect for early iterands; its effect will diminish as
+the iterand index increases.</p>
+<p style="margin-bottom:0" class="asd_par">
+When set to 0, the <b>-strict</b> parameter results in the clustering
+associated with the DAG associated with an MCL iterand as described
+in <a class="intern" href="#supfg">[3]</a>. This DAG is pruned (thus possibly resulting
+in less overlap in the clustering) by increasing the <b>-strict</b>
+parameter. [add]</p>
+</div>
+</div>
+
+<div align=center>
+<h3><a name="misc"></a><a class="quiet" href="#toc-misc">10</a><br>Miscellaneous
+</h3>
+</div>
+
+<div class=" itemize " style="margin-top:1em; font-size:100%">
+<div class=" item_compact"><div class=" item_leftalign nowrap " ><a name="defaults"></a> <a class="quiet" href="#toc-misc">10.1</a></div></div>
+<div class=" item_text " style="margin-left:2em">
+<b>How do I find the default settings of mcl?</b>
+<p style="margin-top:0em; margin-bottom:0em">
+Use <b>-z</b> to find out the actual settings - it shows
+the settings as resulting from the command line options (e.g. the default
+settings if no other options are given).</p>
+</div>
+<div style="margin-top:0em">&nbsp;</div><div class=" item_compact"><div class=" item_leftalign nowrap " ><a name="next"></a> <a class="quiet" href="#toc-misc">10.2</a></div></div>
+<div class=" item_text " style="margin-left:2em">
+<b>What's next?</b>
+<p style="margin-top:0em; margin-bottom:0em">
+I'd like to port MCL to cluster computing, using one of the
+PVM, MPI, or openMP frameworks.
+For the 1.002 release, mcl's internals were rewritten to allow more general
+matrix computations. Among other things, mcl's data structures and primitive
+operations are now more suited to be employed in a distributed computing
+environment. However, much remains to be done before mcl can operate
+in such an environment.</p>
+<p style="margin-bottom:0" class="asd_par">
+If you feel that mcl should support some other standard matrix format,
+let us know.</p>
+</div>
+</div>
+
+<a name="bugs"></a>
+<h2>BUGS</h2>
+<p style="margin-bottom:0" class="asd_par">
+This FAQ tries to compromise between being concise and comprehensive. The
+collection of answers should preferably cover the universe of questions at a
+pleasant level of semantic granularity without too much overlap. It should
+offer value to people interested in clustering but without sound
+mathematical training. Therefore, if this FAQ has not failed somewhere,
+it must have failed.</p>
+<p style="margin-bottom:0" class="asd_par">
+Send criticism and missing questions for consideration to mcl-faq at
+micans.org.</p>
+
+<a name="author"></a>
+<h2>AUTHOR</h2>
+<p style="margin-bottom:0" class="asd_par">
+Stijn van Dongen.</p>
+
+<a name="seealso"></a>
+<h2>SEE ALSO</h2>
+<p style="margin-bottom:0" class="asd_par">
+<a class="local sibling" href="mclfamily.html">mclfamily</a> for an overview of all the documentation
+and the utilities in the mcl family.</p>
+<p style="margin-bottom:0" class="asd_par">
+mcl's home at <a class="extern" href="http://micans.org/mcl/">http://micans.org/mcl/</a>.</p>
+
+<a name="references"></a>
+<h2>REFERENCES</h2>
+<p style="margin-bottom:0" class="asd_par">
+<a name="gcbfs">[1]</a>
+Stijn van Dongen. <i>Graph Clustering by Flow Simulation</i>.
+PhD thesis, University of Utrecht, May 2000.<br>
+<a class="extern" href="http://www.library.uu.nl/digiarchief/dip/diss/1895620/inhoud.htm">http://www.library.uu.nl/digiarchief/dip/diss/1895620/inhoud.htm</a></p>
+<p style="margin-bottom:0" class="asd_par">
+<a name="cafg">[2]</a>
+Stijn van Dongen. <i>A cluster algorithm for graphs</i>.
+Technical Report INS-R0010, National Research Institute for Mathematics and
+Computer Science in the Netherlands, Amsterdam, May 2000.<br>
+<a class="extern" href="http://www.cwi.nl/ftp/CWIreports/INS/INS-R0010.ps.Z">http://www.cwi.nl/ftp/CWIreports/INS/INS-R0010.ps.Z</a></p>
+<p style="margin-bottom:0" class="asd_par">
+<a name="supfg">[3]</a>
+Stijn van Dongen. <i>A stochastic uncoupling process for graphs</i>.
+Technical Report INS-R0011, National Research Institute for Mathematics and
+Computer Science in the Netherlands, Amsterdam, May 2000.<br>
+<a class="extern" href="http://www.cwi.nl/ftp/CWIreports/INS/INS-R0011.ps.Z">http://www.cwi.nl/ftp/CWIreports/INS/INS-R0011.ps.Z</a></p>
+<p style="margin-bottom:0" class="asd_par">
+<a name="pcfgcmce">[4]</a>
+Stijn van Dongen. <i>Performance criteria for graph clustering and Markov
+cluster experiments</i>. Technical Report INS-R0012, National Research
+Institute for Mathematics and Computer Science in the Netherlands,
+Amsterdam, May 2000.<br>
+<a class="extern" href="http://www.cwi.nl/ftp/CWIreports/INS/INS-R0012.ps.Z">http://www.cwi.nl/ftp/CWIreports/INS/INS-R0012.ps.Z</a></p>
+<p style="margin-bottom:0" class="asd_par">
+<a name="eaflsdopf">[5]</a>
+Enright A.J., Van Dongen S., Ouzounis C.A.
+<i>An efficient algorithm for large-scale detection of protein families</i>,
+Nucleic Acids Research 30(7):1575-1584 (2002). </p>
+
+<a name="notes"></a>
+<h2>NOTES</h2>
+<p style="margin-bottom:0" class="asd_par">
+This page was generated from <b>ZOEM</b> manual macros,
+<a class="extern" href="http://micans.org/zoem">http://micans.org/zoem</a>. Both html and roff pages can be created
+from the same source without having to bother with all the usual conversion
+problems, while keeping some level of sophistication in the typesetting.
+<a class="local" href="mclfaq.ps">This</a> is the PostScript derived from the zoem
+troff output.</p>
+</body>
+</html>

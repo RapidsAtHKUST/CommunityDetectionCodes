@@ -1,0 +1,112 @@
+.\" Copyright (c) 2014 Stijn van Dongen
+.TH "mcxalter" 1 "16 May 2014" "mcxalter 14-137" "USER COMMANDS "
+.po 2m
+.de ZI
+.\" Zoem Indent/Itemize macro I.
+.br
+'in +\\$1
+.nr xa 0
+.nr xa -\\$1
+.nr xb \\$1
+.nr xb -\\w'\\$2'
+\h'|\\n(xau'\\$2\h'\\n(xbu'\\
+..
+.de ZJ
+.br
+.\" Zoem Indent/Itemize macro II.
+'in +\\$1
+'in +\\$2
+.nr xa 0
+.nr xa -\\$2
+.nr xa -\\w'\\$3'
+.nr xb \\$2
+\h'|\\n(xau'\\$3\h'\\n(xbu'\\
+..
+.if n .ll -2m
+.am SH
+.ie n .in 4m
+.el .in 8m
+..
+.SH NAME
+mcxalter \- various network transformations
+.SH SYNOPSIS
+
+\fBmcxalter\fP
+\fB[-imx\fP <fname> (\fIspecify matrix/graph input\fP)\fB]\fP
+\fB[-abc\fP <fname> (\fIspecify label input\fP)\fB]\fP
+\fB[-tab\fP <fname> (\fIuse tab file\fP)\fB]\fP
+\fB[-icl\fP <fname> (\fIspecify cluster input\fP)\fB]\fP
+\fB[--block\fP (\fIuse within-cluster edges\fP)\fB]\fP
+\fB[--blockc\fP (\fIuse between-cluster edges\fP)\fB]\fP
+\fB[-o\fP <fname> (\fIoutput\fP)\fB]\fP
+\fB[-tf\fP spec (\fIapply tf-spec to input matrix\fP)\fB]\fP
+.SH DESCRIPTION
+
+This utility supplies various transformations of networks\&.
+.SH OPTIONS
+
+.ZI 2m "\fB-abc\fP <fname> (\fIlabel input\fP)"
+\&
+.br
+The file name for input that is in label format\&.
+.in -2m
+
+.ZI 2m "\fB-imx\fP <fname> (\fIinput matrix\fP)"
+\&
+.br
+The file name for input that is in mcl native matrix format\&.
+.in -2m
+
+.ZI 2m "\fB-tab\fP <fname> (\fIuse tab file\fP)"
+\&
+.br
+This option causes the output to be printed with the labels
+found in the tab file\&.
+With \fB-abc\fP this option will, additionally, construct
+a graph only on the labels found in the tab file\&.
+If this option is used in conjunction with \fB-imx\fP the
+tab domain and the matrix domain are required to be identical\&.
+.in -2m
+
+.ZI 2m "\fB-icl\fP <fname> (\fIspecify cluster input\fP)"
+\&
+.br
+Read in a cluster file for use with either \fB--block\fP or \fB--blockc\fP\&.
+.in -2m
+
+.ZI 2m "\fB--block\fP (\fIuse within-cluster edges\fP)"
+\&
+.br
+Remove between-cluster edges from the network\&. This is done first, before
+other transformations take effect\&.
+.in -2m
+
+.ZI 2m "\fB--blockc\fP (\fIuse between-cluster edges\fP)"
+\&
+.br
+Remove within-cluster edges from the network\&. This is done first, before
+other transformations take effect\&.
+.in -2m
+
+.ZI 2m "\fB-tf\fP <tf-spec> (\fItransform input matrix values\fP)"
+\&
+.br
+Transform the input matrix values according
+to the syntax described in \fBmcxio(5)\fP\&.
+.in -2m
+
+.ZI 2m "\fB-o\fP fname (\fIoutput file\fP)"
+\&
+.br
+Output file\&.
+.in -2m
+.SH AUTHOR
+
+Stijn van Dongen\&.
+.SH SEE ALSO
+
+\fBmcxio(5)\fP,
+\fBmcx(1)\fP,
+\fBmcxsubs(1)\fP,
+and \fBmclfamily(7)\fP for an overview of all the documentation
+and the utilities in the mcl family\&.

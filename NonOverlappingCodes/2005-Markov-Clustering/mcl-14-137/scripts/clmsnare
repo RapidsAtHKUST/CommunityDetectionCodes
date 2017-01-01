@@ -1,0 +1,652 @@
+#!/usr/bin/perl -w
+
+#  (C) Copyright 2007 Stijn van Dongen
+ #
+#  This file is part of MCL.  You can redistribute and/or modify MCL under the
+#  terms of the GNU General Public License; either version 3 of the License or
+#  (at your option) any later version.  You should have received a copy of the
+#  GPL along with MCL, in the file COPYING.
+
+# TODO:
+# -   inward adjustment.
+# -   shape filling, e.g. 2x2 square.
+# -   bug in donut shape: inner curve not closed.
+# -   choose the smaller curve.
+
+
+use Getopt::Long;
+use strict;
+
+my @ARGV_COPY  = @ARGV;
+my $n_args = @ARGV;
+
+$::debug =  0;
+$::test  =  0;
+my $help  =  0;
+my $progname = $0;
+my $f_in = 0.4;
+my $fncoords = "";
+my $stroke = 0;
+my $fill = 0;
+my $fillcolor = "1 1 0";
+
+my $close = 0;
+
+sub help {
+   print <<EOH;
+Usage:
+   $progname [options]
+Options:
+--close
+--inward=f
+--fncoords=s
+EOH
+}
+
+if
+(! GetOptions
+   (  "help"            =>   \$help
+   ,  "test"            =>   \$::test
+   ,  "debug=i"         =>   \$::debug
+   ,  "inward=f"        =>   \$f_in
+   ,  "fncoords=s"      =>   \$fncoords
+   ,  "close"           =>   \$close
+   ,  "stroke"          =>   \$stroke
+   ,  "fill"            =>   \$fill
+   ,  "fillcolor=s"     =>   \$fillcolor
+   )
+)
+   {  print STDERR "option processing failed\n";
+      exit(1);
+   }
+
+if ($help) {
+   help();
+}
+
+my $f_out = 1 - $f_in;
+
+
+my %coord_dir = ();
+
+if ($fncoords) {
+   open (COORDS, "<$fncoords") || die "cannot open $fncoords";
+   local $/ = undef;
+   my $ct = <COORDS>;
+   $ct =~ s/\s+/ /g;
+   while ($ct =~ /\/(\w+)\s*\[\s*(\d+)\s+(\d+)\s*\]\s*def/g) {
+      $coord_dir{$1} = [$2, $3];
+   }
+   close COORDS;
+}
+
+my $dir_size = keys %coord_dir;
+
+sub get_name {
+
+   my ($inst, $x, $y) = @_;
+   if (!defined($inst->{COORDSNAME}{$x}{$y})) {
+      $inst->{COORDSNAME}{$x}{$y} = $inst->{TOKEN};
+      $inst->{NAMECOORDS}{$inst->{TOKEN}} = [$x, $y];
+      $inst->{TOKEN}++;
+   }
+   return $inst->{COORDSNAME}{$x}{$y};
+}
+
+
+sub exist_coords {
+
+   my ($inst, $name) = @_;
+   return defined ($inst->{NAMECOORDS}{$name}) ? 1 : 0;
+}
+
+
+sub get_coords {
+
+   my ($inst, $name) = @_;
+   die "no coords for $name" unless defined ($inst->{NAMECOORDS}{$name});
+   return @{$inst->{NAMECOORDS}{$name}};
+}
+
+
+
+$/ = "";       # paragraph mode.
+
+
+sub init {
+
+   my $lines = $_[0];
+   my $inst
+   =  {  COORDSNAME    => {}
+      ,  NAMECOORDS    => {}
+      ,  SHAPE         => {}
+      ,  CONTOUR       => {}
+      ,  INWARD        => {}
+      ,  TOKEN         => 10001
+      }  ;
+
+
+   if ($dir_size) {
+      my @entries = ($lines =~ /(\S+)/g);
+      for my $e (@entries) {
+         die "no entry <$e> in directory!" unless defined($coord_dir{$e});
+         my ($x, $y) = @{$coord_dir{$e}};
+         my $name = get_name($inst, $x, $y);
+         $inst->{SHAPE}{$name} = 1;
+      }
+   }
+   else {
+      my @lines = grep { !/^\s*#/; } split "\n", $lines;
+      for (@lines) {
+         my ($x, $y) = split;
+         my $name = get_name($inst, $x, $y);
+         $inst->{SHAPE}{$name} = 1;
+      }
+   }
+
+   my $delta = 1;
+   while ($close && $delta) {
+      $delta = 0;
+      for my $p (keys %{$inst->{SHAPE}}) {
+         my ($x, $y) = get_coords($inst, $p);  
+         my $py3 = get_name($inst, $x, $y+3);
+         my $px3 = get_name($inst, $x+3, $y);
+         my $py2 = get_name($inst, $x, $y+2);
+         my $px2 = get_name($inst, $x+2, $y);
+         my $py1 = get_name($inst, $x, $y+1);
+         my $px1 = get_name($inst, $x+1, $y);
+         my $pd1a = get_name($inst, $x+1, $y+1);
+         my $pd1b = get_name($inst, $x+1, $y-1);
+         my $pd2a = get_name($inst, $x+2, $y+2);
+         my $pd2b = get_name($inst, $x+2, $y-2);
+         if
+         (  !defined($inst->{SHAPE}{$py1})
+         && (  defined($inst->{SHAPE}{$py2})
+            || defined($inst->{SHAPE}{$py3})
+            )
+         )
+         {  $inst->{SHAPE}{$py1} = 1;
+            $delta++;
+print STDERR "ADD $x $y+1\n" if $::debug;
+         }
+         if
+         (  !defined($inst->{SHAPE}{$px1})
+         && (  defined($inst->{SHAPE}{$px2})
+            || defined($inst->{SHAPE}{$px3})
+            )
+         )
+         {  $inst->{SHAPE}{$px1} = 1;
+            $delta++;
+print STDERR "ADD $x+1 $y\n" if $::debug;
+         }
+         if
+         (  (  !defined($inst->{SHAPE}{$pd1a})
+            && defined($inst->{SHAPE}{$pd2a})
+         )  )
+         {  $inst->{SHAPE}{$pd1a} = 1;
+            $delta++;
+         }
+         if
+         (  (  !defined($inst->{SHAPE}{$pd1b})
+            && defined($inst->{SHAPE}{$pd2b})
+         )  )
+         {  $inst->{SHAPE}{$pd1b} = 1;
+            $delta++;
+         }
+      }
+   }
+   return $inst;
+}
+
+print "gsave\n";
+print "snarewidth setlinewidth\n";
+print "snarecolor aload pop setrgbcolor\n";
+
+while (<>) {
+   chomp;
+   my $inst = init($_);
+   doit($inst);
+}
+
+print "grestore\n\n";
+
+
+sub doit {
+
+   my $inst = $_[0];
+   my $shape = $inst->{SHAPE};
+   my $contour = $inst->{CONTOUR};
+   my $inward  = $inst->{INWARD};
+
+   for my $p (sort keys %$shape) {
+      my ($x, $y) = get_coords($inst, $p);
+
+      my $xpy0 = get_name($inst, $x+1, $y+0);
+      my $xmy0 = get_name($inst, $x-1, $y+0);
+      my $x0yp = get_name($inst, $x+0, $y+1);
+      my $x0ym = get_name($inst, $x+0, $y-1);
+
+      if (!defined($shape->{$xpy0})) {
+         $contour->{$xpy0} = 1;
+         $inward->{$xpy0}{$p} = 1;
+      }
+      if (!defined($shape->{$xmy0})) {
+         $contour->{$xmy0} = 1;
+         $inward->{$xmy0}{$p} = 1;
+      }
+      if (!defined($shape->{$x0yp})) {
+         $contour->{$x0yp} = 1;
+         $inward->{$x0yp}{$p} = 1;
+      }
+      if (!defined($shape->{$x0ym})) {
+         $contour->{$x0ym} = 1;
+         $inward->{$x0ym}{$p} = 1;
+      }
+   }
+
+   my $contour_size = keys %$contour;
+   my $contour_assigned =  { map { ($_, {}) } keys %$contour };
+
+
+   # contour finding:
+   # 1 connect everything contour point with only two possible connections.
+   # 2 connect every contour point to any remaining contour point
+   #     only if their associated shape nodes are connected
+   #     repeat 2.
+   # ___
+   # to tighten the contour, add a contribution from all inward points
+   # in the relevant directions.
+   # ___
+   # use arced joins.
+
+
+   my $n_edges = 0;
+
+   my $i = 0;
+   my $delta = 1;
+   my $ruleset = 1;
+
+   while ($n_edges < $contour_size && ($delta || $ruleset < 5) && $i++ < 100) {
+
+      $delta = 0;
+      my @todo =
+         sort { keys %{$contour_assigned->{$a}} <=> keys %{$contour_assigned->{$b}} }
+         grep { keys %{$contour_assigned->{$_}} < 2 }
+         keys %$contour;
+
+local $" = ' ';
+print STDERR "RS $ruleset todo: @todo\n" if $::debug;
+
+      for my $t (@todo) {
+         my ($x, $y) = get_coords($inst, $t);
+
+         my @mates =
+            grep
+               {  defined($contour->{$_})
+               && !defined($contour_assigned->{$t}{$_})
+               && keys %{$contour_assigned->{$_}} < 2
+               }
+            map { get_name($inst, $x + $_->[0], $y + $_->[1]); }
+            ( [-1,0],[-1,1],[0,1],[1,1],[1,0],[1,-1],[0,-1],[-1,-1] );
+
+         if
+         (  $ruleset > 1
+         && (  !@mates
+            || @mates + keys %{$contour_assigned->{$t}} > 2
+            )
+         ) {
+         @mates =
+            grep
+               {  defined($contour->{$_})
+               && !defined($contour_assigned->{$t}{$_})
+               && keys %{$contour_assigned->{$_}} < 2
+               }
+            map { get_name($inst, $x + $_->[0], $y + $_->[1]); }
+            ( [-1,0],[0,1],[1,0],[0,-1] );
+         }
+
+   ##
+   ##
+
+         if
+         (  $ruleset > 2
+         && (  !@mates
+            || @mates + keys %{$contour_assigned->{$t}} > 2
+            )
+         ) {
+         @mates =
+            grep
+               {  defined($contour->{$_})
+               && !defined($contour_assigned->{$t}{$_})
+               && keys %{$contour_assigned->{$_}} == 1
+               }
+            map { get_name($inst, $x + $_->[0], $y + $_->[1]); }
+            ( [-1,0],[-1,1],[0,1],[1,1],[1,0],[1,-1],[0,-1],[-1,-1] );
+print STDERR "============= $t @mates\n" if $::debug;
+         }
+
+   ##
+   ##
+
+         if
+         (  $ruleset > 3
+         && (  !@mates
+            || @mates + keys %{$contour_assigned->{$t}} > 2
+            )
+         ) {
+         @mates =
+            grep
+               {  defined($contour->{$_})
+               && !defined($contour_assigned->{$t}{$_})
+               && keys %{$contour_assigned->{$_}} == 1
+               }
+            map { get_name($inst, $x + $_->[0], $y + $_->[1]); }
+            ( [-1,0],[0,1],[1,0],[0,-1] );
+         }
+
+   ##
+   ##
+
+         if (@mates + keys %{$contour_assigned->{$t}} <= 2) {
+            for my $m (@mates) {
+               $contour_assigned->{$t}{$m} = 1;
+               my ($u, $v) = get_coords($inst, $m);
+               if (keys %{$contour_assigned->{$m}} >= 2) {
+                  die "no reciprocality at start [$x $y] end [$u $v]";
+               }
+               $contour_assigned->{$m}{$t} = 1;
+print STDERR "connect $x $y to $u $v\n" if $::debug;
+               $delta++;
+            }
+         }
+         last if $delta && $ruleset > 1;
+      }
+      if ($delta) {
+         $ruleset = 1;
+      }
+      else {
+         $ruleset++;
+      }
+      $n_edges += $delta;
+   }
+
+
+   for my $p (keys %$contour) {
+      my ($x, $y) = get_coords($inst, $p);
+print STDERR "  $p=[$x $y]" if $::debug;
+   }
+print STDERR "\n" if $::debug;
+
+   for my $p (keys %$contour_assigned) {
+      my ($x, $y) = get_coords($inst, $p);
+      my @n = keys %{$contour_assigned->{$p}};
+print STDERR "$x $y: ", join " ", map { my ($u, $v) = get_coords($inst, $_); "[$u $v]" } @n if $::debug;
+print STDERR "\n" if $::debug;
+   }
+
+   my $n_points = keys %$contour;
+   my @unassigned =  map { join ",", get_coords($inst, $_); }
+                     grep { keys %{$contour_assigned->{$_}} < 2; }
+                     keys %$contour_assigned;
+   local $" = ' ';
+print STDERR "$n_points in contour\n" if $::debug;
+print STDERR "not assigned: @unassigned\n" if $::debug;
+print STDERR "\n" if $::debug;
+
+   my %traversed = ();
+   my @todo = keys %$contour_assigned;
+
+   while (@todo) {
+
+                  ## we use foo and bar rather than right and left.
+                  ## but the concept is the same, they indicate
+                  ## unspecified directionalities.
+
+      my $start = shift @todo;  
+      my $n = $start;
+      next if defined($traversed{$n}{foo});
+
+      while (!defined($traversed{$n}{foo})) {
+         my @n = grep { !defined($traversed{$_}{foo}); } keys %{$contour_assigned->{$n}};
+         last unless @n;
+         my ($q, $r) =  map { my ($u, $v) = get_coords($inst, $_); "$u $v"; } ($n, $n[0]);
+         $traversed{$n}{foo} = $n[0];
+         $traversed{$n[0]}{bar} = $n;
+         $traversed{$n}{control} = 0;
+print STDERR "from $q to $r [$n $n[0]]\n" if $::debug;
+            $n = $n[0];
+         }
+         $traversed{$n}{foo} = $start;
+         $traversed{$n}{control} = 0;
+         $traversed{$start}{bar} = $n;
+print STDERR "from $n to $start\n" if $::debug;
+
+      my $p = $start;
+                  ## find things on straight lines that
+                  ## are not endpoints.
+                  ## they will be control points.
+                  ## control points are start/end points
+                  ## of bezier curves.
+      while (1) {
+         my $foo = $traversed{$p}{foo};
+         my $bar = $traversed{$p}{bar};
+         my ($c, $d) = get_coords($inst, $bar);
+         my ($e, $f) = get_coords($inst, $p);
+         my ($g, $h) = get_coords($inst, $foo);
+
+         if ($c + $g - 2 * $e == 0 && $d + $h - 2 * $f == 0) {
+            $traversed{$p}{control} = 1;
+         }
+         else {
+            $traversed{$p}{control} = 0;
+         }
+         $p = $foo;
+         last if $p eq $start;
+      }
+
+      $p = $start;
+                  ## move nodes inward.
+      while (1) {
+         my $foo = $traversed{$p}{foo};
+         my $bar = $traversed{$p}{bar};
+         my ($u, $v) = get_coords($inst, $p);
+         my @inward
+         =  map { my ($x, $y) = get_coords($inst, $_); [$x, $y] }
+            keys %{$inward->{$p}};
+
+         my $ct = @inward;
+         $traversed{$p}{X} = $f_out * $u; 
+         $traversed{$p}{Y} = $f_out * $v; 
+         for my $i (@inward) {
+            $traversed{$p}{X} += $f_in * $i->[0] / $ct;
+            $traversed{$p}{Y} += $f_in * $i->[1] / $ct;
+         }
+
+         $p = $foo;
+         last if $p eq $start;
+      }
+
+      $p = $start;
+                  ## add control points where necessary.
+      while (1) {
+         my $pp = $p;
+         $p = $traversed{$p}{foo};
+            # insert node in the middle.
+         if (!$traversed{$pp}{control} && !$traversed{$p}{control}) {
+            # my ($c, $d) = get_coords($inst, $pp);
+            # my ($e, $f) = get_coords($inst, $p);
+            my ($c, $d) = map { $traversed{$pp}{$_} } qw (X Y);
+            my ($e, $f) = map { $traversed{$p}{$_} } qw (X Y);
+            my $g = ($c+$e) / 2;
+            my $h = ($d+$f) / 2;
+            my $nn = get_name($inst, $g, $h);
+            $traversed{$pp}{foo} = $nn;
+            $traversed{$nn}{bar} = $pp;
+            $traversed{$nn}{foo} = $p;
+            $traversed{$p}{bar}  = $nn;
+            $traversed{$nn}{control} = 2;
+            $traversed{$nn}{X} = $g;
+            $traversed{$nn}{Y} = $h;
+         }
+         last if $p eq $start;
+      }
+
+                        ## we need to moveto to a control point.
+      $p = $start;
+
+      while ($traversed{$p}{control}) {
+         $p = $traversed{$p}{foo};
+      }
+      # my ($x, $y) = get_coords($inst, $bar);
+      my $zut = $traversed{$p}{bar};
+      $p = $traversed{$p}{foo};
+      my $start_print = $p;
+
+      print  "newpath\n";
+      printf "%.3f %.3f snap moveto\n", $traversed{$zut}{X}, $traversed{$zut}{Y};
+      # print "$traversed{foo}{X} $traversed{foo}{Y} moveto\n";
+      # print "$traversed{$p}{X} $traversed{$p}{Y} moveto\n";
+
+      while (1) {
+         # my ($c, $d) = get_coords($inst, $traversed{$p}{bar});
+         # my ($e, $f) = get_coords($inst, $p);
+         # my ($g, $h) = get_coords($inst, $traversed{$p}{foo});
+         my $foo = $traversed{$p}{foo};
+         my $bar = $traversed{$p}{bar};
+         my ($c, $d) = map { $traversed{$bar}{$_} } qw (X Y);
+         my ($e, $f) = map { $traversed{$p}{$_} } qw (X Y);
+         my ($g, $h) = map { $traversed{$foo}{$_} } qw (X Y);
+         my $ctr = $traversed{$p}{control};
+
+         # printf "%.1f %.1f  <==$ctr  %.1f %.1f  $ctr==>  %.1f %.1f\n", $c, $d, $e, $f, $g, $h;
+         if ($traversed{$p}{control}) {
+            printf "%.3f %.3f snap %.3f %.3f snap %.3f %.3f snap curveto\n",  $c, $d, $c, $d, $e, $f;
+         }
+         $p = $traversed{$p}{foo};
+         last if $p eq $start_print;
+      }
+      if ($fill) {
+         print "gsave\n";
+         print "$fillcolor aload pop setrgbcolor fill %totido\n";
+         print "grestore\n";
+      }
+      if ($stroke) {
+         print "gsave snarecolor aload pop setrgbcolor stroke grestore\n\n";
+      }
+   }
+}
+
+
+
+
+
+# 3    0
+# 2   0#0   0
+# 1  0###000#0
+# 0   0#####0
+#-1    00000
+#
+#   -101234567
+
+#    0
+#   0#0
+#  0#0  00
+# 0###00##0
+#  0#####0
+#   00000
+
+__DATA__
+
+
+
+# 4     0#0
+# 3    0#0
+# 2   0#0
+# 1  0#0
+# 0   0
+#
+# 0  0123456
+
+1 1
+2 2
+3 3
+4 4
+
+
+
+
+# 4   0  0
+# 3  0#00#0
+# 2  0#00#0
+# 1   0##0
+# 0    00
+#
+#    0123456
+
+1 2
+1 3
+2 1
+3 1
+4 2
+4 3
+
+
+# 4    0
+# 3   0#0
+# 2   0.0
+# 1  0#.#0
+# 0   000
+#
+# 0  0123456
+
+1 1
+3 1
+2 3
+
+1 1
+
+1 1
+1 2
+2 1
+2 2
+
+1 1
+2 1
+3 1
+4 1
+5 1
+5 2
+5 3
+5 4
+5 5
+4 5
+3 5
+2 5
+1 5
+1 4
+1 3
+1 2
+
+
+# 4    0
+# 3   0#0  00
+# 2  0###00##0
+# 1   0#####0
+# 0    00000
+#
+#    012345678
+
+1 2
+2 1
+2 2
+2 3
+3 1
+3 2
+4 1
+5 1
+6 1
+6 2
+7 2
+
+
+

@@ -1,0 +1,522 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html>
+<!-- Copyright (c) 2014 Stijn van Dongen -->
+<head>
+<meta name="keywords" content="manual">
+<style type="text/css">
+/* START aephea.base.css */
+body
+{ text-align: justify;
+margin-left: 0%;
+margin-right: 0%;
+}
+a:link { text-decoration: none; }
+a:active { text-decoration: none; }
+a:visited { text-decoration: none; }
+a:link { color: #1111aa; }
+a:active { color: #1111aa; }
+a:visited { color: #111166; }
+a.local:link { color: #11aa11; }
+a.local:active { color: #11aa11; }
+a.local:visited { color: #116611; }
+a.intern:link { color: #1111aa; }
+a.intern:active { color: #1111aa; }
+a.intern:visited { color: #111166; }
+a.extern:link { color: #aa1111; }
+a.extern:active { color: #aa1111; }
+a.extern:visited { color: #661111; }
+a.quiet:link { color: black; }
+a.quiet:active { color: black; }
+a.quiet:visited { color: black; }
+div.verbatim
+{ font-family: monospace;
+margin-top: 1em;
+margin-bottom: 1em;
+font-size: 10pt;
+margin-left: 2em;
+white-space: pre;
+}
+div.indent
+{ margin-left: 8%;
+margin-right: 0%;
+}
+.right { text-align: right; }
+.left { text-align: left; }
+.nowrap { white-space: nowrap; }
+.item_leader
+{ position: relative;
+margin-left: 8%;
+}
+.item_compact { position: absolute; vertical-align: baseline; }
+.item_cascade { position: relative; }
+.item_leftalign { text-align: left; }
+.item_rightalign
+{ width: 2em;
+text-align: right;
+}
+.item_compact .item_rightalign
+{ position: absolute;
+width: 52em;
+right: -2em;
+text-align: right;
+}
+.item_text
+{ position: relative;
+margin-left: 3em;
+}
+.smallcaps { font-size: smaller; text-transform: uppercase }
+/* END aephea.base.css */
+body { font-family: "Garamond", "Gill Sans", "Verdana", sans-serif; }
+body
+{ text-align: justify;
+margin-left: 8%;
+margin-right: 8%;
+}
+</style>
+<title>The mcxassemble manual</title>
+</head>
+<body>
+<p style="text-align:right">
+16 May 2014&nbsp;&nbsp;&nbsp;
+<a class="local" href="mcxassemble.ps"><b>mcxassemble</b></a>
+14-137
+</p>
+<div class=" itemize " style="margin-top:1em; font-size:100%">
+<div class=" item_compact"><div class=" item_rightalign nowrap " style="right:-3em">1.</div></div>
+<div class=" item_text " style="margin-left:4em">
+<a class="intern" href="#name">NAME</a>
+</div>
+<div class=" item_compact"><div class=" item_rightalign nowrap " style="right:-3em">2.</div></div>
+<div class=" item_text " style="margin-left:4em">
+<a class="intern" href="#synopsis">SYNOPSIS</a>
+</div>
+<div class=" item_compact"><div class=" item_rightalign nowrap " style="right:-3em">3.</div></div>
+<div class=" item_text " style="margin-left:4em">
+<a class="intern" href="#description">DESCRIPTION</a>
+</div>
+<div class=" item_compact"><div class=" item_rightalign nowrap " style="right:-3em">4.</div></div>
+<div class=" item_text " style="margin-left:4em">
+<a class="intern" href="#options">OPTIONS</a>
+</div>
+<div class=" item_compact"><div class=" item_rightalign nowrap " style="right:-3em">5.</div></div>
+<div class=" item_text " style="margin-left:4em">
+<a class="intern" href="#author">AUTHOR</a>
+</div>
+<div class=" item_compact"><div class=" item_rightalign nowrap " style="right:-3em">6.</div></div>
+<div class=" item_text " style="margin-left:4em">
+<a class="intern" href="#seealso">SEE ALSO</a>
+</div>
+</div>
+
+<a name="name"></a>
+<h2>NAME</h2>
+<p style="margin-bottom:0" class="asd_par">
+mcxassemble &mdash; transform raw cooccurrence data to mcl matrix format.</p>
+
+<a name="synopsis"></a>
+<h2>SYNOPSIS</h2>
+<p style="margin-bottom:0" class="asd_par">
+<b>mcxassemble</b>
+<a class="intern" href="#opt-b"><b>-b</b> base (<i>base name</i>)</a>
+<a class="intern" href="#opt-o"><b>[-o</b> fname (<i>write to file fname</i>)<b>]</b></a>
+<a class="intern" href="#opt--write-binary"><b>[--write-binary</b> (<i>write output in binary format</i>)<b>]</b></a>
+<a class="intern" href="#opt--map"><b>[--map</b> (<i>apply base.map</i>)<b>]</b></a>
+<a class="intern" href="#opt-raw-tf"><b>[-raw-tf</b> (<i>apply transform spec to input</i>)<b>]</b></a>
+<a class="intern" href="#opt-rv"><b>[-rv</b> MODE (<i>repeated vectors</i>)<b>]</b></a>
+<a class="intern" href="#opt-re"><b>[-re</b> MODE (<i>repeated entries</i>)<b>]</b></a>
+<a class="intern" href="#opt-ri"><b>[-ri</b> MODE (<i>adding mirror image</i>)<b>]</b></a>
+<a class="intern" href="#opt-r"><b>[-r</b> MODE (<i>repeated entries/vectors/images</i>)<b>]</b></a>
+<a class="intern" href="#opt-prm-tf"><b>[-prm-tf</b> (<i>apply transform spec to primary matrix</i>)<b>]</b></a>
+<a class="intern" href="#opt-sym-tf"><b>[-sym-tf</b> (<i>apply transform spec to symmetrified matrix</i>)<b>]</b></a>
+<a class="intern" href="#opt-q"><b>[-q</b> (<i>quiet mode</i>)<b>]</b></a>
+</p>
+<p style="margin-bottom:0" class="asd_par">
+The options above embody the default setup when using mcxassemble.
+There are many more options which mostly provide subtly different
+ways of doing input/output, set warning levels, or regulate
+how repeated entries and vectors should be treated.
+The full list of options is shown below.
+Read <a class="intern" href="#description">DESCRIPTION</a> for learning about mcxassemble input/output
+and the functionality it provides.
+</p>
+<p style="margin-bottom:0"><b>NOTE</b><br>
+As of release 05-314 <a class="local sibling" href="mcl.html">mcl</a> is able to cluster label-type input
+on the fly. In most cases, this will be sufficient. Alternatively,
+<a class="local sibling" href="mcxload.html">mcxload</a> can be used to map label-type input onto mcl
+matrices. Consequently, there are likely fewer scenarios nowadays
+where <b>mcxassemble</b> is the best solution. Consider first whether
+<b>mcl</b> in label mode or <b>mcxload</b> can do the job as well.</p>
+<p style="margin-bottom:0" class="asd_par">
+<b>mcxassemble</b>
+<a class="intern" href="#opt-b"><b>[-b</b> base (<i>base name</i>)<b>]</b></a>
+<a class="intern" href="#opt-hdr"><b>[-hdr</b> fname (<i>read header file</i>)<b>]</b></a>
+<a class="intern" href="#opt-raw"><b>[-raw</b> fname (<i>read raw file</i>)<b>]</b></a>
+<a class="intern" href="#opt--map"><b>[--map</b> (<i>apply base.map</i>)<b>]</b></a>
+<a class="intern" href="#opt--cmap"><b>[--cmap</b> (<i>apply base.cmap</i>)<b>]</b></a>
+<a class="intern" href="#opt--rmap"><b>[--rmap</b> (<i>apply base.rmap</i>)<b>]</b></a>
+<a class="intern" href="#opt-map"><b>[-map</b> fname (<i>apply fname</i>)<b>]</b></a>
+<a class="intern" href="#opt-rmap"><b>[-rmap</b> fname (<i>apply fname</i>)<b>]</b></a>
+<a class="intern" href="#opt-cmap"><b>[-cmap</b> fname (<i>apply fname</i>)<b>]</b></a>
+<a class="intern" href="#opt-tag"><b>[-tag</b> tag (<i>apply base.tag</i>)<b>]</b></a>
+<a class="intern" href="#opt-rtag"><b>[-rtag</b> tag (<i>apply base.tag</i>)<b>]</b></a>
+<a class="intern" href="#opt-ctag"><b>[-ctag</b> tag (<i>apply base.tag</i>)<b>]</b></a>
+<a class="intern" href="#opt-skw"><b>[-skw</b> fname (<i>write skew matrix</i>)<b>]</b></a>
+<a class="intern" href="#opt-prm"><b>[-prm</b> fname (<i>write primary result matrix</i>)<b>]</b></a>
+<a class="intern" href="#opt--skw"><b>[--skw</b> (<i>write base.skw</i>)<b>]</b></a>
+<a class="intern" href="#opt--prm"><b>[--prm</b> (<i>write base.prm</i>)<b>]</b></a>
+<a class="intern" href="#opt-xo"><b>[-xo</b> suf (<i>write base.suf</i>)<b>]</b></a>
+<a class="intern" href="#opt-o"><b>[-o</b> fname (<i>write to file fname</i>)<b>]</b></a>
+<a class="intern" href="#opt-n"><b>[-n</b> (<i>do not write default symmetrized result</i>)<b>]</b></a>
+<a class="intern" href="#opt-i"><b>[-i</b> (<i>read from single data file</i>)<b>]</b></a>
+<a class="intern" href="#opt-digits"><b>[-digits</b> int (<i>digits width</i>)<b>]</b></a>
+<a class="intern" href="#opt-s"><b>[-s</b> (<i>check for symmetry</i>)<b>]</b></a>
+<a class="intern" href="#opt-raw-tf"><b>[-raw-tf</b> (<i>apply transform spec to input</i>)<b>]</b></a>
+<a class="intern" href="#opt-rv"><b>[-rv</b> &lt;mode&gt; (<i>action for repeated vectors</i>)<b>]</b></a>
+<a class="intern" href="#opt-re"><b>[-re</b> &lt;mode&gt; (<i>action for repeated entries</i>)<b>]</b></a>
+<a class="intern" href="#opt-ri"><b>[-ri</b> &lt;mode&gt; (<i>adding mirror image</i>)<b>]</b></a>
+<a class="intern" href="#opt-r"><b>[-r</b> &lt;mode&gt; (<i>same for entries and vectors</i>)<b>]</b></a>
+<a class="intern" href="#opt-prm-tf"><b>[-prm-tf</b> (<i>apply transform spec to primary matrix</i>)<b>]</b></a>
+<a class="intern" href="#opt-sym-tf"><b>[-sym-tf</b> (<i>apply transform spec to symmetrified matrix</i>)<b>]</b></a>
+<a class="intern" href="#opt--quiet-re"><b>[--quiet-re</b> (<i>quiet for repeated entries</i>)<b>]</b></a>
+<a class="intern" href="#opt--quiet-rv"><b>[--quiet-rv</b> (<i>quiet for repeated vectors</i>)<b>]</b></a>
+<a class="intern" href="#opt-q"><b>[-q</b> (<i>the two above combined</i>)<b>]</b></a>
+<a class="intern" href="#opt-h"><b>[-h</b> (<i>print synopsis, exit</i>)<b>]</b></a>
+<a class="intern" href="#opt--apropos"><b>[--apropos</b> (<i>print synopsis, exit</i>)<b>]</b></a>
+<a class="intern" href="#opt--version"><b>[--version</b> (<i>print version, exit</i>)<b>]</b></a>
+</p>
+
+<a name="description"></a>
+<h2>DESCRIPTION</h2>
+<p style="margin-bottom:0" class="asd_par">
+<b>mcxassemble</b> enables easy matrix creation from an intermediate raw matrix
+format that can easily be constructed from a one-pass-parse of cooccurrence
+data. The basic setup is as follows.
+</p>
+<div class=" itemize " style="margin-top:1em; font-size:100%">
+<div class=" item_compact"><div class=" item_rightalign " style="right:-1em"><span class="itembullet">&bull;</span></div></div>
+<div class=" item_text " style="margin-left:2em">
+<p style="margin-top:0em; margin-bottom:0em">
+Parse cooccurrence data from some external format.
+</p>
+</div>
+<div class=" item_compact"><div class=" item_rightalign " style="right:-1em"><span class="itembullet">&bull;</span></div></div>
+<div class=" item_text " style="margin-left:2em">
+<p style="margin-top:0em; margin-bottom:0em">
+Transform cooccurrence data to raw mcl data as you parse.
+</p>
+</div>
+<div class=" item_compact"><div class=" item_rightalign " style="right:-1em"><span class="itembullet">&bull;</span></div></div>
+<div class=" item_text " style="margin-left:2em">
+<p style="margin-top:0em; margin-bottom:0em">
+When done, write out required header and domain information
+to a separate file. The domain information can be built during
+the parsing stage.
+</p>
+</div>
+<div class=" item_compact"><div class=" item_rightalign " style="right:-1em"><span class="itembullet">&bull;</span></div></div>
+<div class=" item_text " style="margin-left:2em">
+<p style="margin-top:0em; margin-bottom:0em">
+Use mcxassemble to construct a valid matrix from the raw data
+and the header information.
+</p>
+</div>
+<div class=" item_compact"><div class=" item_rightalign " style="right:-1em"><span class="itembullet">&bull;</span></div></div>
+<div class=" item_text " style="margin-left:2em">
+<p style="margin-top:0em; margin-bottom:0em">
+Nodes can optionally be relabeled by writing a separate map file to be read
+by <b>mcxassemble</b>, which takes the form of a very thin matrix file.
+</p>
+</div>
+</div>
+<p style="margin-bottom:0" class="asd_par">
+The easiest thing to do is to group all input/output files under the same
+base name, say&nbsp;<b>base</b>. A standard way of proceeding, which will lead to
+a concise <b>mcxassemble</b> command line, is by creating the input files
+<b>base.raw</b> and <b>base.hdr</b>, and optionally the file <b>base.map</b>. The
+default behaviour of mcxassemble is then to create <b>base.sym</b> as the
+resulting matrix file, containing the symmetrized matrix constructed from
+the raw input.
+</p>
+<p style="margin-bottom:0"><b>Example</b><br>
+Suppose <tt>blastresult</tt> is a file containing blast results.
+The following two commands construct an mcl matrix file from the file.
+</p>
+<div class="verbatim">   mcxdeblast --score=e --sort=a blastresult
+   mcxassemble -b blastresult -r max --map</div>
+<p style="margin-top:0em; margin-bottom:0em">
+<b>mcxdeblast</b> will generate the
+files <tt>blastresult.hdr</tt>, <tt>blastresult.raw</tt>, and <tt>blastresult.map</tt>.
+The <b>--sort=a</b> option will create a map file corresponding
+with alphabetic ordering. These files are processed by <b>mcxassemble</b>
+and it will generate the file <tt>blastresult.sym</tt>. The <b>-r</b>
+option tells <b>mcxassemble</b> that repeated entries should be maxed;
+each time the largest entry seen thus far will be taken.
+</p>
+<p style="margin-bottom:0"><b>Header file</b><br>
+This file contains a header as usually found in generic mcl matrix files,
+i.e. the required <i>header</i> part, and optionally the <i>domain</i> part(s)
+if not all domains are canonical. Refer to <a class="local sibling" href="mcxio.html">mcxio</a> for more information.
+The domain information in the header file will be used to pre-construct a
+skeleton matrix and to validate the entries in the raw data file as they
+fill the skeleton matrix.
+</p>
+<p style="margin-bottom:0"><b>Raw input format</b><br>
+The file from which raw input is read should have the raw format as
+described in <a class="local sibling" href="mcxio.html">mcxio</a>. Simply put; no header specification, no domain
+specification, and no matrix introduction syntax is used. The file just
+contains a listing of vectors. An example fragment is the following:
+</p>
+<div class="verbatim">2  4:0.34 1:2.8838 4:2.328 1:4.238 1:12 $
+1  2:7.8 $
+2  1:0.01 4:20.3 3:2 $</div>
+<p style="margin-top:0em; margin-bottom:0em">
+The listing of vectors need not be sorted, and neither does
+a vector itself need to be sorted - the mcl generic matrix format
+is actually not different in this respect.
+Furthermore, duplicate entries and duplicate vectors are allowed.
+This is in fact again allowed in the generic format, except
+that where applications expect generic format warnings will be issued and
+duplicate entries will be disregarded. <b>mcxassemble</b> allows customizable
+behaviour dictating how to merge repeated entries.
+Refer to the <a class="intern" href="#opt-re"><b>-re</b>,&nbsp;<b>-rv</b>,&nbsp;<b>-r</b></a>
+options below.
+</p>
+<p style="margin-bottom:0" class="asd_par">
+The vectors read by <b>mcxassemble</b> do have to match the domains specified in
+the header file. The leading index that specifies the column index has to be
+present in the column domain; all subsequent indices that specify column
+entries have to be present in the row domain.
+</p>
+<p style="margin-bottom:0" class="asd_par">
+<i>If one concatenates the contents of the header file and the data file</i>,
+the result is <i>almost but not quite</i> a file containing a matrix in
+syntactically correct mcl generic matrix format. The parts missing
+are the <tt>(mclmatrix</tt> introduction token, (followed by) the
+<tt>begin</tt> token, and the closing <tt>)</tt> token.
+</p>
+<p style="margin-bottom:0"><b>Map file</b><br>
+This file must contain a map matrix, which is a matrix with the
+following properties:
+</p>
+<div class=" itemize " style="margin-top:1em; font-size:100%">
+<div class=" item_compact"><div class=" item_rightalign " style="right:-1em"><span class="itembullet">&bull;</span></div></div>
+<div class=" item_text " style="margin-left:2em">
+<p style="margin-top:0em; margin-bottom:0em">
+The column domain and row domain are of the same cardinality.
+</p>
+</div>
+<div class=" item_compact"><div class=" item_rightalign " style="right:-1em"><span class="itembullet">&bull;</span></div></div>
+<div class=" item_text " style="margin-left:2em">
+<p style="margin-top:0em; margin-bottom:0em">
+Each column has exactly one entry.
+</p>
+</div>
+<div class=" item_compact"><div class=" item_rightalign " style="right:-1em"><span class="itembullet">&bull;</span></div></div>
+<div class=" item_text " style="margin-left:2em">
+<p style="margin-top:0em; margin-bottom:0em">
+Each row domain index occurs in exactly one column.
+</p>
+</div>
+</div>
+<p style="margin-bottom:0" class="asd_par">
+Such a matrix is used to relabel the nodes as found in the raw data. A
+situation that might occur when parsing some external format (and producing
+raw matrix format), is that ID's (indices) are handed out on the fly during
+the parse. Afterwards, one may want to relabel the IDs such that they
+correspond with an alphabetic listing of the quantity that is represented by
+the node domain, or by some other sort criterion. A map file is then
+typically generated by the parser, as that is the utility in charge of the
+IDs. A small example of a map file for a graph containing five nodes is the
+following:
+</p>
+<div class="verbatim">(mclheader
+mcltype matrix
+dimensions 5x5
+)
+(mclmatrix
+begin
+0  4  $  #  mno 
+1  2  $  #  ghi
+2  1  $  #  def
+3  3  $  #  jkl
+4  0  $  #  abc
+)</div>
+<p style="margin-top:0em; margin-bottom:0em">
+This corresponds to a relabeling such that the associated strings
+will be ordered alphabetically. Note that comments can be used
+to link string identifiers with indices. This map file says e.g. that
+the string identifier "mno" is represented by index 0 in the raw data,
+and by index 4 in the matrix output by <b>mcxassemble</b>.
+</p>
+
+<a name="options"></a>
+<h2>OPTIONS</h2>
+<div class=" itemize " style="margin-top:1em; font-size:100%">
+<div class=" item_cascade item_leftalign nowrap" ><a name="opt-b"></a><b>-b</b> base (<i>base name</i>)</div>
+<div class=" item_text " style="margin-left:2em">
+<p style="margin-top:0em; margin-bottom:0em">
+Base name of files to be processed and output. Refer to <a class="intern" href="#description">DESCRIPTION</a>
+above and the entries of other options below.
+</p>
+</div>
+<div style="margin-top:0em">&nbsp;</div><div class=" item_cascade item_leftalign nowrap" ><a name="opt-hdr"></a><b>-hdr</b> fname (<i>read header file</i>)</div><div class=" item_cascade item_leftalign nowrap" ><a name="opt-raw"></a><b>-raw</b> fname (<i>read raw file</i>)</div>
+<div class=" item_text " style="margin-left:2em">
+<p style="margin-top:0em; margin-bottom:0em">
+Explicitly specify the header file and the data file (rather
+than constructing the file names from a base name and suffixes).
+</p>
+</div>
+<div style="margin-top:0em">&nbsp;</div><div class=" item_cascade item_leftalign nowrap" ><a name="opt--map"></a><b>--map</b> (<i>apply base.map</i>)</div><div class=" item_cascade item_leftalign nowrap" ><a name="opt--cmap"></a><b>--cmap</b> (<i>apply base.cmap</i>)</div><div class=" item_cascade item_leftalign nowrap" ><a name="opt--rmap"></a><b>--rmap</b> (<i>apply base.rmap</i>)</div><div class=" item_cascade item_leftalign nowrap" ><a name="opt-map"></a><b>-map</b> fname (<i>apply fname</i>)</div><div class=" item_cascade item_leftalign nowrap" ><a name="opt-rmap"></a><b>-rmap</b> fname (<i>apply fname</i>)</div><div class=" item_cascade item_leftalign nowrap" ><a name="opt-cmap"></a><b>-cmap</b> fname (<i>apply fname</i>)</div><div class=" item_cascade item_leftalign nowrap" ><a name="opt-tag"></a><b>-tag</b> tag (<i>apply base.tag</i>)</div><div class=" item_cascade item_leftalign nowrap" ><a name="opt-rtag"></a><b>-rtag</b> tag (<i>apply base.tag</i>)</div><div class=" item_cascade item_leftalign nowrap" ><a name="opt-ctag"></a><b>-ctag</b> tag (<i>apply base.tag</i>)</div>
+<div class=" item_text " style="margin-left:2em">
+<p style="margin-top:0em; margin-bottom:0em">
+Map options. <b>--cmap</b> combines with the <b>-b</b>&nbsp;option,
+and says that the map file in <b>base</b>.<tt>cmap</tt> (where <b>base</b>
+was specified with <b>-b</b>&nbsp;<b>base</b>) should be applied to the column
+domain only. <b>--rmap</b> works the same for the
+row domain, and <b>--map</b> can be used to apply the same map
+to both the column and row domains.
+</p>
+<p style="margin-bottom:0" class="asd_par">
+<b>-cmap</b> and its siblings are used to explicitly specify the
+map file to be used, rather than combining a base name with a fixed
+suffix.
+<b>-tag</b> and its siblings work in conjuction with
+the <b>-b</b>&nbsp;option, and require that a tag be specified from
+which to construct the map file (by appending it to the base name).
+</p>
+</div>
+<div style="margin-top:0em">&nbsp;</div><div class=" item_cascade item_leftalign nowrap" ><a name="opt-skw"></a><b>-skw</b> fname (<i>write skew matrix</i>)</div><div class=" item_cascade item_leftalign nowrap" ><a name="opt-prm"></a><b>-prm</b> fname (<i>write primary result matrix</i>)</div><div class=" item_cascade item_leftalign nowrap" ><a name="opt--prm"></a><b>--prm</b> (<i>write base.prm</i>)</div><div class=" item_cascade item_leftalign nowrap" ><a name="opt--skw"></a><b>--skw</b> (<i>write base.skw</i>)</div><div class=" item_cascade item_leftalign nowrap" ><a name="opt-n"></a><b>-n</b> (<i>do not write default symmetrized result</i>)</div>
+<div class=" item_text " style="margin-left:2em">
+<p style="margin-top:0em; margin-bottom:0em">
+Options for writing matrices other than the default symmetrized result.
+The primary result matrix is the matrix constructed from reading in the
+raw data and adding entries to the skeleton matrix as specified
+with the <a class="intern" href="#opt-r"><b>-r</b>, <b>-re</b>, and <b>-rv</b> options</a>.
+This matrix can be written using one of the <b>prm</b> options.
+Calling the primary matrix A, the skew matrix (as defined here)
+is the matrix <tt>A&nbsp;-&nbsp;A^T</tt>, i.e. A minus its transposed matrix.
+It can be written using one of the <b>skw</b> options.
+</p>
+<p style="margin-bottom:0" class="asd_par">
+If for some reason the symmetrized result is not needed, its output
+can be prevented using the <b>-n</b>&nbsp;option.
+</p>
+</div>
+<div style="margin-top:0em">&nbsp;</div><div class=" item_cascade item_leftalign nowrap" ><a name="opt-xo"></a><b>-xo</b> suf (<i>write base.suf</i>)</div><div class=" item_cascade item_leftalign nowrap" ><a name="opt-o"></a><b>-o</b> fname (<i>write to file fname</i>)</div><div class=" item_cascade item_leftalign nowrap" ><a name="opt-i"></a><b>-i</b> (<i>read from single data file</i>)</div><div class=" item_cascade item_leftalign nowrap" ><a name="opt-digits"></a><b>-digits</b> int (<i>digits width</i>)</div><div class=" item_cascade item_leftalign nowrap" ><a name="opt--write-binary"></a><b>--write-binary</b> (<i>write output in binary format</i>)</div>
+<div class=" item_text " style="margin-left:2em">
+<p style="margin-top:0em; margin-bottom:0em">
+The <b>-xo</b>&nbsp;option is used in conjunction with the <b>-b</b>&nbsp;option
+in order to change the suffix for the file in which the symmetrized
+result matrix is written. Use e.g. <b>-xo</b>&nbsp;<b>mci</b> to change the suffix
+from the default value <tt>sym</tt> to <tt>mci</tt>. Use <b>-o</b> to explicitly
+specify the filename in full. Use <b>-digits</b> to set the number of
+digits written for matrix entries (c.q. edge weights).
+</p>
+<p style="margin-bottom:0" class="asd_par">
+The <b>-i</b> option is special. It causes
+<b>mcxassemble</b> to read both the header information and the raw data
+from the same file, where the syntax should be fully conforming
+to generic mcl matrix format.
+</p>
+</div>
+<div style="margin-top:0em">&nbsp;</div><div class=" item_cascade"><div class=" item_leftalign nowrap " ><a name="opt-s"></a><b>-s</b> (<i>check for symmetry</i>)</div></div>
+<div class=" item_text " style="margin-left:2em">
+<p style="margin-top:0em; margin-bottom:0em">
+This will check whether the primary result matrix was symmetric.
+It reports the number of failing (or <i>skew</i>) edges.
+</p>
+</div>
+<div style="margin-top:0em">&nbsp;</div><div class=" item_cascade item_leftalign nowrap" ><a name="opt-raw-tf"></a><b>-raw-tf</b> &lt;tf-spec&gt; (<i>apply transform spec to input</i>)</div><div class=" item_cascade item_leftalign nowrap" ><a name="opt-prm-tf"></a><b>-prm-tf</b> (<i>apply transform spec to primary matrix</i>)</div><div class=" item_cascade item_leftalign nowrap" ><a name="opt-sym-tf"></a><b>-sym-tf</b> (<i>apply transform spec to symmetrified matrix</i>)</div>
+<div class=" item_text " style="margin-left:2em">
+<p style="margin-top:0em; margin-bottom:0em">
+The first applies its transformation spec to the values
+as found in the raw data. The second applies its transformation
+spec to the primary matrix. The third applies its transformation
+step to the symmetrified matrix.
+Refer to <a class="local sibling" href="mcxio.html">mcxio</a> for documentation on the transformation
+spec syntax.</p>
+</div>
+<div style="margin-top:0em">&nbsp;</div><div class=" item_cascade item_leftalign nowrap" ><a name="opt-rv"></a><b>-rv</b> add|max|min|mul|left|right (<i>action for repeated vectors</i>)</div><div class=" item_cascade item_leftalign nowrap" ><a name="opt-re"></a><b>-re</b> add|max|min|mul|left|right (<i>action for repeated entries</i>)</div><div class=" item_cascade item_leftalign nowrap" ><a name="opt-ri"></a><b>-ri</b> add|max|min|mul (<i>adding mirror image</i>)</div><div class=" item_cascade item_leftalign nowrap" ><a name="opt-r"></a><b>-r</b> add|max|min|mul|left|right (<i>same for entries and vectors</i>)</div>
+<div class=" item_text " style="margin-left:2em">
+<p style="margin-top:0em; margin-bottom:0em">
+Merge options, dictating the behaviour when repeated entries are
+found. A distinction is made between entries that are repeated within
+the same column listing, and entries that are repeated between
+different column listings. An entry can be a repeat of both kinds
+simultaneously as well.
+Additionally, the final result is by default symmetrized by combining with
+the mirror image (in matrix terminology, the <i>transposed</i> matrix). This
+symmetrization can be done in the same variety of ways.
+</p>
+<p style="margin-bottom:0" class="asd_par">
+The <b>re</b> option, for repeats within the same column, is carried out
+first. It is applied <i>after</i> the column has its entries sorted, so the
+<tt>left</tt> and <tt>right</tt> options are not garantueed to follow the order found
+in the raw input. The <b>rv</b> option, for repeats over different columns,
+is carried out second.
+</p>
+<p style="margin-bottom:0" class="asd_par">
+The option <b>-ri</b>&nbsp;<b>min</b> can assist in implementing
+a (top-list) best reciprocal hit criterion.
+</p>
+<p style="margin-bottom:0"><b>Examples</b><br>
+The column
+</p>
+<div class="verbatim">0 1:30 1:50 2:60 4:70 3:20 1:40 2:40 $</div>
+<p style="margin-top:0em; margin-bottom:0em">
+is encountered in the input, listing entries for the vector labeled
+with index&nbsp;<tt>0</tt>. If <b>-re</b>&nbsp;<b>add</b> or <b>-r</b>&nbsp;<b>add</b>
+is used, it will transform to the vector
+</p>
+<div class="verbatim">0 1:120 2:60  3:20 4:70 $</div>
+<p style="margin-top:0em; margin-bottom:0em">
+If <b>-re</b>&nbsp;<b>max</b> or <b>-r</b>&nbsp;<b>add</b>
+is used instead, it will transform to the vector
+</p>
+<div class="verbatim">0 1:40 2:60 3:20 4:70 $</div>
+<p style="margin-top:0em; margin-bottom:0em">
+Suppose <i>add</i> mode is used, and that later on another
+vector specification for the index&nbsp;<tt>0</tt> is found, leading
+to this transformed vector:
+</p>
+<div class="verbatim">0 1:60 2:80 4:40 $</div>
+<p style="margin-top:0em; margin-bottom:0em">
+If <b>-rv</b>&nbsp;<b>max</b> was specified, this new vector is combined with the
+previous vector by taking the entry wise maximum:
+</p>
+<div class="verbatim">0 1:120 2:60 3:20 4:70 $      # first (transformed) vector
+0 1:60 2:80 4:40 $            # second vector
+
+0 1:120 2:80 3:20 4:70 $      # entry wise maximum</div>
+<p style="margin-top:0em; margin-bottom:0em">
+Finally, suppose that somewhere one or more vector listings
+were specified for index&nbsp;<tt>3</tt>, which eventually led to an entry <tt>0:50</tt>.
+The final symmetrization step will take the <tt>[0,3]</tt>
+entry of weight&nbsp;<tt>20</tt> and combine it with the <tt>[3,0]</tt> entry
+of weight&nbsp;<tt>50</tt>. The resulting matrix will then have the <tt>[0,3]</tt>
+and the <tt>[3,0]</tt> entry both equal to either the maximum, the sum,
+or the product of the two quantities&nbsp;<tt>50</tt> and&nbsp;<tt>20</tt>.
+</p>
+</div>
+<div style="margin-top:0em">&nbsp;</div><div class=" item_cascade item_leftalign nowrap" ><a name="opt--quiet-re"></a><b>--quiet-re</b> (<i>quiet for repeated entries</i>)</div><div class=" item_cascade item_leftalign nowrap" ><a name="opt--quiet-rv"></a><b>--quiet-rv</b> (<i>quiet for repeated vectors</i>)</div><div class=" item_cascade item_leftalign nowrap" ><a name="opt-q"></a><b>-q</b> (<i>the two above combined</i>)</div>
+<div class=" item_text " style="margin-left:2em">
+<p style="margin-top:0em; margin-bottom:0em">
+Warning options. Turn these on if you expect the raw data to be free
+of repeats.
+</p>
+</div>
+</div>
+
+<a name="author"></a>
+<h2>AUTHOR</h2>
+Stijn van Dongen.
+
+<a name="seealso"></a>
+<h2>SEE ALSO</h2>
+<p style="margin-top:0em; margin-bottom:0em">
+<a class="local sibling" href="mcxio.html">mcxio</a>, <a class="local sibling" href="mcl.html">mcl</a>, <a class="local sibling" href="mcxload.html">mcxload</a>
+and <a class="local sibling" href="mclfamily.html">mclfamily</a> for an overview of all the documentation
+and the utilities in the mcl family.
+</p>
+</body>
+</html>

@@ -1,0 +1,162 @@
+%!
+%%BoundingBox: 102 200 410 405
+
+/B_test 1 def		% set to 1 to test BoundingBox parameters
+/BBLL [ 102 200 ] def
+/BBUR [ 410 405 ] def
+
+.5 setlinewidth
+
+% remark: The drawing points are defined in terms of unitx and unity. Why not
+% scale the whole thing after drawing it? My reason for this is that labels
+% which are drawn next to the nodes, and spacing between labels and nodes,
+% generally must not be scaled accordingly. I am currently not aware of other
+% solutions to this small problem.
+
+
+/unitx 3 def
+/unity 3 def
+/unithx unitx 2 div def
+/unithy unity 2 div def
+/radius unitx .6666666 mul  def
+
+/proc_scale {
+	unity mul exch unitx mul exch
+} def
+
+/proc_showpoint {
+	aload pop moveto proc_circle
+} def
+
+/proc_circle {
+        gsave currentpoint radius 0 360 arc
+	0 setgray fill grestore
+} def
+
+B_test 1 eq { newpath
+      BBLL aload pop moveto
+      BBLL aload pop BBUR aload pop pop exch lineto   % this is LR
+      BBUR aload pop lineto
+      BBUR aload pop BBLL aload pop pop exch lineto   % this is UL
+      closepath stroke
+} if
+
+2 2 scale
+0 30 translate
+
+/v_0 [ 30 30 ] def
+/v_1 [ 40 30 ] def
+/v_2 [ 45 30 ] def
+/v_3 [ 55 30 ] def
+
+/v_4 [ 42.5 35 ] def
+
+/v_5 [ 22.5 40 ] def
+/v_6 [ 37.5 40 ] def
+/v_7 [ 47.5 40 ] def
+/v_8 [ 62.5 40 ] def
+
+/v_9 [ 30 50 ] def
+/v_10 [ 55 50 ] def
+/v_11 [ 62.5 50 ] def
+
+/c1_3_10 [ 56 36 ] def
+/c2_3_10 [ 56 44 ] def
+
+/c1_7_8 [51 41 ] def
+/c2_7_8 [59 41 ] def
+
+
+/nodes [v_0 v_1 v_2 v_3 v_4 v_5 v_6 v_7 v_8 v_9 v_10 v_11] def
+/edge1 [
+	[v_0 v_1]
+	[v_0 v_5]
+	[v_0 v_6]
+	[v_0 v_9]
+	[v_1 v_2]
+	[v_1 v_4]
+	[v_2 v_3]
+	[v_2 v_4]
+	[v_3 v_7]
+	[v_3 v_10]
+	[v_3 v_8]
+	[v_4 v_6]
+	[v_4 v_7]
+	[v_5 v_9]
+	[v_6 v_9]
+	[v_7 v_10]
+	[v_7 v_8]
+	[v_8 v_10]
+	[v_8 v_11]
+	[v_10 v_11]
+] def
+
+newpath
+nodes {
+aload pop proc_scale moveto proc_circle		% load array values, scale, and circle
+} forall
+
+edge1 {
+newpath
+aload pop			% load array which consists of two nodes which are again arrays..
+aload pop proc_scale moveto	% load first node.
+aload pop proc_scale lineto	% load second node.
+stroke
+} forall
+
+/Times-Roman findfont
+8 scalefont
+setfont
+
+v_0 aload pop proc_scale moveto
+0 unitx 3 mul sub 0 unity 2 mul sub rmoveto
+(0) show
+
+v_1 aload pop proc_scale moveto
+0 unitx 2 mul sub 0 unity 3 mul sub rmoveto
+(1) show
+
+v_2 aload pop proc_scale moveto
+0 unitx 2 mul sub 0 unity 3 mul sub rmoveto
+(2) show
+
+v_3 aload pop proc_scale moveto
+0 unitx 2 mul sub 0 unity 3 mul sub rmoveto
+(3) show
+
+v_4 aload pop proc_scale moveto
+unitx 2 mul 0 unity sub  rmoveto
+(4) show
+
+v_5 aload pop proc_scale moveto
+0 unitx 2 mul sub unity rmoveto
+(5) show
+
+v_6 aload pop proc_scale moveto
+unitx 1 mul unity rmoveto
+(6) show
+
+v_7 aload pop proc_scale moveto
+0 unitx 2 mul sub unity rmoveto
+(7) show
+
+v_8 aload pop proc_scale moveto
+unitx unity rmoveto
+(8) show
+
+v_9 aload pop proc_scale moveto
+0 unitx 2 mul sub unity 1.5 mul rmoveto
+(9) show
+
+v_10 aload pop proc_scale moveto
+0 unitx 2 mul sub unity 1.5 mul rmoveto
+(10) show
+
+v_11 aload pop proc_scale moveto
+0 unitx 2 mul sub unity 1.5 mul rmoveto
+(11) show
+
+
+
+showpage
+

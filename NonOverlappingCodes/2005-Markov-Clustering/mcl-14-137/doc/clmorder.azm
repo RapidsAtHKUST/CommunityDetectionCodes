@@ -1,0 +1,88 @@
+\import{mcx.zmm}
+
+\begin{pud::man}{
+
+   {name}{clm order}
+   {html_title}{The clm order manual}
+   {author}{Stijn van Dongen}
+   {section}{1}
+   {synstyle}{long}
+   {defstyle}{long}
+
+   \man_share
+}
+
+\${html}{\"pud::man::maketoc"}
+
+\sec{name}{NAME}
+\NAME{clm order}{reorder clusterings conformal to inclusion structure}
+
+\disclaim_clm{order}
+
+\sec{synopsis}{SYNOPSIS}
+\par{
+   \clm{order}
+   \synoptopt{-prefix}{<string>}{file multiplex prefix}
+   \synoptopt{-o}{<fname>}{concatenated output in single file}
+   <cluster|stack>+
+   }
+
+\sec{description}{DESCRIPTION}
+
+\par{
+   Given a set of input clusterings \clm{order} first transform it into a stack
+   of strictly nesting clusterings. It does this by splitting clusters where
+   necessary.
+
+   It then reorders the coarsest (i.e. level-one) clustering, from large to
+   small clusters.  After that it reorders the second coarsest clustering
+   conformally such that the first batch among its reordered clusters covers the
+   level-one largest cluster, the second batch covers the level-one second
+   largest cluster, and so on.  Within these constraints, each batch of
+   second-level clusters (corresponding to a single first-level cluster) is
+   again ordered from larger to smaller clusters.  This process is applied
+   recursively throughout the entire stack of input clusters.
+   }
+
+\par{
+   The input can be specified in multiple files, and a single file may contain
+   multiple clusterings. The output is by default written as a concatenation of
+   matrix files, the so-called stack format.  Use the \genopt{-o} option to
+   specify the output file.  The stacked format can be converted to Newick
+   format using \mysib{mcxdump}.  The output can be written to multiple files,
+   one for each projected clustering, by using the \genopt{-prefix} option.  By
+   example, \useopt{-prefix}{P} leads to output in files named \v{P1}, \v{P2},
+   ..\v{PN}, where \v{N} is the number of clusters in the input, \v{P1} is the
+   most fine-grained ordered clustering, and \v{PN} is the coarsest clustering.
+   }
+
+\sec{options}{OPTIONS}
+
+
+\'begin{itemize}{\mcx_itemopts}
+
+\items{
+{\defopt{-prefix}{<string>}}
+{\defopt{-o}{<fname>}}
+}
+\car{
+   As decribed above.
+   }
+
+\'end{itemize}
+
+
+\sec{author}{AUTHOR}
+\par{
+   Stijn van Dongen.
+   }
+
+\sec{seealso}{SEE ALSO}
+
+\par{
+   \mysib{mclfamily} for an overview of all the documentation
+   and the utilities in the mcl family.
+   }
+
+\end{pud::man}
+

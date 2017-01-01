@@ -1,0 +1,281 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html>
+<!-- Copyright (c) 2014 Stijn van Dongen -->
+<head>
+<meta name="keywords" content="manual">
+<style type="text/css">
+/* START aephea.base.css */
+body
+{ text-align: justify;
+margin-left: 0%;
+margin-right: 0%;
+}
+a:link { text-decoration: none; }
+a:active { text-decoration: none; }
+a:visited { text-decoration: none; }
+a:link { color: #1111aa; }
+a:active { color: #1111aa; }
+a:visited { color: #111166; }
+a.local:link { color: #11aa11; }
+a.local:active { color: #11aa11; }
+a.local:visited { color: #116611; }
+a.intern:link { color: #1111aa; }
+a.intern:active { color: #1111aa; }
+a.intern:visited { color: #111166; }
+a.extern:link { color: #aa1111; }
+a.extern:active { color: #aa1111; }
+a.extern:visited { color: #661111; }
+a.quiet:link { color: black; }
+a.quiet:active { color: black; }
+a.quiet:visited { color: black; }
+div.verbatim
+{ font-family: monospace;
+margin-top: 1em;
+margin-bottom: 1em;
+font-size: 10pt;
+margin-left: 2em;
+white-space: pre;
+}
+div.indent
+{ margin-left: 8%;
+margin-right: 0%;
+}
+.right { text-align: right; }
+.left { text-align: left; }
+.nowrap { white-space: nowrap; }
+.item_leader
+{ position: relative;
+margin-left: 8%;
+}
+.item_compact { position: absolute; vertical-align: baseline; }
+.item_cascade { position: relative; }
+.item_leftalign { text-align: left; }
+.item_rightalign
+{ width: 2em;
+text-align: right;
+}
+.item_compact .item_rightalign
+{ position: absolute;
+width: 52em;
+right: -2em;
+text-align: right;
+}
+.item_text
+{ position: relative;
+margin-left: 3em;
+}
+.smallcaps { font-size: smaller; text-transform: uppercase }
+/* END aephea.base.css */
+body { font-family: "Garamond", "Gill Sans", "Verdana", sans-serif; }
+body
+{ text-align: justify;
+margin-left: 8%;
+margin-right: 8%;
+}
+</style>
+<title>The mcxmap manual</title>
+</head>
+<body>
+<p style="text-align:right">
+16 May 2014&nbsp;&nbsp;&nbsp;
+<a class="local" href="mcxmap.ps"><b>mcxmap</b></a>
+14-137
+</p>
+<div class=" itemize " style="margin-top:1em; font-size:100%">
+<div class=" item_compact"><div class=" item_rightalign nowrap " style="right:-3em">1.</div></div>
+<div class=" item_text " style="margin-left:4em">
+<a class="intern" href="#name">NAME</a>
+</div>
+<div class=" item_compact"><div class=" item_rightalign nowrap " style="right:-3em">2.</div></div>
+<div class=" item_text " style="margin-left:4em">
+<a class="intern" href="#synopsis">SYNOPSIS</a>
+</div>
+<div class=" item_compact"><div class=" item_rightalign nowrap " style="right:-3em">3.</div></div>
+<div class=" item_text " style="margin-left:4em">
+<a class="intern" href="#description">DESCRIPTION</a>
+</div>
+<div class=" item_compact"><div class=" item_rightalign nowrap " style="right:-3em">4.</div></div>
+<div class=" item_text " style="margin-left:4em">
+<a class="intern" href="#options">OPTIONS</a>
+</div>
+<div class=" item_compact"><div class=" item_rightalign nowrap " style="right:-3em">5.</div></div>
+<div class=" item_text " style="margin-left:4em">
+<a class="intern" href="#examples">EXAMPLES</a>
+</div>
+<div class=" item_compact"><div class=" item_rightalign nowrap " style="right:-3em">6.</div></div>
+<div class=" item_text " style="margin-left:4em">
+<a class="intern" href="#author">AUTHOR</a>
+</div>
+<div class=" item_compact"><div class=" item_rightalign nowrap " style="right:-3em">7.</div></div>
+<div class=" item_text " style="margin-left:4em">
+<a class="intern" href="#seealso">SEE ALSO</a>
+</div>
+</div>
+
+<a name="name"></a>
+<h2>NAME</h2>
+<p style="margin-bottom:0" class="asd_par">
+mcxmap &mdash; permute or remap the indices of graphs and matrices.</p>
+
+<a name="synopsis"></a>
+<h2>SYNOPSIS</h2>
+<p style="margin-bottom:0" class="asd_par">
+<b>mcxmap</b>
+<a class="intern" href="#opt-imx"><b>-imx</b> fname (<i>input</i>)</a></p>
+<a class="intern" href="#opt-o"><b>[-o</b> fname (<i>output</i>)<b>]</b></a>
+<a class="intern" href="#opt-make-map"><b>[-make-map</b> (<i>output map file name</i>)<b>]</b></a>
+<a class="intern" href="#opt-make-mapc"><b>[-make-mapc</b> (<i>output map file name</i>)<b>]</b></a>
+<a class="intern" href="#opt-make-mapr"><b>[-make-mapr</b> (<i>output map file name</i>)<b>]</b></a>
+<a class="intern" href="#opt-cmul"><b>[-cmul</b> a (<i>coefficient</i>)<b>]</b></a>
+<a class="intern" href="#opt-cshift"><b>[-cshift</b> b (<i>translate</i>)<b>]</b></a>
+<a class="intern" href="#opt-rmul"><b>[-rmul</b> c (<i>coefficient</i>)<b>]</b></a>
+<a class="intern" href="#opt-rshift"><b>[-rshift</b> d (<i>translate</i>)<b>]</b></a>
+<a class="intern" href="#opt-mul"><b>[-mul</b> e (<i>coefficient</i>)<b>]</b></a>
+<a class="intern" href="#opt-shift"><b>[-shift</b> f (<i>translate</i>)<b>]</b></a>
+<a class="intern" href="#opt-map"><b>[-map</b> fname (<i>row/col map file</i>)<b>]</b></a>
+<a class="intern" href="#opt-rmap"><b>[-rmap</b> fname (<i>row map file</i>)<b>]</b></a>
+<a class="intern" href="#opt-cmap"><b>[-cmap</b> fname (<i>column map file</i>)<b>]</b></a>
+<a class="intern" href="#opt-mapi"><b>[-mapi</b> fname (<i>row/col map file (use inverse)</i>)<b>]</b></a>
+<a class="intern" href="#opt-rmapi"><b>[-rmapi</b> fname (<i>row map file (use inverse)</i>)<b>]</b></a>
+<a class="intern" href="#opt-cmapi"><b>[-cmapi</b> fname (<i>column map file (use inverse)</i>)<b>]</b></a>
+<a class="intern" href="#opt-tab"><b>[-tab</b> fname (<i>read (and map) tab file</i>)<b>]</b></a>
+
+<a name="description"></a>
+<h2>DESCRIPTION</h2>
+<p style="margin-bottom:0" class="asd_par">
+This utility relabels graphs or matrices. Its main use is in applying a
+<i>map file</i> to a given matrix or graph. A map file contains a so called
+<i>map matrix</i> in mcl format that has some special properties (given
+further below). The functionality of mcxmap can also be provided by <b>mcx</b>, as
+a mapped matrix (i.e. the result of applying a map matrix to another matrix)
+is simply the usual matrix product of a matrix and a map matrix. However,
+<b>mcx</b> will construct a new matrix and leave the original matrix to be mapped
+alone. When dealing with huge matrices, considerable gains in efficiency
+memory-wise and time-wise can be achieved by doing the mapping in-place.
+This is what mcxmap does. In the future, its functionality may be
+embedded in <b>mcx</b> with new mcx operators.</p>
+<p style="margin-bottom:0" class="asd_par">
+The special properties of a map matrix are</p>
+<div class=" itemize " style="margin-top:1em; font-size:100%">
+<div class=" item_compact"><div class=" item_rightalign " style="right:-1em"><span class="itembullet">&bull;</span></div></div>
+<div class=" item_text " style="margin-left:2em">
+<p style="margin-top:0em; margin-bottom:0em">
+The column domain and row domain are
+of the same cardinality.</p>
+</div>
+<div class=" item_compact"><div class=" item_rightalign " style="right:-1em"><span class="itembullet">&bull;</span></div></div>
+<div class=" item_text " style="margin-left:2em">
+<p style="margin-top:0em; margin-bottom:0em">
+Each column has exactly one entry.</p>
+</div>
+<div class=" item_compact"><div class=" item_rightalign " style="right:-1em"><span class="itembullet">&bull;</span></div></div>
+<div class=" item_text " style="margin-left:2em">
+<p style="margin-top:0em; margin-bottom:0em">
+Each row domain index occurs in exactly one column.</p>
+</div>
+</div>
+<p style="margin-bottom:0" class="asd_par">
+These properties imply that the matrix can be used
+as a map from the column domain onto the row domain.
+An example map matrix is found in the <a class="intern" href="#examples">EXAMPLES</a> Section.</p>
+
+<a name="options"></a>
+<h2>OPTIONS</h2>
+<div class=" itemize " style="margin-top:1em; font-size:100%">
+<div class=" item_cascade"><div class=" item_leftalign nowrap " ><a name="opt-o"></a><b>-o</b> fname (<i>output file</i>)</div></div>
+<div class=" item_text " style="margin-left:2em">
+<p style="margin-top:0em; margin-bottom:0em">
+Output file.</p>
+</div>
+<div style="margin-top:0em">&nbsp;</div><div class=" item_cascade"><div class=" item_leftalign nowrap " ><a name="opt-imx"></a><b>-imx</b> fname (<i>input file</i>)</div></div>
+<div class=" item_text " style="margin-left:2em">
+<p style="margin-top:0em; margin-bottom:0em">
+Input file.</p>
+</div>
+<div style="margin-top:0em">&nbsp;</div><div class=" item_cascade item_leftalign nowrap" ><a name="opt-map"></a><b>-map</b> fname (<i>row/col map file)</i>)</div><div class=" item_cascade item_leftalign nowrap" ><a name="opt-rmap"></a><b>-rmap</b> fname (<i>row map file</i>)</div><div class=" item_cascade item_leftalign nowrap" ><a name="opt-cmap"></a><b>-cmap</b> fname (<i>column map file</i>)</div><div class=" item_cascade item_leftalign nowrap" ><a name="opt-mapi"></a><b>-mapi</b> fname (<i>row/col map file (use inverse)</i>)</div><div class=" item_cascade item_leftalign nowrap" ><a name="opt-rmapi"></a><b>-rmapi</b> fname (<i>row map fil (use inverse)</i>)</div><div class=" item_cascade item_leftalign nowrap" ><a name="opt-cmapi"></a><b>-cmapi</b> fname (<i>column map fil (use inverse)</i>)</div>
+<div class=" item_text " style="margin-left:2em">
+<p style="margin-top:0em; margin-bottom:0em">
+Different ways to specify map files.</p>
+</div>
+<div style="margin-top:0em">&nbsp;</div><div class=" item_cascade item_leftalign nowrap" ><a name="opt-make-map"></a><b>-make-map</b> (<i>output map file name</i>)</div><div class=" item_cascade item_leftalign nowrap" ><a name="opt-make-mapc"></a><b>-make-mapc</b> (<i>output map file name</i>)</div><div class=" item_cascade item_leftalign nowrap" ><a name="opt-make-mapr"></a><b>-make-mapr</b> (<i>output map file name</i>)</div>
+<div class=" item_text " style="margin-left:2em">
+<p style="margin-top:0em; margin-bottom:0em">
+Generate a map that maps the specified domain onto
+the appropriate canonical domain and write the map
+matrix to file.</p>
+</div>
+<div style="margin-top:0em">&nbsp;</div><div class=" item_cascade item_leftalign nowrap" ><a name="opt-cmul"></a><b>-cmul</b> a (<i>coefficient</i>)</div><div class=" item_cascade item_leftalign nowrap" ><a name="opt-cshift"></a><b>-cshift</b> b (<i>translate</i>)</div>
+<div class=" item_text " style="margin-left:2em">
+<p style="margin-top:0em; margin-bottom:0em">
+These options have affect if neither a column map file nor column
+canonification is specified. If any of the first two options is used,
+column indices&nbsp;<tt>i</tt> are mapped to&nbsp;<tt>a*i+b</tt>.</p>
+</div>
+<div style="margin-top:0em">&nbsp;</div><div class=" item_cascade item_leftalign nowrap" ><a name="opt-rmul"></a><b>-rmul</b> c (<i>coefficient</i>)</div><div class=" item_cascade item_leftalign nowrap" ><a name="opt-rshift"></a><b>-rshift</b> d (<i>translate</i>)</div>
+<div class=" item_text " style="margin-left:2em">
+<p style="margin-top:0em; margin-bottom:0em">
+These options have affect if neither a row map file nor row
+canonification is specified. If any of the first two options is used,
+indices&nbsp;<tt>i</tt> are mapped to&nbsp;<tt>c*i+d</tt>.</p>
+</div>
+<div style="margin-top:0em">&nbsp;</div><div class=" item_cascade item_leftalign nowrap" ><a name="opt-mul"></a><b>-mul</b> e (<i>coefficient</i>)</div><div class=" item_cascade item_leftalign nowrap" ><a name="opt-shift"></a><b>-shift</b> f (<i>translate</i>)</div>
+<div class=" item_text " style="margin-left:2em">
+<p style="margin-top:0em; margin-bottom:0em">
+If a map file is specified for a given domain, neither a map file nor
+canonification is specified. If any of the first two options is used, the
+indices&nbsp;<tt>i</tt> will be mapped to&nbsp;<tt>e*i+f</tt>.</p>
+</div>
+<div style="margin-top:0em">&nbsp;</div><div class=" item_cascade"><div class=" item_leftalign nowrap " ><a name="opt-tab"></a><b>-tab</b> fname (<i>read (and map) tab file</i>)</div></div>
+<div class=" item_text " style="margin-left:2em">
+<p style="margin-top:0em; margin-bottom:0em">
+This option requires the <b>-map</b> option. <b>mcxmap</b> will output the
+mapped tab definition.
+</p>
+</div>
+</div>
+
+<a name="examples"></a>
+<h2>EXAMPLES</h2>
+<p style="margin-bottom:0" class="asd_par">
+The matrix below has two canonical domains which are identical.
+It denotes a map of the canonical domain onto itself, in which
+node 0 is relabeled to 8, node 1 is relabeled to 5, et cetera.
+</p>
+<div class="verbatim">(mclheader
+mcltype matrix
+dimensions 12x12
+)
+(mclmatrix
+begin
+0  8  $
+1  5  $
+2  3  $
+3  2  $
+4  4  $
+5  6  $
+6  7  $
+7  9  $
+8  1  $
+9  10 $
+10 11 $
+11 0  $
+)
+</div>
+
+<a name="author"></a>
+<h2>AUTHOR</h2>
+<p style="margin-bottom:0" class="asd_par">
+Stijn van Dongen.
+</p>
+
+<a name="seealso"></a>
+<h2>SEE ALSO</h2>
+<p style="margin-bottom:0" class="asd_par">
+<a class="local sibling" href="mcxio.html">mcxio</a>,
+<a class="local sibling" href="mcx.html">mcx</a>,
+<a class="local sibling" href="mcxsubs.html">mcxsubs</a>,
+and <a class="local sibling" href="mclfamily.html">mclfamily</a> for an overview of all the documentation
+and the utilities in the mcl family.
+</p>
+</body>
+</html>

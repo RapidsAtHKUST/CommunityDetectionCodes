@@ -1,0 +1,521 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html>
+<!-- Copyright (c) 2014 Stijn van Dongen -->
+<head>
+<meta name="keywords" content="manual">
+<style type="text/css">
+/* START aephea.base.css */
+body
+{ text-align: justify;
+margin-left: 0%;
+margin-right: 0%;
+}
+a:link { text-decoration: none; }
+a:active { text-decoration: none; }
+a:visited { text-decoration: none; }
+a:link { color: #1111aa; }
+a:active { color: #1111aa; }
+a:visited { color: #111166; }
+a.local:link { color: #11aa11; }
+a.local:active { color: #11aa11; }
+a.local:visited { color: #116611; }
+a.intern:link { color: #1111aa; }
+a.intern:active { color: #1111aa; }
+a.intern:visited { color: #111166; }
+a.extern:link { color: #aa1111; }
+a.extern:active { color: #aa1111; }
+a.extern:visited { color: #661111; }
+a.quiet:link { color: black; }
+a.quiet:active { color: black; }
+a.quiet:visited { color: black; }
+div.verbatim
+{ font-family: monospace;
+margin-top: 1em;
+margin-bottom: 1em;
+font-size: 10pt;
+margin-left: 2em;
+white-space: pre;
+}
+div.indent
+{ margin-left: 8%;
+margin-right: 0%;
+}
+.right { text-align: right; }
+.left { text-align: left; }
+.nowrap { white-space: nowrap; }
+.item_leader
+{ position: relative;
+margin-left: 8%;
+}
+.item_compact { position: absolute; vertical-align: baseline; }
+.item_cascade { position: relative; }
+.item_leftalign { text-align: left; }
+.item_rightalign
+{ width: 2em;
+text-align: right;
+}
+.item_compact .item_rightalign
+{ position: absolute;
+width: 52em;
+right: -2em;
+text-align: right;
+}
+.item_text
+{ position: relative;
+margin-left: 3em;
+}
+.smallcaps { font-size: smaller; text-transform: uppercase }
+/* END aephea.base.css */
+body { font-family: "Garamond", "Gill Sans", "Verdana", sans-serif; }
+body
+{ text-align: justify;
+margin-left: 8%;
+margin-right: 8%;
+}
+</style>
+<title>Work flows and protocols for mcl and friends</title>
+</head>
+<body>
+<p style="text-align:right">
+16 May 2014&nbsp;&nbsp;&nbsp;
+<a class="local" href="clmprotocols2.ps"><b>clmprotocols</b></a>
+14-137
+</p>
+<div class=" itemize " style="margin-top:1em; font-size:100%">
+<div class=" item_compact"><div class=" item_rightalign nowrap " style="right:-3em">1.</div></div>
+<div class=" item_text " style="margin-left:4em">
+<a class="intern" href="#name">NAME</a>
+</div>
+<div class=" item_compact"><div class=" item_rightalign nowrap " style="right:-3em">2.</div></div>
+<div class=" item_text " style="margin-left:4em">
+<a class="intern" href="#description">DESCRIPTION</a>
+</div>
+<div class=" item_compact"><div class=" item_rightalign nowrap " style="right:-3em">3.</div></div>
+<div class=" item_text " style="margin-left:4em">
+<a class="intern" href="#toc">TOC</a>
+</div>
+<div class=" item_compact"><div class=" item_rightalign nowrap " style="right:-3em">4.</div></div>
+<div class=" item_text " style="margin-left:4em">
+<a class="intern" href="#faq">FAQ</a>
+</div>
+<div class=" item_compact"><div class=" item_rightalign nowrap " style="right:-3em">5.</div></div>
+<div class=" item_text " style="margin-left:4em">
+<a class="intern" href="#internal">Network representation</a>
+</div>
+<div class=" item_compact"><div class=" item_rightalign nowrap " style="right:-3em">6.</div></div>
+<div class=" item_text " style="margin-left:4em">
+<a class="intern" href="#large">Loading large networks</a>
+</div>
+<div class=" item_compact"><div class=" item_rightalign nowrap " style="right:-3em">7.</div></div>
+<div class=" item_text " style="margin-left:4em">
+<a class="intern" href="#formatconversion">Converting between formats</a>
+</div>
+<div class=" item_compact"><div class=" item_rightalign nowrap " style="right:-3em">8.</div></div>
+<div class=" item_text " style="margin-left:4em">
+<a class="intern" href="#blast">Clustering similarity graphs encoded in BLAST results</a>
+</div>
+<div class=" item_compact"><div class=" item_rightalign nowrap " style="right:-3em">9.</div></div>
+<div class=" item_text " style="margin-left:4em">
+<a class="intern" href="#array">Clustering expression data</a>
+</div>
+<div class=" item_compact"><div class=" item_rightalign nowrap " style="right:-3em">10.</div></div>
+<div class=" item_text " style="margin-left:4em">
+<a class="intern" href="#degree">Reducing node degrees in the graph</a>
+</div>
+<div class=" item_compact"><div class=" item_rightalign nowrap " style="right:-3em">11.</div></div>
+<div class=" item_text " style="margin-left:4em">
+<a class="intern" href="#seealso">SEE ALSO</a>
+</div>
+<div class=" item_compact"><div class=" item_rightalign nowrap " style="right:-3em">12.</div></div>
+<div class=" item_text " style="margin-left:4em">
+<a class="intern" href="#author">AUTHOR</a>
+</div>
+</div>
+<div class=" itemize " style="margin-top:1em; font-size:100%">
+<div class=" item_compact"><div class=" item_rightalign nowrap " style="right:-3em">1.</div></div>
+<div class=" item_text " style="margin-left:4em">
+<a class="intern" href="#name">NAME</a>
+</div>
+<div class=" item_compact"><div class=" item_rightalign nowrap " style="right:-3em">2.</div></div>
+<div class=" item_text " style="margin-left:4em">
+<a class="intern" href="#description">DESCRIPTION</a>
+</div>
+<div class=" item_compact"><div class=" item_rightalign nowrap " style="right:-3em">3.</div></div>
+<div class=" item_text " style="margin-left:4em">
+<a class="intern" href="#toc">TOC</a>
+</div>
+<div class=" item_compact"><div class=" item_rightalign nowrap " style="right:-3em">4.</div></div>
+<div class=" item_text " style="margin-left:4em">
+<a class="intern" href="#faq">FAQ</a>
+</div>
+<div class=" item_compact"><div class=" item_rightalign nowrap " style="right:-3em">5.</div></div>
+<div class=" item_text " style="margin-left:4em">
+<a class="intern" href="#internal">Network representation</a>
+</div>
+<div class=" item_compact"><div class=" item_rightalign nowrap " style="right:-3em">6.</div></div>
+<div class=" item_text " style="margin-left:4em">
+<a class="intern" href="#large">Loading large networks</a>
+</div>
+<div class=" item_compact"><div class=" item_rightalign nowrap " style="right:-3em">7.</div></div>
+<div class=" item_text " style="margin-left:4em">
+<a class="intern" href="#formatconversion">Converting between formats</a>
+</div>
+<div class=" item_compact"><div class=" item_rightalign nowrap " style="right:-3em">8.</div></div>
+<div class=" item_text " style="margin-left:4em">
+<a class="intern" href="#blast">Clustering similarity graphs encoded in BLAST results</a>
+</div>
+<div class=" item_compact"><div class=" item_rightalign nowrap " style="right:-3em">9.</div></div>
+<div class=" item_text " style="margin-left:4em">
+<a class="intern" href="#array">Clustering expression data</a>
+</div>
+<div class=" item_compact"><div class=" item_rightalign nowrap " style="right:-3em">10.</div></div>
+<div class=" item_text " style="margin-left:4em">
+<a class="intern" href="#degree">Reducing node degrees in the graph</a>
+</div>
+<div class=" item_compact"><div class=" item_rightalign nowrap " style="right:-3em">11.</div></div>
+<div class=" item_text " style="margin-left:4em">
+<a class="intern" href="#seealso">SEE ALSO</a>
+</div>
+<div class=" item_compact"><div class=" item_rightalign nowrap " style="right:-3em">12.</div></div>
+<div class=" item_text " style="margin-left:4em">
+<a class="intern" href="#author">AUTHOR</a>
+</div>
+</div>
+
+<a name="name"></a>
+<h2>NAME</h2>
+<p style="margin-bottom:0" class="asd_par">
+clmprotocols &mdash; Work flows and protocols for mcl and friends</p>
+
+<a name="description"></a>
+<h2>DESCRIPTION</h2>
+<p style="margin-top:0em; margin-bottom:0em">
+A guide to doing analysis with mcl and its helper programs.
+</p>
+
+<a name="toc"></a>
+<h2>TOC</h2>
+<hr>
+<div class=" itemize " style="margin-top:0em; font-size:100%">
+<div class=" item_compact"><div class=" item_leftalign nowrap " ><a name="toc-general2"></a><a class="quiet" href="#general2"><b>1</b></a></div></div>
+<div class=" item_text " style="margin-left:2em">
+<a class="quiet" href="#general2"><b>General pardon</b></a>
+</div>
+<div class=" item_compact"><div class=" item_rightalign nowrap " style="right:-1em"><a name="toc-faq1.1"></a> <a class="intern" href="#faq1.1"><b>1.1</b></a></div></div>
+<div class=" item_text " style="margin-left:2em">
+<a class="intern" href="#faq1.1"><b>For whom is mcl and for whom is this FAQ?</b></a>
+</div>
+<div class=" item_compact"><div class=" item_rightalign nowrap " style="right:-1em"><a name="toc-faq1.2"></a> <a class="intern" href="#faq1.2"><b>1.2</b></a></div></div>
+<div class=" item_text " style="margin-left:2em">
+<a class="intern" href="#faq1.2"><b>For whom is mcl and for whom is this FAQ?</b></a>
+</div>
+</div>
+<hr>
+<div class=" itemize " style="margin-top:0em; font-size:100%">
+<div class=" item_compact"><div class=" item_leftalign nowrap " ><a name="toc-general"></a><a class="quiet" href="#general"><b>2</b></a></div></div>
+<div class=" item_text " style="margin-left:2em">
+<a class="quiet" href="#general"><b>General questions</b></a>
+</div>
+<div class=" item_compact"><div class=" item_rightalign nowrap " style="right:-1em"><a name="toc-faq2.1"></a> <a class="intern" href="#faq2.1"><b>2.1</b></a></div></div>
+<div class=" item_text " style="margin-left:2em">
+<a class="intern" href="#faq2.1"><b>For whom is mcl and for whom is this FAQ?</b></a>
+</div>
+<div class=" item_compact"><div class=" item_rightalign nowrap " style="right:-1em"><a name="toc-faq2.2"></a> <a class="intern" href="#faq2.2"><b>2.2</b></a></div></div>
+<div class=" item_text " style="margin-left:2em">
+<a class="intern" href="#faq2.2"><b>For whom is mcl and for whom is this FAQ?</b></a>
+</div>
+</div>
+<br><br>
+
+<a name="faq"></a>
+<h2>FAQ</h2>
+
+<div align=center>
+<h3><a name="general2"></a><a class="quiet" href="#toc-general2">1</a><br>General pardon
+</h3>
+</div>
+
+<div class=" itemize " style="margin-top:1em; font-size:100%">
+<div class=" item_compact"><div class=" item_leftalign nowrap " ><a name="faq1.1"></a> <a class="quiet" href="#toc-general2">1.1</a></div></div>
+<div class=" item_text " style="margin-left:2em">
+<b>For whom is mcl and for whom is this FAQ?</b>
+<p style="margin-top:0em; margin-bottom:0em">
+For everybody with an appetite for graph clustering.</p>
+</div>
+<div style="margin-top:0em">&nbsp;</div><div class=" item_compact"><div class=" item_leftalign nowrap " ><a name="faq1.2"></a> <a class="quiet" href="#toc-general2">1.2</a></div></div>
+<div class=" item_text " style="margin-left:2em">
+<b>For whom is mcl and for whom is this FAQ?</b>
+<p style="margin-top:0em; margin-bottom:0em">
+For everybody with an appetite for graph clustering.</p>
+</div>
+</div>
+
+<div align=center>
+<h3><a name="general"></a><a class="quiet" href="#toc-general">2</a><br>General questions
+</h3>
+</div>
+
+<div class=" itemize " style="margin-top:1em; font-size:100%">
+<div class=" item_compact"><div class=" item_leftalign nowrap " ><a name="faq2.1"></a> <a class="quiet" href="#toc-general">2.1</a></div></div>
+<div class=" item_text " style="margin-left:2em">
+<b>For whom is mcl and for whom is this FAQ?</b>
+<p style="margin-top:0em; margin-bottom:0em">
+For everybody with an appetite for graph clustering.</p>
+</div>
+<div style="margin-top:0em">&nbsp;</div><div class=" item_compact"><div class=" item_leftalign nowrap " ><a name="faq2.2"></a> <a class="quiet" href="#toc-general">2.2</a></div></div>
+<div class=" item_text " style="margin-left:2em">
+<b>For whom is mcl and for whom is this FAQ?</b>
+<p style="margin-top:0em; margin-bottom:0em">
+For everybody with an appetite for graph clustering.</p>
+</div>
+</div>
+
+<a name="internal"></a>
+<h2>Network representation</h2>
+<p style="margin-bottom:0" class="asd_par">
+The clustering program <b>mcl</b> expects the name of file as its first argument.
+If the <b>--abc</b> option is used, the file is assumed to adhere to a
+simple format where a network is specified edge by edge, one line and one
+edge at a time.
+Each line describes an edge as two labels and a numerical value, all
+separated by white space. The labels and the value respectively identify the
+two nodes and the edge weight. The format is called <span class="smallcaps">ABC</span>-format,
+where '<span class="smallcaps">A</span>' and '<span class="smallcaps">B</span>' represent the two labels and '<span class="smallcaps">C</span>' represents the
+edge weight. The latter is optional; if omitted the edge weight is set to one.
+If <span class="smallcaps">ABC</span>-format is used, the output is returned as a listing of clusters,
+each cluster given as a line of white-space separated labels.
+</p>
+<p style="margin-bottom:0" class="asd_par">
+MCL can also utilize a second representation, which is a stringent and
+unambiguous format for both input and output.
+This is called <i>matrix format</i> and it is required when using other
+programs in the mcl suite, for example when comparing and analysing
+clusterings using <a class="local sibling" href="clm.html">clm</a> or when extracting and transforming
+networks using <a class="local sibling" href="mcx.html">mcx</a>.
+Native mode (matrix format) is entered simply by <i>not</i> specifying
+<b>--abc</b>.
+</p>
+<p style="margin-bottom:0" class="asd_par">
+The recommended approach using <b>mcl</b> is to convert an external format to
+<span class="smallcaps">ABC</span>-format. The program <a class="local sibling" href="mcxload.html">mcxload</a> reads the latter and creates a
+native network file and a dictionary file that maps network nodes to
+labels. All applications in the MCL suite, including <b>mcl</b> itself, can read
+this native network file format. Label output can be obtained using
+<a class="local sibling" href="mcxdump.html">mcxdump</a>. The workflow is thus:
+</p>
+<div class="verbatim">   #  External format has been converted to file data.abc (abc format)
+
+   mcxload -abc data.abc --stream-mirror -write-tab data.tab -o data.mci  
+
+   mcl data.mci -I 1.4
+   mcl data.mci -I 2
+   mcl data.mci -I 4
+
+   mcxdump -icl out.data.mci.I14 -tabr data.tab -o dump.data.mci.I14
+   mcxdump -icl out.data.mci.I20 -tabr data.tab -o dump.data.mci.I20
+   mcxdump -icl out.data.mci.I40 -tabr data.tab -o dump.data.mci.I40</div>
+<p style="margin-top:0em; margin-bottom:0em">
+In this example the cluster output is stored in native format and dumped to
+labels using mcxdump. The stored output can now be used to learn more about
+the clusterings. An example is the following, where <a class="local sibling" href="clm.html">clm</a> is applied
+in mode&nbsp;<b>dist</b> to gauge the distance between different clusterings.
+</p>
+<div class="verbatim">   clm dist --chain out.data.mci.I{14,20,40}</div>
+
+<a name="large"></a>
+<h2>Loading large networks</h2>
+<p style="margin-bottom:0" class="asd_par">
+If you deal with very large networks (say with hundreds of millions
+of edges), it is recommended to use binary format (cf <a class="local sibling" href="mcxio.html">mcxio</a>).
+This is simply achieved by adding <tt>--write-binary</tt> to the mcxload
+command line. The resulting file is no longer human-readable but
+will be faster to read by a factor between ten- or twenty-fold
+compared to standard <span class="smallcaps">MCL</span>-edge network format, and a factor around fifty-fold
+compared to label format.
+All <span class="smallcaps">MCL</span>-edge programs are able to read binary format, and speed
+of reading will be somewhere in the order of millions of edges
+per second, compared to, for example, roughly 100K edges
+per second for label format.
+</p>
+<p style="margin-bottom:0" class="asd_par">
+Memory usage for mcxload can be lowered
+by replacing the option <tt>--stream-mirror</tt> with <tt>-ri&nbsp;max</tt>.
+</p>
+
+<a name="formatconversion"></a>
+<h2>Converting between formats</h2>
+<p style="margin-bottom:0" class="asd_par">
+<b>Converting label format to tabular format</b><br>
+Label format, two or three (including weight) columns:
+</p>
+<div class="verbatim">   mcxload -abc data.abc --stream-mirror -write-tab data.tab -o data.mci
+   mcxdump -imx data.mci -tab data.tab --dump-table</div>
+<p style="margin-top:0em; margin-bottom:0em">Simple Interaction File (SIF) format:</p>
+<div class="verbatim">   mcxload -sif data.sif --stream-mirror -write-tab data.tab -o data.mci
+   mcxdump -imx data.mci -tab data.tab --dump-table</div>
+<p style="margin-top:0em; margin-bottom:0em">
+It can be noted that these two examples are very similar, and differ
+only in the way the input to <b>mcxload</b> is specified.
+</p>
+
+<a name="blast"></a>
+<h2>Clustering similarity graphs encoded in BLAST results</h2>
+<p style="margin-bottom:0" class="asd_par">
+A specific instance of the workflow above is the clustering of proteins based on
+their sequence similarities. In the most typical scenario the external
+format is BLAST output, which needs to be transformed to <span class="smallcaps">ABC</span> format.
+In the examples below the input is in columnar blast format
+obtained with the blast -m8 option.
+It requires a version of <b>mcl</b> at least as recent as <tt>09-061</tt>.
+First we create an <span class="smallcaps">ABC</span>-formatted file using the external columnar BLAST
+format, which is assumed to be in a file called <tt>seq.cblast</tt>.
+</p>
+<div class="verbatim">   cut -f 1,2,11 seq.cblast &gt; seq.abc</div>
+<p style="margin-top:0em; margin-bottom:0em">
+The columnar format in the file <tt>seq.cblast</tt> has, for a given BLAST hit,
+the sequence labels in the first two columns and the asssociated E-value in
+column&nbsp;11. It is parsed by the standard UNIX cut(1) utility. The format
+must have been created with the BLAST -m8 option so that no comment lines
+are present. Alternatively these can be filtered out using grep.
+</p>
+<p style="margin-top:0em; margin-bottom:0em">
+The newly created <tt>seq.abc</tt> file is loaded by <a class="local sibling" href="mcxload.html">mcxload</a>,
+which writes both a network file <tt>seq.mci</tt> and a dictionary
+file <tt>seq.tab</tt>.
+</p>
+<div class="verbatim">   mcxload -abc seq.abc --stream-mirror --stream-neg-log10 -stream-tf 'ceil(200)'
+         -o seq.mci -write-tab seq.tab</div>
+<p style="margin-top:0em; margin-bottom:0em">
+The <tt>--stream-mirror</tt> option ensures that the resulting network will be
+undirected, as recommended when using <b>mcl</b>. Omitting this option would
+result in a directed network as BLAST E-values generally differ between two
+sequences. The default course of action for <a class="local sibling" href="mcxload.html">mcxload</a> is to use the
+best value found between a pair of labels. The next option,
+<tt>--abc-neg-log10</tt> tranforms the numerical values in the input (the BLAST
+E-values) by taking the logarithm in base&nbsp;10 and subsequently negating the
+sign. Finally, the transformed values are capped so that any E-value below
+1e-200 is set to a maximum allowed edge weight of&nbsp;200.
+</p>
+<p style="margin-bottom:0" class="asd_par">
+To obtain clusterings from <tt>seq.mci</tt> and <tt>seq.tab</tt> one has two
+choices. The first is to generate an abstract clustering representation
+and from that obtain the label output, as follows.
+Below the <b>-o</b> option is not used, so mcl will create meaningful and
+unique output names by itself. The default way of doing this is to preprend
+the prefix <tt>out.</tt> and to append a suffix encoding the inflation value
+used, with inflation encoded using two digits of precision and the decimal
+separator removed.
+</p>
+<div class="verbatim">   mcl seq.mci -I 1.4
+   mcl seq.mci -I 2
+   mcl seq.mci -I 4
+   mcl seq.mci -I 6
+
+   mcxdump -icl out.seq.mci.I14 -tabr seq.tab -o dump.seq.mci.I14
+   mcxdump -icl out.seq.mci.I20 -tabr seq.tab -o dump.seq.mci.I20
+   mcxdump -icl out.seq.mci.I40 -tabr seq.tab -o dump.seq.mci.I40
+   mcxdump -icl out.seq.mci.I60 -tabr seq.tab -o dump.seq.mci.I60</div>
+<p style="margin-top:0em; margin-bottom:0em">
+Now the file <tt>out.seq.tab.I14</tt> and its associates can be used for example
+to compute the distances between the encoded clusterings with
+<b>clm dist</b>, to compute a set of strictly reconciled nested clusterings
+with <b>clm order</b>, or to compute an efficiency criterion with
+<b>clm info</b>.
+</p>
+<p style="margin-bottom:0" class="asd_par">
+Alternatively, label output can be obtained directly from <b>mcl</b>
+as follows.</p>
+<div class="verbatim">   mcl seq.mci -I 1.4  -use-tab seq.tab
+   mcl seq.mci -I 2  -use-tab seq.tab
+   mcl seq.mci -I 4  -use-tab seq.tab
+   mcl seq.mci -I 6  -use-tab seq.tab</div>
+
+<a name="array"></a>
+<h2>Clustering expression data</h2>
+<p style="margin-bottom:0" class="asd_par">
+The clustering of expression data constitutes another workflow. In this case the
+external format usually is a tabular file format containing labels for genes
+or probes and numerical values measuring the expression values or fold
+changes across a series of conditions or experiments. Such tabular files can
+be processed by <a class="local sibling" href="mcxarray.html">mcxarray</a>, which comes installed with <b>mcl</b>. The
+program computes correlations (either Pearson or Spearmann) between genes,
+and creates an edge between genes if their correlation exceeds the specified
+cutoff. From this <a class="local sibling" href="mcxarray.html">mcxarray</a> creates both a network file and a
+dictionary file. In the example below, the file <tt>expr.data</tt> is
+in tabular format with one row of column headers (e.g. tags for
+experiments) and one column of row identifiers (e.g. probe or gene identifiers).
+</p>
+<div class="verbatim">   mcxarray -data expr.data -skipr 1 -skipc 1 -o expr.mci -write-tab expr.tab --pearson -co 0.7 -tf 'abs(),add(-0.7)'
+   </div>
+<p style="margin-top:0em; margin-bottom:0em">
+This uses the Pearson correlation, ignoring values below 0.7.
+The remaining values in the interval <tt>[0.7-1]</tt> are remapped to the interval
+<tt>[0-0.3]</tt>. This is recommended so that the edge weights will have
+increased contrast between them, as <b>mcl</b> is affected by relative differences
+(ratios) between edge weights rather than absolute differences. To illustrate
+this, values&nbsp;0.75 and&nbsp;0.95 are mapped to&nbsp;0.05 and&nbsp;0.25, with respective
+ratios&nbsp;0.79 and&nbsp;0.25.
+The network file <tt>expr.mci</tt> and the dictionary file <tt>expr.tab</tt> can
+now be used as before.
+</p>
+<p style="margin-bottom:0" class="asd_par">
+It is possible to investigate the effect of the correlation cutoff as follows.
+First a network is generated at a very low threshold, and this network
+is analysed using <b>mcxquery</b>.
+</p>
+<div class="verbatim">   mcxarray -data expr.data -skipr 1 -skipc 1 -o expr20.mcx --write-binary --pearson -co 0.2 -tf 'abs()'
+   mcx query -imx expr20.mcx --vary-correlation
+   </div>
+<p style="margin-top:0em; margin-bottom:0em">
+The output is in a tabular format describing the properties of the network
+at increasing correlation thresholds. Examples are the size of the biggest
+component, the number of orphan nodes (not connected to any other node), and
+the mean and median node degrees.
+A good way to choose the cutoff is to balance the number of singletons
+and the median node degree. Both should preferably not be too high.
+For example the number of orphan nodes should be
+less than ten percent of the total number of nodes,
+and the median node degree should be at most one hundred neighbours.
+</p>
+
+<a name="degree"></a>
+<h2>Reducing node degrees in the graph</h2>
+<p style="margin-top:0em; margin-bottom:0em">
+A good way to lower node degrees in a network is to require that
+an edge is among the best <i>k</i> edges (those of highest weight) for
+<i>both</i> nodes incident to the edge, for some value of <i>k</i>. This is
+achieved by using <tt>knn(k)</tt> in the argument to the <b>-tf</b> option to
+mcl or <b>mcx&nbsp;alter</b>.
+To give an example, a graph was formed on translations in Ensembl release 57 on 2.6M nodes.
+The similarities were obtained from BLAST scores,
+leading to a graph with a total edge count of 300M, with
+best-connected nodes of degree respectively
+11148, 9083, 9070, 9019 and 8988, and with mean node degree 233.
+These degrees are unreasonable.
+The graph was subjected to <b>mcx&nbsp;query</b> to investigate the effect of
+varying k-NN parameters. A good heuristic is to choose a value
+that does not significantly change the number of singletons in the input graph.
+In the example it meant that <b>-tf</b>&nbsp;<b>'knn(160)'</b> was feasible, leading
+to a mean node degree of 98.
+</p>
+<p style="margin-bottom:0" class="asd_par">
+A second approach to reduce node degrees is to employ the <b>-ceil-nb</b> option.
+This ranks nodes by node degree, highest first. Nodes are considered
+in order of rank, and edges of low weight are removed from the graph until
+a node satisfies the node degree threshold specified by <b>-ceil-nb</b>.
+</p>
+<p style="margin-bottom:0" class="asd_par">
+</p>
+
+<a name="seealso"></a>
+<h2>SEE ALSO</h2>
+<p style="margin-top:0em; margin-bottom:0em">
+<a class="local sibling" href="mcxio.html">mcxio</a>.
+</p>
+
+<a name="author"></a>
+<h2>AUTHOR</h2>
+<p style="margin-top:0em; margin-bottom:0em">
+Stijn van Dongen.</p>
+</body>
+</html>

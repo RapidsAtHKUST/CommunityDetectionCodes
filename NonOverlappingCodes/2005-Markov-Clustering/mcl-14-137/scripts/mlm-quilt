@@ -1,0 +1,808 @@
+#!/usr/local/bin/perl -w
+
+#  (C) Copyright 2007 Stijn van Dongen
+ #
+#  This file is part of MCL.  You can redistribute and/or modify MCL under the
+#  terms of the GNU General Public License; either version 3 of the License or
+#  (at your option) any later version.  You should have received a copy of the
+#  GPL along with MCL, in the file COPYING.
+
+# TODO
+#  -  consistency check: check fncone result with fnclin; should yield same.
+#
+#  !!!
+#     try tree search with depth 2 when testing descend.
+#  !encapsulate PN_keep etc initalization and updating.
+#  write clusters with scores, consensus.
+
+# [bc-9-1-02|fam41/rip26] mlmimpromptu --ignore-size=3 --fnannot=../data/paf41.ipro
+# --fncone=mcl.cdump --fntab=../data/paf41.tab --fncls=an2.cls
+#       FINAL result SN=0.891 NS=0.072 SP=0.770 SP2=0.928 TP=407691 TN=105978
+#       FP=31582 FN=49736 noentry=0 nocss_nodes=5803 nocss_cls=3984
+# strange; those clusters should on average have > 3 elements.
+
+
+use Getopt::Long;
+use Data::Dumper;
+use strict;
+
+my @ARGV_COPY  = @ARGV;
+my $n_args = @ARGV;
+
+my $help  =  0;
+my $progname = 'mlmimpromptu';      # imprint, interpro, whatever.
+
+
+my $fnclin  = "";
+my $fncls   = "omptu";
+my $fnannot = "";
+my $fncone  = "";
+my $fntab   = "";
+my $debug   = 0;
+
+$::CONSENSUS_FACTOR = 0.51;
+$::IGNORE_SIZE  = 0;
+$::SINGLE_IN = 0;
+
+$::ALPHA   =  0;
+$::BETA    =  0;
+$::GAMMA   =  0;
+$::DELTA   =  0;
+
+my $STRICT = 0;
+my $USE_CLSIZE = 0;
+my $fndump  = "";
+
+my $shinynew = 1;
+
+
+sub help {
+   print <<EOH;
+Usage:
+   $progname [options]
+Options:
+--fnannot=<name>     input annotation file (<tab ID> <tab annot ID>*)
+--consensus=<num>    <num> * domain-count > cluster-size
+--ignore-size=<num>  ignore clusters of size <= <num>
+--fntab=<name>       tab file name
+--fnclin=<name>      cluster label dump
+--fndump=<name>      output dump file name
+--fncls=<name>       write clustering to this file
+--strict             do take into account clusters with no consensus annotation
+--use-clsize         calculate using cluster size regardless of annotation
+--debug=1/0          print debugging information
+--alpha=<num>        SN  optimization weighing factor   * / [ * =   ]
+--beta=<num>         SP  optimization weighing factor   , / [ , X   ]
+--gamma=<num>        SP2 optimization weighing factor   * / [ * X   ]
+--delta=<num>        SN2 optimization weighing factor   * / [ * X O ]
+--single-in          do not avoid singleton fragments
+--help               this
+cookbook:
+   1 mlmimpromptu --fnannot=tab.annot --fnclin=tdcl.c03.dump
+   2 mlmimpromptu --fnannot=tab.annot --fncone=mcl.cdump --fncls=mcl.cls
+
+NOTE
+   If a tab file is given then the annot file leading identifiers are assumed
+   to be tab labels.  However, the cone dump must always use mcl numeric
+   identifiers.
+EOH
+}
+
+if
+(! GetOptions
+   (  "fnclin=s"        =>    \$fnclin
+   ,  "fncls=s"         =>    \$fncls
+   ,  "fnannot=s"       =>    \$fnannot
+   ,  "fncone=s"        =>    \$fncone
+   ,  "fntab=s"         =>    \$fntab
+   ,  "fndump=s"        =>    \$fndump
+   ,  "debug=i"         =>    \$debug
+   ,  "alpha=f"         =>    \$::ALPHA
+   ,  "beta=f"          =>    \$::BETA
+   ,  "gamma=f"         =>    \$::GAMMA
+   ,  "delta=f"         =>    \$::DELTA
+   ,  "help"            =>    \$help
+   ,  "consensus=f"     =>    \$::CONSENSUS_FACTOR
+   ,  "ignore-size=i"   =>    \$::IGNORE_SIZE
+   ,  "strict"          =>    \$STRICT
+   ,  "single-in"       =>    \$::SINGLE_IN
+   ,  "use-clsize"      =>    \$USE_CLSIZE
+   )
+)
+   {  print STDERR "option processing failed\n";
+      exit(1);
+   }
+
+if (!$n_args || (!$fnannot && !$fncone) || $help) {
+   help();
+   exit(!$help);
+}
+
+my $single_out = !$::SINGLE_IN;
+
+
+die "need subset of {alpha,beta,gamma,delta}" unless $::ALPHA + $::BETA + $::GAMMA + $::DELTA;
+die "need --fnannot=fname" unless $fnannot;
+die "need --clin=fname or --fncone=fname" unless $fnclin || $fncone;
+die "need --fntab=fname" if $fnclin && !$fntab;
+
+my %tab = ();
+
+open (DUMP, ">$fndump") || die "cannot open $fndump for writing" if $fndump;
+
+if ($fntab)
+{  open (T, "<$fntab") || die "failure opening $fntab";
+   {  local $/ = undef;
+      %tab = map { chomp; split; } <T>;
+   }
+}
+
+my %tabi = map { ($tab{$_}, $_) } keys %tab;
+die "identical labels in tab!" unless keys %tabi == keys %tab;
+
+my $n_tab = keys %tab;
+
+
+
+            #        OBSERVED                EXPECTED
+            #        REALITY                 PREDICTION
+            #        a + + + + - + - - -     a + + + + + + |+| + +
+            #        b + + - + + + - - -     b + + + + + + |+| + +
+            #        c + - - + - - - - -     c - - - - - - |-| - -
+            #        d - - + - - - - + -     d - - - - - - |-| - -
+            #        e - + - - - - - - +     e - - - - - - |-| - -
+            #          1 2 3 4 5 6 7 8 9       1 2 3 4 5 6 |7| 8 9
+            #        
+            #        Let's mark the observed signal/no signal into different categories
+            #        
+            #        a * * * * = * |=| = =
+            #        b * * = * * * |=| = =
+            #        c X , , X , , |,| , ,
+            #        d , , X , , , |,| X ,
+            #        e , X , , , , |,| , X
+            #          1 2 3 4 5 6 |7| 8 9
+            #        
+            #        
+            #        *  TP    True Positive (observed positive matches expected positive)
+            #        =  FN    False Negative (observed negative does NOT match expected positive)
+            #        ,  TN    True Negative (observed negative matches expected negative)
+            #        X  FP    False Positive (observed positive does NOT match expected negative)
+
+            #        SN   =   *  /  |  *   =      |
+            #        SP   =   ,  /  |  ,   X      |
+            #        SP2  =   *  /  |  *   X      |
+            #        SN2  =   *  /  |  *   X   O  |
+
+
+            #        Say we have a cluster like this ('=' and ',' not written):
+            #        
+            #              proteins:   T  U  V  W  X  Y  Z
+            #        domains:    a     *  *  *     *  *
+            #                    b        *     *  *  *  *
+            #                    c     X  X  X
+            #                    d              X  X  X
+            #                    e     X  X        X
+            #                    f        X     X        X
+            #        
+            #        It will have relatively bad specificity, namely 16/28 or 0.571.
+            #        Compare this with this situation:
+            #        
+            #        
+            #              proteins:   T  U  V  W  X  Y  Z
+            #        domains:    a     *  *  *     *  *
+            #                    b        *     *  *  *  *
+            #                    c     X  X
+            #                    d              X     X
+            #                    e        X        X
+            #                    f              X        X
+            #                    g     X
+            #                    h           X
+            #                    i                    X
+            #                    j                       X
+            #        
+            #        Here the specificity is 44/56, or 0.786
+            #        However, I'd argue that the first situation is more consistent.
+
+
+#  Special case for SP2, if FP == 0 (no positive signal
+#  outside of the cluster annotation), then TN is also 0,. The consequence is that
+#  we have by default the highest possible specificity  SP2 = 1.0
+#
+#  Is this on a per-protein basis, or overall cluster? Well, in the latter
+#  case FP and TN will be 0 anyway ..
+
+
+
+$::tree = {};
+$::annot = {};
+my $n_annotations = 0;
+open (ANNOT, "<$fnannot") || die "cannot open $fnannot for reading";
+
+while (<ANNOT>) {
+   chomp;
+   my @l = split;
+   my $l = shift @l;
+   $::annot->{$l} = [ @l ];
+   $n_annotations += @l;
+}
+
+
+close ANNOT;
+my $NOENTRY = 0;
+
+
+if ($fnclin) {
+
+   my @cls = ();
+   open (CLSIN, "mcxdump -imx $fnclin -tabr $fntab --no-values --dump-rlines |")
+                     || die "cannot open mcxdump for reading $fnclin";
+   while (<CLSIN>) {
+      chomp;
+      my @l = split;
+      if (@l) {
+         push @cls, [ @l ];
+      }
+   }
+   close CLSIN;
+
+   my ($TP, $FN, $TN, $FP) = (0) x 4;
+   my $pn_total
+   =  {  TP => 0
+      ,  TN => 0
+      ,  FP => 0
+      ,  FN => 0
+      ,  NOENTRY => 0
+      ,  NOCSS_NODES => 0
+      ,  NOCSS_CLS => 0
+      ,  ORPHAN => 0
+      ,  SINGLETON => 0
+      }  ;
+
+   for my $crf (@cls) {
+
+      my $pn_vals = get_the_measure($crf);
+      for (keys %$pn_total) {
+         $pn_total->{$_} += $pn_vals->{$_};
+      }
+   }
+
+   my $snsp_total = get_snsp_from_pn($pn_total);
+   my $sgl = grep { @$_ == 1 } @cls;
+   print_cluster_snsp("$fnclin", $pn_total, $snsp_total, $sgl);
+}
+elsif ($fncone) {
+
+   my $level = 0;
+
+   open (CONE, "<$fncone") || die "cannot open $fncone for reading";
+   while (<CONE>) {
+      ++$level && next if /^===/;
+      die "cone format violates <num> <num> pattern" unless /^(\d+)\s+(\d+)/;
+      my ($clid, $node) = ($1, $2);
+      push @{$::tree->{$level}{$clid}{CHILDREN}}, $node;
+      if (!$level) {
+         $::tree->{$level}{$clid}{SIZE}++;
+      }
+      elsif (!defined($::tree->{$level-1}{$node}{SIZE})) {
+         die "cone format violation, I think";
+      }
+      else {
+         $::tree->{$level}{$clid}{SIZE} += $::tree->{$level-1}{$node}{SIZE};
+      }
+   }
+   if (keys %{$::tree->{$level}} > 1) {
+      for my $c (keys %{$::tree->{$level}}) {
+         push @{$::tree->{$level+1}{0}{CHILDREN}}, $c;
+      }
+      $level++;
+   }
+
+   my @keep = ();
+
+   if ($shinynew) {
+      my $pn = new_descend($level, 0);
+      my $snsp = get_snsp_from_pn($pn);
+      new_collect($level, 0, \@keep);
+      my $sgl = grep { @$_ == 1 } @keep;
+      print_cluster_snsp("$fncone", $pn, $snsp, $sgl);
+   }
+   else  {
+      rusty_old($level, \@keep);
+   }
+   print_cluster_file(\@keep);
+}
+
+
+sub new_collect {
+   my ($level, $clid, $clustering) = @_;
+   if ($::cache->{$level}{$clid}{STAY}) {
+      push @$clustering, get_leaves($level, $clid);
+   }
+   else {
+      for my $c (@{$::tree->{$level}{$clid}{CHILDREN}}) {
+         new_collect($level-1, $c, $clustering);
+      }
+   }
+}
+
+
+                        # $depth is how much steps we are allowed to
+                        # go further, ignoring trivial branching.
+sub new_descend {
+
+   my ($level, $clid) = @_;
+   my $node_pn = get_node_pn($level, $clid);
+   my $children = $::tree->{$level}{$clid}{CHILDREN};
+
+   if (!$level) {
+      $::cache->{$level}{$clid}{STAY} = 1;
+      return $node_pn;
+   }
+   if (!get_genuine_split($level, $clid) && !$::SINGLE_IN) {
+      $::cache->{$level}{$clid}{STAY} = 1;
+      my $sizes = get_leave_sizes($level, $clid);
+# print STDERR "avoid descend at level $level $clid [@$sizes]\n";
+      return $node_pn;
+   }
+   if (@$children == 1) {
+      return new_descend($level-1, $children->[0]);
+   }
+   my $children_pn
+   =  {  TP => 0
+      ,  TN => 0
+      ,  FP => 0
+      ,  FN => 0
+      ,  NOENTRY => 0
+      ,  NOCSS_NODES => 0
+      ,  NOCSS_CLS => 0
+      ,  ORPHAN => 0
+      }  ;
+   for my $c (@$children) {
+      my $pn = new_descend($level-1, $c);
+      for my $v (keys %$pn) {
+         $children_pn->{$v} += $pn->{$v};
+      }
+   }
+   my $node_snsp = get_snsp_from_pn($node_pn);
+   my $value_stay = get_combined_score($node_snsp);
+
+   my $children_snsp = get_snsp_from_pn($children_pn);
+   my $value_descend = get_combined_score($children_snsp);
+
+   my $tag = "[$value_stay $value_descend]";
+
+   if ($value_stay >= $value_descend) {
+# print STDERR "stay at level $level, $clid $tag\n";
+      $::cache->{$level}{$clid}{STAY} = 1;
+      return $node_pn;
+   }
+   else {
+# print STDERR "desc at level $level, $clid $tag\n";
+      if ($::cache->{$level}{$clid}{STAY} == 1) {
+print STDERR "flipping at level $level, $clid $tag\n";
+      }
+      # $::cache->{$level}{$clid}{STAY} = 0;
+      return $children_pn;
+   }
+}
+
+
+sub get_genuine_split {
+   my ($level, $clid) = @_;
+   if (!defined($::cache->{$level}{$clid}{GENSPLIT})) {
+      $::cache->{$level}{$clid}{GENSPLIT}
+      = have_non_singleton_split($level, [$clid]);
+   }
+   return $::cache->{$level}{$clid}{GENSPLIT};
+}
+
+
+sub get_combined_score {
+   my ($snsp) = @_;
+   return   $::ALPHA   *  $snsp->{SN}
+         +  $::BETA    *  $snsp->{SP}
+         +  $::GAMMA   *  $snsp->{SP2}
+         +  $::DELTA   *  $snsp->{SN2}
+         ;
+}
+
+
+sub get_node_pn {
+
+   my ($level, $clid) = @_;
+   if (!defined($::cache->{$level}{$clid}{PN})) {
+      my $leaves = get_leaves($level, $clid);
+      $::cache->{$level}{$clid}{PN} = get_the_measure($leaves);
+      $::cache->{$level}{$clid}{STAY} = 0;
+   }
+   return $::cache->{$level}{$clid}{PN};
+}
+
+
+sub print_cluster_file {
+
+   my ($keep) = @_;
+   my $n_nodes = 0;
+   for my $k (@$keep) {
+      $n_nodes += @$k;
+   }
+   my $dim = $n_nodes . 'x' . scalar @$keep;
+
+   open (MCI, ">$fncls") || die "cannot open $fncls";
+print MCI <<EOH;
+(mclheader
+mcltype matrix
+dimensions $dim
+)
+(mclmatrix
+begin
+EOH
+
+   my @keep = sort { @$b <=> @$a } @$keep;
+   my $i = 0;
+
+   for my $crf (@keep) {
+      local $" = ' ';
+      my @nodes = @$crf;
+      @nodes = map { $tabi{$_} } @nodes if $n_tab;
+      print MCI "$i @nodes \$\n";
+      $i++;
+   }
+
+   print MCI ")\n";
+   close MCI;
+}
+
+
+sub get_the_measure {
+
+   my ($cluster) = @_;
+   my ($tp, $tn, $fp, $fn) = (0) x 4;
+   my ($TP, $TN, $FP, $FN, $NOENTRY, $ORPHAN) = (0) x 6;
+   my ($nocss_nodes, $nocss_clusters) = (0) x 2;
+   my @dcons = ();
+
+                              ##
+                              ## compute 'consensus domains'
+   my $tp_check = 0;
+
+   my %dct = ();     # domain count
+   my @notlisted = grep { !defined($::annot->{$_}) } @$cluster;
+print STDERR "NOTLISTED: @notlisted\n\n" if @notlisted && $debug;
+   $NOENTRY += @notlisted;
+   my @annnotated_nodes = grep { defined($::annot->{$_}) && @{$::annot->{$_}} > 0 } @$cluster;
+
+   if (@annnotated_nodes <= $::IGNORE_SIZE) {
+      for my $n (@annnotated_nodes) {
+         $ORPHAN += @{$::annot->{$n}};
+      }
+      @annnotated_nodes = ();
+   }
+
+   for my $n (@annnotated_nodes) {
+      for my $d (@{$::annot->{$n}}) {
+         $dct{$d}++;
+      }
+   }
+
+   my $size_compare = @annnotated_nodes;
+   $size_compare = @$cluster if $USE_CLSIZE;
+
+   my %dcons
+   =  map { ($_, 1) }
+      grep { $dct{$_} >= $::CONSENSUS_FACTOR * $size_compare }
+      keys %dct;
+   @dcons = sort keys %dcons;
+   for (@dcons) { $tp_check += $dct{$_}; }
+
+print STDERR "consensus: @dcons\n" if $debug;
+
+   if (@dcons || $STRICT) {
+      for my $n (@annnotated_nodes) {
+         my @annot = @{$::annot->{$n}};
+         my $tp = grep { defined($dcons{$_}) } @annot;         #  *
+         my $fp = grep { !defined($dcons{$_}) } @annot;        #  X
+         my $fn = (keys %dcons) - $tp;                        #  =
+         my $tn = (keys %dct) - scalar(@annot) - $fn;          #  ,
+my $k = keys %dct;
+# print STDERR "$n $k *[$tp] =[$fn] ,[$tn] X[$fp]\n";
+         if (@annot) {
+            $TP += $tp;
+            $FP += $fp;
+            $TN += $tn;
+            $FN += $fn;
+         }
+      }
+   }
+   if (!@dcons && @annnotated_nodes > $::IGNORE_SIZE) {
+      $nocss_clusters++;
+      $nocss_nodes += @annnotated_nodes;
+   }
+   die "check/tp = $tp_check/$TP" unless $tp_check == $TP;
+
+   return
+   {  TP => $TP
+   ,  TN => $TN
+   ,  FP => $FP
+   ,  FN => $FN
+   ,  NOENTRY => $NOENTRY
+   ,  ANNOT => [ @dcons ]
+   ,  NOCSS_NODES => $nocss_nodes
+   ,  NOCSS_CLS   => $nocss_clusters
+   ,  ORPHAN => $ORPHAN
+   ,  SINGLETON => @$cluster == 1 ? 1 : 0
+   }  ;
+}
+
+
+sub get_leave_sizes {
+
+   my ($qlevel, $qid) = @_;
+   my @todo = [$qlevel, $qid];
+   my @leaves = ();
+
+   while (@todo) {
+      my $next = shift @todo;
+      my ($level, $id) = @$next;
+
+      if ($level == 0) {
+         push @leaves, $::tree->{0}{$id}{SIZE};
+      }
+      else {
+         push @todo, map { [$level-1, $_] } @{$::tree->{$level}{$id}{CHILDREN}};
+      }
+   }
+   return \@leaves;
+}
+
+
+sub get_leaves {
+
+   my ($qlevel, $qid) = @_;
+   my @todo = [$qlevel, $qid];
+   my @leaves = ();
+
+   while (@todo) {
+      my $next = shift @todo;
+      my ($level, $id) = @$next;
+
+      if ($level == 0) {
+         my @hand = @{$::tree->{0}{$id}{CHILDREN}};
+die "no match for @hand" if grep { !defined($tab{$_}) } @hand;
+         if (keys %tab) {
+            @hand = map { $tab{$_} } @hand;
+         }
+         push @leaves, @hand;
+      }
+      else {
+         push @todo, map { [$level-1, $_] } @{$::tree->{$level}{$id}{CHILDREN}};
+      }
+   }
+   return \@leaves;
+}
+
+
+# sub make_clustering {
+#    my ($tree, $level, $c) = @_;
+#    my $crf = [];
+#    for my $d (@{$tree->{$level}{$c}}) {
+#       push @$crf, get_leaves($level-1, $d);
+#    }
+#    return $crf;
+# }
+
+
+
+sub print_cluster_snsp {
+   my ($msg, $PN, $snsp, $sgl) = @_;
+   my $total = $PN->{TP} + $PN->{FP} + $PN->{ORPHAN};
+   my $score = get_combined_score($snsp);
+
+   printf
+      STDOUT
+      "%-20s [SN=%.3f NS=%.3f SP=%.3f SP2=%.3f SN2=%.3f SCORE=%.3f] [TP(*)=%d TN(,)=%d FP(X)=%d FN(=)=%d] [noentry=%d nocss_nodes=%d nocss_cls=%d total=%d sgl=%d orphan=%d] [$::ALPHA $::BETA $::GAMMA $::DELTA]\n"
+   ,  $msg
+   ,  $snsp->{SN}
+   ,  $snsp->{NS}
+   ,  $snsp->{SP}
+   ,  $snsp->{SP2}
+   ,  $snsp->{SN2}
+   ,  $score
+   ,  $PN->{TP}
+   ,  $PN->{TN}
+   ,  $PN->{FP}
+   ,  $PN->{FN}
+   ,  $PN->{NOENTRY}
+   ,  $PN->{NOCSS_NODES}
+   ,  $PN->{NOCSS_CLS}
+   ,  $total
+   ,  $sgl
+   ,  $PN->{ORPHAN}
+   ;
+   if ($total != $n_annotations) {
+      print STDERR "TP+FP+ORPHAN=$total versus annot=$n_annotations\n";
+   }
+}
+
+
+sub get_snsp_from_pn {
+
+   my ($pn) = @_;
+
+   my $tpfn = $pn->{TP} + $pn->{FN};
+   my $tnfp = $pn->{TN} + $pn->{FP};
+   my $tpfp = $pn->{TP} + $pn->{FP};
+
+   return
+   {  SN => $tpfn ? $pn->{TP} / $tpfn : 0
+   ,  SP => $tnfp ? $pn->{TN} / $tnfp : 0
+   ,  SP2 => $tpfp ? $pn->{TP} / $tpfp : 0
+   ,  NS =>  1 - ($tpfp ? $pn->{TP} / $tpfp : 0)
+   ,  SN2 => $tpfp ? $pn->{TP} / ($tpfp + $pn->{ORPHAN}) : 0
+   }  ;
+}
+
+
+sub have_non_singleton_split {
+
+   my ($level, $clids) = @_;
+   return 0 if $level < 0;
+   my $children0 =  $::tree->{$level}{$clids->[0]}{CHILDREN};
+# print STDERR "-> $level [@$clids] @$children0\n";
+   return have_non_singleton_split($level-1, $children0) if @$clids == 1;
+   my @clids_sorted
+   =  sort { $::tree->{$level}{$b}{SIZE} <=> $::tree->{$level}{$a}{SIZE} } @$clids;
+   return 0 if $::tree->{$level}{$clids_sorted[0]}{SIZE} < 2;
+   return 1 if $::tree->{$level}{$clids_sorted[1]}{SIZE} > 1;
+   return have_non_singleton_split
+            ($level-1, $::tree->{$level}{$clids_sorted[0]}{CHILDREN});
+}
+
+
+sub rusty_old {               # untested. kept for historical purposes.
+   my ($level, $keep) = @_;
+   my @todo = map { [$level, $_] } keys %{$::tree->{$level}};
+   my $n_nodes = 0;
+   my $n_avoided = 0;
+   my $level_max = $level;
+local $" = ' ';
+   my $PN_keep
+   =  {  TP => 0
+      ,  TN => 0
+      ,  FP => 0
+      ,  FN => 0
+      ,  NOENTRY => 0
+      ,  NOCSS_NODES => 0
+      ,  NOCSS_CLS => 0
+      ,  ORPHAN => 0
+      }  ;
+   while (my $item = shift @todo) {
+      my ($level, $id) = @$item;
+      my $leveldown = $level - 1;
+      my @cls = @{$::tree->{$level}{$id}{CHILDREN}};
+      my $node_leaves = get_leaves($level, $id);
+      my $node_pn = get_the_measure($node_leaves);
+      my $node_snsp = get_snsp_from_pn($node_pn);
+      my $sz = @$node_leaves;
+
+print_cluster_snsp("current cluster $level $id [@cls] [@$node_leaves]", $node_pn, $node_snsp, 0) if $debug;
+
+my $l = "   " .  '|  ' x ($level_max - $level);
+my ($ttsn, $ttsp, $ttsp2) = map { sprintf "%.3f", $node_snsp->{$_} } qw (SN SP SP2);
+my ($tp, $tn, $fp, $fn) = map { $node_pn->{$_} } qw (TP TN FP FN);
+my $ll = "sz=$sz annot=[@{$node_pn->{ANNOT}}] snsp=[$ttsn $ttsp $ttsp2, *$tp =$fn ,$tn X$fp]";
+my @l = ();
+
+      local $" = ' ';
+      my $descend = 0;
+      my $mode = "null";
+      my $n_singletons = 0;
+      my ($tag_stay, $tag_descend) = ('-', '-');
+
+      if ($level > 0 && @$node_leaves > $::IGNORE_SIZE) {
+         my $pn_descend
+         =  {  TP => 0
+            ,  TN => 0
+            ,  FP => 0
+            ,  FN => 0
+            ,  NOENTRY => 0
+            ,  NOCSS_NODES => 0
+            ,  NOCSS_CLS => 0
+            ,  ORPHAN => 0
+            }  ;
+         my $index = 0;
+         for my $c (@cls) {
+            my $sub_nodes = get_leaves($leveldown, $c);
+            my $pn = get_the_measure($sub_nodes);
+            $n_singletons++ if @$sub_nodes == 1;
+            for my $v (keys %$pn) {
+               $pn_descend->{$v} += $pn->{$v};
+            }
+            my $snsp = get_snsp_from_pn($pn);
+print_cluster_snsp("sub cluster [@$sub_nodes] $leveldown $index", $pn, $snsp, 0) if $debug;
+            $index++;
+my ($ttsn, $ttsp, $ttsp2) = map { sprintf "%.3f", $snsp->{$_} } qw (SN SP SP2);
+my ($tp, $tn, $fp, $fn) = map { $pn->{$_} } qw (TP TN FP FN);
+my $sz = @$sub_nodes;
+my $ll = "sz=$sz annot=[@{$node_pn->{ANNOT}}] snsp=[$ttsn $ttsp $ttsp2, *$tp =$fn ,$tn X$fp]";
+push @l, $ll;
+         }
+         my $snsp_descend = get_snsp_from_pn($pn_descend);
+print_cluster_snsp("TOTAL cluster", $pn_descend, $snsp_descend, 0) if $debug;
+
+         my $val_descend =  get_combined_score($snsp_descend);
+         my $val_stay    =  get_combined_score($node_snsp);
+
+         $tag_descend   =  sprintf "%.3f", $val_descend;
+         $tag_stay      =  sprintf "%.3f", $val_stay;
+
+         my $have_large_split = have_non_singleton_split($level-1, [@cls]);
+         my @tmp =   map { $::tree->{$level-1}{$_}{SIZE}; }
+                        @{$::tree->{$level}{$id}{CHILDREN}};
+# print "STDERR $level $id $have_large_split cls[@cls] sz[@tmp] $::tree->{$level}{$id}{SIZE}\n";
+
+         if
+         (  (  @cls == 1
+            || $val_descend > 1.0 * $val_stay
+            || !$val_stay
+            )
+     #   &&
+     #      (  $n_singletons * 4 < @$node_leaves
+     #      || $val_descend > $val_stay * 1.1
+     #      )
+         )
+         {  if ($single_out && !$have_large_split) {
+               my $sizes = get_leave_sizes($level, $id);
+# print STDERR "avoid descend at level $level clid $id sizes [@$sizes]\n";
+               $n_avoided++;
+            }
+            else {
+               $descend = 1;
+            }
+         }
+      }
+
+      if (!$descend) {
+
+         if ($fndump) {
+            $l =~ s/^.../==>/;
+            print DUMP "$l$ll\n";
+            $l =~ s/^.../   /;
+            for (@l) { print DUMP "$l|  $_\n"; }
+         }
+
+         local $" = "\t";
+         $mode = "KEEPING";
+         my $annotation = join ' ', @{$node_pn->{ANNOT}};
+
+#          print KEEP <<EOK;
+# @$node_leaves
+#    -->TP=$node_pn->{TP} FP=$node_pn->{FP} FN=$node_pn->{FN} TN=$node_pn->{TN} cons: $annotation
+# EOK
+
+         for (keys %$PN_keep) {
+            $PN_keep->{$_} += $node_pn->{$_};
+         }
+         push @$keep, $node_leaves;
+         $n_nodes += @$node_leaves;
+      }
+      else {
+         $mode = "DESCENDING";
+         print DUMP "$l$ll\n" if $fndump;
+         unshift @todo, map { [$leveldown, $_] } @{$::tree->{$level}{$id}{CHILDREN}};
+      }
+
+my $n_leaves = @$node_leaves;
+# print STDERR "($tag_stay vs $tag_descend) $mode level $level id $id # $n_leaves [@cls]\n" if $debug || 1;
+print STDERR "\n" if $debug;
+   }
+print STDERR "avoided $n_avoided singleton descends\n";
+
+   my $snsp_keep = get_snsp_from_pn($PN_keep);
+   my $sgl = grep { @$_ == 1 } @$keep;
+   print_cluster_snsp("FINAL result", $PN_keep, $snsp_keep, $sgl);
+
+   if ($n_tab && $n_nodes != $n_tab) {
+      die "conflicting set sizes tab:$n_tab tree:$n_nodes";
+   }
+}

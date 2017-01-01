@@ -1,0 +1,140 @@
+.\" Copyright (c) 2014 Stijn van Dongen
+.TH "mcl" 7 "16 May 2014" "mcl 14-137" "MISCELLANEOUS "
+.po 2m
+.de ZI
+.\" Zoem Indent/Itemize macro I.
+.br
+'in +\\$1
+.nr xa 0
+.nr xa -\\$1
+.nr xb \\$1
+.nr xb -\\w'\\$2'
+\h'|\\n(xau'\\$2\h'\\n(xbu'\\
+..
+.de ZJ
+.br
+.\" Zoem Indent/Itemize macro II.
+'in +\\$1
+'in +\\$2
+.nr xa 0
+.nr xa -\\$2
+.nr xa -\\w'\\$3'
+.nr xb \\$2
+\h'|\\n(xau'\\$3\h'\\n(xbu'\\
+..
+.if n .ll -2m
+.am SH
+.ie n .in 4m
+.el .in 8m
+..
+.SH NAME
+mclfamily \- a description of the mcl family of cluster applications\&.
+
+\fBmcl\fP is an implementation of the Markov Cluster Algorithm, aka MCL algoritm\&.
+It is described in the \fBmcl manual\fP\&.
+Several other applications are part of the MCL distribution\&. This manual pages
+gives an overview\&.
+.SH DESCRIPTION
+
+.ZI 15m "\fBmcl(1)\fP"
+the cluster algorithm
+.in -15m
+.ZI 15m "\fBmclfaq(7)\fP"
+MCL Frequently Asked Questions
+.in -15m
+.ZI 15m "\fBmcxio(5)\fP"
+the network/matrix input/output format
+.in -15m
+.ZI 15m "\fBmcx(1)\fP"
+general network/matrix tasks
+.in -15m
+.ZI 15m "\fBmcx\ \&diameter\fP"
+compute diameter of an undirected network
+.in -15m
+.ZI 15m "\fBmcx\ \&ctty\fP"
+compute betweenness centrality
+.in -15m
+.ZI 15m "\fBmcx\ \&clcf\fP"
+compute clustering coefficient
+.in -15m
+.ZI 15m "\fBmcx\ \&erdos\fP"
+compute shortest paths in graphs
+.in -15m
+.ZI 15m "\fBmcx\ \&query\fP"
+analyse networks at different thresholds
+.in -15m
+.ZI 15m "\fBmcx\ \&alter\fP"
+apply network transformations
+.in -15m
+.ZI 15m "\fBmcx\ \&convert\fP"
+convert between interchange/binary storage types
+.in -15m
+.ZI 15m "\fBmcxarray(1)\fP"
+transform array data to MCL matrices
+.in -15m
+.ZI 15m "\fBmcxdump(1)\fP"
+dump a matrix optionally with label substitions
+.in -15m
+.ZI 15m "\fBmcxload(1)\fP"
+load label data into matrix and tab files
+.in -15m
+.ZI 15m "\fBmcxrand(1)\fP"
+randomly remove, add, and perturb edge weights
+.in -15m
+.ZI 15m "\fBmcxmap(1)\fP"
+relabel indices in a graph/matrix
+.in -15m
+.ZI 15m "\fBmcxsubs(1)\fP"
+extracting submatrices in various ways
+.in -15m
+.ZI 15m "\fBmcxi(1)\fP"
+general matrix operations
+.in -15m
+.ZI 15m "\fBmcxassemble(1)\fP"
+create matrices from raw data
+.in -15m
+.ZI 15m "\fBclm(1)\fP"
+general graph-clustering related tasks
+.in -15m
+.ZI 15m "\fBclm\ \&dist\fP"
+compute split/join distance between clusterings
+.in -15m
+.ZI 15m "\fBclm\ \&vol\fP"
+derive node volatility scores from a set of clusterings
+.in -15m
+.ZI 15m "\fBclm\ \&info\fP"
+compute performance measure for clusterings
+.in -15m
+.ZI 15m "\fBclm\ \&meet\fP"
+compute intersection of clusterings
+.in -15m
+.ZI 15m "\fBclm\ \&mate\fP"
+find best matching clusters between clusterings
+.in -15m
+.ZI 15m "\fBclm\ \&close\fP"
+fetch connected components from graphs or subgraphs
+.in -15m
+.ZI 15m "\fBclm\ \&imac\fP"
+interpret MCL iterand/matrix as clustering
+.in -15m
+.ZI 15m "\fBclm\ \&order\fP"
+reorder indices to represent blocks from different clusterings
+.in -15m
+.ZI 15m "\fBclm\ \&residue\fP"
+extend subgraph clustering
+.in -15m
+.ZI 15m "\fBclmformat(1)\fP"
+display clusters as html or txt files
+.in -15m
+.ZI 15m "\fBmclpipeline(1)\fP"
+parsing/assembly/clustering/display
+.in -15m
+.ZI 15m "\fBmclblastline(1)\fP \fC*\fP"
+BLAST pipeline
+.in -15m
+.ZI 15m "\fBmcxdeblast(1)\fP \fC*\fP"
+parse BLAST files
+.in -15m
+
+Entries marked \fC*\fP are not available if only a default
+install is done\&.

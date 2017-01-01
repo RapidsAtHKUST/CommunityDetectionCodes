@@ -1,0 +1,67 @@
+
+,-------------------------------------------------------------------------------,
+| This is a very messy and svd-centric TODO.  The items predominantly relate to |
+| other graph-related applications and helper applications, mostly *NOT* to mcl.|
+'-------------------------------------------------------------------------------'
+
+-  Thread locality, pthread_attr_getaffinity_np, sched_setaffinity
+   lstopo numactl --local-alloc
+   MCLX_THREAD_POLICY "spread", "compact"
+
+-  mclxCopy_loc(mx matrix, mx ordering)
+   thread locality-aware copying
+
+ $$$$ unify tf(), mcxi, mcxsubs, mcxarray languages
+
+  $$? clm info best for regime where clssize ~ node degree?
+
+    -  mcxarray clean-up .. table output of job division.
+
+    $ mcx{load,dump} restrict tab: report intersect and difference (useful sanity-check feedback for user).
+
+    $ mcxload etc and sif modes;
+         allow value on the source node.
+         allow spaces if tabs are present.
+
+    - make mcxarray available as library call with callback for pairwise vector comparison
+
+    - hidden options in clm close should be part of other clm mode.
+
+    - why are mclxSub and mclxChangeDomains not more alike?
+      (physical moving of column vectors in the latter).
+
+    ? matrix read on clustering (intra-edges only -- help --force-connected)
+
+  $$$ enable -j 0-2 [one job takes multiple groups]
+
+ $$$$ mcxi modality for strict domain identity / subsumption.
+
+  $$$ mclExpandVector / mclvKBar should use pval rather than float?
+
+    $ -tf add loop transformations. #diag(max, sum, center, laplace)
+
+    $ mcxi uses 'int' for integers. Why not long?
+
+    $ mcxdump JSON output.
+
+    - domain selection in mcxi (skel?)
+
+    - skeleton creation in mcx query /mcxi ?
+
+    - fast colsizes in mcx query with binary format.
+
+    - domain masking in mcxi mask maskc maskv mask
+      sel selinv mask maskinv maskr maskc maskrinv?  masacinv?  too many primitives.  cr mask
+
+    - mcx query -vary-threshold with 20x21 matrix L == 0 - better NA.
+
+    - clm protocols  -> generic treatment of thresholding and transformation?
+      check mcx/mcl/clm family / mcxio / mclfaq / clmprotocols manual page structure.
+      (proposed new) mcledge.azm and (existing) mcxio.azm, mclfamily.azm, sec_networktools.azm
+
+    - (clxdo) easy way to generate top and bottom clusterings.
+      paste <(seq 0 1 $((10-1))) <(yes 0 | head -n 10) | recol 21 | mcxload -123 -
+
+    - re-read functionality (now also with base clustering ....) stick it all in a separate file.
+
+

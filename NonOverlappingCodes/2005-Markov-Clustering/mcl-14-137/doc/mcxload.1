@@ -1,0 +1,583 @@
+.\" Copyright (c) 2014 Stijn van Dongen
+.TH "mcxload" 1 "16 May 2014" "mcxload 14-137" "USER COMMANDS "
+.po 2m
+.de ZI
+.\" Zoem Indent/Itemize macro I.
+.br
+'in +\\$1
+.nr xa 0
+.nr xa -\\$1
+.nr xb \\$1
+.nr xb -\\w'\\$2'
+\h'|\\n(xau'\\$2\h'\\n(xbu'\\
+..
+.de ZJ
+.br
+.\" Zoem Indent/Itemize macro II.
+'in +\\$1
+'in +\\$2
+.nr xa 0
+.nr xa -\\$2
+.nr xa -\\w'\\$3'
+.nr xb \\$2
+\h'|\\n(xau'\\$3\h'\\n(xbu'\\
+..
+.if n .ll -2m
+.am SH
+.ie n .in 4m
+.el .in 8m
+..
+.SH NAME
+mcxload \- load matrices and tab files from label format
+.SH SYNOPSIS
+
+\fBmcxload\fP \fB-abc\fP <fname> (\fIlabel file\fP)
+\fB-o\fP <fname> (\fIoutput file\fP)
+
+\fB[-abc\fP <fname> (\fIlabel file\fP)\fB]\fP
+\fB[-123\fP <fname> (\fIidentifier file\fP)\fB]\fP
+\fB[-o\fP <fname> (\fIoutput file\fP)\fB]\fP
+\fB[--stream-mirror\fP (\fIsymmetrify, same domain\fP)\fB]\fP
+\fB[--stream-split\fP (\fIassume different domains\fP)\fB]\fP
+\fB[-re\fP <mode> (\fIedge deduplication mode\fP)\fB]\fP
+\fB[-ri\fP <mode> (\fIimage symmetrification mode\fP)\fB]\fP
+\fB[-sif\fP <fname> (\fISIF label file\fP)\fB]\fP
+\fB[-etc\fP <fname> (\fI\&'etc\&' label file\fP)\fB]\fP
+\fB[-etc-ai\fP <fname> (\fIleaderless \&'etc\&' label file\fP)\fB]\fP
+\fB[--expect-values\fP (\fIexpect label:weight format\fP)\fB]\fP
+\fB[-235\fP <fname> (\fIleader \&'235\&' label file\fP)\fB]\fP
+\fB[-235-ai\fP <fname> (\fIleaderless \&'235\&' label file\fP)\fB]\fP
+\fB[-packed\fP <fname> (\fIfile/stream in binary format\fP)\fB]\fP
+\fB[-pack-cnum\fP <num> (\fIset column range\fP)\fB]\fP
+\fB[-pack-rnum\fP <num> (\fIset row range\fP)\fB]\fP
+\fB[-123-max\fP <int> (\fIset domain range\fP)\fB]\fP
+\fB[-123-maxc\fP <int> (\fIset column range\fP)\fB]\fP
+\fB[-123-maxr\fP <int> (\fIset row range\fP)\fB]\fP
+\fB[-write-tab\fP <fname> (\fIsave domain tab\fP)\fB]\fP
+\fB[-write-tabc\fP <fname> (\fIsave column tab\fP)\fB]\fP
+\fB[-write-tabr\fP <fname> (\fIsave row tab\fP)\fB]\fP
+\fB[-strict-tab\fP <fname> (\fItab universe\fP)\fB]\fP
+\fB[-strict-tabc\fP <fname> (\fItabc universe\fP)\fB]\fP
+\fB[-strict-tabr\fP <fname> (\fItabr universe\fP)\fB]\fP
+\fB[-restrict-tab\fP <fname> (\fItab world\fP)\fB]\fP
+\fB[-restrict-tabc\fP <fname> (\fItabc world\fP)\fB]\fP
+\fB[-restrict-tabr\fP <fname> (\fItabr world\fP)\fB]\fP
+\fB[-extend-tab\fP <fname> (\fItab launch\fP)\fB]\fP
+\fB[-extend-tabc\fP <fname> (\fItabc launch\fP)\fB]\fP
+\fB[-extend-tabr\fP <fname> (\fItabr launch\fP)\fB]\fP
+\fB[--stream-log\fP (\fIlog transform stream values\fP)\fB]\fP
+\fB[--stream-neg-log\fP (\fInegative log transform stream values\fP)\fB]\fP
+\fB[--stream-neg-log10\fP (\fInegative log-10 transform stream values\fP)\fB]\fP
+\fB[-stream-tf\fP (\fItransform stream values\fP)\fB]\fP
+\fB[-tf\fP <tf-spec> (\fItransform (not so) final matrix\fP)\fB]\fP
+\fB[--transpose\fP (\fItranspose\fP)\fB]\fP
+\fB[--write-binary\fP (\fIoutput binary format\fP)\fB]\fP
+\fB[--debug\fP (\fIdebug\fP)\fB]\fP
+\fB[-h\fP (\fIprint synopsis, exit\fP)\fB]\fP
+\fB[--apropos\fP (\fIprint synopsis, exit\fP)\fB]\fP
+\fB[--version\fP (\fIprint version, exit\fP)\fB]\fP
+.SH GETTING STARTED
+
+.di ZV
+.in 0
+.nf \fC
+   mcxload --stream-mirror -abc data1\&.txt -o data1\&.mci -write-tab data1\&.tab
+   mcxload --stream-mirror -etc data2\&.txt -o data2\&.mci -write-tab data2\&.tab
+   mcxload --stream-mirror -sif data3\&.txt -o data3\&.mci -write-tab data3\&.tab
+.fi \fR
+.in
+.di
+.ne \n(dnu
+.nf \fC
+.ZV
+.fi \fR
+
+When the output should be an undirected graph it is safest to always use
+the \fC--stream-mirror\fP option\&. Edges are stored bidirectionally as two arcs,
+and this option instructs \fBmcxload\fP to ensure that both arcs are present\&.
+In the above examples three different types of format are read\&. In all formats,
+the basic unit of specification is that of an arc specified by a source node,
+a destination node, and optionally a weight\&. All formats are line based,
+with \fB-abc\fP specifying a single arc and \fB-etc\fP and \fB-sif\fP
+specifying multiple arcs corresponding to a shared source node\&.
+For \fB-abc\fP the format is
+
+.di ZV
+.in 0
+.nf \fC
+<source-label>    <destination-label>     [<weight>]
+.fi \fR
+.in
+.di
+.ne \n(dnu
+.nf \fC
+.ZV
+.fi \fR
+
+The last field, specifying the arc weight, is optional\&. If not present the arc weight will be
+set to the default weight of 1\&.0\&. For \fB-sif\fP the format is
+
+.di ZV
+.in 0
+.nf \fC
+<source-label>    <relation-type>   <destination-label>   <destination-label>  \&.\&.\&.
+.fi \fR
+.in
+.di
+.ne \n(dnu
+.nf \fC
+.ZV
+.fi \fR
+
+There can be an arbitrary number of destination labels\&. The relation type field
+in the second column is required but will be ignored\&. As an extension it is possible
+to specify weights, requiring the use of the \fB--expect-values\fP option\&.
+Weights are specified by tagging them onto the destination label separated by a colon:
+
+.di ZV
+.in 0
+.nf \fC
+<source-label>    <relation-type>   <destination-label>:<weight>   <destination-label>:<weight>  \&.\&.\&.
+.fi \fR
+.in
+.di
+.ne \n(dnu
+.nf \fC
+.ZV
+.fi \fR
+
+Finally, the format for the \fB-etc\fP option is the same, except that the relation type
+column is dropped\&.
+.SH DESCRIPTION
+\fBmcxload\fP reads label input from a file\&. The format of the file should be
+line-based, each line containing two white-space separated strings (labels)
+and optionally a number separated from the second label by whitespace\&. In
+the absence of a value, mcxload will use the default value 1\&.0\&. If a tab is
+present on an input line, mcxload will assume that the tab character is the
+separator for that line\&. Lines for which the first non-whitespace character
+is an octothorpe (\&'\fC#\fP\&') are skipped\&.
+
+\fBmcxload\fP will transform the labels into mcl numerical identifiers and the
+pairs of labels into graph edges or equivalently matrix entries\&. The weight
+of an edge is the value associated with the associated labels\&. mcxload
+constructs dictionaries (sometimes just one) that map labels onto mcl
+identifiers as it goes along\&. It can optionally write these to file\&. In MCL
+(family) parlance, such a dictionary written to file is called a \fItab
+file\fP\&.
+
+It is possible to specify numerical identifiers directly with
+the \fB-123\fP option\&. In this case \fBmcxload\fP assumes a canonical
+domain (cf \fBmcxio\fP) and will create the minimal canonical
+domain that supports the data\&. Also bear in mind the caveat further
+below\&.
+
+It is possible to effectively predeclare labels and thus enforce
+an a-priori known mapping of labels onto numerical identifiers\&.
+Labels receive an identifier in the order in which they occur
+in the input\&. Predeclaring labels can be achieved by
+having them appear in the desired order and setting the edge
+weight to zero\&.
+
+A major mcxload modality is whether the input refers to a single
+domain or to two separate domains\&. An example of the first is where
+labels are names of people and the value is the extent to which they
+like one another\&. This encodes a \fIlikability\fP graph where all
+the nodes represent people\&. The reasonable thing to do in this
+case is to create a single dictionary with all names wherever
+they occur\&. All \fBtab\fP options (as opposed to \fBtabc\fP and \fBtabr\fP)
+pertain to this scenario and likewise for the options \fB--graph\fP
+and \fB--stream-mirror\fP\&.
+
+An example of the second mode is where the first label is again the name of
+a person, the second label is the name of an animal species, and the value
+is the extent to which that person appreciates the species\&. In this case,
+the reasonable thing to do is to create two dictionaries, one for persons
+and one for species\&. All \fBtabc\fP and \fBtabr\fP options pertain to
+this scenario\&. The \fBtabc\fP options \fIalways refer to the first label\fP
+and the \fBtabr\fP options \fIalways refer to the second label\fP\&.
+The letters \fBc\fP and \fBr\fP refer to \fIcolumn\fP and \fIrow\fP respectively\&.
+The latter are the names of the matrix domains corresponding
+to the input domains\&. Refer to \fBmcxio(5)\fP\&.
+
+A further mcxload modality is whether it constructs dictionaries
+on the fly, or whether it proceeds from a tab file already
+available\&.
+By default mcxload will construct dictionaries on the fly\&. You
+need to save them with the appropriate \fB-write\fP option(s)\&.
+All the \fBstrict\fP options read a tab file
+and require any labels in the \fB-abc\fP\ \&\fIlabel input\fP
+to be present in the corresponding tab file\&. mcxload will then fail in
+the face of absent labels\&.
+All the \fBrestrict\fP options simply ignore labels that are
+not found in the corresponding tab file\&.
+The \fBextend\fP options extend the existing tab file with
+labels that are not found\&.
+It presumably only makes sense to do so if the corresponding
+\fB-write\fP options are used as well\&.
+
+The input stream is deduplicated on a per-node neighbourhood basis
+using the \fB-re\fP option\&.
+
+mcxload has a few options to transform or select based on
+the values in the input stream and the values in the
+constructed matrix\&. These are
+\fB--stream-log\fP,
+\fB--stream-neg-log\fP,
+\fB--stream-neg-log10\fP,
+\fB-stream-tf\fP and
+\fB-tf\fP\&.
+Refer to \fBmcxio(5)\fP for a description of the syntax accepted
+by the latter two options \- it is a syntax accepted
+by a few more mcl siblings\&.
+Finally it is possible to transpose the final result
+using the \fB--transpose\fP option\&. Keep in mind that
+mcxload does not accordingly change its idea of row and
+column domains\&.
+
+The final matrix can be symmetrified using the \fB-ri\fP option\&.
+
+The \fB-etc\fP, \fB-235\fP and \fB-sif\fP options
+assume a format where all entries for a given
+column (or equivalently all neighbours for a given node) are joined onto a
+single line\&. This can be useful e\&.g\&. to read in externally generated
+clusterings\&. The \fB-etc\fP and \fB-sif\fP options expect label
+input, whereas the \fB-235\fP options expects numbers in the input that
+are mapped directly onto mcl numerical identifiers\&.
+The SIF format expected by \fB-sif\fP requires a \fIrelationship type\fP
+in the second field on each line; this is ignored\&.
+As an extension to the SIF format
+weights may optionally follow the labels, separated from them with a colon character\&.
+
+\fBCAVEAT\fP
+.br
+Please note that by feeding the line \&'1000000000 1\&' to \fBmcxload\fP with either
+of the \fB-235\fP or \fB-123\fP options it will try to allocate a
+matrix with one billion columns\&. This is most likely not what is wanted\&.
+Assuming that the input contains fewer than one billion unique labels, one
+should use the label options as described above and below\&.
+
+\fBSTAGES\fP
+.br
+Conceptually, input matrix creation consists of the following stages
+
+.ZJ 2m 2m "i"
+Read the input stream, apply \fB-stream-tf\fP transformation
+specification, and optionally push reverse elements
+(\fB--stream-mirror\fP)\&.
+.in -4m
+.ZJ 2m 2m "ii"
+Deduplicate edges in the context of all edges/arcs originating from
+a given node according to the \fB-re\fP option\&.
+.in -4m
+.ZJ 2m 2m "iii"
+Apply transpose symmetrification according to the
+\fB-ri\fP option, if used\&.
+.in -4m
+.ZJ 2m 2m "iv"
+Apply \fB-tf\fP transformation specification\&.
+.in -4m
+.SH OPTIONS
+
+.ZI 2m "\fB-abc\fP <fname> (\fIlabel file\fP)"
+\&
+.br
+The file to read label data from\&. Labels are separated by white-space\&. The
+labels may optionally be followed by a value (again separated by
+white-space), which is taken as the edge weight between the nodes
+corresponding with the labels\&. If a tab is present on an input line it is
+presumed to be the separator for that line, including the value if present\&.
+Lines for which the first non-blank character is the octothorpe (\&'\fC#\fP\&')
+are skipped\&.
+.in -2m
+
+.ZI 2m "\fB-123\fP <fname> (\fIidentifier file\fP)"
+\&
+.br
+The file to read numerical data from\&. The format is the same as
+for label data, but the identifiers are directly mapped onto mcl identifiers
+as described earlier\&.
+.in -2m
+
+.ZI 2m "\fB-o\fP <fname> (\fIoutput file\fP)"
+\&
+.br
+The output file where the constructed matrix is written\&.
+.in -2m
+
+.ZI 2m "\fB--stream-mirror\fP (\fIsymmetrify, same domain\fP)"
+\&
+.br
+Whenever \fIlabel1\fP \fIlabel2\fP \fIvalue\fP
+is encountered in the input, mcxload inserts
+\fIlabel2\fP \fIlabel1\fP \fIvalue\fP in the input
+stream as well\&. This option implies that both labels
+belong to the same domain\&.
+.in -2m
+
+.ZI 2m "\fB--stream-split\fP (\fIassume different domains\fP)"
+\&
+.br
+This tells mcxload that the two labels belong to different domains\&.
+The program will create two tab files, one for columns and one
+for rows\&. This can be used for example to create a logical mapping of
+gene identifiers to species identifiers\&.
+.in -2m
+
+.ZI 2m "\fB-re\fP <max|add|mul|first|last> (\fIdeduplication mode\fP)"
+\&
+.br
+This specifies how mcxload should collapse repeated entries, that is edges
+for which a value is specified multiple times\&. This is done relative to a
+single node at a time, taking into account all neighbours assembled from the
+input stream\&. Note that \fB--stream-mirror\fP will result in
+duplicated entries if the input contains edge specifications in both ways\&.
+Also note that \fBfirst\fP and \fBlast\fP might not result in
+symmetric input if only \fB--stream-mirror\fP is used\&.
+.in -2m
+
+.ZI 2m "\fB-write-tab\fP <fname> (\fIsave domain tab\fP)"
+\&
+.br
+Write the domain to file\&. It applies to both label types\&.
+.in -2m
+
+.ZI 2m "\fB-write-tabc\fP <fname> (\fIsave column tab\fP)"
+\&
+.br
+Write the column domain to file\&. It applies to the first label found
+on each input line\&.
+.in -2m
+
+.ZI 2m "\fB-write-tabr\fP <fname> (\fIsave row tab\fP)"
+\&
+.br
+Write the column domain to file\&. It applies to the second label found
+on each input line\&.
+.in -2m
+
+.ZI 2m "\fB-strict-tab\fP <fname> (\fItab universe\fP)"
+\&
+.br
+Read a dictionary from file and require each label to be present in the
+dictionary\&. mcxload will exit on absentees\&.
+.in -2m
+
+.ZI 2m "\fB-strict-tabc\fP <fname> (\fItabc universe\fP)"
+\&
+.br
+Read a dictionary from file and require the first label on each line
+to be present in the dictionary\&. mcxload will exit on absentees\&.
+.in -2m
+
+.ZI 2m "\fB-strict-tabr\fP <fname> (\fItabr universe\fP)"
+\&
+.br
+Read a dictionary from file and require the second label on each line
+to be present in the dictionary\&. mcxload will exit on absentees\&.
+.in -2m
+
+.ZI 2m "\fB-restrict-tab\fP <fname> (\fItab world\fP)"
+\&
+.br
+Read a dictionary from file and only accept input lines (edges)
+for which both labels are present in the dictionary\&.
+mcxload will ignore absentees\&.
+.in -2m
+
+.ZI 2m "\fB-restrict-tabc\fP <fname> (\fItabc world\fP)"
+\&
+.br
+Read a dictionary from file and ignore input lines
+for which the first label is absent from the dictionary\&.
+.in -2m
+
+.ZI 2m "\fB-restrict-tabr\fP <fname> (\fItabr world\fP)"
+\&
+.br
+Read a dictionary from file and ignore input lines
+for which the second label is absent from the dictionary\&.
+.in -2m
+
+.ZI 2m "\fB-extend-tab\fP <fname> (\fItab launch\fP)"
+\&
+.br
+Read a dictionary from file and extend it with any
+label from the input not yet present in the dictionary\&.
+.in -2m
+
+.ZI 2m "\fB-extend-tabc\fP <fname> (\fItabc launch\fP)"
+\&
+.br
+Read a dictionary from file and extend it with all
+first labels from the input not yet present in the dictionary\&.
+.in -2m
+
+.ZI 2m "\fB-extend-tabr\fP <fname> (\fItabr launch\fP)"
+\&
+.br
+Read a dictionary from file and extend it with all
+second labels from the input not yet present in the dictionary\&.
+.in -2m
+
+.ZI 2m "\fB-123-max\fP <int> (\fIset domain range\fP)"
+\&
+'in -2m
+.ZI 2m "\fB-123-maxc\fP <int> (\fIset column range\fP)"
+\&
+'in -2m
+.ZI 2m "\fB-123-maxr\fP <int> (\fIset row range\fP)"
+\&
+'in -2m
+'in +2m
+\&
+.br
+These options limit the domain ranges accepted by the \fB-123\fP option\&.
+Numbers starting from \fI<int>\fP will be ignored, and the domain(s)
+will range from zero up to one less than \fI<int>\fP\&.
+The first, \fB-123-max\fP governs both domains, and \fB-123-maxc\fP
+and \fB-123-maxr\fP respectively govern the column and row domain\&.
+.in -2m
+
+.ZI 2m "\fB--stream-log\fP (\fIlog transform stream values\fP)"
+\&
+.br
+Replace each entry by its natural logarithm\&.
+.in -2m
+
+.ZI 2m "\fB--stream-neg-log\fP (\fInegative log transform stream values\fP)"
+\&
+'in -2m
+.ZI 2m "\fB--stream-neg-log10\fP (\fInegative log-10 transform stream values\fP)"
+\&
+'in -2m
+'in +2m
+\&
+.br
+Replace each entry by the negative of its natural logarithm and
+log-10 representation, respectively\&.
+This is for example useful to convert scores that denote probabilities
+or p-values such as BLAST scores\&.
+.in -2m
+
+.ZI 2m "\fB-stream-tf\fP (\fItransform stream values\fP)"
+\&
+.br
+Transform the stream values as they are read in according
+to the syntax described in \fBmcxio(5)\fP\&.
+.in -2m
+
+.ZI 2m "\fB-tf\fP <tf-spec> (\fItransform (not so) final matrix\fP)"
+\&
+.br
+Transform the matrix values after deduplication and symmetrification
+according to the syntax described in \fBmcxio(5)\fP\&.
+.in -2m
+
+.ZI 2m "\fB-ri\fP (\fI<max|add|mul>\fP)"
+\&
+.br
+After the initial matrix has been assembled, it can be symmetrified by
+either of these options\&. They indicate the operation used to combine the
+entries of the transposed matrix and the original matrix\&. \fBmul\fP
+is special in that it treats missing entries (which are normally considered
+zero in mcl matrix operations) as one\&.
+.in -2m
+
+.ZI 2m "\fB--transpose\fP (\fItranspose\fP)"
+\&
+.br
+Write the transposed matrix to file\&. This is obviously not useful
+when a symmetric matrix has been generated\&.
+.in -2m
+
+.ZI 2m "\fB-etc\fP <fname> (\fI\&'etc\&' label file\fP)"
+\&
+'in -2m
+.ZI 2m "\fB-etc-ai\fP <fname> (\fIleaderless \&'etc\&' label file\fP)"
+\&
+'in -2m
+.ZI 2m "\fB-235\fP <fname> (\fI\&'235\&' label file\fP)"
+\&
+'in -2m
+.ZI 2m "\fB-235-ai\fP <fname> (\fIleaderless \&'235\&' label file\fP)"
+\&
+'in -2m
+.ZI 2m "\fB-sif\fP <fname> (\fISIF label file\fP)"
+\&
+'in -2m
+.ZI 2m "\fB--expect-values\fP (\fIexpect label:weight format\fP)"
+\&
+'in -2m
+'in +2m
+\&
+.br
+The input is read in lines; each line is split on whitespace into labels\&.
+For \fB-etc\fP the first label is interpreted as the source node\&. All
+other labels are interpreted as destination nodes\&.
+Weights may optionally follow the labels, separated from them with a colon character\&.
+It is in this case necessary to use the \fB--expect-values\fP option\&.
+The SIF (Simple Interaction File) format expected by \fB-sif\fP is
+similar except that it contains an additional field\&. In this format the
+second column denotes the \fIrelationship type\fP\&. It is ignored by \fBmcxload\fP\&.
+For \fB-etc-ai\fP (\fIauto-increment\fP) all labels are interpreted as
+destination nodes and mcxload automatically creates a source node for each
+line it reads\&. This option can be useful to read in files encoding a
+clustering, where each line represents a cluster of white-space separated
+labels\&.
+
+The \fB-235\fP options are similar except that the input is not
+interpreted as labels but must consist of numbers that explicitly
+specify the matrix to be built\&.
+.in -2m
+
+.ZI 2m "\fB-packed\fP <fname> (\fIfile/stream in binary format\fP)"
+\&
+'in -2m
+.ZI 2m "\fB-pack-cnum\fP <num> (\fIset column range\fP)"
+\&
+'in -2m
+.ZI 2m "\fB-pack-rnum\fP <num> (\fIset row range\fP)"
+\&
+'in -2m
+'in +2m
+\&
+.br
+The \fB-packed\fP option allows to read machine-readable data
+directly\&. The data has to correspond to the data types for indexes
+and values with with MCL was compiled\&. The use of \fB-pack-cnum\fP
+and \fB-pack-rnum\fP is required to set the limits of
+the ranges of indices that will be read\&.
+
+The \fC/scripts\fP directory of the MCL software contains scripts
+\fCpacked-example\&.sh\fP and \fCpacked-example2\&.sh\fP\&. The first shows the simple
+binary format that is accepted by \fB-packed\fP\&. It also documents the
+required include files and library and the method by which they can be
+referenced and linked to\&. The second expands on the first example by
+multiplexing binary output onto multiple output streams\&. Each output stream
+is read and loaded by an independent \fImcxload\fP instance\&. The final result
+is obtained by summing the individual matrices\&. This can be used to speed up
+the loading of large data by parallelisation\&.
+.in -2m
+
+.ZI 2m "\fB--write-binary\fP (\fIoutput binary format\fP)"
+\&
+.br
+The output matrix is written in native binary format \- refer to
+\fBmcxio(5)\fP\&.
+.in -2m
+
+.ZI 2m "\fB--debug\fP (\fIdebug\fP)"
+\&
+.br
+Among other things, this turns on warnings when \fBrestrict\fP tab
+files are used and labels are found to be missing\&.
+.in -2m
+.SH AUTHOR
+Stijn van Dongen\&.
+.SH SEE ALSO
+\fBmcxio(5)\fP,
+\fBmcxdump(1)\fP,
+\fBmcl(1)\fP,
+\fBmclfaq(7)\fP,
+and \fBmclfamily(7)\fP for an overview of all the documentation
+and the utilities in the mcl family\&.

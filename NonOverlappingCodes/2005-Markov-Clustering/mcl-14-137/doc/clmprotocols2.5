@@ -1,0 +1,457 @@
+.\" Copyright (c) 2014 Stijn van Dongen
+.TH "clmprotocols" 5 "16 May 2014" "clmprotocols 14-137" "FILE FORMATS "
+.po 2m
+.de ZI
+.\" Zoem Indent/Itemize macro I.
+.br
+'in +\\$1
+.nr xa 0
+.nr xa -\\$1
+.nr xb \\$1
+.nr xb -\\w'\\$2'
+\h'|\\n(xau'\\$2\h'\\n(xbu'\\
+..
+.de ZJ
+.br
+.\" Zoem Indent/Itemize macro II.
+'in +\\$1
+'in +\\$2
+.nr xa 0
+.nr xa -\\$2
+.nr xa -\\w'\\$3'
+.nr xb \\$2
+\h'|\\n(xau'\\$3\h'\\n(xbu'\\
+..
+.if n .ll -2m
+.am SH
+.ie n .in 4m
+.el .in 8m
+..
+.de ZT
+.\" Zoem Faq (Toc) macro.
+.nr xb \\n(.k
+.nr xb -1m
+.nr xa \\$1
+.nr xa -\\n(.k
+.nr xa -\\n(.i
+\h'\\n(xau'\\$2\l'|\\n(xbu.'\h'1m'\\
+..
+.de ZB
+.\" Zoem Faq (Body) macro.
+.nr xb \\n(.k
+.nr xa \\$1
+.nr xa -\\n(.k
+.nr xa -\\n(.i
+\h'\\n(xau'\\$2\h'|\\n(xbu'\\
+..
+.am SH
+.ie n .in 8m
+.el .in 8m
+..
+
+.ZJ 3m 1m "1\&."
+NAME
+.in -4m
+.ZJ 3m 1m "2\&."
+DESCRIPTION
+.in -4m
+.ZJ 3m 1m "3\&."
+TOC
+.in -4m
+.ZJ 3m 1m "4\&."
+FAQ
+.in -4m
+.ZJ 3m 1m "5\&."
+Network representation
+.in -4m
+.ZJ 3m 1m "6\&."
+Loading large networks
+.in -4m
+.ZJ 3m 1m "7\&."
+Converting between formats
+.in -4m
+.ZJ 3m 1m "8\&."
+Clustering similarity graphs encoded in BLAST results
+.in -4m
+.ZJ 3m 1m "9\&."
+Clustering expression data
+.in -4m
+.ZJ 3m 1m "10\&."
+Reducing node degrees in the graph
+.in -4m
+.ZJ 3m 1m "11\&."
+SEE ALSO
+.in -4m
+.ZJ 3m 1m "12\&."
+AUTHOR
+.in -4m
+.SH NAME
+clmprotocols \- Work flows and protocols for mcl and friends
+.SH DESCRIPTION
+A guide to doing analysis with mcl and its helper programs\&.
+.SH TOC
+
+.ZT 0m \fB1\fP
+\s+1\fBGeneral pardon\fP\s-1
+.br
+.ZT 1m \fB1\&.1\fP
+For whom is mcl and for whom is this FAQ?
+.br
+.ZT 1m \fB1\&.2\fP
+For whom is mcl and for whom is this FAQ?
+
+.ZT 0m \fB2\fP
+\s+1\fBGeneral questions\fP\s-1
+.br
+.ZT 1m \fB2\&.1\fP
+For whom is mcl and for whom is this FAQ?
+.br
+.ZT 1m \fB2\&.2\fP
+For whom is mcl and for whom is this FAQ?
+.SH FAQ
+
+.ce
+\s+2\fBGeneral pardon\fP\s-2
+
+.ZB 1m \fB1\&.1\fP
+\s+1\fBFor whom is mcl and for whom is this FAQ?\fP\s-1
+
+For everybody with an appetite for graph clustering\&.
+
+.ZB 1m \fB1\&.2\fP
+\s+1\fBFor whom is mcl and for whom is this FAQ?\fP\s-1
+
+For everybody with an appetite for graph clustering\&.
+
+.ce
+\s+2\fBGeneral questions\fP\s-2
+
+.ZB 1m \fB2\&.1\fP
+\s+1\fBFor whom is mcl and for whom is this FAQ?\fP\s-1
+
+For everybody with an appetite for graph clustering\&.
+
+.ZB 1m \fB2\&.2\fP
+\s+1\fBFor whom is mcl and for whom is this FAQ?\fP\s-1
+
+For everybody with an appetite for graph clustering\&.
+.SH Network representation
+
+The clustering program \fBmcl\fP expects the name of file as its first argument\&.
+If the \fB--abc\fP option is used, the file is assumed to adhere to a
+simple format where a network is specified edge by edge, one line and one
+edge at a time\&.
+Each line describes an edge as two labels and a numerical value, all
+separated by white space\&. The labels and the value respectively identify the
+two nodes and the edge weight\&. The format is called ABC-format,
+where \&'A\&' and \&'B\&' represent the two labels and \&'C\&' represents the
+edge weight\&. The latter is optional; if omitted the edge weight is set to one\&.
+If ABC-format is used, the output is returned as a listing of clusters,
+each cluster given as a line of white-space separated labels\&.
+
+MCL can also utilize a second representation, which is a stringent and
+unambiguous format for both input and output\&.
+This is called \fImatrix format\fP and it is required when using other
+programs in the mcl suite, for example when comparing and analysing
+clusterings using \fBclm(1)\fP or when extracting and transforming
+networks using \fBmcx(1)\fP\&.
+Native mode (matrix format) is entered simply by \fInot\fP specifying
+\fB--abc\fP\&.
+
+The recommended approach using \fBmcl\fP is to convert an external format to
+ABC-format\&. The program \fBmcxload(1)\fP reads the latter and creates a
+native network file and a dictionary file that maps network nodes to
+labels\&. All applications in the MCL suite, including \fBmcl\fP itself, can read
+this native network file format\&. Label output can be obtained using
+\fBmcxdump(1)\fP\&. The workflow is thus:
+
+.di ZV
+.in 0
+.nf \fC
+   #  External format has been converted to file data\&.abc (abc format)
+
+   mcxload -abc data\&.abc --stream-mirror -write-tab data\&.tab -o data\&.mci  
+
+   mcl data\&.mci -I 1\&.4
+   mcl data\&.mci -I 2
+   mcl data\&.mci -I 4
+
+   mcxdump -icl out\&.data\&.mci\&.I14 -tabr data\&.tab -o dump\&.data\&.mci\&.I14
+   mcxdump -icl out\&.data\&.mci\&.I20 -tabr data\&.tab -o dump\&.data\&.mci\&.I20
+   mcxdump -icl out\&.data\&.mci\&.I40 -tabr data\&.tab -o dump\&.data\&.mci\&.I40
+.fi \fR
+.in
+.di
+.ne \n(dnu
+.nf \fC
+.ZV
+.fi \fR
+
+In this example the cluster output is stored in native format and dumped to
+labels using mcxdump\&. The stored output can now be used to learn more about
+the clusterings\&. An example is the following, where \fBclm(1)\fP is applied
+in mode\ \&\fBdist\fP to gauge the distance between different clusterings\&.
+
+.di ZV
+.in 0
+.nf \fC
+   clm dist --chain out\&.data\&.mci\&.I{14,20,40}
+.fi \fR
+.in
+.di
+.ne \n(dnu
+.nf \fC
+.ZV
+.fi \fR
+
+.SH Loading large networks
+
+If you deal with very large networks (say with hundreds of millions
+of edges), it is recommended to use binary format (cf \fBmcxio(5)\fP)\&.
+This is simply achieved by adding \fC--write-binary\fP to the mcxload
+command line\&. The resulting file is no longer human-readable but
+will be faster to read by a factor between ten- or twenty-fold
+compared to standard MCL-edge network format, and a factor around fifty-fold
+compared to label format\&.
+All MCL-edge programs are able to read binary format, and speed
+of reading will be somewhere in the order of millions of edges
+per second, compared to, for example, roughly 100K edges
+per second for label format\&.
+
+Memory usage for mcxload can be lowered
+by replacing the option \fC--stream-mirror\fP with \fC-ri\ \&max\fP\&.
+.SH Converting between formats
+
+\fBConverting label format to tabular format\fP
+.br
+Label format, two or three (including weight) columns:
+
+.di ZV
+.in 0
+.nf \fC
+   mcxload -abc data\&.abc --stream-mirror -write-tab data\&.tab -o data\&.mci
+   mcxdump -imx data\&.mci -tab data\&.tab --dump-table
+.fi \fR
+.in
+.di
+.ne \n(dnu
+.nf \fC
+.ZV
+.fi \fR
+
+Simple Interaction File (SIF) format:
+
+.di ZV
+.in 0
+.nf \fC
+   mcxload -sif data\&.sif --stream-mirror -write-tab data\&.tab -o data\&.mci
+   mcxdump -imx data\&.mci -tab data\&.tab --dump-table
+.fi \fR
+.in
+.di
+.ne \n(dnu
+.nf \fC
+.ZV
+.fi \fR
+
+It can be noted that these two examples are very similar, and differ
+only in the way the input to \fBmcxload\fP is specified\&.
+.SH Clustering similarity graphs encoded in BLAST results
+
+A specific instance of the workflow above is the clustering of proteins based on
+their sequence similarities\&. In the most typical scenario the external
+format is BLAST output, which needs to be transformed to ABC format\&.
+In the examples below the input is in columnar blast format
+obtained with the blast -m8 option\&.
+It requires a version of \fBmcl\fP at least as recent as \fC09-061\fP\&.
+First we create an ABC-formatted file using the external columnar BLAST
+format, which is assumed to be in a file called \fCseq\&.cblast\fP\&.
+
+.di ZV
+.in 0
+.nf \fC
+   cut -f 1,2,11 seq\&.cblast > seq\&.abc
+.fi \fR
+.in
+.di
+.ne \n(dnu
+.nf \fC
+.ZV
+.fi \fR
+
+The columnar format in the file \fCseq\&.cblast\fP has, for a given BLAST hit,
+the sequence labels in the first two columns and the asssociated E-value in
+column\ \&11\&. It is parsed by the standard UNIX cut(1) utility\&. The format
+must have been created with the BLAST -m8 option so that no comment lines
+are present\&. Alternatively these can be filtered out using grep\&.
+The newly created \fCseq\&.abc\fP file is loaded by \fBmcxload(1)\fP,
+which writes both a network file \fCseq\&.mci\fP and a dictionary
+file \fCseq\&.tab\fP\&.
+
+.di ZV
+.in 0
+.nf \fC
+   mcxload -abc seq\&.abc --stream-mirror --stream-neg-log10 -stream-tf \&'ceil(200)\&'
+         -o seq\&.mci -write-tab seq\&.tab
+.fi \fR
+.in
+.di
+.ne \n(dnu
+.nf \fC
+.ZV
+.fi \fR
+
+The \fC--stream-mirror\fP option ensures that the resulting network will be
+undirected, as recommended when using \fBmcl\fP\&. Omitting this option would
+result in a directed network as BLAST E-values generally differ between two
+sequences\&. The default course of action for \fBmcxload(1)\fP is to use the
+best value found between a pair of labels\&. The next option,
+\fC--abc-neg-log10\fP tranforms the numerical values in the input (the BLAST
+E-values) by taking the logarithm in base\ \&10 and subsequently negating the
+sign\&. Finally, the transformed values are capped so that any E-value below
+1e-200 is set to a maximum allowed edge weight of\ \&200\&.
+
+To obtain clusterings from \fCseq\&.mci\fP and \fCseq\&.tab\fP one has two
+choices\&. The first is to generate an abstract clustering representation
+and from that obtain the label output, as follows\&.
+Below the \fB-o\fP option is not used, so mcl will create meaningful and
+unique output names by itself\&. The default way of doing this is to preprend
+the prefix \fCout\&.\fP and to append a suffix encoding the inflation value
+used, with inflation encoded using two digits of precision and the decimal
+separator removed\&.
+
+.di ZV
+.in 0
+.nf \fC
+   mcl seq\&.mci -I 1\&.4
+   mcl seq\&.mci -I 2
+   mcl seq\&.mci -I 4
+   mcl seq\&.mci -I 6
+
+   mcxdump -icl out\&.seq\&.mci\&.I14 -tabr seq\&.tab -o dump\&.seq\&.mci\&.I14
+   mcxdump -icl out\&.seq\&.mci\&.I20 -tabr seq\&.tab -o dump\&.seq\&.mci\&.I20
+   mcxdump -icl out\&.seq\&.mci\&.I40 -tabr seq\&.tab -o dump\&.seq\&.mci\&.I40
+   mcxdump -icl out\&.seq\&.mci\&.I60 -tabr seq\&.tab -o dump\&.seq\&.mci\&.I60
+.fi \fR
+.in
+.di
+.ne \n(dnu
+.nf \fC
+.ZV
+.fi \fR
+
+Now the file \fCout\&.seq\&.tab\&.I14\fP and its associates can be used for example
+to compute the distances between the encoded clusterings with
+\fBclm dist\fP, to compute a set of strictly reconciled nested clusterings
+with \fBclm order\fP, or to compute an efficiency criterion with
+\fBclm info\fP\&.
+
+Alternatively, label output can be obtained directly from \fBmcl\fP
+as follows\&.
+
+.di ZV
+.in 0
+.nf \fC
+   mcl seq\&.mci -I 1\&.4  -use-tab seq\&.tab
+   mcl seq\&.mci -I 2  -use-tab seq\&.tab
+   mcl seq\&.mci -I 4  -use-tab seq\&.tab
+   mcl seq\&.mci -I 6  -use-tab seq\&.tab
+.fi \fR
+.in
+.di
+.ne \n(dnu
+.nf \fC
+.ZV
+.fi \fR
+
+.SH Clustering expression data
+
+The clustering of expression data constitutes another workflow\&. In this case the
+external format usually is a tabular file format containing labels for genes
+or probes and numerical values measuring the expression values or fold
+changes across a series of conditions or experiments\&. Such tabular files can
+be processed by \fBmcxarray(1)\fP, which comes installed with \fBmcl\fP\&. The
+program computes correlations (either Pearson or Spearmann) between genes,
+and creates an edge between genes if their correlation exceeds the specified
+cutoff\&. From this \fBmcxarray(1)\fP creates both a network file and a
+dictionary file\&. In the example below, the file \fCexpr\&.data\fP is
+in tabular format with one row of column headers (e\&.g\&. tags for
+experiments) and one column of row identifiers (e\&.g\&. probe or gene identifiers)\&.
+
+.di ZV
+.in 0
+.nf \fC
+   mcxarray -data expr\&.data -skipr 1 -skipc 1 -o expr\&.mci -write-tab expr\&.tab --pearson -co 0\&.7 -tf \&'abs(),add(-0\&.7)\&'
+   
+.fi \fR
+.in
+.di
+.ne \n(dnu
+.nf \fC
+.ZV
+.fi \fR
+
+This uses the Pearson correlation, ignoring values below 0\&.7\&.
+The remaining values in the interval \fC[0\&.7-1]\fP are remapped to the interval
+\fC[0-0\&.3]\fP\&. This is recommended so that the edge weights will have
+increased contrast between them, as \fBmcl\fP is affected by relative differences
+(ratios) between edge weights rather than absolute differences\&. To illustrate
+this, values\ \&0\&.75 and\ \&0\&.95 are mapped to\ \&0\&.05 and\ \&0\&.25, with respective
+ratios\ \&0\&.79 and\ \&0\&.25\&.
+The network file \fCexpr\&.mci\fP and the dictionary file \fCexpr\&.tab\fP can
+now be used as before\&.
+
+It is possible to investigate the effect of the correlation cutoff as follows\&.
+First a network is generated at a very low threshold, and this network
+is analysed using \fBmcxquery\fP\&.
+
+.di ZV
+.in 0
+.nf \fC
+   mcxarray -data expr\&.data -skipr 1 -skipc 1 -o expr20\&.mcx --write-binary --pearson -co 0\&.2 -tf \&'abs()\&'
+   mcx query -imx expr20\&.mcx --vary-correlation
+   
+.fi \fR
+.in
+.di
+.ne \n(dnu
+.nf \fC
+.ZV
+.fi \fR
+
+The output is in a tabular format describing the properties of the network
+at increasing correlation thresholds\&. Examples are the size of the biggest
+component, the number of orphan nodes (not connected to any other node), and
+the mean and median node degrees\&.
+A good way to choose the cutoff is to balance the number of singletons
+and the median node degree\&. Both should preferably not be too high\&.
+For example the number of orphan nodes should be
+less than ten percent of the total number of nodes,
+and the median node degree should be at most one hundred neighbours\&.
+.SH Reducing node degrees in the graph
+A good way to lower node degrees in a network is to require that
+an edge is among the best \fIk\fP edges (those of highest weight) for
+\fIboth\fP nodes incident to the edge, for some value of \fIk\fP\&. This is
+achieved by using \fCknn(k)\fP in the argument to the \fB-tf\fP option to
+mcl or \fBmcx\ \&alter\fP\&.
+To give an example, a graph was formed on translations in Ensembl release 57 on 2\&.6M nodes\&.
+The similarities were obtained from BLAST scores,
+leading to a graph with a total edge count of 300M, with
+best-connected nodes of degree respectively
+11148, 9083, 9070, 9019 and 8988, and with mean node degree 233\&.
+These degrees are unreasonable\&.
+The graph was subjected to \fBmcx\ \&query\fP to investigate the effect of
+varying k-NN parameters\&. A good heuristic is to choose a value
+that does not significantly change the number of singletons in the input graph\&.
+In the example it meant that \fB-tf\fP\ \&\fB\&'knn(160)\&'\fP was feasible, leading
+to a mean node degree of 98\&.
+
+A second approach to reduce node degrees is to employ the \fB-ceil-nb\fP option\&.
+This ranks nodes by node degree, highest first\&. Nodes are considered
+in order of rank, and edges of low weight are removed from the graph until
+a node satisfies the node degree threshold specified by \fB-ceil-nb\fP\&.
+
+.SH SEE ALSO
+\fBmcxio(5)\fP\&.
+.SH AUTHOR
+Stijn van Dongen\&.

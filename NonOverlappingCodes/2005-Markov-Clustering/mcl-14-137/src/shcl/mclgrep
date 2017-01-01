@@ -1,0 +1,124 @@
+#!/usr/bin/env perl
+
+my $keep_header = 1;
+my @fields = ();
+my $re = "";
+my $mh = 0;
+
+while ($ARGV[0] =~ /^--/) {
+   my $arg = shift @ARGV;
+   my ($val, $key) = ("", "");
+   if ($arg =~ /^--(.*?)(=(.*))?$/) {
+      $key = $1;
+      $val = $2 ? $3 : "";
+   }
+   else {
+      print "Arguments must be in <--key=val> or <--key> format\n";
+      exit;
+   }
+
+   if ($key eq 'nh') {
+      $keep_header = 0;
+   }
+
+   elsif ($key eq 'mh') {
+      $mh = $val;
+   }
+
+   elsif ($key eq 're') {
+      $re = $val;
+   }
+
+   elsif ($key eq 'fd') {
+      @fields = split ':', $val;
+   }
+
+   else {
+      print "Unsupported option: --$key\n";
+      exit;
+   }
+}
+
+
+my $pat = shift;
+
+if (!$pat || @ARGV < 1) {
+   print <<EOU;
+Usage: mclgrep [options] <perl-pat> <fname>+\n
+--fd=<f1:f2>      output these fields only
+--re=<tag>        section must match re
+--mh=<num>        max number of section hits
+EOU
+   exit;
+}
+
+$pat =~ s/;/|/g;
+
+
+while ($fn = shift) {
+
+   my $section_hits = 0;
+   my $fh;
+
+   if ($fn eq '-') {
+      $fh = STDIN;
+   }
+   else {
+      open (LINES, "<$fn") || die "Can not open file $fn\n";
+      $fh = LINES;
+   }
+
+   my $level = 0;
+
+   my $l = length $fn;
+   my $p1 = (76 - $l) / 2;
+   my $p2 = $p1 + ($l % 2);
+
+   my $rule = '=' x $p1 . " $fn " . '=' x $p2;
+   my $par = "";
+
+   # print $rule, "\n";
+
+   while (<$fh>) {
+
+      if (!$level && /^\s*\((\S*$pat)/) {
+         $par .= $_;
+         $level++;
+         if (/\)/) {
+            $level--;
+         }
+      }
+      elsif ($level) {
+         if (/^\s*\(/) {
+            $level++;
+         }
+         elsif (/^\s*\)/) {
+            $level--;
+         }
+         $par .= $_;
+      }
+
+      if (!$level && $par && (!$mh || $section_hits<$mh)) {
+
+         $section_hits++;
+
+         if ($re && $par !~ /$re/) {
+         }
+         elsif (@fields) {
+            for my $fd (@fields) {
+               if ($par =~ /$fd=(\S+)/i) {
+                  printf "%10s", $1;
+               }
+            }
+         }
+         else {
+            print $par;
+         }
+         $par = "";
+      }
+   }
+   if ($fn ne '-') {
+      close $fh;
+   }
+}
+

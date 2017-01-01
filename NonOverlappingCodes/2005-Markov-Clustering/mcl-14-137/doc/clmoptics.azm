@@ -1,0 +1,131 @@
+\import{mcx.zmm}
+
+\begin{pud::man}{
+
+   {name}{clm optics}
+   {html_title}{The clm optics manual}
+   {author}{Stijn van Dongen}
+   {section}{1}
+   {synstyle}{long}
+   {defstyle}{long}
+
+   \man_share
+}
+
+\${html}{\"pud::man::maketoc"}
+
+\sec{name}{NAME}
+\NAME{clm optics}{implementation of the OPTICS reachability ordering}
+\disclaim_clm{optics}
+
+\sec{synopsis}{SYNOPSIS}
+\par{
+   \clm{optics} -imx <fname> [options]
+   }
+
+\par{
+   \clm{optics}
+   \synreqopt{-imx}{fname}{input graph file name}
+   \synreqopt{-max-eps}{<num>}{maximum distance considered}
+   \synreqopt{-min-eps}{<num>}{minimum similarity considered}
+   \synreqopt{-min-pts}{<int>}{minimum eps-neighbourhood size}
+   \synoptopt{-icl}{fname}{input clustering name}
+   \synoptopt{-o}{fname}{output name}
+   \synoptopt{-ps}{fname}{PostScript output name}
+   \synoptopt{-psx}{fname}{scaling factor x axis}
+   \synoptopt{-psy}{fname}{scaling factor y axis}
+   \synoptopt{-ps-rows}{<num>}{split reachability plot into <num> rows}
+   \synoptopt{--ps-labels}{show identifiers in PS output}
+   \stdsynopt
+   }
+
+\sec{description}{DESCRIPTION}
+
+\par{
+   This programs computes the reachability ordering according to the \bf{OPTICS}
+   clustering method. It can additionally output a PostScript plot of the reachability
+   landscape. This plot can be annotated with a user-supplied clustering.
+   The program does not implement the clustering method that is associated
+   with \bf{OPTICS}.  It is part of \mcle primarily as a visualisation aid.
+   }
+
+\sec{options}{OPTIONS}
+
+\'begin{itemize}{\mcx_itemopts}
+
+
+\item{\defopt{-imx}{fname}{input file}}
+\car{
+   The input file, encoding a graph in native format.
+   }
+
+\items{
+   {\defopt{-max-eps}{<num>}{maximum distance considered}}
+   {\defopt{-min-eps}{<num>}{minimum similarity considered}}
+   {\defopt{-min-pts}{<int>}{minimum eps-neighbourhood size}}
+   }
+\car{
+   These encode the \bf{OPTICS} parameters. Use \genopt{-max-eps} if the
+   edge weights encode a distance (for example the Euclidean distance between
+   points), use \genopt{-min-eps} if the edge weights encode a similarity.
+   }
+
+
+\items{
+   {\defopt{-o}{fname}{output file name}}
+   {\defopt{-ps}{fname}{PostScript file name}}
+   {\defopt{-icl}{fname}{input clustering name}}
+   }
+\car{
+   The \genopt{-o}{fname} option controls the name of the file in which the reachability
+   values are written. By default these values are written to STDOUT.
+   }
+
+\par{
+   If \genopt{-ps}{fname} is supplied the program will additionally output a visualisation
+   of the reachability landscape plot in a PostScript file.
+   }
+
+\par{
+   It is possible, in addition to \genopt{-ps}, to specify a clustering with \genopt{-icl}{fname}.
+   Each vertical bar in the landscape plot will be coloured according to cluster membership,
+   that is, nodes in the same cluster will have the same colour. This can be a useful way
+   to visualise separation properties of clusterings.
+   }
+
+\items{
+   {\defopt{-psx}{fname}{scaling factor x axis}}
+   {\defopt{-psy}{fname}{scaling factor y axis}}
+   {\defopt{--ps-labels}{show identifiers in PS output}}
+   {\defopt{-ps-rows}{<num>}{split reachability plot into <num> rows}}
+   }
+\car{
+   By default the PostScript output will be scaled to fit onto an A3 page.
+   The scaling options \genopt{-psx} and \genopt{-psy} can be used as additional
+   scaling factors. By default these are set \v{1.0}.
+   }
+
+\par{
+   The \genopt{--ps-labels} can be used to annotate each vertical bar in the landscape
+   plot with the \mcle identifier of the corresponding node.
+   }
+
+\par{
+   The \genopt{-ps-rows} option sets the number of rows. This is the primary
+   option affect the width of a bar.
+   }
+
+\stddefopt
+
+\end{itemize}
+
+\sec{author}{AUTHOR}
+\par{
+   Stijn van Dongen.}
+
+\sec{seealso}{SEE ALSO}
+\par{
+   \mysib{mclfamily} for an overview of all the documentation
+   and the utilities in the mcl family.}
+
+\end{pud::man}

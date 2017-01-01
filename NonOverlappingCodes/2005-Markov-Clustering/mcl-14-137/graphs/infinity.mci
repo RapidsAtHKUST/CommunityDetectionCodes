@@ -1,0 +1,12 @@
+
+(mclheader
+mcltype matrix
+dimensions 3x3
+)
+(mclmatrix
+begin
+0  0:4   1:1   2:1   $
+1  0:1   1:4   2:1   $
+2  0:1   1:1   2:4   $
+)
+

@@ -1,0 +1,295 @@
+#!/usr/local/bin/bash
+
+export MCLXIOVERBOSITY=2
+
+set -e
+
+g_dst="./"
+g_tab=""
+g_stem="mlm"
+g_mx=""
+g_levels=6
+g_cone="mcl.cone"
+g_force_info=0
+g_ALPHA=0
+g_BETA=0
+g_GAMMA=0
+g_DELTA=0
+g_var1=alpha
+g_var2=delta
+g_annot=""
+g_transform=""
+g_pi=""
+g_reff=""     # the power coefficient r in efficiency/performance
+g_exclude="summary"
+
+bin=$HOME/local/bin
+
+while getopts :A:B:C:D:P:Q:d:a:b:p:l:f:s:c:r:m:t:x:hfI opt
+do
+    case "$opt" in
+    A)
+      g_ALPHA=$((0+$OPTARG))
+      ;;
+    B)
+      g_BETA=$((0+$OPTARG))
+      ;;
+    C)
+      g_GAMMA=$((0+$OPTARG))
+      ;;
+    D)
+      g_DELTA=$((0+$OPTARG))
+      ;;
+    P)
+      g_var1=$OPTARG
+      ;;
+    Q)
+      g_var2=$OPTARG
+      ;;
+    a)
+      g_annot=$OPTARG
+      ;;
+    f)
+      g_transform=$OPTARG
+      ;;
+    d)
+      g_dst=$OPTARG
+      ;;
+    I)
+      g_force_info=1
+      ;;
+    r)
+      g_reff=$OPTARG
+      ;;
+    p)
+      g_pi=$OPTARG
+      ;;
+    c)
+      g_cone=$OPTARG
+      ;;
+    b)
+      bin=$OPTARG
+      ;;
+    t)
+      g_tab=$OPTARG
+      ;;
+    s)
+      g_stem=$OPTARG
+      ;;
+    x)
+      g_exclude="$g_exclude,$OPTARG"
+      ;;
+    l)
+      g_levels=$OPTARG
+      ;;
+    m)
+      g_mx=$OPTARG
+      ;;
+    h)
+      cat <<EOU
+-d <destination directory> (default current)
+-m <matrix file>
+-I    force recreation of info file if it exists
+-c <cone file> (default mcl.cone)
+-l <int> number of levels to take into account (default $g_levels)
+-b <bin directory> (default $HOME/local/bin)
+-s <stem> stem for output files (default $g_stem)
+-t <tab file>
+-p <inflation>
+-f <transform> (cf mcxio(5))          |      a * * * * = * |=| = =
+-r <clminfo power coefficient>        |      b * * = * * * |=| = =
+-A <alpha|sn>     * / [ * =   ]       |      c X , , X , , |,| , ,
+-B <beta|sp>      , / [ , X   ]       |      d , , X , , , |,| X ,
+-C <gamma|sp2>    * / [ * X   ]       |      e , X , , , , |,| , X
+-D <delta|sn2>    * / [ * X O ]       |         1 2 3 4 5 6 |7| 8 9
+-P {alpha|beta|gamma|delta}    
+-Q {alpha|beta|gamma|delta}           *  true positive   ,  true negative
+-x {dump,info,fifofum}+               =  false negative  X  false positive
+                                      O  orphan (ignored annotations)
+
+EOU
+      exit
+      ;;
+    :) echo "Flag $OPTARG needs argument"
+        exit 1;;
+    ?) echo "Flag $OPTARG unknown (use -h for help)"
+        exit 1;;
+   esac
+done
+
+# echo $@
+
+cline="$0 $@"
+
+OPTIND=$(($OPTIND-1))
+shift $OPTIND
+
+if let $(($# > 0)); then
+   echo "trailing arguments not allowed"
+   exit
+fi
+
+if test ! "$g_pi"; then
+   ARG_I=""
+   piffix=""
+else
+   ARG_I="-pi $g_pi"
+   piffix=".p${g_pi/\.}"
+fi
+
+if test ! "$g_reff"; then
+   ARG_R=""
+   reffix=""
+else
+   ARG_R="--set=MCL_SCAN_R=$g_reff"
+   reffix=".r${g_reff/\.}"
+fi
+
+if test ! "$g_transform"; then
+   tfffix=""
+else
+   tfffix=".F${g_transform//[\.()]}"
+fi
+
+
+if test ! "$g_tab"; then
+   ARG_TAB=""
+else
+   ARG_TAB="--fntab=$g_tab"
+fi
+
+
+if test ! $g_dst; then
+   echo "Need destination! (see -d/-h)"; exit
+fi
+if test ! $g_mx; then
+   echo "Need matrix file! (see -m/-h)"; exit
+fi
+if test "$g_annot" -a ! "$g_tab" ; then
+   echo "With annot also need tab!"; exit
+fi
+
+foo=$(($g_ALPHA+$g_BETA+$g_GAMMA+$g_DELTA))
+
+if ! let $(($g_ALPHA+$g_BETA+$g_GAMMA+$g_DELTA)); then
+   echo "ABCD not specified; using A=10 D=90";
+   g_ALPHA=10
+   g_DELTA=90
+fi
+
+tag="$reffix$piffix$tfffix"
+infoname="$g_stem.cinfo$tag"
+
+FILE_QILT="MLM.$g_stem.qilt$tag"
+FILE_INFO="MLM.$g_stem.info$tag"
+
+cd $g_dst
+
+
+if [[ !(-f "$infoname") || (($g_force_info != 0)) ]]; then
+   echo "+ clm info creating file $infoname"
+   $bin/clm info                    \
+      -tf "$g_transform"            \
+      $ARG_I   $ARG_R               \
+      -cl-ceil 30000 -cat-max $g_levels \
+      -o $infoname -cl-tree $g_cone \
+      $g_mx
+else
+   echo "- clm info"
+   if test -f $infoname; then
+      echo "___ $infoname exists already"
+      echo "___ remove this file if you want to recreate it"
+   fi
+fi
+
+
+if [[ $g_exclude != *dump* ]]; then
+   echo "+ dump (*) creating cdump file and matrix iterands"
+   $bin/mcxdump -imx-cat $g_cone  -o $g_stem.mcl.cdump --cat-max=15
+   $bin/mcxdump -imx-tree $g_cone  -split-stem $g_stem.mcl --write-matrix -cat-max $g_levels
+else
+   echo "- dumping"
+fi
+
+
+if [[ $g_exclude != *fifofum* ]]; then
+   echo "+ fifofum (*) creating $g_stem.tdcl files"
+for k in `seq 0 1 9`; do
+   #mlm.fifofum --force-up=$k --fncone=$g_stem.mcl.cdump --fninfo=$infoname \
+   #   --clout=$g_stem.tdcl.c0$k.cls
+   mlm.fifofum --fncone=$g_stem.mcl.cdump --fninfo=$infoname --clout=$g_stem.tdcl.c0$k.cls$tag --force-up=$k
+done
+else
+   echo "- fifofum"
+fi
+
+
+if test "$g_annot"; then
+   echo "+ annot creating quilt files, summaries in $FILE_QILT"
+   echo "# $cline" > $FILE_QILT
+   for k in 10 30 50 70 90; do
+      l=$((100-$k))
+      $bin/mlm.quilt   --ignore-size=3 --fnannot=$g_annot    \
+         --fncone=$g_stem.mcl.cdump --fncls=$g_stem.impt$k.cls          \
+         --fntab=$g_tab --strict --$g_var1=$k --$g_var2=$l  \
+         >> $FILE_QILT
+   done
+   echo "===" >> $FILE_QILT
+   for k in 10 30 50 70 90; do
+      l=$((100-$k))
+      $bin/mlm.quilt   --ignore-size=3 --fnannot=$g_annot    \
+         --fnclin=$g_stem.impt$k.cls                        \
+         --fntab=$g_tab --strict --$g_var1=$k --$g_var2=$l  \
+         >> $FILE_QILT
+   done
+   echo "===" >> $FILE_QILT
+   for j in `seq 0 1 9`; do
+      $bin/mlm.quilt   --ignore-size=3 --fnannot=$g_annot    \
+         --fnclin=$g_stem.tdcl.c0$j.cls$tag                 \
+         --fntab=$g_tab --strict                            \
+         --alpha=$g_ALPHA --beta=$g_BETA --gamma=$g_GAMMA --delta=$g_DELTA \
+         >> $FILE_QILT
+   done
+   echo "===" >> $FILE_QILT
+   for j in `seq 1 1 $g_levels`; do
+      $bin/mlm.quilt   --ignore-size=3 --fnannot=$g_annot    \
+         --fnclin=$g_stem.mcl.00$j --fntab=$g_tab --strict  \
+         --alpha=$g_ALPHA --beta=$g_BETA --gamma=$g_GAMMA --delta=$g_DELTA \
+         >> $FILE_QILT
+   done
+else
+   echo "- annot"
+fi
+
+
+
+if [[ $g_exclude != *summary* ]]; then
+   echo "+ summary (*)"
+   $bin/mlm.summary --fncone=$g_stem.mcl.cdump --remove-singletons   \
+      | mlm.summary --fncone=$g_stem.mcl.cdump --fninfo=$infoname    \
+      > dump+info
+   # | mlmtree $ARG_TAB --fninfo=$infoname --out=dump+info
+else
+   echo "- summary"
+fi
+
+
+if [[ $g_exclude != *info* ]]; then
+   echo "+ info (*) creating file $FILE_INFO"
+   echo "# $cline" > $FILE_INFO
+   if test "$g_annot"; then
+      imptfiles=$(echo $g_stem.impt{10,30,50,70,90}.cls)
+   else
+      imptfiles=""
+   fi
+   $bin/clm info -set TINGEA_PLUS_APPEND -cat-max 5         \
+      -tf "$g_transform" $ARG_I -o +$FILE_INFO $g_mx        \
+         $g_stem.tdcl.c0{0,1,2,3,4,5,6,7,8,9}.cls$tag --        \
+         $g_cone -- $imptfiles
+   echo "" >> $FILE_INFO
+else
+   echo "- info"
+fi
+
+
+

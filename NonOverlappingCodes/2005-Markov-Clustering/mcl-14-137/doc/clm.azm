@@ -1,0 +1,186 @@
+\import{mcx.zmm}
+
+\begin{pud::man}{
+
+   {name}{clm}
+   {html_title}{The clm manual}
+   {author}{Stijn van Dongen}
+   {section}{1}
+   {synstyle}{long}
+   {defstyle}{long}
+
+   \man_share
+}
+
+\${html}{\"pud::man::maketoc"}
+
+\sec{name}{NAME}
+\NAME{clm}{perform various computations on graphs and clusterings}
+
+\sec{synopsis}{SYNOPSIS}
+\verbatim{\:/
+   \clm <mode> [mode-options] [mode-files]}
+
+\sec{description}{DESCRIPTION}
+
+\par{
+   \clm implements a variety of computations on graphs and clusterings.  The
+   first argument to \clm should be a \it{mode}, which is a string establishing
+   the type of computation to invoke.  Each mode \it{mode} is described in the
+   clm\it{mode} manual page.  The currently available modes are
+   \clmref{dist},
+   \clmref{info},
+   \clmref{meet},
+   \clmref{mate},
+   \clmref{close},
+   \clmref{order},
+   \clmref{imac},
+   \clmref{vol},      and
+   \clmref{residue}.
+   The \bf{dist} mode is thus described in the
+   \sibref{clmdist} manual page.
+   }
+
+\par{
+   Invoking \clm without arguments causes it to print out a list
+   of available modes with a short description of the type of
+   command line expected by that mode.
+   }
+
+\par{
+   Invoking \clm with just a mode will print out a longer listing
+   of options available for that particular mode.
+   Modes that are able to function normally without arguments
+   can be invoked by adding the \genarg{--nop} argument.
+   }
+
+\par{
+   Several options are shared between all \clm modes. Note that
+   these options are specified after the \bf{mode}. See \secref{options}.
+   }
+
+\par{
+   The \genopt{--version} option causes \clm to print out version
+   and license information.
+   }
+
+\par{
+   Issuing \it{clm help mode} will cause \clm to look for a manual page
+   describing \it{mode} and display it if found.  This requires that the
+   MANPATH environment variable contains the directory in which the MCL-edge
+   manual pages were installed. This will usually be \v{PREFIX/share},
+   where \v{PREFIX} is the path with which the software was configured.
+   }
+
+\sec{options}{OPTIONS}
+
+\par{
+   These are options that pertain to all modes. They should be specified 
+   \it{after} the mode argument.
+   }
+
+\'begin{itemize}{\mcx_itemopts}
+
+\items{
+   {\defopt{-h}{synopsis}}
+   {\defopt{--help}{synopsis}}
+}
+\car{
+   List available options.
+   }
+
+\item{\defopt{--nop}{no-op}}
+\car{
+   Not an option. This option has no effect then to increment
+   the argument count. This can be useful for \clm modes which are able to
+   function without any options. Such a mode typically reads from STDIN, writes
+   to STDOUT, and uses default settings. However, simply specifying a mode
+   without options leads \clm to output a list of available options for that
+   mode. This can be averted by using the \genopt{--nop} option.
+   }
+
+\item{\defopt{-set}{key=val}{set key-value pair}}
+\car{
+   Sets the key\~\bf{key} to value\~\bf{val} in the environment.
+   Some modes allow adjustment of settings in this manner.
+   }
+
+
+\items{
+   {\defopt{-debug}{<int>}{set debug level/flags}}
+   {\defopt{--debug}{turn default debugging on}}
+   {\defopt{--test}{turn default testing on}}
+}
+\car{
+   The first two turn on debugging, the last is for testing. The effect of
+   these options is otherwise undocumented.
+
+   }
+
+\item{\defopt{--progress}{enable progress reporting}}
+\car{
+   This will enable some kind of progress reporting, by
+   writing to STDERR.
+
+   }
+
+\'end{itemize}
+
+\sec{author}{AUTHOR}
+\par{
+   Stijn van Dongen.
+   }
+
+
+\sec{seealso}{SEE ALSO}
+\par{
+   \mysib{mclfamily} for an overview of all the documentation
+   and the utilities in the mcl family.
+}
+
+\end{pud::man}
+
+
+\done
+
+   \synoptopt{-lint-k}{<num>}{assimilate small clusters entirely}
+   \synoptopt{-lint-l}{<num>}{try to pry nodes from small clusters}
+\items{
+   {\defopt{-lint-k}{<numk>}{cluster size assimilation threshold}}
+   {\defopt{-lint-l}{<numl>}{cluster size pry threshold}}
+}
+\car{
+   These options will result in postprocessing on the clustering, reallocating
+   nodes that seems to have siphoned the wrong way.  The input matrix will be
+   reread for this.
+   }
+\par{
+   When applied to networks with inhomogenously distributed edge density
+   characteristics the mcl process will sometimes cause smaller
+   clusters/sparse areas to suck in border nodes which 1) have only few
+   edges to that cluster/area and 2) seem to have been sucked out of a much
+   denser cluster into which they would fit beautifully. This is fully in line
+   with the flow characteristics of mcl but a largely unwanted phenomenon.  The
+   postprocessing step was added as a remedy for this problem should it
+   manifest itself.  It is based on the efficiency criterion described in
+   \refer{gcbfs} and \refer{pcfgcmce} (there called \it{coverage}).
+   }
+\par{
+   With \genopt{-lint-l} a node is tentatively reallocated if this will improve
+   its effiency, and if it is initially in a cluster of size at most \genarg{numl}.
+   After all nodes that are candidate for reallocation have been
+   identified the proposed new clustering is accepted if it increases the total
+   edge weight captured. This procedure is iterated until no further
+   reallocations are possible. The efficiency measure is a conservative
+   criterion in that it does not unduly favour larger clusters over smaller
+   clusters. For example, if a node has 4 neighbours in a cluster of size 8 and
+   it has a further 8 neighbours in a cluster of size 100 the efficiency for
+   the first cluster (relative to that node) will generally be higher than the
+   efficiency for the second cluster.
+   }
+\par{
+   With \genopt{-lint-k} clusters up to the given size \genarg{numk}
+   are assimilated by a larger cluster if a suitable candidate is found.
+   This is based on the same criteria as described above, except
+   that a cluster is absorbed in its entirety.
+   }

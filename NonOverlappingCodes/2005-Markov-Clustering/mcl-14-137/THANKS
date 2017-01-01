@@ -1,0 +1,39 @@
+
+Thanks to:
+
+  Joost van Baal, author of the mcl build environment,
+      for
+         autotooling and packaging mcl.
+         setting up and maintaining the CVS tree.
+         regularly catching glitches in the mcl package.
+   Anton Enright
+      for co-implementing threading and his interest and enthousiasm for mcl.
+   Abel Ureta-Vidal
+      for fixes and suggestions for mcxdeblast and mcxassemble.
+      for pointing out a functional bug due to sub-optimal loop weight
+      assignment.
+      for valuable feedback on using/testing MCL on huge graphs.
+   Andreas Kahari
+      for packaging mcl for OpenBSD and pointing out various compile warnings
+      identifying embarassing lines of source code.
+   Jason Stajich
+      for contributing to the parser mcxdeblast.
+   Jan van der Steen
+      for sharing his useful mempool routines and for contributing the smart
+      stuff in the zoem troff macros.
+   Philip Lijnzaad
+      for a useful bug report and giving advice.
+   Rob Koopman
+      for putting heap-selection to my attention, when I was using a
+      less than dumb algorithm.
+   Dinakarpandian Deendayal
+      for fixes and suggestions for mcxdeblast and mcxassemble.
+   Shawn Hoon, Tim Hughes
+      for useful bug reports.
+   Wouter Hanegraaf
+      for making my Debian system run :)
+   Tamás Nepusz
+      feedback and bug reports on mcl build errors.
+   The Free Software Community
+      for making the world a better place, software and community wise.
+

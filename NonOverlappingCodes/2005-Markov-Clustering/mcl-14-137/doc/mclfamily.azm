@@ -1,0 +1,111 @@
+\import{mcx.zmm}
+
+\begin{pud::man}{
+
+   {name}{mcl}
+   {html_title}{The\~MCL\~family}
+   {title}{The MCL family}
+   {author}{Stijn van Dongen}
+   {section}{7}
+   {synstyle}{long}
+   {defstyle}{long}
+
+   \man_share
+}
+
+\${html}{\"pud::man::maketoc"}
+
+\${html}{\sec{name}{NAME}}
+\${roff}{\sec{*}{name}{NAME}}
+\NAME{mclfamily}{a description of the mcl family of cluster applications.}
+
+\par{
+   \mcl is an implementation of the Markov Cluster Algorithm, aka MCL algoritm.
+   It is described in the \sibref{mcl}{mcl manual}.
+   Several other applications are part of the MCL distribution. This manual pages
+   gives an overview.}
+
+\: A short overview is found in
+\: \sibidx\${html}{, with links to their manual page}. This manual page
+\: provides somewhat longer descriptions and points out various ways
+\: of gaining insight, evaluating results, and implementing sanity checks,
+\: using these utilities.
+
+\sec{description}{DESCRIPTION}
+
+\begin{itemize}{
+   {flow}{compact}
+   {interitem}{0}
+   {textindent}{15}
+}
+\apply{_#2\!{{
+      \switch{\1}{
+         {skip}{\itemskip}
+         {intermezzo}{\intermezzo{\2}}
+         {\item{\1}\car{\2}}
+      }
+   }
+}}{
+   {\mysib{mcl}}{the cluster algorithm}
+   {\mysib{mclfaq}}{MCL Frequently Asked Questions}
+{skip}{}
+   {\mysib{mcxio}}{the network/matrix input/output format}
+{skip}{}
+   {\mysib{mcx}}{general network/matrix tasks}
+   {\mcxref{diameter}}{compute diameter of an undirected network}
+   {\mcxref{ctty}}{compute betweenness centrality}
+   {\mcxref{clcf}}{compute clustering coefficient}
+   {\mcxref{erdos}}{compute shortest paths in graphs}
+   {\mcxref{query}}{analyse networks at different thresholds}
+   {\mcxref{alter}}{apply network transformations}
+   {\mcxref{convert}}{convert between interchange/binary storage types}
+{skip}{}
+   {\mysib{mcxarray}}{transform array data to MCL matrices}
+   {\mysib{mcxdump}}{dump a matrix optionally with label substitions}
+   {\mysib{mcxload}}{load label data into matrix and tab files}
+   {\mysib{mcxrand}}{randomly remove, add, and perturb edge weights}
+   {\mysib{mcxmap}}{relabel indices in a graph/matrix}
+   {\mysib{mcxsubs}}{extracting submatrices in various ways}
+   {\mysib{mcxi}}{general matrix operations}
+   {\mysib{mcxassemble}}{create matrices from raw data}
+{skip}{}
+   {\mysib{clm}}{general graph-clustering related tasks}
+   {\clmref{dist}}{compute split/join distance between clusterings}
+   {\clmref{vol}}{derive node volatility scores from a set of clusterings}
+   {\clmref{info}}{compute performance measure for clusterings}
+   {\clmref{meet}}{compute intersection of clusterings}
+   {\clmref{mate}}{find best matching clusters between clusterings}
+   {\clmref{close}}{fetch connected components from graphs or subgraphs}
+   {\clmref{imac}}{interpret MCL iterand/matrix as clustering}
+   {\clmref{order}}{reorder indices to represent blocks from different clusterings}
+   {\clmref{residue}}{extend subgraph clustering}
+   {\mysib{clmformat}}{display clusters as html or txt files}
+{skip}{}
+   {\mysib{mclpipeline}}{parsing/assembly/clustering/display}
+   {\mysib{mclblastline} \v{*}}{BLAST pipeline}
+   {\mysib{mcxdeblast} \v{*}}{parse BLAST files}
+}
+\end{itemize}
+
+\par{
+   Entries marked \v{*} are not available if only a default
+   install is done.}
+
+
+\end{pud::man}
+
+\done
+
+\sec{env}{ENVIRONMENT}
+
+\'begin{itemize}{
+   {flow}{cascade}
+   {interitem}{1}
+   {align}{left}
+}
+\item{MCXLOGTAG}
+\car{
+   An interface to the logging code used in much of the mcl libraries.}
+\'end{itemize}
+
+

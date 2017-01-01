@@ -1,0 +1,534 @@
+\: setx{__searchpath__}{\__searchpath__\!{}{../../../zoem/mac}}
+\import{mcx.zmm}
+
+\begin{pud::man}{
+
+   {name}{mclpipeline}
+   {html_title}{The mclpipeline manual}
+   {author}{Stijn van Dongen}
+   {section}{1}
+   {synstyle}{long}
+   {defstyle}{long}
+
+   \man_share
+}
+
+\'${html}{\"pud::man::maketoc"}
+
+\sec{name}{NAME}
+\NAME{mclpipeline}{a generic pipeline for generating and scrutinizing mcl clusterings.}
+
+\cpar{NOTE}{
+   \mcl has acquired the ability to manipulate label input directly.  This
+   enables a very lightweight mechanism of generating clusterings by teaming up
+   mcl with a lightweight parser.  You might want to use this mechanism.
+   Example invocations using the \mcxdeblast BLAST parser are documented in the
+   \sibref{mcl}{mcl manual}.}
+
+
+\sec{synopsis}{SYNOPSIS}
+
+\par{
+   \mclpipeline [options] <file-name>\|
+   }
+
+\par{
+   where <file-name> is either the name of the data input file, or its base
+   name.  In the latter case the \genopt{--xi-dat} option is required.  In case
+   mclpipeline is indeed used to control all stages from the data input file
+   onwards, usage will often be like this:
+   }
+
+\verbatix{\
+   mclpipeline [prepare options] --prepare-mcl <file-name>
+   mclpipeline [cluster options 1] --start-mcl <file-name>
+   mclpipeline [cluster options 2] --start-mcl <file-name>
+   .. etc
+}
+
+\par{
+   \mclpipeline can also be used to control shorter pipelines, i.e. in
+   case the input matrix was already created or in case pre-assembled parts
+   of the input matrix were already created. In this case, usage will
+   often be like this:
+   }
+
+\verbatix{\
+   mclpipeline [cluster options 1] --start-mcl=<fname>
+   mclpipeline [cluster options 2] --start-mcl=<fname>
+or
+   mclpipeline [assembly options] --start-assemble=<fname> --prepare-mcl
+}
+
+\cpar{NOTE}{
+It is possible to make mclpipeline output a large arrary
+of performance measures related to nodes and clusters
+in hyperlinked output by supplying the \genopt{--fmt-fancy} option.
+This can be useful if one wants to scrutinize a clustering in greater
+detail and navigate within the clustering. The output then includes
+listings of external nodes that are relevant/close to a given cluster,
+and vice versa, listings of external clusters that are relevant/close
+to a given node.}
+
+\par{
+Generating this more intricate output requires the presence of the \zoem macro
+processor.  Refer to the \secref{seealso} section and the
+\sibref{clmformat}{clmformat manual} for more information on zoem.  By default
+zoem is not required, and the return result is a file where each line contains
+a clustering consisting of tab-separated labels.}
+
+
+\par{
+   If this program does not work as expected, please file a bug report with the
+   developer and/or subscribe to mcl-devel as indicated on
+   \httpref{http://micans.org/mcl/}. The problem will then be fixed.
+   }
+
+\par{
+   The full list of pipeline options is given below. Start simple,
+   and if you need some behaviour, try to see if there is an option
+   that fits your needs.
+   If you use a wrapper pipeline such as \mysib{mclblastline}, you
+   can ignore the \genopt{--parser} and \genopt{--parser-tag} options
+   as they are provided by the wrapper.
+   }
+
+\par{
+   \mclpipeline
+   \synreqkvp{--parser}{application}{data parser}
+   \synreqkvp{--parser-tag}{str}{parse option transporter}
+   }
+
+\par{
+   \synoptopt{--whatif}{do not execute}\|
+   \synoptopt{--start-assemble}{skip parse stage}\|
+   \synoptopt{--start-mcl}{skip earlier stages}\|
+   \synoptopt{--start-format}{skip earlier stages}\|
+   \synoptopt{--prepare-mcl}{do preparatory stages}\|
+   \synoptopt{--help}{summary of options}\|
+   \synoptkvp{--xi}{suf}{strip suf from input file}\|
+   \synoptkvp{--xo-dat}{suf}{attach suf to parse output}\|
+   \synoptkvp{--xo-ass}{suf}{attach suf to assembly output}\|
+   \synoptkvp{--xi-mcl}{suf}{use with --start-mcl}\|
+   \synoptkvp{--xo-mcl}{suf}{replace mcl output suffix}\|
+   \synoptkvp{--xa-mcl}{str}{append to mcl output suffix}\|
+   \synoptkvp{--xe-mcl}{suf}{append to mcl output}\|
+   \synoptkvp{--xo-fmt}{suf}{attach suf to clmformat output}\|
+   \synoptkvp{--ass-repeat}{str}{assembly repeat option}\|
+   \synoptopt{--ass-nomap}{ignore map file}\|
+   \synoptkvp{--ass-opt}{val}{assembly option transporter}\|
+   \synoptkvp{--mcl-te}{num}{#expansion threads}\|
+   \synoptkvp{--mcl-I}{float}{mcl inflation value}\|
+   \synoptkvp{--mcl-i}{float}{mcl initial inflation value}\|
+   \synoptkvp{--mcl-l}{float}{mcl initial loop length}\|
+   \synoptkvp{--mcl-c}{float}{mcl center value}\|
+   \synoptkvp{--mcl-pi}{float}{mcl pre-inflation value}\|
+   \synoptkvp{--mcl-scheme}{i}{mcl scheme index}\|
+   \synoptkvp{--mcl-o}{fname}{do not use}\|
+   \synoptkvp{--mcl-opt}{val}{mcl option transporter}\|
+   \synoptkvp{--fmt-lump-count}{num}{collect formatted output}\|
+   \synoptopt{--fmt-opt}{val}{clmformat option transporter}\|
+   \synoptopt{--fmt-tab}{fname}{use this tab file}\|
+   \synoptopt{--fmt-notab}{ignore tab file}\|
+   \: \synoptopt{--fmt-noscores}{omit scores}\|
+   <file-name>
+   }
+
+\sec{description}{DESCRIPTION}
+
+\par{
+   \mclpipeline encapsulates a sequence of programs to be run on some
+   input data in order to obtain clusterings and formatted output
+   representing the clusterings, while maintaining unique file names
+   and file name ensembles corresponding with differently parametrized runs.
+   }
+
+\par{
+   The script can behave in several ways. By default, the pipeline
+   consists of the stages of \it{parsing}, \it{assembly},
+   \it{clustering}, and \it{formatting}.
+   The parsing stage is to be
+   represented by some parser script obeying the interface
+   rules described below. The assembly stage is done by
+   \mysib{mcxassemble}, the clustering stage is done by \mysib{mcl},
+   and the formatting stage is done by \mysib{clmformat}.
+   }
+
+\par{
+   The script can also be put to simpler uses, e.g. letting the script take
+   care of unique file names for differently parametrized mcl runs. In this
+   case there is no need to specify either the parser or the data file, and
+   subsequent invocations might look like this:
+   }
+
+\verbatix{
+   mclpipeline --start-mcl=<fname> --mcl-I=1.6 --mcl-scheme=4
+   mclpipeline --start-mcl=<fname> --mcl-I=2.0 --mcl-scheme=4
+   mclpipeline --start-mcl=<fname> --mcl-I=2.4 --mcl-scheme=4
+   .. etc
+}
+
+\par{
+   It is easiest if for each parser a wrapper script is written
+   encapsulating the parser and \mclpipeline.  A mechanism is provided
+   through which mclpipeline can recognize options that are meant to be
+   passed to the parser. An example of such a wrapper script is the BLAST
+   pipeline \bf{mclblastline} that basically calls mclpipeline with the
+   parameters \usekvp{--parser}{mcxdeblast} \usekvp{--parser-tag}{blast}.
+   In this case the parser is \bf{mcxdeblast}, and mclpipeline will
+   pass any options of the forms \bf{--blast-foo} and \bf{--blast-bar=zut}
+   to the parser (respectively as \bf{--foo} and \bf{--bar=zut}).
+   }
+
+
+\par{
+   For a given data set the stages of parsing and assembling
+   will often not need to be repeated, especially if there
+   is a well established way of creating a matrix from
+   the input data. In this case, usage
+   will look like
+   }
+
+\verbatix{
+   mclpipeline [parse/assembly options] --prepare-mcl <file-name>
+   mclpipeline [cluster options 1] --start-mcl <file-name>
+   mclpipeline [cluster options 2] --start-mcl <file-name>
+   mclpipeline [cluster options 3] --start-mcl <file-name>
+   ...
+}
+
+\par{
+   Note that \mclpipeline will store the output of those runs
+   in unique file names derived from the parametrizations.
+   }
+
+\par{
+   There are some options that affect the file names of intermediate
+   results. In the above setup of repeated runs, if used in one run,
+   they must be used in all runs, as \mclpipeline uses them to compute the
+   file names it needs.
+   For the setup above, these options are
+   \genkvp{--xi}{suf},
+   \genkvp{--xo-dat}{suf}, and
+   \genkvp{--xo-ass}{suf}.
+   }
+
+\par{
+   There are other ways of resuming the pipeline, and one must always take care
+   that options starting with \bf{--xi-}, \bf{--xo-}, \bf{--xa}, or
+   \bf{--xe} are repeated among preparatory and subsequent runs.
+   These tags respectively mnemonize \it{extension in}, \it{extension out},
+   \it{extension append}, and \it{extension extra}.
+   }
+
+\par{
+   Should one want to experiment with various ways of creating input
+   matrices, then \mclpipeline supplies options to create unique file
+   names and file name ensembles corresponding with different setups and
+   parametrizations. These are \genkvp{--xo-dat}{suf} for the parsing
+   stage and \genkvp{--xo-ass}{suf} for the assembly stage.  mclpipeline
+   \it{automatically} generates unique file names for the cluster results,
+   but it does not do so for the parse and assembly results.
+   }
+
+
+\cpar{Parser interface requirements}{
+   The parser should recognize its last argument as a file name
+   or as the base name of a file.
+   It should produce the files \v{base.raw}, \v{base.hdr}, 
+   and preferably \v{base.tab} and \v{base.map}, where the base name
+   \v{base} is determined as described below.
+   }
+
+\par{
+   \mclpipeline will pass its last argument <file-name> to the parser.
+   The parser should recognize the \genkvp{--xi-dat}{suf}
+   and \genkvp{--xo-dat}{suf} options. If the first is present,
+   it should try to strip <file-name> of the suffix specified in
+   the value and use the result as the initial part of the base name
+   for the files it constructs.  If stripping does not succeed, it
+   must interpret <file-name> as the base name and append the suffix
+   in order to construct the name of the file it will try to read.
+   If the \genkvp{--xo-dat}{suf} option is present, it must append the
+   suffix specified in the value to the base part as described above.
+   The result is then the full base name to which the \v{raw}, \v{hdr},
+   and other suffixes will be appended.
+   }
+
+\cpar{Parser interface examples}{}
+
+\verbatix{\
+<parser> --xi-dat=abc --xo-dat=xyz foo
+ *  parser reads foo.abc, writes foo.xyz.raw, foo.xyz.hdr et cetera.
+<parser> --xi-dat=abc --xo-dat=xyz foo.abc
+ *  idem
+<parser> --xo-dat=xyz foo.abc
+ *  parser reads foo.abc, writes foo.abc.xyz.raw et cetera.
+<parser> --xi-dat=abc foo.abc
+ *  parser reads foo.abc, writes foo.raw, foo.hdr et cetera.
+<parser> foo.abc
+ *  parser reads foo.abc, writes foo.abc.raw, foo.abc.hdr et cetera.
+}
+
+\cpar{Output file names construction}{
+   The files of primary interest are the mcl output file and
+   the formatted output produced by clmformat.
+   The pipeline constructs a file name for the mcl output
+   in which several parameters are encoded. The first
+   part of the file name is either the base name for the assembly
+   stage, or simply the name of the input file, depending on
+   whether the option \genkvp{--xo-ass}{suf} was used or not.
+   }
+
+\par{
+   A suffix encoding key-value pairs is appended. By default
+   it has the form \v{I..s.}, e.g. \v{I20s2}. The latter examples
+   denotes primary inflation value 2.0 and scheme 2.
+   The pipeline will automatically append several other mcl parameters
+   if they are used. These correspond with the pipeline options
+   \genkvp{--mcl-i}{f}, \genkvp{--mcl-l}{i}, \genkvp{--mcl-c}{f},
+   and \genkvp{--mcl-pi}{f},
+   which in turn correspond with the mcl options \genopt{-i}{f},
+   \genopt{-l}{i}, \genopt{-c}{f}, and \genopt{-pi}{f}.
+   The order of appending is alphabetical with capitals preceding
+   lowercase, so a full example is \v{I25c30i35l2pi28s3}.
+   }
+
+\sec{options}{OPTIONS}
+
+\begin{itemize}{\mcx_itemopts}
+\item{\defopt{--whatif}{do not execute}}
+\car{
+   Shows only what would be done without executing it.
+   Hugely useful!
+   }
+
+\item{\defopt{--start-assemble}{skip parse stage}}
+\car{
+   Skip the parse stage, assume the necessary files have been created in a
+   previous run.
+   }
+
+\item{\defopt{--prepare-mcl}{do preparatory stages}}
+\car{
+   Do the parsing and assembly stage, then quit. Useful if you
+   want to do multiple cluster runs for a given graph - use
+   \genopt{--start-mcl}
+   }
+
+\item{\defopt{--start-mcl}{skip earlier stages}}
+\car{
+   Immediately start the mcl stage.
+   Assume the necessary files have been created in a previous run.
+   }
+
+\cpar{NOTE}{
+   This option can be used as \genkvp{--start-mcl}{fname}.
+   In this case, no final file name argument need be given, and
+   mcl will use \genarg{fname} as the file name for its input.
+   }
+
+\par{
+   The difference with \genopt{--start-mcl} is that the latter
+   will assume it is picking up the results of a previous run.
+   The names of those results might include suffixes corresponding
+   with the parse and assembly stage (cf. \genopt{--xo-dat} and
+   \genopt{--xo-ass}).
+   If you are not clear on this (and you should not be), exercise
+   the \genopt{--whatif} option to be sure.
+   }
+
+\item{\defopt{--start-format}{skip earlier stages}}
+\car{
+   Immediately start the format stage.
+   Assume the necessary files have been created in a previous run.
+   }
+
+\item{\defopt{--help}{summary of options}}
+\car{
+   Print a terse summary of options.
+   }
+
+\item{\defopt{--xi}{suf}{strip suffix from data file}}
+\car{
+   In normal usage, this will strip the specified suffix from the data file
+   to obtain the base name for further output.
+   When used with \genkvp{--start-mcl}{fname} the same behaviour is applied
+   to the mcl input file name specified in \genarg{fname}.
+   }
+
+\item{\defopt{--xo-dat}{suf}{attach suf to parse output}}
+\car{
+   This suffix will be attached to the base name of the parse output.
+   It can be used to distinguish between different parse parametrizations
+   if this is applicable.
+   }
+
+\item{\defopt{--xo-ass}{suf}{attach suf to assembly output}}
+\car{
+   This suffix will be attached to the base name of the assembly output.
+   It can be used to distinguish between different assembly parametrizations
+   if this is applicable.
+   }
+
+\item{\defopt{--xo-mcl}{suf}{replace mcl output suffix}}
+\car{
+   This suffix will be used instead of the suffix by default created
+   by the pipeline.
+   }
+
+\item{\defopt{--xa-mcl}{str}{append to mcl output suffix}}
+\car{
+   This string will be appended to the suffix by default created
+   by the pipeline.
+   }
+
+\item{\defopt{--xe-mcl}{suf}{append to mcl output}}
+\car{
+   This string will be appended as a single suffix to the output base
+   name before mclpipeline appends its own suffix.
+   }
+
+\item{\defopt{--xo-fmt}{suf}{attach suf to clmformat output}}
+\car{
+   This suffix will be used instead of the suffix by default used
+   by the formatting stage.
+   }
+
+\item{\defopt{--ass-repeat}{str}{assembly repeat option}}
+\car{
+   Corresponds with the \mcxassemble \genopt{-r}{mode} option.
+   Refer to the \mysib{mcxassemble} manual.
+   }
+
+\item{\defopt{--ass-opt}{val}{assembly option transporter}}
+\car{
+   Transfer \genopt{-opt}{val} to \mcxassemble.
+   }
+
+\item{\defopt{--ass-nomap}{ignore map file}}
+\car{
+   Either no map file is present or it should be ignored.
+   For parsers that don't write map files.
+   }
+
+\item{\defopt{--mcl-I}{float}{mcl inflation value}}
+\car{
+   The (main) inflation value mcl should use.
+   \it{This is the primary mcl option}.
+   }
+
+\item{\defopt{--mcl-scheme}{i}{mcl scheme index}}
+\car{
+   The scheme index to use. This options is also important.
+   Refer to the \mysib{mcl} manual.
+   }
+
+\item{\defopt{--mcl-te}{num}{#expansion threads}}
+\car{
+   The number of threads \mcl should use.
+   }
+
+\item{\defopt{--mcl-i}{float}{mcl initial inflation value}}
+\car{
+   The initial inflation value mcl should use.
+   Only for fine-tuning or testing.
+   }
+
+\item{\defopt{--mcl-l}{float}{mcl initial loop length}}
+\car{
+   The length of the loop in which initial inflation
+   is applied. By default zero.
+   }
+
+\item{\defopt{--mcl-c}{float}{mcl center value}}
+\car{
+   The center value. One may attempt to affect granularity
+   by exercising this option, which controls the loop weights
+   in the input matrix. Refer to the \mysib{mcl} manual.
+   }
+
+
+\item{\defopt{--mcl-pi}{float}{mcl pre-inflation value}}
+\car{
+   Pre-inflation, another option which may  possibly affect granularity by
+   changing the input matrix. It makes the edge weight
+   distribution either more or less homogeneous.
+   Refer to the \mysib{mcl} manual.
+   }
+
+\item{\defopt{--mcl-o}{fname}{do not use}}
+\car{
+   Set the mcl output name.
+   }
+
+\item{\defopt{--mcl-opt}{val}{mcl option transporter}}
+\car{
+   Transfer \genopt{-opt}{val} to \mcl.
+   }
+
+\item{\defopt{--fmt-dump-stats}{add simple measures to dump file}}
+\car{
+   This adds some simple performance measures to the dump file.  For each
+   cluster, five columns proceed the label listing.  These are the cluster ID,
+   the number of elements in the cluster, the projection (percentage of
+   within-cluster edge weight relative to total outgoing edge weight), the
+   efficiency of the cluster (which is the average of the efficiency of all its
+   nodes), and the maximum efficiency (average of the max-efficiency of all the
+   nodes).  Look into the \sibref{clmformat}{clmformat manual} for more
+   information on and references to the efficiency measures.
+   }
+
+\item{\defopt{--fmt-fancy}{create detailed output (requires zoem)}}
+\car{
+   Creates extensive description of node/cluster and cluster/cluster
+   relationships.
+   }
+
+\item{\defopt{--fmt-lump-count}{num}{collect formatted output}}
+\car{
+   Collect clusters in the same file until the total number
+   of nodes has exceeded \genarg{num} (in the formatted output).
+   Only meaninful when \genopt{--fmt-fancy} is given.
+   }
+
+\item{\defopt{--fmt-tab}{use this tab file}}
+\car{
+   Explicitly specify the tab file to use.
+   }
+
+\item{\defopt{--fmt-notab}{ignore tab file}}
+\car{
+   Either no tab file is present or it should be ignored.
+   For parsers that don't write tab files.
+   }
+
+\item{\defopt{--fmt-opt}{val}{clmformat option transporter}}
+\car{
+   Transfer \genopt{-opt}{val} to \clmformat.
+   }
+
+\: \item{\defopt{--fmt-noscores}{omit scores}}
+\:    Do not write cohesion and stickiness scores in the formatted output.
+\end{itemize}
+
+\sec{author}{AUTHOR}
+\par{
+   Stijn van Dongen
+   }
+
+\sec{seealso}{SEE ALSO}
+\par{
+   \mysib{mcxdeblast}, \mysib{mclblastline},
+   and \mysib{mclfamily} for an overview of all the documentation
+   and the utilities in the mcl family.
+   }
+
+\par{
+   With default settings, \mclpipeline depends on the presence
+   of \zoem. It can be obtained from
+   \httpref{http://micans.org/zoem/} .
+   }
+
+\end{pud::man}
+

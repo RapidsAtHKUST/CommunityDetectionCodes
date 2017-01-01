@@ -1,0 +1,560 @@
+.\" Copyright (c) 2014 Stijn van Dongen
+.TH "mcxassemble" 1 "16 May 2014" "mcxassemble 14-137" "USER COMMANDS "
+.po 2m
+.de ZI
+.\" Zoem Indent/Itemize macro I.
+.br
+'in +\\$1
+.nr xa 0
+.nr xa -\\$1
+.nr xb \\$1
+.nr xb -\\w'\\$2'
+\h'|\\n(xau'\\$2\h'\\n(xbu'\\
+..
+.de ZJ
+.br
+.\" Zoem Indent/Itemize macro II.
+'in +\\$1
+'in +\\$2
+.nr xa 0
+.nr xa -\\$2
+.nr xa -\\w'\\$3'
+.nr xb \\$2
+\h'|\\n(xau'\\$3\h'\\n(xbu'\\
+..
+.if n .ll -2m
+.am SH
+.ie n .in 4m
+.el .in 8m
+..
+.SH NAME
+mcxassemble \- transform raw cooccurrence data to mcl matrix format\&.
+.SH SYNOPSIS
+
+\fBmcxassemble\fP
+\fB-b\fP base (\fIbase name\fP)
+\fB[-o\fP fname (\fIwrite to file fname\fP)\fB]\fP
+\fB[--write-binary\fP (\fIwrite output in binary format\fP)\fB]\fP
+\fB[--map\fP (\fIapply base\&.map\fP)\fB]\fP
+\fB[-raw-tf\fP (\fIapply transform spec to input\fP)\fB]\fP
+\fB[-rv\fP MODE (\fIrepeated vectors\fP)\fB]\fP
+\fB[-re\fP MODE (\fIrepeated entries\fP)\fB]\fP
+\fB[-ri\fP MODE (\fIadding mirror image\fP)\fB]\fP
+\fB[-r\fP MODE (\fIrepeated entries/vectors/images\fP)\fB]\fP
+\fB[-prm-tf\fP (\fIapply transform spec to primary matrix\fP)\fB]\fP
+\fB[-sym-tf\fP (\fIapply transform spec to symmetrified matrix\fP)\fB]\fP
+\fB[-q\fP (\fIquiet mode\fP)\fB]\fP
+
+The options above embody the default setup when using mcxassemble\&.
+There are many more options which mostly provide subtly different
+ways of doing input/output, set warning levels, or regulate
+how repeated entries and vectors should be treated\&.
+The full list of options is shown below\&.
+Read \fBDESCRIPTION\fP for learning about mcxassemble input/output
+and the functionality it provides\&.
+
+\fBNOTE\fP
+.br
+As of release 05-314 \fBmcl(1)\fP is able to cluster label-type input
+on the fly\&. In most cases, this will be sufficient\&. Alternatively,
+\fBmcxload(1)\fP can be used to map label-type input onto mcl
+matrices\&. Consequently, there are likely fewer scenarios nowadays
+where \fBmcxassemble\fP is the best solution\&. Consider first whether
+\fBmcl\fP in label mode or \fBmcxload\fP can do the job as well\&.
+
+\fBmcxassemble\fP
+\fB[-b\fP base (\fIbase name\fP)\fB]\fP
+\fB[-hdr\fP fname (\fIread header file\fP)\fB]\fP
+\fB[-raw\fP fname (\fIread raw file\fP)\fB]\fP
+\fB[--map\fP (\fIapply base\&.map\fP)\fB]\fP
+\fB[--cmap\fP (\fIapply base\&.cmap\fP)\fB]\fP
+\fB[--rmap\fP (\fIapply base\&.rmap\fP)\fB]\fP
+\fB[-map\fP fname (\fIapply fname\fP)\fB]\fP
+\fB[-rmap\fP fname (\fIapply fname\fP)\fB]\fP
+\fB[-cmap\fP fname (\fIapply fname\fP)\fB]\fP
+\fB[-tag\fP tag (\fIapply base\&.tag\fP)\fB]\fP
+\fB[-rtag\fP tag (\fIapply base\&.tag\fP)\fB]\fP
+\fB[-ctag\fP tag (\fIapply base\&.tag\fP)\fB]\fP
+\fB[-skw\fP fname (\fIwrite skew matrix\fP)\fB]\fP
+\fB[-prm\fP fname (\fIwrite primary result matrix\fP)\fB]\fP
+\fB[--skw\fP (\fIwrite base\&.skw\fP)\fB]\fP
+\fB[--prm\fP (\fIwrite base\&.prm\fP)\fB]\fP
+\fB[-xo\fP suf (\fIwrite base\&.suf\fP)\fB]\fP
+\fB[-o\fP fname (\fIwrite to file fname\fP)\fB]\fP
+\fB[-n\fP (\fIdo not write default symmetrized result\fP)\fB]\fP
+\fB[-i\fP (\fIread from single data file\fP)\fB]\fP
+\fB[-digits\fP int (\fIdigits width\fP)\fB]\fP
+\fB[-s\fP (\fIcheck for symmetry\fP)\fB]\fP
+\fB[-raw-tf\fP (\fIapply transform spec to input\fP)\fB]\fP
+\fB[-rv\fP <mode> (\fIaction for repeated vectors\fP)\fB]\fP
+\fB[-re\fP <mode> (\fIaction for repeated entries\fP)\fB]\fP
+\fB[-ri\fP <mode> (\fIadding mirror image\fP)\fB]\fP
+\fB[-r\fP <mode> (\fIsame for entries and vectors\fP)\fB]\fP
+\fB[-prm-tf\fP (\fIapply transform spec to primary matrix\fP)\fB]\fP
+\fB[-sym-tf\fP (\fIapply transform spec to symmetrified matrix\fP)\fB]\fP
+\fB[--quiet-re\fP (\fIquiet for repeated entries\fP)\fB]\fP
+\fB[--quiet-rv\fP (\fIquiet for repeated vectors\fP)\fB]\fP
+\fB[-q\fP (\fIthe two above combined\fP)\fB]\fP
+\fB[-h\fP (\fIprint synopsis, exit\fP)\fB]\fP
+\fB[--apropos\fP (\fIprint synopsis, exit\fP)\fB]\fP
+\fB[--version\fP (\fIprint version, exit\fP)\fB]\fP
+.SH DESCRIPTION
+
+\fBmcxassemble\fP enables easy matrix creation from an intermediate raw matrix
+format that can easily be constructed from a one-pass-parse of cooccurrence
+data\&. The basic setup is as follows\&.
+
+.ZJ 1m 1m "\(bu"
+Parse cooccurrence data from some external format\&.
+.in -2m
+.ZJ 1m 1m "\(bu"
+Transform cooccurrence data to raw mcl data as you parse\&.
+.in -2m
+.ZJ 1m 1m "\(bu"
+When done, write out required header and domain information
+to a separate file\&. The domain information can be built during
+the parsing stage\&.
+.in -2m
+.ZJ 1m 1m "\(bu"
+Use mcxassemble to construct a valid matrix from the raw data
+and the header information\&.
+.in -2m
+.ZJ 1m 1m "\(bu"
+Nodes can optionally be relabeled by writing a separate map file to be read
+by \fBmcxassemble\fP, which takes the form of a very thin matrix file\&.
+.in -2m
+
+The easiest thing to do is to group all input/output files under the same
+base name, say\ \&\fBbase\fP\&. A standard way of proceeding, which will lead to
+a concise \fBmcxassemble\fP command line, is by creating the input files
+\fBbase\&.raw\fP and \fBbase\&.hdr\fP, and optionally the file \fBbase\&.map\fP\&. The
+default behaviour of mcxassemble is then to create \fBbase\&.sym\fP as the
+resulting matrix file, containing the symmetrized matrix constructed from
+the raw input\&.
+
+\fBExample\fP
+.br
+Suppose \fCblastresult\fP is a file containing blast results\&.
+The following two commands construct an mcl matrix file from the file\&.
+
+.di ZV
+.in 0
+.nf \fC
+   mcxdeblast --score=e --sort=a blastresult
+   mcxassemble -b blastresult -r max --map
+.fi \fR
+.in
+.di
+.ne \n(dnu
+.nf \fC
+.ZV
+.fi \fR
+
+\fBmcxdeblast\fP will generate the
+files \fCblastresult\&.hdr\fP, \fCblastresult\&.raw\fP, and \fCblastresult\&.map\fP\&.
+The \fB--sort=a\fP option will create a map file corresponding
+with alphabetic ordering\&. These files are processed by \fBmcxassemble\fP
+and it will generate the file \fCblastresult\&.sym\fP\&. The \fB-r\fP
+option tells \fBmcxassemble\fP that repeated entries should be maxed;
+each time the largest entry seen thus far will be taken\&.
+
+\fBHeader file\fP
+.br
+This file contains a header as usually found in generic mcl matrix files,
+i\&.e\&. the required \fIheader\fP part, and optionally the \fIdomain\fP part(s)
+if not all domains are canonical\&. Refer to \fBmcxio(5)\fP for more information\&.
+The domain information in the header file will be used to pre-construct a
+skeleton matrix and to validate the entries in the raw data file as they
+fill the skeleton matrix\&.
+
+\fBRaw input format\fP
+.br
+The file from which raw input is read should have the raw format as
+described in \fBmcxio(5)\fP\&. Simply put; no header specification, no domain
+specification, and no matrix introduction syntax is used\&. The file just
+contains a listing of vectors\&. An example fragment is the following:
+
+.nf \fC
+2  4:0\&.34 1:2\&.8838 4:2\&.328 1:4\&.238 1:12 $
+1  2:7\&.8 $
+2  1:0\&.01 4:20\&.3 3:2 $
+.fi \fR
+
+The listing of vectors need not be sorted, and neither does
+a vector itself need to be sorted - the mcl generic matrix format
+is actually not different in this respect\&.
+Furthermore, duplicate entries and duplicate vectors are allowed\&.
+This is in fact again allowed in the generic format, except
+that where applications expect generic format warnings will be issued and
+duplicate entries will be disregarded\&. \fBmcxassemble\fP allows customizable
+behaviour dictating how to merge repeated entries\&.
+Refer to the \fB-re\fP,\ \&\fB-rv\fP,\ \&\fB-r\fP
+options below\&.
+
+The vectors read by \fBmcxassemble\fP do have to match the domains specified in
+the header file\&. The leading index that specifies the column index has to be
+present in the column domain; all subsequent indices that specify column
+entries have to be present in the row domain\&.
+
+\fIIf one concatenates the contents of the header file and the data file\fP,
+the result is \fIalmost but not quite\fP a file containing a matrix in
+syntactically correct mcl generic matrix format\&. The parts missing
+are the \fC(mclmatrix\fP introduction token, (followed by) the
+\fCbegin\fP token, and the closing \fC)\fP token\&.
+
+\fBMap file\fP
+.br
+This file must contain a map matrix, which is a matrix with the
+following properties:
+
+.ZJ 1m 1m "\(bu"
+The column domain and row domain are of the same cardinality\&.
+.in -2m
+.ZJ 1m 1m "\(bu"
+Each column has exactly one entry\&.
+.in -2m
+.ZJ 1m 1m "\(bu"
+Each row domain index occurs in exactly one column\&.
+.in -2m
+
+Such a matrix is used to relabel the nodes as found in the raw data\&. A
+situation that might occur when parsing some external format (and producing
+raw matrix format), is that ID\&'s (indices) are handed out on the fly during
+the parse\&. Afterwards, one may want to relabel the IDs such that they
+correspond with an alphabetic listing of the quantity that is represented by
+the node domain, or by some other sort criterion\&. A map file is then
+typically generated by the parser, as that is the utility in charge of the
+IDs\&. A small example of a map file for a graph containing five nodes is the
+following:
+
+.di ZV
+.in 0
+.nf \fC
+(mclheader
+mcltype matrix
+dimensions 5x5
+)
+(mclmatrix
+begin
+0  4  $  #  mno 
+1  2  $  #  ghi
+2  1  $  #  def
+3  3  $  #  jkl
+4  0  $  #  abc
+)
+.fi \fR
+.in
+.di
+.ne \n(dnu
+.nf \fC
+.ZV
+.fi \fR
+
+This corresponds to a relabeling such that the associated strings
+will be ordered alphabetically\&. Note that comments can be used
+to link string identifiers with indices\&. This map file says e\&.g\&. that
+the string identifier "mno" is represented by index 0 in the raw data,
+and by index 4 in the matrix output by \fBmcxassemble\fP\&.
+.SH OPTIONS
+
+.ZI 2m "\fB-b\fP base (\fIbase name\fP)"
+\&
+'in -2m
+'in +2m
+\&
+.br
+Base name of files to be processed and output\&. Refer to \fBDESCRIPTION\fP
+above and the entries of other options below\&.
+.in -2m
+
+.ZI 2m "\fB-hdr\fP fname (\fIread header file\fP)"
+\&
+'in -2m
+.ZI 2m "\fB-raw\fP fname (\fIread raw file\fP)"
+\&
+'in -2m
+'in +2m
+\&
+.br
+Explicitly specify the header file and the data file (rather
+than constructing the file names from a base name and suffixes)\&.
+.in -2m
+
+.ZI 2m "\fB--map\fP (\fIapply base\&.map\fP)"
+\&
+'in -2m
+.ZI 2m "\fB--cmap\fP (\fIapply base\&.cmap\fP)"
+\&
+'in -2m
+.ZI 2m "\fB--rmap\fP (\fIapply base\&.rmap\fP)"
+\&
+'in -2m
+.ZI 2m "\fB-map\fP fname (\fIapply fname\fP)"
+\&
+'in -2m
+.ZI 2m "\fB-rmap\fP fname (\fIapply fname\fP)"
+\&
+'in -2m
+.ZI 2m "\fB-cmap\fP fname (\fIapply fname\fP)"
+\&
+'in -2m
+.ZI 2m "\fB-tag\fP tag (\fIapply base\&.tag\fP)"
+\&
+'in -2m
+.ZI 2m "\fB-rtag\fP tag (\fIapply base\&.tag\fP)"
+\&
+'in -2m
+.ZI 2m "\fB-ctag\fP tag (\fIapply base\&.tag\fP)"
+\&
+'in -2m
+'in +2m
+\&
+.br
+Map options\&. \fB--cmap\fP combines with the \fB-b\fP\ \&option,
+and says that the map file in \fBbase\fP\&.\fCcmap\fP (where \fBbase\fP
+was specified with \fB-b\fP\ \&\fBbase\fP) should be applied to the column
+domain only\&. \fB--rmap\fP works the same for the
+row domain, and \fB--map\fP can be used to apply the same map
+to both the column and row domains\&.
+
+\fB-cmap\fP and its siblings are used to explicitly specify the
+map file to be used, rather than combining a base name with a fixed
+suffix\&.
+\fB-tag\fP and its siblings work in conjuction with
+the \fB-b\fP\ \&option, and require that a tag be specified from
+which to construct the map file (by appending it to the base name)\&.
+.in -2m
+
+.ZI 2m "\fB-skw\fP fname (\fIwrite skew matrix\fP)"
+\&
+'in -2m
+.ZI 2m "\fB-prm\fP fname (\fIwrite primary result matrix\fP)"
+\&
+'in -2m
+.ZI 2m "\fB--prm\fP (\fIwrite base\&.prm\fP)"
+\&
+'in -2m
+.ZI 2m "\fB--skw\fP (\fIwrite base\&.skw\fP)"
+\&
+'in -2m
+.ZI 2m "\fB-n\fP (\fIdo not write default symmetrized result\fP)"
+\&
+'in -2m
+'in +2m
+\&
+.br
+Options for writing matrices other than the default symmetrized result\&.
+The primary result matrix is the matrix constructed from reading in the
+raw data and adding entries to the skeleton matrix as specified
+with the \fB-r\fP, \fB-re\fP, and \fB-rv\fP options\&.
+This matrix can be written using one of the \fBprm\fP options\&.
+Calling the primary matrix A, the skew matrix (as defined here)
+is the matrix \fCA\ \&-\ \&A^T\fP, i\&.e\&. A minus its transposed matrix\&.
+It can be written using one of the \fBskw\fP options\&.
+
+If for some reason the symmetrized result is not needed, its output
+can be prevented using the \fB-n\fP\ \&option\&.
+.in -2m
+
+.ZI 2m "\fB-xo\fP suf (\fIwrite base\&.suf\fP)"
+\&
+'in -2m
+.ZI 2m "\fB-o\fP fname (\fIwrite to file fname\fP)"
+\&
+'in -2m
+.ZI 2m "\fB-i\fP (\fIread from single data file\fP)"
+\&
+'in -2m
+.ZI 2m "\fB-digits\fP int (\fIdigits width\fP)"
+\&
+'in -2m
+.ZI 2m "\fB--write-binary\fP (\fIwrite output in binary format\fP)"
+\&
+'in -2m
+'in +2m
+\&
+.br
+The \fB-xo\fP\ \&option is used in conjunction with the \fB-b\fP\ \&option
+in order to change the suffix for the file in which the symmetrized
+result matrix is written\&. Use e\&.g\&. \fB-xo\fP\ \&\fBmci\fP to change the suffix
+from the default value \fCsym\fP to \fCmci\fP\&. Use \fB-o\fP to explicitly
+specify the filename in full\&. Use \fB-digits\fP to set the number of
+digits written for matrix entries (c\&.q\&. edge weights)\&.
+
+The \fB-i\fP option is special\&. It causes
+\fBmcxassemble\fP to read both the header information and the raw data
+from the same file, where the syntax should be fully conforming
+to generic mcl matrix format\&.
+.in -2m
+
+.ZI 2m "\fB-s\fP (\fIcheck for symmetry\fP)"
+\&
+.br
+This will check whether the primary result matrix was symmetric\&.
+It reports the number of failing (or \fIskew\fP) edges\&.
+.in -2m
+
+.ZI 2m "\fB-raw-tf\fP <tf-spec> (\fIapply transform spec to input\fP)"
+\&
+'in -2m
+.ZI 2m "\fB-prm-tf\fP (\fIapply transform spec to primary matrix\fP)"
+\&
+'in -2m
+.ZI 2m "\fB-sym-tf\fP (\fIapply transform spec to symmetrified matrix\fP)"
+\&
+'in -2m
+'in +2m
+\&
+.br
+The first applies its transformation spec to the values
+as found in the raw data\&. The second applies its transformation
+spec to the primary matrix\&. The third applies its transformation
+step to the symmetrified matrix\&.
+Refer to \fBmcxio(5)\fP for documentation on the transformation
+spec syntax\&.
+.in -2m
+
+.ZI 2m "\fB-rv\fP add|max|min|mul|left|right (\fIaction for repeated vectors\fP)"
+\&
+'in -2m
+.ZI 2m "\fB-re\fP add|max|min|mul|left|right (\fIaction for repeated entries\fP)"
+\&
+'in -2m
+.ZI 2m "\fB-ri\fP add|max|min|mul (\fIadding mirror image\fP)"
+\&
+'in -2m
+.ZI 2m "\fB-r\fP add|max|min|mul|left|right (\fIsame for entries and vectors\fP)"
+\&
+'in -2m
+'in +2m
+\&
+.br
+Merge options, dictating the behaviour when repeated entries are
+found\&. A distinction is made between entries that are repeated within
+the same column listing, and entries that are repeated between
+different column listings\&. An entry can be a repeat of both kinds
+simultaneously as well\&.
+Additionally, the final result is by default symmetrized by combining with
+the mirror image (in matrix terminology, the \fItransposed\fP matrix)\&. This
+symmetrization can be done in the same variety of ways\&.
+
+The \fBre\fP option, for repeats within the same column, is carried out
+first\&. It is applied \fIafter\fP the column has its entries sorted, so the
+\fCleft\fP and \fCright\fP options are not garantueed to follow the order found
+in the raw input\&. The \fBrv\fP option, for repeats over different columns,
+is carried out second\&.
+
+The option \fB-ri\fP\ \&\fBmin\fP can assist in implementing
+a (top-list) best reciprocal hit criterion\&.
+
+\fBExamples\fP
+.br
+The column
+
+.di ZV
+.in 0
+.nf \fC
+0 1:30 1:50 2:60 4:70 3:20 1:40 2:40 $
+.fi \fR
+.in
+.di
+.ne \n(dnu
+.nf \fC
+.ZV
+.fi \fR
+
+is encountered in the input, listing entries for the vector labeled
+with index\ \&\fC0\fP\&. If \fB-re\fP\ \&\fBadd\fP or \fB-r\fP\ \&\fBadd\fP
+is used, it will transform to the vector
+
+.di ZV
+.in 0
+.nf \fC
+0 1:120 2:60  3:20 4:70 $
+.fi \fR
+.in
+.di
+.ne \n(dnu
+.nf \fC
+.ZV
+.fi \fR
+
+If \fB-re\fP\ \&\fBmax\fP or \fB-r\fP\ \&\fBadd\fP
+is used instead, it will transform to the vector
+
+.di ZV
+.in 0
+.nf \fC
+0 1:40 2:60 3:20 4:70 $
+.fi \fR
+.in
+.di
+.ne \n(dnu
+.nf \fC
+.ZV
+.fi \fR
+
+Suppose \fIadd\fP mode is used, and that later on another
+vector specification for the index\ \&\fC0\fP is found, leading
+to this transformed vector:
+
+.di ZV
+.in 0
+.nf \fC
+0 1:60 2:80 4:40 $
+.fi \fR
+.in
+.di
+.ne \n(dnu
+.nf \fC
+.ZV
+.fi \fR
+
+If \fB-rv\fP\ \&\fBmax\fP was specified, this new vector is combined with the
+previous vector by taking the entry wise maximum:
+
+.di ZV
+.in 0
+.nf \fC
+0 1:120 2:60 3:20 4:70 $      # first (transformed) vector
+0 1:60 2:80 4:40 $            # second vector
+
+0 1:120 2:80 3:20 4:70 $      # entry wise maximum
+.fi \fR
+.in
+.di
+.ne \n(dnu
+.nf \fC
+.ZV
+.fi \fR
+
+Finally, suppose that somewhere one or more vector listings
+were specified for index\ \&\fC3\fP, which eventually led to an entry \fC0:50\fP\&.
+The final symmetrization step will take the \fC[0,3]\fP
+entry of weight\ \&\fC20\fP and combine it with the \fC[3,0]\fP entry
+of weight\ \&\fC50\fP\&. The resulting matrix will then have the \fC[0,3]\fP
+and the \fC[3,0]\fP entry both equal to either the maximum, the sum,
+or the product of the two quantities\ \&\fC50\fP and\ \&\fC20\fP\&.
+.in -2m
+
+.ZI 2m "\fB--quiet-re\fP (\fIquiet for repeated entries\fP)"
+\&
+'in -2m
+.ZI 2m "\fB--quiet-rv\fP (\fIquiet for repeated vectors\fP)"
+\&
+'in -2m
+.ZI 2m "\fB-q\fP (\fIthe two above combined\fP)"
+\&
+'in -2m
+'in +2m
+\&
+.br
+Warning options\&. Turn these on if you expect the raw data to be free
+of repeats\&.
+.in -2m
+.SH AUTHOR
+Stijn van Dongen\&.
+.SH SEE ALSO
+\fBmcxio(5)\fP, \fBmcl(1)\fP, \fBmcxload(1)\fP
+and \fBmclfamily(7)\fP for an overview of all the documentation
+and the utilities in the mcl family\&.

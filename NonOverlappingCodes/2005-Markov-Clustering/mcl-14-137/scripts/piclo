@@ -1,0 +1,147 @@
+#!/bin/bash -e
+
+# piclo -b abc -e 36 -c falkner.coords -k 0 -l 2 -s 1 -S 20 -X 100 -Y 100 -p llx=90 -p lly=90 -p urx=510 -p ury=510 -o t -p edge=3edge -p rmin=1 -p gmin=1 -p bmin=1 -p rmax=0 -p gmax=0 -p bmax=0 -p boundwidth=0.06 -p edgewidth=0.08
+
+mx=""
+fnout=t.ps
+coords=""
+defopts=""
+emax=0
+type=ite
+scale=15
+base=""
+X=0
+Y=0
+k=0
+l=5
+rot=0
+stride=1
+
+
+while getopts :b:p:e:o:k:s:l:c:m:R:S:X:Y:hd opt
+do
+    case "$opt" in
+    e)
+      emax=$OPTARG
+      ;;
+    d)
+      type=dag
+      ;;
+    b)
+      base=$OPTARG
+      ;;
+    s)
+      stride=$OPTARG
+      ;;
+    m)
+      mx=$OPTARG
+      ;;
+    c)
+      coords=$OPTARG
+      ;;
+    k)
+      k=$OPTARG
+      ;;
+    l)
+      l=$OPTARG
+      ;;
+    p)
+      defopts="$defopts -def $OPTARG"
+      ;;
+    S)
+      scale=$OPTARG
+      ;;
+    R)
+      rot=$OPTARG
+      ;;
+    X)
+      X=$OPTARG
+      ;;
+    Y)
+      Y=$OPTARG
+      ;;
+    o)
+      fnout=$OPTARG
+      ;;
+    h)
+      cat <<EOU
+-m matrix         file name
+-b base           assume ite-$i.$base
+-d                assume dag-$i.$base
+-c coords         file with PostScript coordinates
+-o output         file name
+-e num            max #edges
+-k num            iterand start
+-l num            iterand end
+-s num            stride: skip s-1 iterands each time
+-p key=val        clm ps PostScript parameters
+­S num            scale factor
+-R num            rotate num degrees
+-X num            x translate
+-Y num            y translate
+EOU
+      exit
+      ;;
+    :) echo "Flag $opt needs argument"
+        exit 1;;
+    ?) echo "Flag $opt unknown"
+        exit 1;;
+   esac
+done
+
+
+if test ! "$base" -a ! "$mx"; then
+   echo "Need base or matrix! (see -h)"
+   exit
+fi
+
+if test ! $coords; then
+   echo "Need coords! (see -h)"
+   exit
+fi
+
+
+OPTIND=$(($OPTIND-1))
+shift $OPTIND
+
+j=0
+
+
+if test "$mx"; then
+
+   clm ps $defopts -imx $mx -o $fnout --header
+   cat $coords >> $fnout
+   echo "$X $Y translate" >> $fnout
+   echo "$scale $scale scale" >> $fnout
+   clm ps $defopts -e-max $emax -imx $mx -o - >>$fnout
+   echo showpage  >> $fnout
+   echo >> $fnout
+
+elif test "$base"; then
+
+   for ((i=$k;i<=$l;i=$i+$stride)); do
+
+      if (($j<10)); then
+         jj="0$j"
+      else
+         jj=$j
+      fi
+      this=$fnout.$jj.ps
+      mx=$type-$i.$base
+
+      clm ps $defopts -imx $mx -o $this --header
+      cat $coords >> $this
+      echo "$X $Y translate" >> $this
+      echo "$scale $scale scale" >> $this
+      clm ps $defopts -e-max $emax -imx $mx -caption "foo" -o - >>$this
+      echo showpage  >> $this
+      echo >> $this
+      convert -rotate $rot $fnout.$jj.ps $fnout.$jj.png
+
+      j=$(($j+1))
+      echo $j
+   done
+fi
+
+
+

@@ -1,0 +1,120 @@
+\import{mcx.zmm}
+
+\begin{pud::man}{
+
+   {name}{clm mate}
+   {html_title}{The clm mate manual}
+   {author}{Stijn van Dongen}
+   {section}{1}
+   {synstyle}{long}
+   {defstyle}{long}
+
+   \man_share
+}
+
+\${html}{\"pud::man::maketoc"}
+
+\sec{name}{NAME}
+\NAME{clm mate}{compute best matches between two clusterings}
+
+\disclaim_clm{mate}
+
+\sec{synopsis}{SYNOPSIS}
+\par{
+   \clm{mate}
+   \synoptopt{-o}{fname}{output file name}
+   \synoptopt{-b}{omit headers}
+   \synoptopt{--one-to-many}{require multiple hits in <clfile1>}
+   \stdsynopt
+   <clfile1> <clfile2>
+   }
+
+\sec{description}{DESCRIPTION}
+
+\par{
+   \clm{mate} computes for each cluster \v{X} in \v{clfile1} all clusters
+   \v{Y} in \v{clfile2} that have non-empty intersection and outputs
+   a line with the data points listed below.}
+
+\verbatim{\:/
+   overlap(X,Y)               # 2 * size(meet(X,Y)) / (size(X)+size(Y))
+   index(X)                   # name of cluster
+   index(Y)                   # name of cluster
+   size(meet(X,Y))
+   size(X-Y)                  # size of left difference
+   size(Y-X)                  # size of right difference
+   size(X)
+   size(Y)
+   projection(X, clfile2)     # see below
+   projection(Y, clfile1)     # see below
+}
+
+\par{
+   The projected size of a cluster \v{X} relative to a clustering \v{K} is
+   simply the sum of all the nodes shared between any cluster \v{Y} in \v{K}
+   and \v{X}, duplications allowed. For example, the projected size of
+   \v{(0,1)} relative to \v{\{(0,2,4), (1,4,9), (1,3,5)\}} equals \v{3}.}
+
+\par{
+   The overlap between \v{X} and \v{Y} is exactly
+   1.0 if the two clusters are identical, and for nearly identical
+   clusterings the score will be close to 1.0.}
+
+\par{
+   All of this information can also be obtained from the
+   contingency matrix defined for two clusterings.
+   The \v{[i,j]} row-column entry in a contigency matrix between
+   to clusterings gives the number of entries in the intersection
+   between cluster\~\v{i} and cluster\~\v{j} from the respective
+   clusterings. The other information is implicitly present;
+   the total number of nodes in clusters\~\v{i} and\~\v{j}
+   for example can be obtained as the sum of entries in row\~\v{i}
+   and column\~\v{j} respectively, and the difference counts
+   can then be obtained by substracting the intersection count.
+   The contingency matrix can easily be computed using \mcx;
+   e.g.}
+
+\verbatim{
+mcx /clfile2 lm /clfile1 lm tp mul /ting wm}
+
+\car{
+   will create the contingency matrix in mcl matrix format
+   in the file \v{ting}, where columns range over the clusters
+   in \v{clfile1}.}
+
+\par{
+   The output can be put to good use by sorting it numerically on
+   that first score field. It is advisable to use a stable sort routine
+   (use the \usearg{-s} option for UNIX sort)
+   From this information one can quickly extract the closest
+   clusters between two clusterings.}
+
+\sec{options}{OPTIONS}
+
+\'begin{itemize}{\mcx_itemopts}
+
+\item{\defopt{-o}{fname}{output file name}}
+\car{Specify the name of the output file.}
+\item{\defopt{-b}{omit headers}}
+\car{Batch mode, omit column names.}
+\item{\defopt{--one-to-many}{require multiple hits in <clfile1>}}
+\car{Do not output information for clusters in the first file
+that are subset of a cluster in the second file.}
+\stddefopt
+
+\'end{itemize}
+
+\sec{author}{AUTHOR}
+\par{
+   Stijn van Dongen.
+   }
+
+
+\sec{seealso}{SEE ALSO}
+\par{
+   \mysib{mclfamily} for an overview of all the documentation
+   and the utilities in the mcl family.
+}
+
+\end{pud::man}
+

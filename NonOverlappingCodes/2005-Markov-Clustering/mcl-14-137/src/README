@@ -1,0 +1,9 @@
+
+alien/         modules
+clew/          cluster related operations
+contrib/       contributed code
+giraffe/       perl scripts for generating graphs
+impala         ivp vector matrix operations
+mcl/           mcl code
+taurus/        <BITROT SIGN> integer list operations
+

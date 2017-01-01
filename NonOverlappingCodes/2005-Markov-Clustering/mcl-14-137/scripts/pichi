@@ -1,0 +1,205 @@
+#!/bin/bash
+
+#  (C) Copyright 2007 Stijn van Dongen
+ #
+#  This file is part of MCL.  You can redistribute and/or modify MCL under the
+#  terms of the GNU General Public License; either version 3 of the License or
+#  (at your option) any later version.  You should have received a copy of the
+#  GPL along with MCL, in the file COPYING.
+
+# pichi -n "001 002 003 004 005 006" -i "9 7 6 5 4 3" -S 20 -X 100 -Y 100 -p llx=90 -p lly=90 -p urx=510 -p ury=510 -o t -p edge=3edge -t falkner.tab -c falkner.coords -b falkner
+
+set -e
+stem=mcl
+base=""
+fnout=t.ps
+defopts=""
+X=0
+Y=0
+scale=10
+rot=0
+fnmci=""
+fntab=""
+fncoords=""
+clus=""
+
+color=("1 0.3 0"   "1 0.5 0"   "1 0.6 0"   "1 0.7 0"   "1 0.8 0"   "1 0.9 0"   "1 1 0")
+
+
+while getopts :s:b:t:c:o:f:c:n:m:i:X:Y:S:R:p:h opt
+do
+    case "$opt" in
+    h)
+      cat <<EOU
+__[-b <base>   Expect <base>.coords <base>.tab <base>.mci
+  [-s <stem>   Expect <stem>.3 <stem>.5 ...
+
+ _[-f <fname>  Use (_f_lat) clustering in fname
+| [-m <fname>  Use matrix in <fname>
+|_[-c <fname>  coordinate file name
+  [-t <fname>     tab file name
+
+-n <n1 n2 n3>  3 5 7 et cetera    
+-i <i1 i2 i3>  In the range 0..9
+-o <fname>     Write to <fname>
+-p key=val     clm ps -set parameters
+-R num         rotate num degrees
+-X <num>       x translate
+-Y <num>       y translate
+-S <num>       scale factor
+EOU
+      exit
+      ;;
+    b)
+      base=$OPTARG
+      ;;
+    n)
+      nums=($OPTARG)
+      ;;
+    f)
+      clus=$OPTARG
+      ;;
+    t)
+      fntab=$OPTARG
+      ;;
+    c)
+      fncoords=$OPTARG
+      ;;
+    m)
+      fnmci=$OPTARG
+      ;;
+    i)
+      inward=($OPTARG)
+      ;;
+    s)
+      stem=$OPTARG
+      ;;
+    o)
+      fnout=$OPTARG
+      ;;
+    R)
+      rot=$OPTARG
+      ;;
+    S)
+      scale=$OPTARG
+      ;;
+    p)
+      defopts="$defopts -def $OPTARG"
+      ;;
+    X)
+      X=$OPTARG
+      ;;
+    Y)
+      Y=$OPTARG
+      ;;
+    :) echo "Flag $OPTARG needs argument"
+        exit 1;;
+    ?) echo "Flag $OPTARG unknown"
+        exit 1;;
+   esac
+done
+
+
+if test ! "$fncoords"; then
+   fncoords=$base.coords
+fi
+if test ! "$fnmci"; then
+   fnmci=$base.mci
+fi
+if test ! "$fntab"; then
+   fntab=$base.tab
+fi
+
+
+clm ps $defopts -coords $fncoords -def edge=edge \
+            -node-grey 0 -imx $fnmci --header -o $base.header
+
+clm ps $defopts -coords $fncoords -def edge=edge \
+            -node-grey 0 -imx $fnmci -o $base.include
+
+
+if test "$clus"; then
+
+   mcxdump -imx $clus --no-values --tabr=$fntab --dump-rlines    \
+      | perl -pe 'print "\n";'                                   \
+      | clmsnare --close --stroke --fncoords=$fncoords           \
+            --inward=0.5 > $base.body
+
+   echo "$X $Y translate" >> $base.header
+   echo "$scale $scale scale" >> $base.header
+   cat $base.header $base.include $base.body > $fnout
+   exit 0
+fi
+
+
+for ((i=0;i<${#nums[*]};i++)); do
+   n=${nums[$i]}
+   j=${inward[$i]}
+   c=${color[$i]}
+
+   colorname=fill_lev$i''color
+
+   echo "/$colorname [$c] def" >> $base.header
+   echo "/fill_lev$i {" >> $base.header
+
+   mcxdump -imx $stem.$n --no-values --tabr=$fntab --dump-rlines \
+      | perl -pe 'print "\n";'                                   \
+      | clmsnare --close --fill --fillcolor=$colorname           \
+            --fncoords=$fncoords --inward=0.$j >> $base.header
+
+   echo "} def" >> $base.header
+done
+
+
+for ((i=0;i<${#nums[*]};i++)); do
+   n=${nums[$i]}
+   j=${inward[$i]}
+   c=${color[$i]}
+
+   echo "/stroke_lev$i {" >> $base.header
+
+   mcxdump -imx $stem.$n --no-values --tabr=$fntab --dump-rlines \
+      | perl -pe 'print "\n";'                                   \
+      | clmsnare --close --stroke --fncoords=$fncoords           \
+            --inward=0.$j >> $base.header
+
+   echo "} def" >> $base.header
+done
+
+
+
+fnthis=$fnout.b.ps
+cat $base.header > $fnthis
+
+echo "$X $Y translate" >> $fnthis
+echo "$scale $scale scale" >> $fnthis
+
+
+cat $base.include >> $fnthis
+echo showpage >> $fnthis
+
+for ((i=0;i<${#nums[*]};i++)); do
+
+   fnthis=$fnout.$i.ps
+   cat $base.header > $fnthis
+
+   echo "$X $Y translate" >> $fnthis
+   echo "$scale $scale scale" >> $fnthis
+
+   for ((j=$i;j>=0;j--)); do
+      echo fill_lev$j >> $fnthis
+   done
+
+   cat $base.include >> $fnthis
+
+   for ((j=$i;j>=0;j--)); do
+      echo stroke_lev$j >> $fnthis
+   done
+
+   echo showpage >> $fnthis
+done
+
+for ((i=0;i<${#nums[*]};i++)); do
+   convert -rotate $rot $fnout.$i.ps $fnout.$i.png
+done
+

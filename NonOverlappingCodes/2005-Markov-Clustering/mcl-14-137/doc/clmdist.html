@@ -1,0 +1,454 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html>
+<!-- Copyright (c) 2014 Stijn van Dongen -->
+<head>
+<meta name="keywords" content="manual">
+<style type="text/css">
+/* START aephea.base.css */
+body
+{ text-align: justify;
+margin-left: 0%;
+margin-right: 0%;
+}
+a:link { text-decoration: none; }
+a:active { text-decoration: none; }
+a:visited { text-decoration: none; }
+a:link { color: #1111aa; }
+a:active { color: #1111aa; }
+a:visited { color: #111166; }
+a.local:link { color: #11aa11; }
+a.local:active { color: #11aa11; }
+a.local:visited { color: #116611; }
+a.intern:link { color: #1111aa; }
+a.intern:active { color: #1111aa; }
+a.intern:visited { color: #111166; }
+a.extern:link { color: #aa1111; }
+a.extern:active { color: #aa1111; }
+a.extern:visited { color: #661111; }
+a.quiet:link { color: black; }
+a.quiet:active { color: black; }
+a.quiet:visited { color: black; }
+div.verbatim
+{ font-family: monospace;
+margin-top: 1em;
+margin-bottom: 1em;
+font-size: 10pt;
+margin-left: 2em;
+white-space: pre;
+}
+div.indent
+{ margin-left: 8%;
+margin-right: 0%;
+}
+.right { text-align: right; }
+.left { text-align: left; }
+.nowrap { white-space: nowrap; }
+.item_leader
+{ position: relative;
+margin-left: 8%;
+}
+.item_compact { position: absolute; vertical-align: baseline; }
+.item_cascade { position: relative; }
+.item_leftalign { text-align: left; }
+.item_rightalign
+{ width: 2em;
+text-align: right;
+}
+.item_compact .item_rightalign
+{ position: absolute;
+width: 52em;
+right: -2em;
+text-align: right;
+}
+.item_text
+{ position: relative;
+margin-left: 3em;
+}
+.smallcaps { font-size: smaller; text-transform: uppercase }
+/* END aephea.base.css */
+body { font-family: "Garamond", "Gill Sans", "Verdana", sans-serif; }
+body
+{ text-align: justify;
+margin-left: 8%;
+margin-right: 8%;
+}
+</style>
+<title>The clm dist manual</title>
+</head>
+<body>
+<p style="text-align:right">
+16 May 2014&nbsp;&nbsp;&nbsp;
+<a class="local" href="clmdist.ps"><b>clm dist</b></a>
+14-137
+</p>
+<div class=" itemize " style="margin-top:1em; font-size:100%">
+<div class=" item_compact"><div class=" item_rightalign nowrap " style="right:-3em">1.</div></div>
+<div class=" item_text " style="margin-left:4em">
+<a class="intern" href="#name">NAME</a>
+</div>
+<div class=" item_compact"><div class=" item_rightalign nowrap " style="right:-3em">2.</div></div>
+<div class=" item_text " style="margin-left:4em">
+<a class="intern" href="#synopsis">SYNOPSIS</a>
+</div>
+<div class=" item_compact"><div class=" item_rightalign nowrap " style="right:-3em">3.</div></div>
+<div class=" item_text " style="margin-left:4em">
+<a class="intern" href="#description">DESCRIPTION</a>
+</div>
+<div class=" item_compact"><div class=" item_rightalign nowrap " style="right:-3em">4.</div></div>
+<div class=" item_text " style="margin-left:4em">
+<a class="intern" href="#options">OPTIONS</a>
+</div>
+<div class=" item_compact"><div class=" item_rightalign nowrap " style="right:-3em">5.</div></div>
+<div class=" item_text " style="margin-left:4em">
+<a class="intern" href="#_section_5">SPLIT/JOIN DISTANCE</a>
+</div>
+<div class=" item_compact"><div class=" item_rightalign nowrap " style="right:-3em">6.</div></div>
+<div class=" item_text " style="margin-left:4em">
+<a class="intern" href="#examples">EXAMPLES</a>
+</div>
+<div class=" item_compact"><div class=" item_rightalign nowrap " style="right:-3em">7.</div></div>
+<div class=" item_text " style="margin-left:4em">
+<a class="intern" href="#author">AUTHOR</a>
+</div>
+<div class=" item_compact"><div class=" item_rightalign nowrap " style="right:-3em">8.</div></div>
+<div class=" item_text " style="margin-left:4em">
+<a class="intern" href="#seealso">SEE ALSO</a>
+</div>
+<div class=" item_compact"><div class=" item_rightalign nowrap " style="right:-3em">9.</div></div>
+<div class=" item_text " style="margin-left:4em">
+<a class="intern" href="#references">REFERENCES</a>
+</div>
+</div>
+
+<a name="name"></a>
+<h2>NAME</h2>
+<p style="margin-bottom:0" class="asd_par">
+clm dist &mdash; compute the distance between two or more partitions (clusterings).</p>
+<p style="margin-bottom:0" class="asd_par">
+The distance that is computed can be any of
+<i>split/join distance</i>, <i>variance of information</i>,
+or <i>Mirkin metric</i>.</p>
+<p style="margin-bottom:0" class="asd_par">clmdist is not in actual fact a program. This manual
+page documents the behaviour and options of the clm program when
+invoked in mode <i>dist</i>. The options <b>-h</b>, <b>--apropos</b>,
+<b>--version</b>, <b>-set</b>, <b>--nop</b> are accessible
+in all <b>clm</b> modes. They are described
+in the <a class="local sibling" href="clm.html">clm</a> manual page.</p>
+
+<a name="synopsis"></a>
+<h2>SYNOPSIS</h2>
+<p style="margin-bottom:0" class="asd_par">
+<b>clm dist</b> [options] &lt;file name&gt; &lt;file name&gt;+</p>
+<p style="margin-bottom:0" class="asd_par">
+<b>clm dist</b>
+<a class="intern" href="#opt-mode"><b>[-mode</b> &lt;sj|vi|mk|sc&gt; (<i>distance type</i>)<b>]</b></a>
+<a class="intern" href="#opt-o"><b>[-o</b> fname (<i>output file</i>)<b>]</b></a>
+<a class="intern" href="#opt--chain"><b>[--chain</b> (<i>only compare consecutive clusterings</i>)<b>]</b></a>
+<a class="intern" href="#opt--one-to-many"><b>[--one-to-many</b> (<i>compare first clustering to all others</i>)<b>]</b></a>
+<a class="intern" href="#opt--sort"><b>[--sort</b> (<i>sort clusterings based on coarseness</i>)<b>]</b></a>
+<a class="intern" href="#opt--index"><b>[--index</b> (<i>output Rand, adjusted Rand and Jaccard indices</i>)<b>]</b></a>
+<a class="intern" href="#opt-digits"><b>[-digits</b> k (<i>output decimals</i>)<b>]</b></a>
+<a class="intern" href="#opt-h"><b>[-h</b> (<i>print synopsis, exit</i>)<b>]</b></a>
+<a class="intern" href="#opt--apropos"><b>[--apropos</b> (<i>print synopsis, exit</i>)<b>]</b></a>
+<a class="intern" href="#opt--version"><b>[--version</b> (<i>print version, exit</i>)<b>]</b></a>
+&lt;file name&gt; &lt;file name&gt;+</p>
+
+<a name="description"></a>
+<h2>DESCRIPTION</h2>
+<p style="margin-bottom:0" class="asd_par">
+<b>clm dist</b> computes distances between clusterings. It can compute the
+<i>split/join distance</i> (described below), the <i>variance of information
+measure</i>, and the <i>Mirkin metric</i>. By default it computes the chosen distance
+for all pairs of distances in the clusterings provided. Clusterings must be in
+the mcl matrix format (cf. <a class="local sibling" href="mcxio.html">mcxio</a>), and are supplied on the command
+line as the names of the files in which they are stored.
+It is possible to compare only consecutive clusterings by using
+the <b>--chain</b> option.
+</p>
+<p style="margin-bottom:0" class="asd_par">
+Currently, <b>clm dist</b> cannot compute different distance types simultaneously.</p>
+<p style="margin-bottom:0" class="asd_par">
+The output is linewise, each line giving information about
+the distance between a pair of clusterings. A line has the
+following format:</p>
+<div class="verbatim">d  d1  d2  N  v  name1  name2  [v50,v75,v90,v95,v99]</div>
+<p style="margin-top:0em; margin-bottom:0em">
+where <tt>dT</tt> is the distance between the two clusterings, <tt>d1</tt> is the
+distance from the first clustering to the greatest common subclustering
+(alternatively called GCS, intersection, or meet) of the two clusterings,
+<tt>d2</tt> is similarly the distance from the second clustering to the GCS,
+<tt>N</tt> is the number of nodes in the set over which the clusterings are
+defined, <tt>name1</tt> is the name of the file containing the first clustering,
+<tt>name2</tt> is the name of the file containing the second clustering, and
+<tt>vXX</tt> is the number of <i>volatile nodes</i> at stringency factor <tt>0.XX</tt>
+(i.e. 0.5 for <tt>v50</tt>). Refer to <a class="local sibling" href="clmvol.html">clm&nbsp;vol</a> for a definition of
+<i>volatile node</i>.
+</p>
+
+<a name="options"></a>
+<h2>OPTIONS</h2>
+<div class=" itemize " style="margin-top:1em; font-size:100%">
+<div class=" item_cascade"><div class=" item_leftalign nowrap " ><a name="opt-mode"></a><b>-mode</b> &lt;sj|vi|mk&gt; (<i>distance type</i>)</div></div>
+<div class=" item_text " style="margin-left:2em">
+<p style="margin-top:0em; margin-bottom:0em">
+Use <b>sj</b> for the <i>split/join distance</i> (described below), <b>vi</b> for
+the <i>variance of information measure</i> and <b>mk</b> for the <i>Mirkin metric</i>.</p>
+</div>
+<div style="margin-top:0em">&nbsp;</div><div class=" item_cascade"><div class=" item_leftalign nowrap " ><a name="opt--chain"></a><b>--chain</b> (<i>only compare consecutive clusterings</i>)</div></div>
+<div class=" item_text " style="margin-left:2em">
+<p style="margin-top:0em; margin-bottom:0em">
+This option can be used if you know that the clusterings are nested
+clusterings (or appoximately so) and ordered from coarse to fine-grained
+or vice versa. An example of this is the set of clusterings resulting
+from applying <b>mcl</b> with a range of inflation parameters.
+</p>
+</div>
+<div style="margin-top:0em">&nbsp;</div><div class=" item_cascade"><div class=" item_leftalign nowrap " ><a name="opt--one-to-many"></a><b>--one-to-many</b> (<i>compare first clustering to all others</i>)</div></div>
+<div class=" item_text " style="margin-left:2em">
+<p style="margin-top:0em; margin-bottom:0em">
+Use this option for example to compare a gold standard classification
+to a collection of clusterings.
+Bear in mind that sub-clustering and super-clustering are also
+ways for a clustering to be compatible with a gold standard.
+This means that the simple numerical criterion of distance between
+clusters (by whatever method) is only partially informative.
+For the Mirkin, variation of information and split/join metrics
+it pays to take into account the constituent distances <tt>d1</tt>
+and <tt>d2</tt> (see above). Assuming that the first clustering
+given as argument represents a gold standard, a small value
+for <tt>d1</tt> implies that the second clustering is (nearly) a superclustering,
+and similarly a small value for <tt>d2</tt> implies that it is (nearly)
+a subclustering.
+</p>
+</div>
+<div style="margin-top:0em">&nbsp;</div><div class=" item_cascade"><div class=" item_leftalign nowrap " ><a name="opt--sort"></a><b>--sort</b> (<i>sort clusterings based on coarseness</i>)</div></div>
+<div class=" item_text " style="margin-left:2em">
+<p style="margin-top:0em; margin-bottom:0em">
+This option can be useful in conjunction with the <b>--chain</b>
+option, in case the list of clusterings supplied is not necessarily
+ordered by granularity.
+</p>
+</div>
+<div style="margin-top:0em">&nbsp;</div><div class=" item_cascade"><div class=" item_leftalign nowrap " ><a name="opt--index"></a><b>--index</b> (<i>output Rand, adjusted Rand and Jaccard indices</i>)</div></div>
+<div class=" item_text " style="margin-left:2em">
+<p style="margin-top:0em; margin-bottom:0em">
+As described.
+</p>
+</div>
+<div style="margin-top:0em">&nbsp;</div><div class=" item_cascade"><div class=" item_leftalign nowrap " ><a name="opt-o"></a><b>-o</b> fname (<i>output file</i>)</div></div>
+<div class=" item_text " style="margin-left:2em">
+</div>
+<div style="margin-top:0em">&nbsp;</div><div class=" item_cascade"><div class=" item_leftalign nowrap " ><a name="opt-digits"></a><b>-digits</b> k (<i>output decimals</i>)</div></div>
+<div class=" item_text " style="margin-left:2em">
+<p style="margin-top:0em; margin-bottom:0em">
+The number of decimals printed when using the variance of information measure.</p>
+</div>
+</div>
+
+<a name="_section_5"></a>
+<h2>SPLIT/JOIN DISTANCE</h2>
+<p style="margin-bottom:0" class="asd_par">
+For each pair of clusterings <b>C1</b>, <b>C2</b>, two numbers are given,
+say <b>d1</b> and <b>d2</b>. Then <b>d1</b> + <b>d2</b> equals the number
+of nodes that have to be exchanged in order to transform any of the two
+clusterings into the other, and you can think of (<b>d1</b>+<b>d2</b>)/<b>2N</b>
+as the percentage that the two clusterings differ. The split/join
+distance has a linearity property with respect to the meet of <b>C1</b> and
+<b>C2</b>, see below.</p>
+<p style="margin-bottom:0" class="asd_par">
+The split/join distance <b>sjd</b> is very handy in computing the consistency of
+two or more clusterings of the same graph, or comparing clusterings made
+with different resource (but otherwise identical) parameters. The latter is
+for finding out whether you can settle for cheaper mcl settings, or whether
+you need to switch to more expensive settings. The former is for finding out
+whether clusterings are identical, conflicting, or whether one is (almost) a
+subclustering of the other - mostly for comparing a set of clusterings of
+different granularity, made by letting the mcl parameter <b>-I</b> vary.
+The <a class="intern" href="#examples">EXAMPLES</a> section contains examples of all these <b>clm dist</b> uses,
+and the use of <b>clm info</b> and <b>clm meet</b> is also discussed there.</p>
+<p style="margin-bottom:0" class="asd_par">
+<b>sjd</b> is a metric distance on the space of partitions of
+a set of a given fixed cardinality. It has the following linearity
+property. Let <b>P1</b> and <b>P2</b> be partitions, then</p>
+<p style="margin-bottom:0" class="asd_par">
+<b>sjd</b>(<b>P1</b>, <b>P2</b>) = <b>sjd</b>(<b>P1</b>, <b>D</b>) + <b>sjd</b>(<b>P2</b>, <b>D</b>)</p>
+<p style="margin-bottom:0" class="asd_par">
+where <b>D</b> (for Dutch Doorsnede)
+is the intersection of <b>P1</b> and <b>P2</b>, i.e. the unique clustering
+that is both a subclustering of <b>P1</b> and <b>P2</b> <i>and</i> a superclustering of
+all other subclusterings of <b>P1</b> and <b>P2</b>. Sloppily worded, <b>D</b> is the largest
+subclustering of both <b>P1</b> and <b>P2</b>. See the <a class="intern" href="#references">REFERENCES</a> section for
+a pointer to the technical report in which <b>sjd</b> was first defined (and in
+which the non-trivial triangle inequality is proven).</p>
+<p style="margin-bottom:0" class="asd_par">
+Because it is useful to know whether one partition (or clustering)
+is almost a subclustering of the other, <b>clm dist</b> returns the
+two constituents <b>sjd</b>(<b>P1</b>,<b>D</b>) and <b>sjd</b>(<b>P2</b>,<b>D</b>).</p>
+<p style="margin-bottom:0" class="asd_par">
+Let <b>P1</b> and <b>P2</b> be two clusterings of a graph of cardinality <b>N</b>,
+and suppose <b>clm dist</b> returns the integers <b>d1</b> and <b>d2</b>. You can think of
+<b>100 * (d1 + d2) / N</b> as the percentage that <b>P1</b> and <b>P2</b> differ.
+This interpretation is in fact slightly conservative.
+The numerator is the number of nodes that need to be exchanged in order to
+transform one into the other. This number may grow as large as
+<b>2*N - 2*sqrt(N)</b>, so it would be justified to take 50 as a scaling
+factor rather than 100.</p>
+<p style="margin-bottom:0" class="asd_par">
+For example, if <b>A</b> and <b>B</b> are both clusterings of a graph
+on a set of 9058 nodes and <b>clm dist</b> returns [38, 2096], this conveys
+that <b>A</b> is almost a subclustering of <b>B</b> (by splitting 38 nodes
+in <b>A</b> we obtain a clustering <b>D</b> that is a subclustering of <b>B</b>),
+and that <b>B</b> is much less granular than <b>A</b>. The latter is
+because we can obtain <b>B</b> from <b>D</b> by <i>joining</i> 2096 nodes
+in some way.</p>
+
+<a name="examples"></a>
+<h2>EXAMPLES</h2>
+<p style="margin-bottom:0" class="asd_par">
+The following is an example of several mcl validation tools
+applied to a set of clusterings on a protein graph of 9058 nodes.
+In the first experiment, six
+different clusterings were generated for different values of the inflation
+parameter, which was respectively set to 1.2, 1.6, 2.0, 2.4, 2.8, and 3.2.
+It should be noted that protein graphs seem somewhat special in that an
+inflation parameter setting as low as 1.2 still produces a very acceptable
+clustering. The six clusterings are scrutinized using <b>clm dist</b>,
+<b>clm info</b>, and <b>clm meet</b>.
+In the second experiment, four different clusterings were generated
+with identical flow (i.e. inflation) parameter, but
+with different resource parameters. <b>clm dist</b> is used to choose
+a sufficient resource level.</p>
+<p style="margin-bottom:0" class="asd_par">
+High <b>-P/-S/-R</b> values make <b>mcl</b> more accurate but also
+more time and memory consuming. Run <b>mcl</b> with different settings for these
+parameters, holding other parameters fixed. If the expensive and supposedly
+more accurate clusterings are very similar to the clusterings resulting from
+cheaper settings, the cheaper setting is sufficient. If the distances
+between cheaper clusterings and more expensive clusterings are large, this
+is an indication that you need the expensive settings. In that case, you may
+want to increase the <b>-P/-S/-R</b> parameters (or simply the
+<b>-scheme</b> parameter) until associated
+clusterings at nearby resource levels are very similar.</p>
+<p style="margin-bottom:0" class="asd_par">
+In this particular example, the validation tools do not reveal that one
+clustering in particular can be chosen as 'best', because all clusterings
+seem at least acceptable. They do aid however in showing the relative
+merits of each clusterings. The most important issue in this respect is
+cluster granularity. The table below shows the output of <b>clm info</b>.</p>
+<div class="verbatim">
+     Efficiency  Mass frac  Area frac  Cl weight  Mx link weight
+1.2   0.42364     0.98690    0.02616    52.06002    50.82800
+1.6   0.58297     0.95441    0.01353    55.40282    50.82800
+2.0   0.63279     0.92386    0.01171    58.09409    50.82800
+2.4   0.65532     0.90702    0.01091    59.58283    50.82800
+2.8   0.66854     0.84954    0.00940    63.19183    50.82800
+3.2   0.67674     0.82275    0.00845    66.10831    50.82800</div>
+<p style="margin-top:0em; margin-bottom:0em">
+This data shows that there is exceptionally strong cluster structure present
+in the input graph. The 1.2 clustering captures almost all edge mass using
+only 2.5 percent of 'area'. The 3.2 clustering still captures 82 percent of
+the mass using less than 1 percent of area. We continue with looking at the
+mutual consistency of the six clusterings. Below is a table that shows all
+pairwise distances between the clusterings.</p>
+<div class="verbatim">
+    |   1.6  |   2.0  |   2.4  |   2.8  |   3.2  |   3.6
+-----------------------------------------------------------.
+1.2 |2096,38 |2728,41 |3045,48 |3404,45 |3621,43 |3800, 42 |
+-----------------------------------------------------------|
+1.6 |        | 797,72 |1204,76 |1638,78 |1919,70 |2167, 69 |
+-----------------------------------------------------------|
+2.0 |        |        | 477,68 | 936,78 |1235,85 |1504, 88 |
+-----------------------------------------------------------|
+2.4 |        |        |        | 498,64 | 836,91 |1124,103 |
+-----------------------------------------------------------|
+2.8 |        |        |        |        | 384,95 | 688,119 |
+-----------------------------------------------------------|
+3.2 |        |        |        |        |        | 350,110 |
+-----------------------------------------------------------.
+</div>
+<p style="margin-bottom:0" class="asd_par">
+The table shows that the different clusterings are pretty consistent with
+each other, because for two different clusterings it is generally true that
+one is almost a subclustering of the other. The interpretation for the
+distance between the 1.6 and the 3.2 clustering for example, is that by
+rearranging 43 nodes in the 3.2 clustering, we obtain a subclustering of the
+1.6 clustering. The table shows that for any pair of clusterings, at most
+119 entries need to be rearranged in order to make one a subclustering of
+the other.</p>
+<p style="margin-bottom:0" class="asd_par">
+The overall consistency becomes all the more clear by looking at the meet of
+all the clusterings:</p>
+<div class="verbatim">
+clm meet -o meet out12 out16 out20 out24 out28 out32
+clm dist meet out12 out16 out20 out24 out28 out32</div>
+<p style="margin-top:0em; margin-bottom:0em">
+results in the following distances between the respective clusterings
+and their meet.</p>
+<div class="verbatim">
+    |   1.2  |    1.6 |  2.0   |   2.4  |  2.8   |  3.2    |  
+-------------- --------------------------------------------.
+meet|  0,3663|  0,1972| 0,1321 |  0,958 | 0,559  | 0,283   |
+-------------- --------------------------------------------.</div>
+<p style="margin-top:0em; margin-bottom:0em">
+This shows that by rearranging only 283 nodes in the 3.2 clustering,
+one obtains a subclustering of all other clusterings.</p>
+<p style="margin-bottom:0" class="asd_par">
+In the last experiment, <b>mcl</b> was run with inflation parameter 1.4,
+for each of the four different preset pruning schemes <tt>k=1,2,3,4</tt>.
+The <b>clm dist</b> distances between the different clusterings
+are shown below.</p>
+<div class="verbatim">
+    |  k=2   |   k=3  |   k=4  |
+-------------------------------.
+k=1 |  17,17 |  16,16 |  16,16 |
+-------------------------------.
+k=2 |        |   3,3  |   5,5  |
+-------------------------------.
+k=3 |        |        |   4,4  |
+-------------------------------.</div>
+<p style="margin-top:0em; margin-bottom:0em">
+This example is a little boring in that the cheapest scheme seems adequate.
+If anything, the gaps between the <tt>k=1</tt> scheme and the rest are a little
+larger than the three gaps between the <tt>k=2</tt>, <tt>k=3</tt>, and <tt>k=4</tt>
+clusterings. Had all distances been much larger, then such an observation
+would be reason to choose the <tt>k=2</tt> setting.</p>
+<p style="margin-bottom:0" class="asd_par">
+Note that you need not feel uncomfortable with the clusterings
+still being different at high resource levels, if ever so slightly.
+In all likelihood, there are anyway nodes which are not in any core of
+attraction, and that are on the boundary between two or more clusterings.
+They may go one way or another, and these are the nodes which
+will go different ways even at high resource levels.
+Such nodes may be stable in clusterings obtained for lower inflation
+values (i.e. coarser clusterings), in which the different clusters
+to which they are attracted are merged.</p>
+
+<a name="author"></a>
+<h2>AUTHOR</h2>
+<p style="margin-bottom:0" class="asd_par">
+Stijn van Dongen.</p>
+
+<a name="seealso"></a>
+<h2>SEE ALSO</h2>
+<p style="margin-bottom:0" class="asd_par">
+<a class="local sibling" href="mclfamily.html">mclfamily</a> for an overview of all the documentation
+and the utilities in the mcl family.</p>
+
+<a name="references"></a>
+<h2>REFERENCES</h2>
+<p style="margin-bottom:0" class="asd_par">
+Stijn van Dongen. <i>Performance criteria for graph clustering and Markov
+cluster experiments</i>. Technical Report INS-R0012, National Research
+Institute for Mathematics and Computer Science in the Netherlands,
+Amsterdam, May 2000.<br>
+<a class="extern" href="http://www.cwi.nl/ftp/CWIreports/INS/INS-R0012.ps.Z">http://www.cwi.nl/ftp/CWIreports/INS/INS-R0012.ps.Z</a></p>
+<p style="margin-bottom:0" class="asd_par">
+Marina Meila. <i>Comparing Clusterings &mdash; An Axiomatic View</i>.
+In <i>Proceedings of the 22nd International Conference on Machine Learning</i>,
+Bonn, Germany, 2005.</p>
+<p style="margin-bottom:0" class="asd_par">
+Marina Meila. <i>Comparing Clusterings</i>,
+UW Statistics Technical Report 418.<br>
+<a class="extern" href="http://www.stat.washington.edu/www/research/reports/2002/tr418.ps">http://www.stat.washington.edu/www/research/reports/2002/tr418.ps</a></p>
+</body>
+</html>

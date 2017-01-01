@@ -1,0 +1,92 @@
+\import{mcx.zmm}
+
+\begin{pud::man}{
+
+   {name}{clm residue}
+   {html_title}{The clm residue manual}
+   {author}{Stijn van Dongen}
+   {section}{1}
+   {synstyle}{long}
+   {defstyle}{long}
+
+   \man_share
+}
+
+\${html}{\"pud::man::maketoc"}
+
+\sec{name}{NAME}
+\NAME{clm residue}{extend clustering of subgraph to clustering of graph.}
+
+\disclaim_clm{residue}
+
+\sec{synopsis}{SYNOPSIS}
+\par{
+   \clm{residue}
+   \synreqopt{-icl}{fname}{input clustering}
+   \synreqopt{-imx}{fname}{input graph}
+   \synoptopt{-rpm}{fname}{residue projection matrix}
+   \synoptopt{-o}{fname}{output clustering file}
+   }
+
+\sec{description}{DESCRIPTION}
+
+\par{
+   The cluster file presumably contains a clustering of a subgraph of the
+   graph\~\v{G} contained by the matrix file, implying that the row domain of
+   that clustering is a subset of the node domain of the graph. \clm{residue} will
+   compute a simple upwards projection of that clustering, resulting in a
+   clustering of\~\v{G}. 
+   }
+
+\sec{options}{OPTIONS}
+
+\begin{itemize}{\mcx_itemopts}
+
+\item{\defopt{-imx}{fname}{input graph}}
+\item{\defopt{-icl}{fname}{input clustering}}
+
+\item{\defopt{-rpm}{fname}{residue projection matrix}}
+\car{
+   The name for the file in which the residue projection matrix is stored.
+   It contains for each node and for each cluster in the input clustering
+   the combined weight of the (edges to the) neighbours of that node
+   in that cluster.
+   }
+
+\car{
+   The default output file name is \v{out.rpm}.
+   }
+
+\item{\defopt{-o}{fname}{output clustering file}}
+\car{
+   The name for the file in which the majority vote projection clustering
+   is stored. Aka the majority vote projection clustering storage file name.
+   }
+
+\par{
+   This embodies a very crude approach to distributing the missing nodes in the
+   input clustering onto that same cluster.  For each node, the cluster is
+   taken for which the residue projection is the largest (see above). The
+   residue (i.e. the set of missing nodes) is initially viewed as a cluster;
+   the set of nodes for which the projection is largest for the residue itself
+   will form a new cluster, if it is not empty.
+   }
+
+\par{
+   By default output is sent to STDOUT.
+   }
+
+\end{itemize}
+
+\sec{author}{AUTHOR}
+\par{
+   Stijn van Dongen.
+   }
+
+\sec{seealso}{SEE ALSO}
+\par{
+   \mysib{mclfamily} for an overview of all the documentation
+   and the utilities in the mcl family.
+   }
+
+\end{pud::man}

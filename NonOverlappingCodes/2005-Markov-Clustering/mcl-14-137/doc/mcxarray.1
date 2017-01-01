@@ -1,0 +1,495 @@
+.\" Copyright (c) 2014 Stijn van Dongen
+.TH "mcxarray" 1 "16 May 2014" "mcxarray 14-137" "USER COMMANDS "
+.po 2m
+.de ZI
+.\" Zoem Indent/Itemize macro I.
+.br
+'in +\\$1
+.nr xa 0
+.nr xa -\\$1
+.nr xb \\$1
+.nr xb -\\w'\\$2'
+\h'|\\n(xau'\\$2\h'\\n(xbu'\\
+..
+.de ZJ
+.br
+.\" Zoem Indent/Itemize macro II.
+'in +\\$1
+'in +\\$2
+.nr xa 0
+.nr xa -\\$2
+.nr xa -\\w'\\$3'
+.nr xb \\$2
+\h'|\\n(xau'\\$3\h'\\n(xbu'\\
+..
+.if n .ll -2m
+.am SH
+.ie n .in 4m
+.el .in 8m
+..
+.SH NAME
+mcxarray \- Transform array data to MCL matrices
+.SH SYNOPSIS
+
+\fBmcxarray\fP [options]
+
+\fBmcxarray\fP
+\fB[-data\fP fname (\fIinput data file\fP)\fB]\fP
+.br
+\fB[-imx\fP fname (\fIinput matrix file\fP)\fB]\fP
+.br
+\fB[-co\fP num (\fI(absolute) cutoff for output values (required)\fP)\fB]\fP
+.br
+\fB[-skipr\fP <num> (\fIskip <num> data rows\fP)\fB]\fP
+.br
+\fB[-skipc\fP <num> (\fIskip <num> data columns\fP)\fB]\fP
+.br
+\fB[-o\fP fname (\fIoutput file fname\fP)\fB]\fP
+.br
+\fB[--text-table\fP (\fIwrite output in full text table format\fP)\fB]\fP
+.br
+\fB[-write-tab\fP <fname> (\fIwrite row labels to file\fP)\fB]\fP
+.br
+\fB[-l\fP <num> (\fItake labels from column <num>\fP)\fB]\fP
+.br
+
+\fB[--pearson\fP (\fIuse Pearson correlation (default)\fP)\fB]\fP
+.br
+\fB[--spearman\fP (\fIuse Spearman rank correlation\fP)\fB]\fP
+.br
+\fB[--dot\fP (\fIuse dot product\fP)\fB]\fP
+.br
+\fB[--cosine\fP (\fIuse cosine (similarity)\fP)\fB]\fP
+.br
+\fB[--slow-cosine\fP (\fIuse cosine(0\&.5 alpha) (similarity)\fP)\fB]\fP
+
+\fB[--angle\fP (\fIuse angle between vectors (note: a metric distance)\fP)\fB]\fP
+.br
+\fB[--acute-angle\fP (\fIuse acute angle between vectors\fP)\fB]\fP
+.br
+\fB[--angle-norm\fP (\fIuse normalised angle between vectors (by pi)\fP)\fB]\fP
+.br
+\fB[--acute-angle-norm\fP (\fIuse normalised acute angle between vectors\ \&(by\ \&pi/2)\fP)\fB]\fP
+.br
+\fB[--sine\fP (\fIuse sine (note: a metric distance)\fP)\fB]\fP
+.br
+\fB[--slow-sine\fP (\fIuse sine(0\&.5 alpha) (note: a metric distance)\fP)\fB]\fP
+.br
+\fB[--euclid\fP (\fIuse Euclidean distance between vectors\fP)\fB]\fP
+.br
+\fB[--max\fP (\fIuse L-oo, aka Chebyshev distance\fP)\fB]\fP
+.br
+\fB[--taxi\fP (\fIuse L-1, aka taxi, aka city-block distance\fP)\fB]\fP
+.br
+\fB[-minkowski\fP <num> (\fIuse Minkowski distance with power <num>\fP)\fB]\fP
+.br
+\fB[-fp\fP <mode> (\fIuse fingerprint measure\fP)\fB]\fP
+.br
+
+\fB[-digits\fP <num> (\fIoutput precision\fP)\fB]\fP
+.br
+\fB[--write-binary\fP (\fIwrite output in binary format\fP)\fB]\fP
+.br
+\fB[-t\fP <int> (\fIuse <int> threads\fP)\fB]\fP
+.br
+\fB[-J\fP <intJ> (\fIa total of <intJ> jobs are used\fP)\fB]\fP
+.br
+\fB[-j\fP <intj> (\fIthis job has index <intj>\fP)\fB]\fP
+.br
+\fB[-start\fP <int> (\fIstart at column <int> inclusive\fP)\fB]\fP
+.br
+\fB[-end\fP <int> (\fIend at column <int> EXclusive\fP)\fB]\fP
+.br
+\fB[--transpose-data\fP (\fIwork with the transposed data matrix\fP)\fB]\fP
+.br
+\fB[--rank-transform\fP (\fIrank transform the data first\fP)\fB]\fP
+.br
+\fB[-tf\fP spec (\fItransform result network\fP)\fB]\fP
+.br
+\fB[-table-tf\fP spec (\fItransform input table before processing\fP)\fB]\fP
+.br
+\fB[-n\fP mode (\fInormalize input\fP)\fB]\fP
+.br
+\fB[--zero-as-na\fP (\fItreat zeroes as missing data\fP)\fB]\fP
+.br
+\fB[--sparse\fP (\fIdo not store zero values\fP)\fB]\fP
+.br
+\fB[-write-data\fP <fname> (\fIwrite data to file\fP)\fB]\fP
+.br
+\fB[-write-na\fP <fname> (\fIwrite NA matrix to file\fP)\fB]\fP
+.br
+\fB[--job-info\fP (\fIprint index ranges for this job\fP)\fB]\fP
+.br
+\fB[--help\fP (\fIprint this help\fP)\fB]\fP
+.br
+\fB[-h\fP (\fIprint this help\fP)\fB]\fP
+.br
+\fB[--version\fP (\fIprint version information\fP)\fB]\fP
+.SH DESCRIPTION
+
+\fBmcxarray\fP can either read a flat file containing array data (\fB-data\fP)
+or a matrix file satisfying the mcl input format (\fB-imx\fP)\&. In the
+former case it will by default work with the rows as the data vectors\&. In
+the latter case it will by default work with the columns as the data
+vectors (note that mcl matrices are presented as a listing of columns)\&.
+This can be changed for both using the
+\fB--transpose-data\fP option\&.
+
+The input data may contain missing data in the form of empty columns,
+NA values (not available/applicable), or NaN values (not a number)\&.
+The program keeps track of these, and when computing the correlation
+between two rows or columns ignores all positions where any one of
+the two has missing data\&.
+.SH OPTIONS
+
+.ZI 2m "\fB-data\fP fname (\fIinput data file\fP)"
+\&
+.br
+Specify the data file containing the expression values\&.
+It should be tab-separated\&.
+.in -2m
+
+.ZI 2m "\fB-imx\fP fname (\fIinput matrix file\fP)"
+\&
+.br
+The expression values are read from a file in mcl matrix format\&.
+.in -2m
+
+.ZI 2m "\fB--pearson\fP (\fIuse Pearson correlation (default)\fP)"
+\&
+'in -2m
+.ZI 2m "\fB--spearman\fP (\fIuse Spearman rank correlation\fP)"
+\&
+'in -2m
+.ZI 2m "\fB--cosine\fP (\fIuse cosine\fP)"
+\&
+'in -2m
+.ZI 2m "\fB--slow-cosine\fP (\fIuse cosine(0\&.5 alpha) (similarity)\fP)"
+\&
+'in -2m
+.ZI 2m "\fB--dot\fP (\fIuse the dot product\fP)"
+\&
+'in -2m
+'in +2m
+\&
+.br
+All these measures express the level of similarity or correlation
+between two vectors\&.
+Note that the dot product is not normalised and should only be used with
+very good reason\&. A few more similarity measures are provided by
+the fingerprint option \fB-fp\fP described below\&.
+.in -2m
+
+.ZI 2m "\fB-fp\fP <mode> (\fIspecify fingerprint measure\fP)"
+\&
+.br
+Fingerprints are used to define an entity in terms of it having
+or not having certain traits\&. This means that a fingerprint can be
+represented by a boolean vector, and a set of fingerprints can be represented
+by an array of such vectors\&. In the presence of many traits and entities the dimensions
+of such a matrix can grow large\&. The sparse storage employed by MCL-edge is
+ideally suited to this, and mcxarray is ideally suited to the computation
+of all pairwise comparisons between such fingerprints\&.
+Currently mcxarray supports five different types of fingerprint, described below\&.
+Given two fingerprints, the number of traits unique to the first is denoted by \fIa\fP,
+the number unique to the second is denoted by \fIb\fP, and the number that they
+have in common is denoted by \fIc\fP\&.
+
+.ZI 2m "hamming"
+\&
+.br
+The Hamming distance, defined as \fIa\fP+\fIb\fP\&.
+.in -2m
+
+.ZI 2m "tanimoto"
+\&
+.br
+The Tanimoto similarity measure, \fIc\fP/(\fIa\fP+\fIb\fP+\fIc\fP)\&.
+.in -2m
+
+.ZI 2m "cosine"
+\&
+.br
+The cosine similarity measure, \fIc\fP/sqrt((\fIa\fP+\fIc\fP)*(\fIb\fP+\fIc\fP))\&.
+.in -2m
+
+.ZI 2m "meet"
+\&
+.br
+Simply the number of shared traits, identical to \fIc\fP\&.
+.in -2m
+
+.ZI 2m "cover"
+\&
+.br
+A normalised and non-symmetric similarity measure, representing the fraction
+of traits shared relative to the number of traits by a single entity\&.
+This gives the value \fIc\fP/(\fIa\fP+\fIc\fP) in one direction, and the value
+\fIc\fP/(\fIb\fP+\fIc\fP) in the other\&.
+.in -2m
+.in -2m
+
+.ZI 2m "\fB--sine\fP (\fIuse sine (note: a metric distance)\fP)"
+\&
+'in -2m
+.ZI 2m "\fB--slow-sine\fP (\fIuse sine(0\&.5 alpha) (note: a metric distance)\fP)"
+\&
+'in -2m
+.ZI 2m "\fB--angle\fP (\fIuse angle between vectors (note: a metric distance)\fP)"
+\&
+'in -2m
+.ZI 2m "\fB--acute-angle\fP (\fIuse acute angle between vectors\fP)"
+\&
+'in -2m
+.ZI 2m "\fB--angle-norm\fP (\fIuse normalised angle between vectors (by pi)\fP)"
+\&
+'in -2m
+.ZI 2m "\fB--acute-angle-norm\fP (\fIuse normalised acute angle between vectors (by pi/2)\fP)"
+\&
+'in -2m
+.ZI 2m "\fB--euclid\fP (\fIuse Euclidean distance between vectors\fP)"
+\&
+'in -2m
+.ZI 2m "\fB--max\fP (\fIuse L-oo, aka Chebyshev distance\fP)"
+\&
+'in -2m
+.ZI 2m "\fB--taxi\fP (\fIuse L-1, aka taxi, aka city-block, aka Manhattan distance\fP)"
+\&
+'in -2m
+.ZI 2m "\fB-minkowski\fP <num> (\fIuse Minkowski distance with power <num>\fP)"
+\&
+'in -2m
+'in +2m
+\&
+.br
+All these measures express the level of dissimilarity or distance
+between two vectors\&.
+.in -2m
+
+.ZI 2m "\fB-skipr\fP <num> (\fIskip <num> data rows\fP)"
+\&
+.br
+Skip the first \fI<num>\fP data rows\&.
+.in -2m
+
+.ZI 2m "\fB-skipc\fP <num> (\fIskip <num> data columns\fP)"
+\&
+.br
+Ignore the first \fI<num>\fP data columns\&.
+.in -2m
+
+.ZI 2m "\fB-l\fP <num> (\fItake labels from column <num>\fP)"
+\&
+.br
+Specifies to construct a tab of labels from this data column\&.
+The tab can be written to file using \fB-write-tab\fP\ \&\fIfname\fP\&.
+.in -2m
+
+.ZI 2m "\fB-write-tab\fP <fname> (\fIwrite row labels to file\fP)"
+\&
+.br
+Write a tab file\&. In the simple case where the labels are in the first
+data column it is sufficient to issue \fB-skipc\fP\ \&\fB1\fP\&.
+If more data columns need to be skipped one must explicitly specify
+the data column to take labels from with \fB-l\fP\ \&\fIl\fP\&.
+.in -2m
+
+.ZI 2m "\fB-t\fP <int> (\fIuse <int> threads\fP)"
+\&
+'in -2m
+.ZI 2m "\fB-J\fP <intJ> (\fIa total of <intJ> jobs are used\fP)"
+\&
+'in -2m
+.ZI 2m "\fB-j\fP <intj> (\fIthis job has index <intj>\fP)"
+\&
+'in -2m
+'in +2m
+\&
+.br
+Computing all pairwise correlations is time-intensive for large input\&.
+If you have multiple CPUs available consider using as
+many threads\&. Additionally it is possible to spread the computation over
+multiple jobs/machines\&.
+These three options are described in the \fBclmprotocols\fP manual page\&.
+The following set of options, if given to as many commands, defines three jobs, each running four threads\&.
+
+.di ZV
+.in 0
+.nf \fC
+-t 4 -J 3 -j 0 -o out\&.0
+-t 4 -J 3 -j 1 -o out\&.1
+-t 4 -J 3 -j 2 -o out\&.2
+.fi \fR
+.in
+.di
+.ne \n(dnu
+.nf \fC
+.ZV
+.fi \fR
+
+The output can then be collected with
+
+.di ZV
+.in 0
+.nf \fC
+mcx collect --add-matrix -o out\&.all out\&.[0-2]
+.fi \fR
+.in
+.di
+.ne \n(dnu
+.nf \fC
+.ZV
+.fi \fR
+
+.in -2m
+
+.ZI 2m "\fB--job-info\fP (\fIprint index ranges for this job\fP)"
+\&
+'in -2m
+.ZI 2m "\fB-start\fP <int> (\fIstart at column <int> inclusive\fP)"
+\&
+'in -2m
+.ZI 2m "\fB-end\fP <int> (\fIend at column <int> EXclusive\fP)"
+\&
+'in -2m
+'in +2m
+\&
+.br
+\fB--job-info\fP can be used to list the set of column
+ranges to be processed by the job as a result of the command
+line options \fB-t\fP, \fB-J\fP, and \fB-j\fP\&.
+If a job has failed, this option can be used to manually
+split those ranges into finer chunks, each to be processed
+as a new sub-job specified with \fB-start\fP and \fB-end\fP\&.
+With the latter two options, it is impossible to use
+parallelization of any kind
+(i\&.e\&. any of the \fB-t\fP, \fB-J\fP, and \fB-j\fP options)\&.
+.in -2m
+
+.ZI 2m "\fB-o\fP fname (\fIoutput file fname\fP)"
+\&
+.br
+Output file name\&.
+.in -2m
+
+.ZI 2m "\fB--text-table\fP (\fIwrite output in full text table format\fP)"
+\&
+.br
+The output will be written in tabular format rather than native \fBmcl-edge\fP format\&.
+.in -2m
+
+.ZI 2m "\fB-digits\fP <num> (\fIoutput precision\fP)"
+\&
+.br
+Specify the precision to use in native interchange format\&.
+.in -2m
+
+.ZI 2m "\fB--write-binary\fP (\fIwrite output in binary format\fP)"
+\&
+.br
+Write output matrices in native binary format\&.
+.in -2m
+
+.ZI 2m "\fB-co\fP num (\fI(absolute) cutoff for output values\fP)"
+\&
+'in -2m
+'in +2m
+\&
+.br
+Output values of magnitude smaller than \fInum\fP are removed (set to zero)\&.
+Thus, negative values are removed only if their positive counterpart
+is smaller than \fInum\fP\&.
+.in -2m
+
+.ZI 2m "\fB--transpose-data\fP (\fIwork with the transpose\fP)"
+\&
+.br
+Work with the transpose of the input data matrix\&.
+.in -2m
+
+.ZI 2m "\fB--rank-transform\fP (\fIrank transform the data first\fP)"
+\&
+.br
+The data is rank-transformed prior to the computation of pairwise measures\&.
+.in -2m
+
+.ZI 2m "\fB-write-data\fP <fname> (\fIwrite data to file\fP)"
+\&
+.br
+This writes the data that was read in to file\&.
+If \fB--spearman\fP is specified the data will
+be rank-transformed\&.
+.in -2m
+
+.ZI 2m "\fB-write-na\fP <fname> (\fIwrite NA matrix to file\fP)"
+\&
+.br
+This writes all positions for which no data was found
+to file, in native mcl matrix format\&.
+.in -2m
+
+.ZI 2m "\fB--zero-as-na\fP (\fItreat zeroes as missing data\fP)"
+\&
+.br
+This option can be useful when reading data with the \fB-imx\fP option,
+for example after it has been loaded from label input by \fBmcxload\fP\&.
+An example case is the processing of a large number of probe rankings,
+where not all rankings contain all probe names\&. The rankings can be loaded
+using \fBmcxload\fP with a tab file containing all probe names\&.
+Probes that are present in the ranking are given a positive ordinal
+number reflecting the ranking, and probes that are absent are implicitly
+given the value zero\&. With the present option mcxarray will handle
+the correlation computation in a reasonable way\&.
+.in -2m
+
+.ZI 2m "\fB--sparse\fP (\fIdo not store zero data value\fP)"
+\&
+.br
+With this option internal calculations are performed on compressed
+data where zeroes are not stored\&. This can be useful when the input
+data is very large\&.
+.in -2m
+
+.ZI 2m "\fB-n\fP mode (\fInormalization mode\fP)"
+\&
+.br
+If \fImode\fP is set to \fBz\fP the data will be normalized
+based on z-score\&. No other modes are currently supported\&.
+.in -2m
+
+.ZI 2m "\fB-tf\fP spec (\fItransform result network\fP)"
+\&
+'in -2m
+.ZI 2m "\fB-table-tf\fP spec (\fItransform input table before processing\fP)"
+\&
+'in -2m
+'in +2m
+\&
+.br
+The transformation syntax is described in \fBmcxio(5)\fP\&.
+.in -2m
+
+.ZI 2m "\fB--help\fP (\fIprint help\fP)"
+\&
+'in -2m
+.ZI 2m "\fB-h\fP (\fIprint help\fP)"
+\&
+'in -2m
+'in +2m
+\&
+.br
+.in -2m
+
+.ZI 2m "\fB--version\fP (\fIprint version information\fP)"
+\&
+.br
+.in -2m
+.SH AUTHOR
+
+Stijn van Dongen\&.
+.SH SEE ALSO
+
+\fBmcl(1)\fP,
+\fBmclfaq(7)\fP,
+and \fBmclfamily(7)\fP for an overview of all the documentation
+and the utilities in the mcl family\&.

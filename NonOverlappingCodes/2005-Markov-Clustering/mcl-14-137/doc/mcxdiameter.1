@@ -1,0 +1,172 @@
+.\" Copyright (c) 2014 Stijn van Dongen
+.TH "mcx diameter" 1 "16 May 2014" "mcx diameter 14-137" "USER COMMANDS "
+.po 2m
+.de ZI
+.\" Zoem Indent/Itemize macro I.
+.br
+'in +\\$1
+.nr xa 0
+.nr xa -\\$1
+.nr xb \\$1
+.nr xb -\\w'\\$2'
+\h'|\\n(xau'\\$2\h'\\n(xbu'\\
+..
+.de ZJ
+.br
+.\" Zoem Indent/Itemize macro II.
+'in +\\$1
+'in +\\$2
+.nr xa 0
+.nr xa -\\$2
+.nr xa -\\w'\\$3'
+.nr xb \\$2
+\h'|\\n(xau'\\$3\h'\\n(xbu'\\
+..
+.if n .ll -2m
+.am SH
+.ie n .in 4m
+.el .in 8m
+..
+.SH NAME
+mcx diameter \- compute the diameter of a graph
+.SH SYNOPSIS
+
+\fBmcx\ \&diameter\fP [options]
+
+mcxdiameter is not in actual fact a program\&. This manual
+page documents the behaviour and options of the mcx program when
+invoked in mode \fIdiameter\fP\&. The options \fB-h\fP, \fB--apropos\fP,
+\fB--version\fP, \fB-set\fP, \fB--nop\fP, \fB-progress\fP\ \&\fI<num>\fP
+are accessible
+in all \fBmcx\fP modes\&. They are described
+in the \fBmcx\fP manual page\&.
+
+\fBmcx\ \&diameter\fP
+\fB[-abc\fP <fname> (\fIspecify label input\fP)\fB]\fP
+\fB[-imx\fP <fname> (\fIspecify matrix input\fP)\fB]\fP
+\fB[-o\fP <fname> (\fIoutput file name\fP)\fB]\fP
+\fB[-tab\fP <fname> (\fIuse tab file\fP)\fB]\fP
+\fB[-t\fP <int> (\fIuse <int> threads\fP)\fB]\fP
+\fB[-J\fP <intJ> (\fIa total of <intJ> jobs are used\fP)\fB]\fP
+\fB[-j\fP <intj> (\fIthis job has index <intj>\fP)\fB]\fP
+\fB[--summary\fP (\fIoutput diameter and average shortest path length\fP)\fB]\fP
+\fB[--list\fP (\fIlist eccentricity for all nodes\fP)\fB]\fP
+\fB[-h\fP (\fIprint synopsis, exit\fP)\fB]\fP
+\fB[--apropos\fP (\fIprint synopsis, exit\fP)\fB]\fP
+\fB[--version\fP (\fIprint version, exit\fP)\fB]\fP
+.SH DESCRIPTION
+
+\fBmcx\ \&diameter\fP computes the diameter of a graph\&. The input graph should be
+symmetric\&. Results will be unpredictable for directed graphs\&.
+For label input this is irrelevant as \fBmcx\ \&diameter\fP will create
+a symmetric graph from the input\&.
+
+The input graph/matrix, if specified with the \fB-imx\fP option, has to
+be in mcl matrix/graph format\&. You can use label input instead by using the
+\fB-abc\fP option\&.
+Refer to \fBmcxio(5)\fP for a description of these two input formats\&.
+By default \fBmcx\ \&diameter\fP reads from STDIN \fIand expects matrix format\fP\&.
+To specify label input from STDIN use \fB-abc\fP\ \&\fB-\fP\&.
+.SH OPTIONS
+
+.ZI 2m "\fB-abc\fP <fname> (\fIlabel input\fP)"
+\&
+.br
+The file name for input that is in label format\&.
+.in -2m
+
+.ZI 2m "\fB-imx\fP <fname> (\fIinput matrix\fP)"
+\&
+.br
+The file name for input that is in mcl native matrix format\&.
+.in -2m
+
+.ZI 2m "\fB-o\fP <fname> (\fIoutput file name\fP)"
+\&
+.br
+The name of the file to write output to\&.
+.in -2m
+
+.ZI 2m "\fB-tab\fP <fname> (\fIuse tab file\fP)"
+\&
+.br
+This option causes the output to be printed with the labels
+found in the tab file\&.
+With \fB-abc\fP this option will, additionally, construct
+a graph only on the labels found in the tab file\&.
+If this option is used in conjunction with \fB-imx\fP the
+tab domain and the matrix domain are required to be identical\&.
+.in -2m
+
+.ZI 2m "\fB-t\fP <int> (\fIuse <int> threads\fP)"
+\&
+'in -2m
+.ZI 2m "\fB-J\fP <intJ> (\fIa total of <intJ> jobs are used\fP)"
+\&
+'in -2m
+.ZI 2m "\fB-j\fP <intj> (\fIthis job has index <intj>\fP)"
+\&
+'in -2m
+'in +2m
+\&
+.br
+Computing the diameter of a graph is time-intensive
+for large graphs\&. If you have multiple CPUs available consider using as
+many threads\&. Additionally it is possible to spread the computation over
+multiple jobs/machines\&.
+These three options are described in the \fBclmprotocols\fP manual page\&.
+The following set of options, if given to as many commands, defines three jobs, each running four threads\&.
+
+.di ZV
+.in 0
+.nf \fC
+-t 4 -J 3 -j 0 -o out\&.0
+-t 4 -J 3 -j 1 -o out\&.1
+-t 4 -J 3 -j 2 -o out\&.2
+.fi \fR
+.in
+.di
+.ne \n(dnu
+.nf \fC
+.ZV
+.fi \fR
+
+The output can then be collected with
+
+.di ZV
+.in 0
+.nf \fC
+mcx collect --add-column -o out\&.all out\&.[0-2]
+.fi \fR
+.in
+.di
+.ne \n(dnu
+.nf \fC
+.ZV
+.fi \fR
+
+.in -2m
+
+.ZI 2m "\fB--list\fP (\fIlist eccentricity for all nodes\fP)"
+\&
+'in -2m
+.ZI 2m "\fB--summary\fP (\fIoutput diameter and average eccentricity\fP)"
+\&
+'in -2m
+'in +2m
+\&
+.br
+The default mode is \fB--list\fP, which results in output
+of the eccentricity of all nodes\&. The eccentricity of
+a node is the distance to any node that is the furthest
+away from it\&. The diameter of a graph is the maximum
+of the eccentricity taken over all nodes in a graph\&.
+In this mode \fBmcx\ \&diameter\fP will not output the diameter
+itself\&. Use \fB--summary\fP to output just the diameter
+and the average eccentricity\&.
+.in -2m
+.SH SEE ALSO
+
+\fBmcxio(5)\fP,
+and \fBmclfamily(7)\fP for an overview of all the documentation
+and the utilities in the mcl family\&.

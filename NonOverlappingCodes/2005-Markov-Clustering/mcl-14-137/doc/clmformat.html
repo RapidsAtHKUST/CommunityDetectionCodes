@@ -1,0 +1,674 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html>
+<!-- Copyright (c) 2014 Stijn van Dongen -->
+<head>
+<meta name="keywords" content="manual">
+<style type="text/css">
+/* START aephea.base.css */
+body
+{ text-align: justify;
+margin-left: 0%;
+margin-right: 0%;
+}
+a:link { text-decoration: none; }
+a:active { text-decoration: none; }
+a:visited { text-decoration: none; }
+a:link { color: #1111aa; }
+a:active { color: #1111aa; }
+a:visited { color: #111166; }
+a.local:link { color: #11aa11; }
+a.local:active { color: #11aa11; }
+a.local:visited { color: #116611; }
+a.intern:link { color: #1111aa; }
+a.intern:active { color: #1111aa; }
+a.intern:visited { color: #111166; }
+a.extern:link { color: #aa1111; }
+a.extern:active { color: #aa1111; }
+a.extern:visited { color: #661111; }
+a.quiet:link { color: black; }
+a.quiet:active { color: black; }
+a.quiet:visited { color: black; }
+div.verbatim
+{ font-family: monospace;
+margin-top: 1em;
+margin-bottom: 1em;
+font-size: 10pt;
+margin-left: 2em;
+white-space: pre;
+}
+div.indent
+{ margin-left: 8%;
+margin-right: 0%;
+}
+.right { text-align: right; }
+.left { text-align: left; }
+.nowrap { white-space: nowrap; }
+.item_leader
+{ position: relative;
+margin-left: 8%;
+}
+.item_compact { position: absolute; vertical-align: baseline; }
+.item_cascade { position: relative; }
+.item_leftalign { text-align: left; }
+.item_rightalign
+{ width: 2em;
+text-align: right;
+}
+.item_compact .item_rightalign
+{ position: absolute;
+width: 52em;
+right: -2em;
+text-align: right;
+}
+.item_text
+{ position: relative;
+margin-left: 3em;
+}
+.smallcaps { font-size: smaller; text-transform: uppercase }
+/* END aephea.base.css */
+body { font-family: "Garamond", "Gill Sans", "Verdana", sans-serif; }
+body
+{ text-align: justify;
+margin-left: 8%;
+margin-right: 8%;
+}
+</style>
+<title>The clmformat manual</title>
+</head>
+<body>
+<p style="text-align:right">
+16 May 2014&nbsp;&nbsp;&nbsp;
+<a class="local" href="clmformat.ps"><b>clmformat</b></a>
+14-137
+</p>
+<div class=" itemize " style="margin-top:1em; font-size:100%">
+<div class=" item_compact"><div class=" item_rightalign nowrap " style="right:-3em">2.</div></div>
+<div class=" item_text " style="margin-left:4em">
+<a class="intern" href="#synopsis">SYNOPSIS</a>
+</div>
+<div class=" item_compact"><div class=" item_rightalign nowrap " style="right:-3em">3.</div></div>
+<div class=" item_text " style="margin-left:4em">
+<a class="intern" href="#description">DESCRIPTION</a>
+</div>
+<div class=" item_compact"><div class=" item_rightalign nowrap " style="right:-3em">4.</div></div>
+<div class=" item_text " style="margin-left:4em">
+<a class="intern" href="#options">OPTIONS</a>
+</div>
+<div class=" item_compact"><div class=" item_rightalign nowrap " style="right:-3em">5.</div></div>
+<div class=" item_text " style="margin-left:4em">
+<a class="intern" href="#xpl">OUTPUT EXPLAINED</a>
+</div>
+<div class=" item_compact"><div class=" item_rightalign nowrap " style="right:-3em">6.</div></div>
+<div class=" item_text " style="margin-left:4em">
+<a class="intern" href="#author">AUTHOR</a>
+</div>
+<div class=" item_compact"><div class=" item_rightalign nowrap " style="right:-3em">7.</div></div>
+<div class=" item_text " style="margin-left:4em">
+<a class="intern" href="#references">REFERENCES</a>
+</div>
+<div class=" item_compact"><div class=" item_rightalign nowrap " style="right:-3em">8.</div></div>
+<div class=" item_text " style="margin-left:4em">
+<a class="intern" href="#seealso">SEE ALSO</a>
+</div>
+</div>
+
+<a name="name"></a>
+<h2>NAME</h2>
+<p style="margin-bottom:0" class="asd_par">
+clm format &mdash; display cluster results in readable form</p>
+<p style="margin-bottom:0" class="asd_par">
+(optionally with labels and/or cohesion and stickiness measures
+attached).
+</p>
+<p style="margin-bottom:0" class="asd_par">
+Unless used with the <b>-dump</b>&nbsp;<i>fname</i> or <b>--dump</b> option,
+<b>clm format</b> depends on the presence of the macro processor <b>zoem</b>, as
+described further below.
+</p>
+<p style="margin-bottom:0" class="asd_par">
+The <b>-icl</b>&nbsp;<i>fname</i> input clustering option is always required. The
+<b>-imx</b>&nbsp;<i>fname</i> input matrix option is required in fancy mode. The tab
+file option <b>-tab</b>&nbsp;<i>fname</i> is needed if you want label information in
+the output rather than mcl identifiers.
+</p>
+
+<a name="synopsis"></a>
+<h2>SYNOPSIS</h2>
+<p style="margin-bottom:0" class="asd_par">
+<b>clm format</b> has two different modes of output: <i>dump</i> and <i>fancy</i>.
+If neither is specified, <i>fancy</i> is used. In this mode, <b>clm format</b>
+generates a large arrary of performance measures related to nodes and
+clusters in both interlinked html output and plain text files. The files
+will be contained in an output directory that is newly created if not yet
+existing. In fancy mode the <b>-imx</b> option is required and the macro
+processor <b>zoem</b> must be available (<a class="extern" href="http://micans.org/zoem">http://micans.org/zoem</a>).
+</p>
+<p style="margin-bottom:0" class="asd_par">
+If <i>dump</i> is specified (see below how to do this) <b>clm format</b> just
+generates a dump file where each line
+contains a cluster in the form of tab-separated indices, or tab-separated
+labels in case the <b>-tab</b> option is used. This dump is easy to parse
+with a simple or even quick-and-dirty script.
+You can include some very simple performance measures in this dump file
+by supplying <b>--dump-measures</b>. Use
+<b>-dump</b>&nbsp;<i>fname</i> to specify the name of the file to dump to, rather
+than having <b>clm format</b> construct a file name by itself.
+</p>
+<p style="margin-bottom:0" class="asd_par">
+<b>clm format</b> can combine the both modes by using either <b>--dump</b> or
+<b>-dump</b>&nbsp;<i>fname</i> <i>and</i> <b>--fancy</b>. In this case the dump file
+will be created in the output directory that is used by <i>fancy</i> mode.
+</p>
+<p style="margin-bottom:0" class="asd_par"><b>clm format</b></p>
+<p style="margin-bottom:0" class="asd_par">
+<a class="intern" href="#opt-icl"><b>-icl</b> fname (<i>input cluster file</i>)</a>
+<a class="intern" href="#opt-imx"><b>-imx</b> fname (<i>input matrix/graph file</i>)</a>
+<a class="intern" href="#opt-tf"><b>[-tf</b> spec (<i>apply tf-spec to input matrix</i>)<b>]</b></a>
+<a class="intern" href="#opt-pi"><b>[-pi</b> num (<i>apply pre-inflation to matrix</i>)<b>]</b></a>
+<a class="intern" href="#opt-tab"><b>[-tab</b> fname (<i>read tab file</i>)<b>]</b></a>
+<a class="intern" href="#opt--lazy-tab"><b>[--lazy-tab</b> (<i>allow mismatched tab-file</i>)<b>]</b></a>
+<a class="intern" href="#opt-lump-count"><b>[-lump-count</b> n (<i>node threshold</i>)<b>]</b></a>
+<a class="intern" href="#opt--dump"><b>[--dump</b> (<i>write dump to dump.&lt;icl-name&gt;</i>)<b>]</b></a>
+<a class="intern" href="#opt-dump"><b>[-dump</b> fname (<i>write dump to file</i>)<b>]</b></a>
+<a class="intern" href="#opt--dump-pairs"><b>[--dump-pairs</b> (<i>write cluster/node pair per line</i>)<b>]</b></a>
+<a class="intern" href="#opt--dump-measures"><b>[--dump-measures</b> (<i>write simple performance measures</i>)<b>]</b></a>
+<a class="intern" href="#opt-dump-node-sep"><b>[-dump-node-sep</b> str (<i>separate entries with str</i>)<b>]</b></a>
+<a class="intern" href="#opt--fancy"><b>[--fancy</b> (<i>spawn information blizzard</i>)<b>]</b></a>
+<a class="intern" href="#opt-dir"><b>[-dir</b> dirname (<i>write results to directory</i>)<b>]</b></a>
+<a class="intern" href="#opt-infix"><b>[-infix</b> str (<i>use after base name/directory</i>)<b>]</b></a>
+<a class="intern" href="#opt-nsm"><b>[-nsm</b> fname (<i>output node stickiness file</i>)<b>]</b></a>
+<a class="intern" href="#opt-ccm"><b>[-ccm</b> fname (<i>output cluster cohesion file</i>)<b>]</b></a>
+<a class="intern" href="#opt--adapt"><b>[--adapt</b> (<i>allow domain mismatch</i>)<b>]</b></a>
+<a class="intern" href="#opt--subgraph"><b>[--subgraph</b> (<i>take subgraph with --adapt</i>)<b>]</b></a>
+<a class="intern" href="#opt-zmm"><b>[-zmm</b> fname (<i>assume macro definitions are in fname</i>)<b>]</b></a>
+<a class="intern" href="#opt-fmt"><b>[-fmt</b> fname (<i>write to encoding file fname</i>)<b>]</b></a>
+<a class="intern" href="#opt-h"><b>[-h</b> (<i>print synopsis, exit</i>)<b>]</b></a>
+<a class="intern" href="#opt--apropos"><b>[--apropos</b> (<i>print synopsis, exit</i>)<b>]</b></a>
+<a class="intern" href="#opt--version"><b>[--version</b> (<i>print version, exit</i>)<b>]</b></a>
+</p>
+<p style="margin-bottom:0" class="asd_par">Consult the option descriptions and the introduction above for
+interdependencies of options.</p>
+<p style="margin-bottom:0" class="asd_par">
+<b>clm format</b> generates in fancy mode a logical description of the
+to-be-formatted content in a very small vocabulary of format-specific
+zoem macros. The appearance of the output can be easily changed by adapting
+a zoem macro definition file (also output by <b>clm format</b>) that is used by the
+zoem interpreter to interpret the logical elements.
+</p>
+<p style="margin-bottom:0" class="asd_par">
+The output format is apt to change over subsequent releases, as a result of
+user feedback. Such changes will most likely be confined to the zoem macro
+definition file.
+</p>
+<p style="margin-bottom:0" class="asd_par">
+The OUTPUT EXPLAINED section further below is likely to be of interest.
+</p>
+
+<a name="description"></a>
+<h2>DESCRIPTION</h2>
+<p style="margin-bottom:0" class="asd_par">
+The primary function of <b>clm format</b> is to display cluster results and
+associated confidence measures in a readable form, by listing clusters in
+terms of the labels associated with the indices that are used in the mcl
+matrix. The labels must be stored in a so called <i>tab</i> file; see the
+<a class="intern" href="#opt-tab"><b>-tab</b></a> option for more information.
+</p>
+<p style="margin-bottom:0"><b>NOTE</b><br>
+<b>clm format</b> output is in the form of <i>zoem</i> macros.
+You need to have zoem installed in your system if you want <b>clm format</b>
+to be of use. Zoem will not be necessary if you are using
+the <b>-dump</b> option.
+</p>
+<p style="margin-bottom:0" class="asd_par">
+The <a class="intern" href="#opt-imx"><b>-imx</b>&nbsp;<i>mx</i></a> option is required
+unless the <b>-dump</b> option is used. The latter option
+results in special behaviour described under the
+<a class="intern" href="#opt-dump"><b>-dump</b>&nbsp;<i>fname</i></a> entry.
+</p>
+<p style="margin-bottom:0" class="asd_par">
+Output is by default written in a directory that
+is newly created if it does not yet exist (normally several files
+will be created, for which the directory acts as a natural container).
+It is possible to simply output to the current directory, for that you need
+to specify <b>-dir</b>&nbsp;<b>./</b>. If <b>-dir</b> is not specified, the output
+directory <tt>fmt.&lt;clname&gt;</tt> will be used, where <tt>&lt;clname&gt;</tt> is the argument
+to the <b>-cl</b> option. In the output directory, <b>clm format</b> will
+normally write two files. One contains zoem macros encoding formatted output
+(the encoding file), and the second (the definition file) contains zoem
+macro definitions which are used by the former.
+</p>
+<p style="margin-bottom:0" class="asd_par">
+The encoding file is by default called <tt>fmt.azm</tt>
+(cf. the <a class="intern" href="#opt-fmt"><b>-fmt</b>&nbsp;<i>fname</i></a> option).
+It contains <i>zoem</i> macros. It imports the macro definition file
+called <tt>clmformat.zmm</tt>
+that is normally also written by <b>clm format</b>. Another macro definition
+file can be specified by using the <a class="intern" href="#opt-zmm"><b>-zmm</b>&nbsp;<i>&lt;defsname&gt;</i></a>
+option. In this case <b>clm format</b> will refrain from writing the definition
+file and replace mentions of <tt>clmformat.zmm</tt> in the encoding file
+by <tt>&lt;defsname&gt;</tt>.
+</p>
+<p style="margin-bottom:0" class="asd_par">
+The encoding file needs to be processed by issuing one of the following
+commands from within the directory where the file is located.
+</p>
+<div class="verbatim">   zoem -i fmt -d html
+   zoem -i fmt -d txt</div>
+<p style="margin-top:0em; margin-bottom:0em">
+The first will result in HTML formatted output, the second in
+plain text format. Obviously, you need to have installed zoem
+(e.g. from <a class="extern" href="http://micans.org/zoem/src/">http://micans.org/zoem/src/</a>) for this to work.
+</p>
+<p style="margin-bottom:0" class="asd_par">
+For each cluster a paragraph is output. First comes a listing of other
+clusters (in order of relevance, possibly empty) for which a significant
+amount of edges exists between the other and the current cluster. Second
+comes a listing of the nodes in the current cluster. For each node a small
+sublist is made (in order of relevance, possibly empty) of other clusters in
+which the node has neighbours and for which the total sum of corresponding
+edge weights is significant.
+Several quantities are output for each node/cluster pair that is
+deemed relevant. These are explained in the section OUTPUT EXPLAINED.
+</p>
+<p style="margin-bottom:0" class="asd_par">
+Clusters will by default be output to file until the total node count has
+exceeded a threshold (refer to the <a class="intern" href="#opt-lump-count"><b>-lump-count</b>
+option</a>).
+</p>
+<p style="margin-bottom:0" class="asd_par">
+<b>clm format</b> also shows how well each node fits in the cluster it is in and
+how cohesive each cluster is, using simple but effective measures
+(described in section OUTPUT EXPLAINED).
+This enables you to compare the quality of the clusters in a clustering
+relative to each other, and may help in identifying both interesting areas
+and areas for which cluster structure is hard to find or perhaps absent.
+</p>
+
+<a name="options"></a>
+<h2>OPTIONS</h2>
+<div class=" itemize " style="margin-top:1em; font-size:100%">
+<div class=" item_cascade"><div class=" item_leftalign nowrap " ><a name="opt-icl"></a><b>-icl</b> fname (<i>input cluster file</i>)</div></div>
+<div class=" item_text " style="margin-left:2em">
+<p style="margin-top:0em; margin-bottom:0em">
+Name of the clustering file.
+</p>
+</div>
+<div style="margin-top:0em">&nbsp;</div><div class=" item_cascade"><div class=" item_leftalign nowrap " ><a name="opt-imx"></a><b>-imx</b> fname (<i>input matrix/graph file</i>)</div></div>
+<div class=" item_text " style="margin-left:2em">
+<p style="margin-top:0em; margin-bottom:0em">
+Name of the graph/matrix file.
+</p>
+</div>
+<div style="margin-top:0em">&nbsp;</div><div class=" item_cascade"><div class=" item_leftalign nowrap " ><a name="opt-tf"></a><b>-tf</b> spec (<i>apply tf-spec to input matrix</i>)</div></div>
+<div class=" item_text " style="margin-left:2em">
+<p style="margin-top:0em; margin-bottom:0em">
+Transform the input matrix values according
+to the syntax described in <a class="local sibling" href="mcxio.html">mcxio</a>.
+</p>
+</div>
+<div style="margin-top:0em">&nbsp;</div><div class=" item_cascade"><div class=" item_leftalign nowrap " ><a name="opt-tab"></a><b>-tab</b> fname (<i>read tab file</i>)</div></div>
+<div class=" item_text " style="margin-left:2em">
+<p style="margin-top:0em; margin-bottom:0em">
+The file <tt>fname</tt> should be in <i>tab format</i>. Refer
+to <a class="local sibling" href="mcxio.html">mcxio</a>.
+</p>
+</div>
+<div style="margin-top:0em">&nbsp;</div><div class=" item_cascade"><div class=" item_leftalign nowrap " ><a name="opt--lazy-tab"></a><b>--lazy-tab</b> (<i>allow mismatched tab-file</i>)</div></div>
+<div class=" item_text " style="margin-left:2em">
+<p style="margin-top:0em; margin-bottom:0em">
+Allow missing and spurious entries in the tab file.
+</p>
+</div>
+<div style="margin-top:0em">&nbsp;</div><div class=" item_cascade"><div class=" item_leftalign nowrap " ><a name="opt-dump"></a><b>-dump</b> fname (<i>write dump to file</i>)</div></div>
+<div class=" item_text " style="margin-left:2em">
+<p style="margin-top:0em; margin-bottom:0em">
+Clusters are written to file. For each cluster a single line is written
+containing all indices of all nodes in that cluster. The indices are
+separated by tabs. If a tab file is specified, the indices are replaced by
+the corresponding tab file entry.
+</p>
+</div>
+<div style="margin-top:0em">&nbsp;</div><div class=" item_cascade"><div class=" item_leftalign nowrap " ><a name="opt--dump"></a><b>--dump</b> (<i>write dump to file</i>)</div></div>
+<div class=" item_text " style="margin-left:2em">
+<p style="margin-top:0em; margin-bottom:0em">
+As <b>-dump</b>&nbsp;<i>fname</i> except that <b>clm format</b> writes to the file
+named <tt>dump.&lt;icl-name&gt;</tt> where <tt>&lt;icl-name&gt;</tt> is the argument to
+the <b>-icl</b> option.
+</p>
+</div>
+<div style="margin-top:0em">&nbsp;</div><div class=" item_cascade"><div class=" item_leftalign nowrap " ><a name="opt-infix"></a><b>-infix</b> str (<i>incorporate in base name</i>)</div></div>
+<div class=" item_text " style="margin-left:2em">
+<p style="margin-top:0em; margin-bottom:0em">
+<i>str</i> is included in the output file names.
+This can be used to store the results of different <b>clm format</b> runs
+(e.g. with differing <b>-tf</b> arguments) in the same directory.
+</p>
+</div>
+<div style="margin-top:0em">&nbsp;</div><div class=" item_cascade"><div class=" item_leftalign nowrap " ><a name="opt--fancy"></a><b>--fancy</b> (<i>force fancy mode</i>)</div></div>
+<div class=" item_text " style="margin-left:2em">
+<p style="margin-top:0em; margin-bottom:0em">
+This enforces fancy mode if either of <b>-dump</b> or <b>--dump</b>
+is given. The dump file will be created in the output directory.
+</p>
+</div>
+<div style="margin-top:0em">&nbsp;</div><div class=" item_cascade"><div class=" item_leftalign nowrap " ><a name="opt--dump-pairs"></a><b>--dump-pairs</b> (<i>write cluster/node pair per line</i>)</div></div>
+<div class=" item_text " style="margin-left:2em">
+<p style="margin-top:0em; margin-bottom:0em">
+Rather than writing a single cluster on each line, write a single
+cluster index/node (either tab entry or index) pair per line.
+Works in conjunction with the
+<a class="intern" href="#opt-tab"><b>-tab</b></a> and <a class="intern" href="#opt-imx"><b>-imx</b></a> options.
+</p>
+</div>
+<div style="margin-top:0em">&nbsp;</div><div class=" item_cascade"><div class=" item_leftalign nowrap " ><a name="opt--dump-measures"></a><b>--dump-measures</b> (<i>write simple performance measures</i>)</div></div>
+<div class=" item_text " style="margin-left:2em">
+<p style="margin-top:0em; margin-bottom:0em">
+If an input matrix is specified with <b>-imx</b>&nbsp;<i>fname</i>, three
+measures of efficiency are prepended, respectively the simple projection
+score, efficiency or coverage, and the max-efficiency or max-coverage.
+</p>
+</div>
+<div style="margin-top:0em">&nbsp;</div><div class=" item_cascade"><div class=" item_leftalign nowrap " ><a name="opt-dump-node-sep"></a><b>-dump-node-sep</b> str (<i>separate entries with str</i>)</div></div>
+<div class=" item_text " style="margin-left:2em">
+<p style="margin-top:0em; margin-bottom:0em">
+Separate entries in the dump file with <b>str</b>.
+</p>
+</div>
+<div style="margin-top:0em">&nbsp;</div><div class=" item_cascade"><div class=" item_leftalign nowrap " ><a name="opt-pi"></a><b>-pi</b> num (<i>apply pre-inflation to matrix</i>)</div></div>
+<div class=" item_text " style="margin-left:2em">
+<p style="margin-top:0em; margin-bottom:0em">
+Apply pre-inflation to the matrix specified with the <b>-imx</b> option.
+This will cause the efficiency scores to place a higher reward on
+high-weight edges being covered by a clustering (assuming that
+<i>num</i> is larger than one).
+</p>
+<p style="margin-bottom:0" class="asd_par">
+This option is also useful when <b>mcl</b> itself was instructed to use
+pre-inflation when clustering a graph.
+</p>
+</div>
+<div style="margin-top:0em">&nbsp;</div><div class=" item_cascade"><div class=" item_leftalign nowrap " ><a name="opt-lump-count"></a><b>-lump-count</b> n (<i>node threshold</i>)</div></div>
+<div class=" item_text " style="margin-left:2em">
+<p style="margin-top:0em; margin-bottom:0em">
+The zoem file is created such that during zoem processing clusters are
+formatted and output within a single file until the node threshold has been
+exceeded. A new file is then opened and the procedure repeats itself.
+</p>
+</div>
+<div style="margin-top:0em">&nbsp;</div><div class=" item_cascade"><div class=" item_leftalign nowrap " ><a name="opt--adapt"></a><b>--adapt</b> (<i>allow domain mismatch</i>)</div></div>
+<div class=" item_text " style="margin-left:2em">
+<p style="margin-top:0em; margin-bottom:0em">
+Allow the cluster domain to differ from the graph domain. Presumably
+the clustering is a clustering of a subgraph. The cohesion and stickiness
+measures will pertain to the relevant part of the graph only.
+</p>
+</div>
+<div style="margin-top:0em">&nbsp;</div><div class=" item_cascade"><div class=" item_leftalign nowrap " ><a name="opt--subgraph"></a><b>--subgraph</b> (<i>use restriction</i>)</div></div>
+<div class=" item_text " style="margin-left:2em">
+<p style="margin-top:0em; margin-bottom:0em">
+If the cluster domain is a subset of the graph domain, the cohesion and
+stickiness measures will by default still pertain to the entire graph. By
+setting this option, the measures will pertain to the subgraph induced by
+the cluster domain.
+</p>
+</div>
+<div style="margin-top:0em">&nbsp;</div><div class=" item_cascade"><div class=" item_leftalign nowrap " ><a name="opt-dir"></a><b>-dir</b> dirname (<i>write results to directory</i>)</div></div>
+<div class=" item_text " style="margin-left:2em">
+<p style="margin-top:0em; margin-bottom:0em">
+Use <b>dirname</b> as output directory. It will be created
+if it does not exist already.
+</p>
+</div>
+<div style="margin-top:0em">&nbsp;</div><div class=" item_cascade"><div class=" item_leftalign nowrap " ><a name="opt-fmt"></a><b>-fmt</b> fname (<i>write to encoding file fname</i>)</div></div>
+<div class=" item_text " style="margin-left:2em">
+<p style="margin-top:0em; margin-bottom:0em">
+Write to encoding file <b>fname</b> rather than the default <tt>fmt.azm</tt>.
+It is best to supply fname with the standard zoem suffix <tt>.azm</tt>. Zoem
+will process file of any name, but those lacking the <tt>.azm</tt> suffix must be
+specified using the zoem <b>-I</b>&nbsp;<i>fname</i> option.
+</p>
+</div>
+<div style="margin-top:0em">&nbsp;</div><div class=" item_cascade"><div class=" item_leftalign nowrap " ><a name="opt-zmm"></a><b>-zmm</b> defsname (<i>assume macro definitions are in fname</i>)</div></div>
+<div class=" item_text " style="margin-left:2em">
+<p style="margin-top:0em; margin-bottom:0em">
+If this option is used, <b>clm format</b> will not output the definition file,
+and mentions of the definition file in the encoding file will use
+the file name <tt>defsname</tt>. This option assumes that a valid definition
+file by the name of <tt>defsname</tt> does exist.
+</p>
+</div>
+<div style="margin-top:0em">&nbsp;</div><div class=" item_cascade"><div class=" item_leftalign nowrap " ><a name="opt-nsm"></a><b>-nsm</b> fname (<i>output node stickiness file</i>)</div></div>
+<div class=" item_text " style="margin-left:2em">
+<p style="margin-top:0em; margin-bottom:0em">
+This option specifies the name in which to store (optionally) the <b>node
+stickiness matrix</b>. It has the following structure. The columns range over
+all elements in the graph as specified by the <b>-imx</b> option.
+The rows range over the clusters as specified by the <b>-icl</b> option.
+The entries contain the projection value of that particular
+node onto that particular clusters, i.e. the sum of the weights of
+all arcs going out from the node to some node in that cluster, written
+as a fraction relative to the sum of weights of all outgoing arcs.
+</p>
+</div>
+<div style="margin-top:0em">&nbsp;</div><div class=" item_cascade"><div class=" item_leftalign nowrap " ><a name="opt-ccm"></a><b>-ccm</b> fname (<i>output cluster cohesion file</i>)</div></div>
+<div class=" item_text " style="margin-left:2em">
+<p style="margin-top:0em; margin-bottom:0em">
+This option specifies the name of the file in which to store (optionally)
+the <b>cluster cohesion matrix</b>. It has the following structure.
+Both columns and rows range over all clusters in the clustering as specified
+by the <b>-icl</b> option. An entry specifies the projection
+of one cluster onto another cluster, which is simply the average
+of the projection value onto the second cluster of all nodes in the
+first cluster.
+</p>
+</div>
+</div>
+
+<a name="xpl"></a>
+<h2>OUTPUT EXPLAINED</h2>
+<p style="margin-bottom:0" class="asd_par">
+What follows is an explanation of the output provided by the
+standard zoem macros. The output comes in a pretty terse number-packed
+format. The decision was made not to include headers and captions
+in the output in order to keep it readable.
+You might want to print out the following annotated examples.
+At the same side of the equation, the following is probably tough
+reading unless you have an actual example of clmformatted output at hand.
+</p>
+<p style="margin-bottom:0" class="asd_par">
+Below mention is made of the projection value for a node/cluster pair.
+This is simply the total amount of edge weights for that node
+in that cluster (corresponding to neighbours of the node in the
+cluster) relative to the overall amount of edge weights for that node
+(corresponding to all its neighbours).
+The coverage measure (refered to as <b>cov</b>)
+is also used. This is similar to the projection
+value, except that a) the coverage measure rewards the inclusion
+of large edge weights (and penalizes the inclusion of insignificant
+edge weights) and b) rewards node/cluster pairs for which the neighbour set
+of the node is very similar to the cluster.
+The maximum coverage measure (refered to as <b>maxcov</b>) is similar
+to the normal coverage measure except that it rewards inclusion
+of large edge weights even more.
+The cov and maxcov performance measures have several nice continuity and
+monotonicity properties and are described in <a class="intern" href="#pcfgcmce">[1]</a>.
+</p>
+<p style="margin-bottom:0"><b>Example cluster header</b><br></p>
+<div class="verbatim">Cluster 0 sz 15 self 0.82 cov 0.43-0.26
+   10: 0.11
+   18: 0.05
+   12: 0.02</div>
+<p style="margin-bottom:0"><b>explanation</b><br></p>
+<div class="verbatim">Cluster 0 sz 15 self 0.82 cov 0.43-0.26
+        |    |       |           | |
+        clid count   proj      cov covmax
+
+   10: 0.11
+    |  |
+clidx1 projx1
+
+   18: 0.05
+    |  |
+clidx2 projx2
+
+clid    Numeric cluster identifier (arbitrarily) assigned by MCL.
+count   The size of cluster clid.
+proj    Projection value for cluster clid [d].
+cov     Coverage measure for cluster clid [d].
+maxcov  Max-coverage measure for cluster clid [d].
+clidx1  Index of other cluster sharing relatively many edges.
+projx1  Projection value for the clid/clidx1 pair of clusters [e].
+clidx2  :
+projx2  : as clidx1 and projx1</div>
+<p style="margin-bottom:0"><b>Example inner node</b><br>
+An inner node is listed under a cluster, and it is simply a member of that
+cluster. The name is as opposed to 'outer node', described below.
+</p>
+<div class="verbatim">[foo bar zut]
+    21     7-5      0.73 0.420-0.331  0.282-0.047  0.071-0.035 &lt;3.54&gt;
+      10   6/3      0.16 0.071-0.047  0.268-0.442 
+      12   4/2      0.11 0.071-0.035  0.296-0.515</div>
+<p style="margin-bottom:0"><b>explanation</b><br></p>
+<div class="verbatim">[label]
+    21     7-5      0.73 0.420-0.331  0.282-0.047  0.071-0.035 &lt;3.54&gt;
+     |     | |      |        | |          | |          | |     |
+    idx  nbi nbo    proj   cov covmax max_i min_i  max_o-min_o SUM
+
+      10   6/3      0.16 0.268-0.442  0.071-0.047
+       |   | |      |        | |          | |
+  clusid  sz nb     proj   cov covmax max_i min_i
+
+label   Optional; with -tab &lt;tabfile&gt; option.
+idx     Numeric (mcl) identifier.
+nbi     Count of the neighbours of node idx within its cluster.
+nbo     Count of the neighbours of node idx outside its cluster.
+proj    Projection value [a] of nbi edges.
+cov     Skewed projection [b], rewards inclusion of large edge weights.
+covmax  As cov above, rewarding large edge weights even more.
+max_i   Largest edge weight in the nbi set, normalized [c].
+min_i   Smallest edge weight in the nbi set [c].
+max_o   Largest edge weight outside the nbi set [c]
+min_o   Smallest edge weight outside the nbi set [c].
+SUM     The sum of all edges leaving node idx.
+
+clusid  Index of other cluster that is relevant for node idx.
+sz      Size of that cluster.
+nb      Count of neighbours of node idx in cluster clusid.
+proj    Projection value of edges from node idx to cluster clusid.
+cov     Skewed projection of edges from node idx to cluster clusid.
+covmax  Maximally skewed projection, as above.
+max_o   Largest edge weight for node idx to cluster clusid [c].
+min_o   Smallest edge weight for  node idx to cluster clusid [c].</div>
+<p style="margin-bottom:0"><b>Example outer node</b><br>
+An outer node is listed under a cluster. The node is not part of that
+cluster, but seems to have substantial connections to that cluster.
+</p>
+<div class="verbatim">[zoo eek few]
+    29   18#2        2-5      0.65 0.883-0.815  0.436-0.218  0.073-0.055
+                      /4      0.27 0.070-0.109  0.073-0.055</div>
+<p style="margin-bottom:0"><b>explanation</b><br></p>
+<div class="verbatim">[label]
+    29   18#2        2-5      0.65 0.883-0.815  0.436-0.218  0.073-0.055
+    |    |  |        | |      |        | |          | |          | |
+    idx  cl sz     nbi nbo    proj   cov maxcov max_i min_i  max_o min_o
+         id
+                      /4      0.27 0.070-0.109  0.073-0.055  &lt;2.29&gt;
+                       |      |        | |          | |      |
+                       nb     proj   cov maxcov max_i min_i  SUM
+
+label   Optional; with -tab &lt;tabfile&gt; option.
+idx     Numeric (mcl) identifier
+clid    Index of the cluster that node idx belongs to
+sz      Size of the cluster that node idx belongs to
+proj    :
+cov     :  All these entries are the same as described above
+covmax  :  for inner nodes, pertaining to cluster clid,
+max_i   :  i.e. the native cluster for node idx
+min_i   :  (it is a member of that cluster).
+max_o   :
+min_o   :
+
+nb      The count of neighbours of node idx in the current cluster
+proj    Projection value for node idx relative to current cluster.
+cov     Skewed projection (rewards large edge weights), as above.
+covmax  Maximally skewed projection, as above.
+max_o   Largest edge weight for node idx in current cluster [c].
+min_o   smallest edge weight for node idx in current cluster [c].
+SUM     The sum of *all* edges leaving node idx.</div>
+<div class=" itemize " style="margin-top:1em; font-size:100%">
+<div class=" item_compact"><div class=" item_rightalign nowrap " style="right:-1em">[a]</div></div>
+<div class=" item_text " style="margin-left:3em">
+<p style="margin-top:0em; margin-bottom:0em">
+The projection value for a node relative to some subset of
+its neighbours is the sum of edge weights of all edges to that
+subset. The sum is witten as a fraction relative to the sum
+of edge weights of all neighbours.
+</p>
+</div>
+<div style="margin-top:0em">&nbsp;</div><div class=" item_compact"><div class=" item_rightalign nowrap " style="right:-1em">[b]</div></div>
+<div class=" item_text " style="margin-left:3em">
+<p style="margin-top:0em; margin-bottom:0em">
+cov and covmax stand for coverage and maximal coverage.
+The coverage measure of a node/cluster pair is a generalized and skewed
+projection value [a] that rewards the presence of large edge weights in the
+cluster, relative to the collection of weights of all edges departing from
+the node. The maxcov measure is a projection value skewed even further,
+correspondingly rewarding the inclusion of large edge weights. The cov and
+maxcov performance measures have several nice continuity properties and are
+described in <a class="intern" href="#pcfgcmce">[1]</a>.
+</p>
+</div>
+<div style="margin-top:0em">&nbsp;</div><div class=" item_compact"><div class=" item_rightalign nowrap " style="right:-1em">[c]</div></div>
+<div class=" item_text " style="margin-left:3em">
+<p style="margin-top:0em; margin-bottom:0em">
+All edge weights are written as the fraction of the sum
+SUM of all edge weights of edges leaving node idx.
+</p>
+</div>
+<div style="margin-top:0em">&nbsp;</div><div class=" item_compact"><div class=" item_rightalign nowrap " style="right:-1em">[d]</div></div>
+<div class=" item_text " style="margin-left:3em">
+<p style="margin-top:0em; margin-bottom:0em">
+For clusters the projection value and the coverage measures
+are simply the averages of all projection values [a], respectively
+coverage measures [b], taken over all nodes in the cluster.
+The cluster projection value simply measures the sum of edge
+weights internal to the cluster, relative to the total sum of
+edge weights of all edges where at least one node in the edge
+is part of the cluster.
+</p>
+</div>
+<div style="margin-top:0em">&nbsp;</div><div class=" item_compact"><div class=" item_rightalign nowrap " style="right:-1em">[e]</div></div>
+<div class=" item_text " style="margin-left:3em">
+<p style="margin-top:0em; margin-bottom:0em">
+The projection value for start cluster x and end cluster y
+is the sum of edge weights of edges between x and y as a fraction
+of the sum of all edge weights of edges leaving x.
+</p>
+</div>
+</div>
+
+<a name="author"></a>
+<h2>AUTHOR</h2>
+<p style="margin-bottom:0" class="asd_par">
+Stijn van Dongen.
+</p>
+
+<a name="references"></a>
+<h2>REFERENCES</h2>
+<p style="margin-bottom:0" class="asd_par">
+<a name="pcfgcmce">[1]</a>
+Stijn van Dongen. <i>Performance criteria for graph clustering and Markov
+cluster experiments</i>. Technical Report INS-R0012, National Research
+Institute for Mathematics and Computer Science in the Netherlands,
+Amsterdam, May 2000.<br>
+<a class="extern" href="http://www.cwi.nl/ftp/CWIreports/INS/INS-R0012.ps.Z">http://www.cwi.nl/ftp/CWIreports/INS/INS-R0012.ps.Z</a>
+</p>
+
+<a name="seealso"></a>
+<h2>SEE ALSO</h2>
+<p style="margin-bottom:0" class="asd_par">
+<a class="local sibling" href="mclfamily.html">mclfamily</a> for an overview of all the documentation
+and the utilities in the mcl family.
+</p>
+</body>
+</html>

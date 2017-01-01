@@ -1,0 +1,309 @@
+\import{mcx.zmm}
+
+\begin{pud::man}{
+
+   {name}{mclcm}
+   {html_title}{The mclcm manual}
+   {author}{Stijn van Dongen}
+   {section}{1}
+   {synstyle}{long}
+   {defstyle}{long}
+
+   \man_share
+}
+
+\${html}{\"pud::man::maketoc"}
+
+\""{
+   mclcm <stream-name> -stem mclI4I2      -a "-I 2" -- "-I 4"
+   mclcm <stream-name> -stem mclI5I3      -a "-I 3" -- "-I 5"
+   mclcm <stream-name> -stem mclI5shI3    -a "-I 3" -- "-I 5 --shadow=vl"
+   mclcm <stream-name> -stem mclI8I5      -a "-I 5" -- "-I 8 --shadow=vl"
+   mclcm <stream-name> -stem mclI8shpi5I5 -a "-I 5" -- "-I 8 --shadow=vl -ph 5" -b1 ""
+
+   mclcm <stream-name> -stem mclI4I2      -a "-I 2" -- "-I 4 --shadow=vl"
+   # etc ..
+}
+
+
+\sec{name}{NAME}
+\NAME{mclcm}{hierarchical clustering of graphs with mcl}
+
+\sec{synopsis}{SYNOPSIS}
+
+\par{\mclcm <-|fname> [mclcm-options] [-- "mcl options"*]}
+
+\verbatim{\:/
+\mclcm <-|fname> -a "-I 4 --shadow=vl"
+\mclcm <-|fname> -a "-I 3" -- "-I 5"
+\mclcm <-|fname> -a "-I 3" -b1 "" -- "-ph 3 --shadow=vl -I 5"}
+
+\par{
+   \mclcm <-fname>
+   \synoptopt{--contract}{contraction mode}
+   \synoptopt{--dispatch}{dispatch mode}
+   \synoptopt{--integrate}{integrate mode}
+   \synoptopt{--subcluster}{subcluster mode}
+   \synoptopt{-a}{<opts>}{shared mcl options}
+   \synoptopt{-b1}{<opts>}{dedicated base 1 mcl options}
+   \synoptopt{-b2}{<opts>}{dedicated base 2 mcl options}
+   \shared_synoptopt{-tf}
+   \synoptopt{-c}{<fname>}{input clustering}
+   \synoptopt{-n}{<num>}{iteration limit}
+   \synoptopt{--root}{ensure universe root clustering}
+   \synoptopt{-cone}{<fname>}{nested cluster stack file}
+   \synoptopt{-stack}{<fname>}{expanded cluster stack file}
+   \synoptopt{-coarse}{<fname>}{coarsened graphs file}
+   \synoptopt{-write}{stack,cone,coarse,steps}
+   \synoptopt{-write-base}{<fname>}{write base matrix}
+   \synoptopt{-stem}{<str>}{prefix for all outputs}
+   \synoptkvp{--mplex}{y/n}{write clusterings separately}
+   \synoptopt{-annot}{str}{dummy annotation option}
+   \stdsynopt
+   \synoptopt{-q}{spec}{log levels}
+   \synoptopt{-z}{show default shared options}
+   [-- "mcl options"*]
+}
+
+
+\sec{description}{DESCRIPTION}
+\par{
+   The mclcm options may be followed by a number of trailing arguments.
+   The trailing arguments should be separated from the mclcm options
+   by the separator \v{--}.
+   Normally each trailing argument should consist of a set of zero, one, or more mcl arguments
+   enclosed in quotes or double quotes to group them together.
+   These arguments are passed to the successive stages of hierarchical
+   clustering. They are combined with the default options. If an option
+   is specified both in the default options list and in a trailing
+   options list the latter specification overrides the former.
+   When the \genopt{--integrate} option is specified the trailing arguments
+   must be names of files containing mcl clusterings; see further below.
+   \mclcm has four major modes of operation, namely \it{contraction} (default),
+   \it{integration}, \it{dispatch}, and \it{subcluster}. Each mode is
+   described a little below. Note though that \it{dispatch} mode is not
+   the best mode to use for hierarchical clustering. It is mostly useful
+   to generate multiple mcl clusterings in a single run.
+   }
+
+\par{
+   In all modes \mclcm will generate a file, by default called \it{mcl.cone}.
+   This is a representation of a hierarchical clustering that is particular
+   to mcl. It can be converted to \it{newick} format like this:
+   }
+
+\verbatim{\:/
+         mcxdump -imx-tree mcl.cone --newick -o NEWICKFILE
+   OR    mcxdump -imx-tree mcl.cone --newick -o NEWICKFILE -tab TABFILE}
+
+\par{
+   In the last example, TABFILE should be a file containing a mapping
+   from mcl labels to application labels. Refer to \mysib{mcxio} for
+   more information about tab files and mcl input/ouput formats.
+   }
+
+
+\sec{options}{OPTIONS}
+\begin{itemize}{\mcx_itemopts}
+
+\item{\defopt{--contract}{repeated contraction mode}}
+\car{
+   This is the default mode of operation.
+   At each successive step of constructing the hierarchy on top of the first
+   level mcl clustering, mclcm uses a matrix derived from the input matrix and
+   the last computed clustering to compute a contracted graph.
+   
+   The contracted graph is a graph where the nodes represent the clusters of
+   the last clustering. The matrix derived from the input graph that is used to
+   construct the contracted graph is called the \it{base matrix}. The base
+   matrix can be either the \it{start matrix} or the \it{expansion matrix}.
+   
+   The \it{start matrix} is the input matrix after transformations have been
+   applied to it (if any).
+
+   The \it{expansion matrix} is the first expanded matrix of some
+   mcl process applied to the input graph.
+   }
+
+\par{
+   By default the base matrix is constructed from either the start matrix
+   or the expansion matrix obtained from the first mcl process.
+   It is possible to use a start matrix derived from special purpose
+   mcl transformation parameters (such as \genopt{-ph} and \genopt{-tf})
+   or an expansion matrix derived from a special purpose mcl process.
+   The \genopt{-b1} and \genopt{-b2} parameters provide the interfaces
+   to this functionality.}
+
+\par{
+   You are advised to start with a high inflation value for the input
+   graph and to use shadowing, e.g. include \v{--shadow=vl} in the
+   \genopt{-a} argument.
+   This generally leads to hierarchies that are better balanced.
+   Shadowing is a transformation where nodes are added to the
+   graph, preventing relatively distant nodes from unwanted chaining.
+   For more information refer to the \mcl manual.
+   The invocations in \secref{synopsis} are a good starting point.}
+
+\item{\defopt{--dispatch}{different mcl processes}}
+\car{
+   In this mode each trailing argument is specified as a set of options to pass
+   to an mcl process. For each trailing argument an mcl process is thus
+   computed.  The set of resulting clusterings is integrated into a hierarchy.
+   }
+
+\item{\defopt{--integrate}{existing clusterings}}
+\car{
+   This mode is similar to \it{dispatch} mode. The difference is that with
+   this option mclcm simply integrates a set of already existing clusterings.
+   Each trailing argument must be the name of a file containing a clustering.
+   The set of clusterings thus specified is integrated into a hierarchy.
+   }
+
+\item{\defopt{--subcluster}{repeated sub-clustering}}
+\car{
+   In this mode each trailing argument specifies a set of options to pass to an
+   mcl process. The second clustering process is applied to the graph of
+   components induced by the first clustering, resulting in a further
+   subdivision of the first clustering. This approach is repeated with each
+   further trailing argument. With this approach, the first clustering will be
+   the most coarse clustering. Hence, subsequent trailing arguments will
+   typically specify increasingly higher inflation values, pre-inflation
+   values, and optionally more stringent transformation parameters
+   in order to achieve further subdivsions.
+   }
+
+
+\item{\defopt{-a}{<opts>}{shared mcl options}}
+\car{
+   Use this to change and/or set the default mcl options for
+   all iterations. Use quotes if necessary.
+   Example of  usage: -a "-I 5".}
+
+\item{\defopt{-b1}{<opts>}{dedicated base 1 mcl options}}
+\car{
+   This will apply the mcl options \genarg{opts} to the input matrix. The
+   resulting start matrix is used as the base matrix for constructing contracted
+   graphs.}
+
+\item{\defopt{-b2}{<opts>}{dedicated base 2 mcl options}}
+\car{
+   This will apply the mcl options \genarg{opts} to the input matrix and
+   compute the first iterand of the corresponding mcl process.  The first
+   iterand, aka the expansion matrix, is used as the base matrix for
+   constructing contracted graphs.}
+
+\shared_itemopt{-tf}
+\car{\shared_defopt{-tf}}
+
+\item{\defopt{-c}{<fname>}{input clustering}}
+\car{
+   The hierarchical clustering process will be kicked off by
+   the clustering found in \genarg{<fname>}.}
+
+\item{\defopt{-n}{<num>}{iteration limit}}
+\car{
+   This puts an upper bound to the number of contractions that
+   will be performed.}
+
+\item{\defopt{--root}{ensure universe root clustering}}
+\car{
+   In case the graph consists of different connected components,
+   the last clustering computed by the mclcm process will
+   correspond with those connected components. This option
+   simply adds an artificial clustering where all nodes
+   have been joined into a single cluster.}
+
+\item{\defopt{-cone}{<fname>}{nested cluster stack file}}
+\car{
+   File to write the nested cluster stack to.
+   The nested cluster stack contains a sequence of clusterings,
+   each written as an MCL matrix.
+   The first (bottom) clustering is a clustering of the nodes
+   in the input graph. Each subsequent clustering is a clustering
+   where the nodes are the clusters of the previous clustering.
+   \mcxdump can dump this format if the file name is given as
+   the \genopt{-imx-stack} option. The explanation
+   for the cone/stack discrepancy is simple. To mcxdump
+   the contents are simply a stack of matrices. It does not
+   care whether the stack is cone shaped, cylindrical, or
+   yet another shape.}
+
+\item{\defopt{-stack}{<fname>}{expanded cluster stack file}}
+\car{
+   File to write the expanded cluster stack to.  The expanded cluster stack is
+   similar to the nested cluster stack except that each cluster lists all the
+   nodes in the input graph it contains.
+   \mcxdump can dump this format if the file name is given as
+   the \genopt{-imx-stack} option.}
+
+\item{\defopt{-coarse}{<fname>}{coarsened graphs file}}
+\car{
+   File to write the sequence of coarsened graphs to. Each clustering induces a
+   coarsened graph where the nodes represent the clusters and an edge between
+   two nodes represents the connectivity between the corresponding two
+   clusters. The computation of this connectivity takes into account all edges
+   between the two clusters in in the original graph.}
+
+\item{\defopt{-write}{<tag>}{select output modes}}
+\car{
+   Use this option to explicitly specify all of the output types you want
+   written in a comma-separated string. \genarg{<tag>} may contain
+   any of the strings \it{stack}, \it{cone}, \it{coarse}, \it{steps}.
+   The current default is to write all of these except \it{coarse}.
+   The latter dumps the intermediate coarsened (aka contracted) graphs
+   to a single file.
+   }
+
+\item{\defopt{-write-base}{<fname>}{write base matrix}}
+\car{
+   Write the base matrix to file. This can be useful for debugging
+   expectations.
+   }
+
+\item{\defopt{-stem}{<str>}{prefix for all outputs}}
+\car{
+   All output files share the same prefix. The default is \v{mcl}
+   and can be changed with this option.}
+
+\item{\defkvp{--mplex}{y/n}{write clusterings separately}}
+\car{
+   If turned on each clustering is written in a separate file.  The first
+   clustering is written to the file \genarg{<stem>}.3 where \genarg{<stem>} is
+   determined by the \genopt{-stem} option.  For each subsequent clustering
+   the index is incremented by two, so clusterings are written to
+   files for which the name ends with an odd index.}
+
+\item{\defopt{-annot}{str}{dummy annotation option}}
+\car{
+   \mclcm writes the command line with which it was invoked to the output file
+   (either of the \it{cone} or \it{stack} files).  Use this option to include
+   any additional information. mclcm does nothing with this option except copying
+   it as just described.
+   }
+
+\item{\defopt{-q}{spec}{log levels}}
+\car{
+   Set the quiet level. Read \mysib{tingea.log} for syntax and semantics.}
+
+\item{\defopt{-z}{show default shared options}}
+\car{
+   Show the default mcl options. These are used for each mcl invocation as
+   successively applied to the input graph and succeeding contracted graphs.}
+
+\stddefopt
+
+\end{itemize}
+
+\sec{author}{AUTHOR}
+\par{
+   Stijn van Dongen.
+   }
+
+\sec{seealso}{SEE ALSO}
+\par{
+   \mysib{mclfamily} for an overview of all the documentation
+   and the utilities in the mcl family.
+   }
+
+\end{pud::man}
+

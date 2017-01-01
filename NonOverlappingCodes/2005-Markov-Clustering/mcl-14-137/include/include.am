@@ -1,0 +1,12 @@
+## $Id: include.am,v 1.7 2006-10-19 12:50:41 flux Exp $
+## vim:syntax=automake
+##
+## Makefile.am snippet, included in all Makefile.am's in src/
+
+INCLUDES = -I$(top_srcdir)/src -I$(top_srcdir)
+
+LDADD = ../mcl/libmcl.a ../clew/libclew.a  ../gryphon/libgryphon.a ../impala/libimpala.a ../../util/libutil.a
+
+AM_LDFLAGS = -lm
+# AM_LDFLAGS = -lm -lunwind -ltcmalloc
+

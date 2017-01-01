@@ -1,0 +1,305 @@
+\import{mcx.zmm}
+
+\begin{pud::man}{
+
+   {name}{mcx q}
+   {html_title}{The mcx q manual}
+   {author}{Stijn van Dongen}
+   {section}{1}
+   {synstyle}{long}
+   {defstyle}{long}
+
+   \man_share
+}
+
+\${html}{\"pud::man::maketoc"}
+
+\sec{name}{NAME}
+\NAME{mcxquery}{compute simple graph statistics}
+
+\sec{synopsis}{SYNOPSIS}
+
+\disclaim_mcx{query}
+
+
+\par{
+   \mcxquery
+      \synoptopt{-abc}{<fname>}{specify label input}
+      \synoptopt{-imx}{<fname>}{specify matrix input}
+      \synoptopt{-o}{<fname>}{output file name}
+      \synoptopt{-tab}{<fname>}{use tab file}
+      \synoptopt{--node-attr}{output node degree and weight attributes}
+      \synoptopt{-vary-threshold}{<start/end/step>}{analyze graph at similarity cutoffs}
+      \synoptopt{-vary-knn}{<start/end/step>}{analyze graph for varying k-NN}
+      \synoptopt{-vary-ceil}{<start/end/step>}{analyze graph for varying ceil reductions}
+      \synoptopt{--no-legend}{do not output explanatory legend}
+      \synoptopt{--reduce}{use reduced matrix}
+      \synoptopt{--test-metric}{test whether graph distance is metric}
+      \synoptopt{--test-cycle}{test whether graph contains cycles}
+      \synoptopt{-test-cycle}{<num>}{test cycles, report cycles}
+      \synoptopt{--vary-correlation}{analyze graph at correlation cutoffs}
+      \synoptopt{--clcf}{include clustering coefficient analysis}
+      \synoptopt{--eff}{include efficiency criterion}
+      \synoptopt{-div}{<num>}{cluster size separating value}
+      \: kynoptopt{-digits}{<num>}{width of fractional part}
+      \synoptopt{--dim}{report native format and dimensions}
+      \synoptopt{--values}{output all arc entries/weights, unsorted}
+      \synoptopt{--values-sorted}{output all entries/weights, sorted}
+      \synoptopt{-values-hist}{<nbins|start/end/nbins>}{weight histogram}
+      \synoptopt{-degrees-hist}{<step>}{degrees histogram}
+      \synoptopt{--output-table}{output logical tab separated table without key}
+      \synoptopt{-t}{<num>}{number of threads to use}
+      \synoptopt{-icl}{<fname>}{input clustering}
+
+      \shared_synoptopt{-tf}
+      \stdsynopt
+   }
+
+\sec{description}{DESCRIPTION}
+\par{
+   The default \mcxquery output is a list of summary statistics for each
+   node. These are its node degree, the mean, minimum, maximum and median
+   edge weight. If supplied with a clustering, the output will additionally
+   list the cluster size and cluster label for each node.
+   }
+
+\par{
+   Additionally, \mcxquery can be used to analyse a graph at different similarity
+   cutoffs or at varying parameters of edge reduction strategies such as mutual
+   nearest neighbour reduction.
+
+   Attributes supplied across different thresholds are the number of connected
+   components, the number of singletons, and statistics (median, average, iqr)
+   on node degrees and edge weights.
+
+   Typically this is done on a graph constructed using a very permissive
+   threshold. For example, one can create a graph from array expression data
+   using \mcxarray with a very low pearson correlation cutoff such as\~0.5
+   Then \mcxquery can be used to analyze the graph at increasingly
+   stringent thresholds of\~0.50, 0.55, 0.60\~..\~0.95.
+}
+
+
+\par{Other tasks that \mcxquery be used for include:
+   }
+
+\begin{itemize}{{flow}{compact}}
+\item
+   Produce a histogram of edge weights.
+\item
+   Produce a histogram of edge node degrees.
+\item
+   Output all edge weights.
+\item
+   Test whether the graph weight encodes a metric
+   (for edge weights that encode distances rather than similarites).
+\item
+   Test whether the graph has a cycle.
+\end{itemize}
+
+\""{
+   and a graph plotting the R^2 value of the relationship of log(k)
+   versus the logarithm of the number of nodes of degree at least k (for the
+   graph at a given threshold).
+
+   Scale-free networks are defined by having a high R^2 value.  It should
+   be noted however that in many applications graphs will not be scale-free.
+   Additionally, for the purpose of clustering scale-free networks are to be
+   avoided or transformed, as the highly-connected nodes in scale-free networks
+   obfuscate cluster structure.
+}
+
+\sec{options}{OPTIONS}
+
+\begin{itemize}{\mcx_itemopts}
+
+\item{\defopt{-abc}{<fname>}{label input}}
+\car{
+   The file name for input that is in label format.}
+
+\item{\defopt{-imx}{<fname>}{input matrix}}
+\car{
+   The file name for input that is in mcl native matrix format.
+   }
+
+\item{\defopt{-o}{<fname>}{output file name}}
+\car{
+   Set the name of the file where output should be written to.
+   }
+
+\item{\defopt{-tab}{<fname>}{use tab file}}
+\car{
+   This option causes the output to be printed with the labels
+   found in the tab file.
+   }
+\:  With \genopt{-abc} this option will, additionally, construct
+\:  a graph only on the labels found in the tab file.
+\:  If this option is used in conjunction with \genopt{-imx} the
+\:  tab domain and the matrix domain are required to be identical.
+
+
+\item{\defopt{--dim}{report native format and dimensions}}
+\car{
+   This will report the matrix format (either interchange or binary)
+   and the matrix dimensions. For a graph the two reported dimensions
+   should be equal.
+   }
+
+
+\items{
+   {\defopt{--values}{output all entries/weights, unsorted}}
+   {\defopt{--values-sorted}{output all entries/weights, sorted}}
+   {\defopt{-values-hist}{<start/end/nbins>}{output weight histogram}}
+   {\defopt{-values-hist}{<nbins>}{output weight histogram}}
+   {\defopt{-degrees-hist}{<nbins>}{degrees histogram}}
+}
+\car{
+   These options are fairly self-documenting. The result of both
+   \genopt{-edges-hist} and \genopt{-degrees-hist}
+   is a tab separated table of bin offsets and bin counts.
+   When using \genopt{-edges-hist}{<nbins>} the program will
+   create a histogram ranging from the smallest to
+   the largest edge weight.
+   }
+
+\item{\defopt{--output-table}{output logical tab separated table without key}}
+\car{
+   This option causes table output such as provided by \genopt{--vary-correlation}
+   to be output in a logical tab-separated format rather than pretty-printed.
+   }
+
+\item{\defopt{-vary-threshold}{<start/end/nbins>}{analyze graphs at similarity cutoffs}}
+\car{
+   The graph is analysed at different edge weight thresholds, going from \genopt{<start>}
+   to \genopt{<end>} in \genopt{<nbins>} steps.
+   }
+
+\item{\defopt{--vary-correlation}{analyze graphs at correlation cutoffs}}
+\car{
+   This instructs \mcxquery to use a threshold list suitable for use with graphs
+   in which the edge weight similarities are correlations.
+   The list starts at 0.2 and ends at 1.0 using increments of 0.05.
+   If a different start or increment is required it can
+   be achieved by using the \genopt{-vary-threshold} option.
+   For example, a start of\~0.10 and an increment of\~0.02 are obtained
+   by issuing \useopt{-vary-threshold}{:.1/1.0/45}.
+   }
+
+\item{defopt{--no-legend}{do not output explanatory legend}}
+\car{
+   For a fully parseable output format use \genoptref{--output-table}.
+   }
+
+
+\items{
+   {\defopt{--clcf}{include clustering coefficient analysis}}
+   {\defopt{--eff}{include efficiency criterion}}
+}
+\car{
+   These options can be used to compute additional characteristics
+   in the analysis of thresholded graphs with \genopt{--vary-correlation}
+   and \genopt{-vary-threshold}. For large graphs these are relatively time-consuming
+   to compute. More information and a reference for
+   the efficiency criterion can be found in \mysib{clminfo}.
+   }
+
+\items{
+   {\defopt{-vary-knn}{<start/end/step>}{analyze graphs for varying k-NN}}
+\:   {\hiddenopt{-vary-n}{<start/end/step>}{analyze graphs for varying N}}
+   {\defopt{-vary-ceil}{<start/end/step>}{analyze graphs for varying ceil reductions}}
+   {\defopt{--reduce}{use reduced matrix}}
+}
+\car{
+   These options cause analysis of a graph as it is subjected to reductions
+   across a range of parameters. Refer to \mysib{mcxio} for a description of
+   these reductions.  The analyses starts at the \it{end} argument, and
+   progresses towards the \it{start} argument using decrements of size
+   \it{step}.  By default the reduction is always computed relative to the
+   start matrix, i.e. the input matrix after \genopt{-tf} transformations have
+   optionally been applied. Specifying \genopt{--reduce} causes this to change
+   so that each new reduction is calculated relative to the reduction just
+   computed.
+   }
+
+\par{
+   For graphs with ties among edge weights it may be useful to use
+   \useopt{-tf}{'#tug()'}. This will add small perturbations to the
+   edge weights and have the effect of breaking ties.
+   By default perturbations are computed using the cosine between
+   the vectors of neighbours of the two nodes incident to an edge.
+   This can be changed to a random perturbation with
+   \useopt{-tf}{'#rug()'}.
+   }
+
+\items{
+   {\defopt{--test-cycle}{test whether graph contains cycles}}
+   {\defopt{-test-cycle}{<num>}{test cycles, report cyclees}}
+}
+\car{
+   Test whether the input graph contains cycles. With the second option
+   nodes that are part of a cycle are output, up to a maximum of \genarg{<num>}
+   nodes. Use \genarg{<num>}=\usearg{-1} to output all such nodes.
+   }
+
+\item{\defopt{--test-metric}{test whether graph distance is metric}}
+\car{
+   This tests all possible triangle relationships.
+   }
+
+\""{
+\item{\kefopt{-digits}{<num>}{width of fractional part}}
+\car{
+   In the output graph and table, the thresholds are by default
+   printed with two digits for the fractional part. This
+   can be changed using this option.
+
+   }}
+
+
+\item{\defopt{-div}{<num>}{cluster size separating value}}
+\car{
+   When analyzing graphs at different thresholds with one of the
+   options above, \mcxquery reports the percentage of nodes contained
+   in clusters not exceeding a specified size, by default\~3.
+   This number can be changed using the \genopt{-div} option.
+   }
+
+
+\shared_itemopt{-tf}
+\car{\shared_defopt{-tf}}
+
+
+\item{\defopt{-t}{<num>}{number of threads to use}}
+\car{
+   This has an effect only when using the \genopt{-vary-knn} option,
+   and is only useful on multi-CPU machines.
+   }
+
+
+\item{\defopt{--node-attr}{output node degree and weight attributes}}
+\car{
+   Output is in the form of a tab separated file.
+   The option \genopt{-icl} can be used in conjuction.
+   }
+
+
+\item{\defopt{-icl}{<fname>}{input clustering}}
+\car{
+   Output for each node the size of the cluster it is in.
+   This option can be used in conjunction with \genopt{--node-attr}.
+   }
+
+
+\stddefopt
+
+\end{itemize}
+
+
+\sec{seealso}{SEE ALSO}
+\par{
+   \mysib{mcxio},
+   and \mysib{mclfamily} for an overview of all the documentation
+   and the utilities in the mcl family.}
+
+\end{pud::man}
+

@@ -1,0 +1,262 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html>
+<!-- Copyright (c) 2014 Stijn van Dongen -->
+<head>
+<meta name="keywords" content="manual">
+<style type="text/css">
+/* START aephea.base.css */
+body
+{ text-align: justify;
+margin-left: 0%;
+margin-right: 0%;
+}
+a:link { text-decoration: none; }
+a:active { text-decoration: none; }
+a:visited { text-decoration: none; }
+a:link { color: #1111aa; }
+a:active { color: #1111aa; }
+a:visited { color: #111166; }
+a.local:link { color: #11aa11; }
+a.local:active { color: #11aa11; }
+a.local:visited { color: #116611; }
+a.intern:link { color: #1111aa; }
+a.intern:active { color: #1111aa; }
+a.intern:visited { color: #111166; }
+a.extern:link { color: #aa1111; }
+a.extern:active { color: #aa1111; }
+a.extern:visited { color: #661111; }
+a.quiet:link { color: black; }
+a.quiet:active { color: black; }
+a.quiet:visited { color: black; }
+div.verbatim
+{ font-family: monospace;
+margin-top: 1em;
+margin-bottom: 1em;
+font-size: 10pt;
+margin-left: 2em;
+white-space: pre;
+}
+div.indent
+{ margin-left: 8%;
+margin-right: 0%;
+}
+.right { text-align: right; }
+.left { text-align: left; }
+.nowrap { white-space: nowrap; }
+.item_leader
+{ position: relative;
+margin-left: 8%;
+}
+.item_compact { position: absolute; vertical-align: baseline; }
+.item_cascade { position: relative; }
+.item_leftalign { text-align: left; }
+.item_rightalign
+{ width: 2em;
+text-align: right;
+}
+.item_compact .item_rightalign
+{ position: absolute;
+width: 52em;
+right: -2em;
+text-align: right;
+}
+.item_text
+{ position: relative;
+margin-left: 3em;
+}
+.smallcaps { font-size: smaller; text-transform: uppercase }
+/* END aephea.base.css */
+body { font-family: "Garamond", "Gill Sans", "Verdana", sans-serif; }
+body
+{ text-align: justify;
+margin-left: 8%;
+margin-right: 8%;
+}
+</style>
+<title>The clm info manual</title>
+</head>
+<body>
+<p style="text-align:right">
+16 May 2014&nbsp;&nbsp;&nbsp;
+<a class="local" href="clminfo.ps"><b>clm info</b></a>
+14-137
+</p>
+<div class=" itemize " style="margin-top:1em; font-size:100%">
+<div class=" item_compact"><div class=" item_rightalign nowrap " style="right:-3em">1.</div></div>
+<div class=" item_text " style="margin-left:4em">
+<a class="intern" href="#name">NAME</a>
+</div>
+<div class=" item_compact"><div class=" item_rightalign nowrap " style="right:-3em">2.</div></div>
+<div class=" item_text " style="margin-left:4em">
+<a class="intern" href="#synopsis">SYNOPSIS</a>
+</div>
+<div class=" item_compact"><div class=" item_rightalign nowrap " style="right:-3em">3.</div></div>
+<div class=" item_text " style="margin-left:4em">
+<a class="intern" href="#description">DESCRIPTION</a>
+</div>
+<div class=" item_compact"><div class=" item_rightalign nowrap " style="right:-3em">4.</div></div>
+<div class=" item_text " style="margin-left:4em">
+<a class="intern" href="#_section_4">OPTIONS</a>
+</div>
+<div class=" item_compact"><div class=" item_rightalign nowrap " style="right:-3em">5.</div></div>
+<div class=" item_text " style="margin-left:4em">
+<a class="intern" href="#author">AUTHOR</a>
+</div>
+<div class=" item_compact"><div class=" item_rightalign nowrap " style="right:-3em">6.</div></div>
+<div class=" item_text " style="margin-left:4em">
+<a class="intern" href="#seealso">SEE ALSO</a>
+</div>
+<div class=" item_compact"><div class=" item_rightalign nowrap " style="right:-3em">7.</div></div>
+<div class=" item_text " style="margin-left:4em">
+<a class="intern" href="#references">REFERENCES</a>
+</div>
+</div>
+
+<a name="name"></a>
+<h2>NAME</h2>
+<p style="margin-bottom:0" class="asd_par">
+clm info &mdash; compute performance measures for graphs and clusterings.</p>
+<p style="margin-bottom:0" class="asd_par">clminfo is not in actual fact a program. This manual
+page documents the behaviour and options of the clm program when
+invoked in mode <i>info</i>. The options <b>-h</b>, <b>--apropos</b>,
+<b>--version</b>, <b>-set</b>, <b>--nop</b> are accessible
+in all <b>clm</b> modes. They are described
+in the <a class="local sibling" href="clm.html">clm</a> manual page.</p>
+
+<a name="synopsis"></a>
+<h2>SYNOPSIS</h2>
+<p style="margin-bottom:0" class="asd_par">
+<b>clm info</b> [options] &lt;graph file&gt; &lt;cluster file&gt; &lt;cluster file&gt;*
+</p>
+<p style="margin-bottom:0" class="asd_par">
+<b>clm info</b>
+<a class="intern" href="#opt-o"><b>[-o</b> fname (<i>write to file <b>fname</b></i>)<b>]</b></a>
+<a class="intern" href="#opt-pi"><b>[-pi</b> f (<i>apply inflation beforehand</i>)<b>]</b></a>
+<a class="intern" href="#opt-tf"><b>[-tf</b> spec (<i>apply tf-spec to input matrix</i>)<b>]</b></a>
+<a class="intern" href="#opt-cl-tree"><b>[-cl-tree</b> fname (<i>expect file with nested clusterings</i>)<b>]</b></a>
+<a class="intern" href="#opt-cat-max"><b>[-cat-max</b> num (<i>do at most <b>num</b> tree levels</i>)<b>]</b></a>
+<a class="intern" href="#opt-cl-ceil"><b>[-cl-ceil</b> &lt;num&gt; (<i>skip clusters of size exceeding &lt;num&gt;</i>)<b>]</b></a>
+<a class="intern" href="#opt--node-self-measures"><b>[--node-self-measures</b> (<i>dump measure for native cluster</i>)<b>]</b></a>
+<a class="intern" href="#opt--node-all-measures"><b>[--node-all-measures</b> (<i>dump measure for incident cluster</i>)<b>]</b></a>
+<a class="intern" href="#opt-h"><b>[-h</b> (<i>print synopsis, exit</i>)<b>]</b></a>
+<a class="intern" href="#opt--apropos"><b>[--apropos</b> (<i>print synopsis, exit</i>)<b>]</b></a>
+<a class="intern" href="#opt--version"><b>[--version</b> (<i>print version, exit</i>)<b>]</b></a>
+&lt;matrix file&gt; &lt;cluster file&gt; &lt;cluster file&gt;*
+</p>
+
+<a name="description"></a>
+<h2>DESCRIPTION</h2>
+<p style="margin-bottom:0" class="asd_par">
+<b>clm info</b> computes several numbers indicative for the efficiency with
+with a clustering captures the edge mass of a given graph.
+Use it in conjunction with <b>clm dist</b> to determine which clusterings
+you accept. See the EXAMPLES section in <b>clm dist</b>
+for an example of <b>clm dist</b> and <b>clm info</b> (and <b>clm meet</b>) usage.
+Output can be generated for multiple clusterings at the same time.</p>
+<p style="margin-bottom:0" class="asd_par">
+The <b>efficiency</b> factor is described in [1] (see
+the <a class="intern" href="#references">REFERENCES</a> section). It tries to balance the dual aims of
+capturing a lot of edges or edge weights and keeping the cluster footprint
+or area fraction small. The efficiency number has several appealing
+mathematical properties, cf. [1]. It is related to, but not derivable from,
+the second and third numbers, the <i>mass fraction</i> and the
+<i>area fraction</i>.</p>
+<p style="margin-bottom:0" class="asd_par">
+The <b>mass fraction</b> is defined as follows.
+Let <b>e</b> be an edge of the graph. The clustering <i>captures</i> <b>e</b>
+if the two nodes associated with <b>e</b> are in the same cluster.
+Now the mass fraction is the joint weight of all captured edges divided
+by the joint weight of all edges in the input graph.</p>
+<p style="margin-bottom:0" class="asd_par">
+The <b>area fraction</b> is roughly the sum of the
+squares of all cluster sizes for all clusters in the clustering, divided by
+the square of the number of nodes in the graph. It says <i>roughly</i>,
+because the actual formula uses the quantity <b>N</b>*(<b>N-1</b>) wherever it
+says square (of <b>N</b>) above. A low/high area fraction indicates a
+fine-grained/coarse clustering.</p>
+
+<a name="_section_4"></a>
+<h2>OPTIONS</h2>
+<div class=" itemize " style="margin-top:1em; font-size:100%">
+<div class=" item_cascade"><div class=" item_leftalign nowrap " ><a name="opt-o"></a><b>-o</b> fname (<i>output file name</i>)</div></div>
+<div class=" item_text " style="margin-left:2em">
+</div>
+<div style="margin-top:0em">&nbsp;</div><div class=" item_cascade"><div class=" item_leftalign nowrap " ><a name="opt-pi"></a><b>-pi</b> f (<i>apply inflation beforehand</i>)</div></div>
+<div class=" item_text " style="margin-left:2em">
+<p style="margin-top:0em; margin-bottom:0em">
+Apply inflation to the graph matrix and compute the performance
+measures for the result.</p>
+</div>
+<div style="margin-top:0em">&nbsp;</div><div class=" item_cascade"><div class=" item_leftalign nowrap " ><a name="opt-tf"></a><b>-tf</b> &lt;tf-spec&gt; (<i>transform input matrix values</i>)</div></div>
+<div class=" item_text " style="margin-left:2em">
+<p style="margin-top:0em; margin-bottom:0em">shared_defopt{-tf}</p>
+</div>
+<div style="margin-top:0em">&nbsp;</div><div class=" item_cascade item_leftalign nowrap" ><a name="opt-cl-tree"></a><b>-cl-tree</b> fname (<i>expect file with nested clusterings (cone format)</i>)</div><div class=" item_cascade item_leftalign nowrap" ><a name="opt-cl-ceil"></a><b>-cl-ceil</b> &lt;num&gt; (<i>skip (nested) clusters of size exceeding &lt;num&gt;</i>)</div>
+<div class=" item_text " style="margin-left:2em">
+<p style="margin-top:0em; margin-bottom:0em">
+The specified file should contain a hierarchy of nested
+clusterings such as generated by <b>mclcm</b>. The output is then
+in a special format, undocumented but easy to understand.
+Its purpose is to help cherrypick a single clustering
+from a tree, in conjunction with the slightly experimental
+and undocumented program <b>mlmfifofum</b>.
+</p>
+<p style="margin-bottom:0" class="asd_par">
+The measure that is used is very slow to compute for large clusters, and
+generally it will be outside any interesting range (i.e. it will be small).
+Use <b>-cl-ceil</b> to skip clusters exceeding the specified size &mdash;
+<b>clm info</b> will directly proceed to subclusters if they exist.
+</p>
+</div>
+<div style="margin-top:0em">&nbsp;</div><div class=" item_cascade"><div class=" item_leftalign nowrap " ><a name="opt-cat-max"></a><b>-cat-max</b> num (<i>do at most num levels</i>)</div></div>
+<div class=" item_text " style="margin-left:2em">
+<p style="margin-top:0em; margin-bottom:0em">
+This only has effect when used with <b>-cl-tree</b>.
+<b>clm info</b> will start at the most fine-grained level, working upwards.
+</p>
+</div>
+<div style="margin-top:0em">&nbsp;</div><div class=" item_cascade item_leftalign nowrap" ><a name="opt--node-all-measures"></a><b>--node-all-measures</b> (<i>dump node-wise criteria for all incident clusters</i>)</div><div class=" item_cascade item_leftalign nowrap" ><a name="opt--node-self-measures"></a><b>--node-self-measures</b> (<i>dump node-wise criteria for native cluster</i>)</div>
+<div class=" item_text " style="margin-left:2em">
+<p style="margin-top:0em; margin-bottom:0em">
+These options return a key-value based format, with the meaning of
+the keys as follows.
+</p>
+<div class="verbatim">nm    file name (redundant unless multiple cluster files are provided)
+ni    node index
+ci    cluster index
+nn    number of neighbours of this node (constant for a give node)
+nc    cluster size (constant for a given cluster)
+ef    efficiency for this node/cluster combination
+em    max-efficiency for this node/cluster combination
+mf    mass fraction: percentage of edge weights for this node in this cluster
+ma    total mass of edge weights for this node in this cluster
+xn    number of neighbours of the node that are not in the cluster
+xc    number of nodes in the cluster that are not a neighbour of the node
+ns    number of neighbours of the node that are also in this cluster
+ti    the maximum of the edge weights for neighbours of this node that are in this cluster
+to    the maximum of the edge weights for neighbours of this node that are NOT in this cluster
+al    (alien) 1 if the node is not native to the cluster, 0 if the node is native</div>
+</div>
+</div>
+
+<a name="author"></a>
+<h2>AUTHOR</h2>
+<p style="margin-bottom:0" class="asd_par">
+Stijn van Dongen.</p>
+
+<a name="seealso"></a>
+<h2>SEE ALSO</h2>
+<p style="margin-bottom:0" class="asd_par">
+<a class="local sibling" href="mclfamily.html">mclfamily</a> for an overview of all the documentation
+and the utilities in the mcl family.</p>
+
+<a name="references"></a>
+<h2>REFERENCES</h2>
+<p style="margin-bottom:0" class="asd_par">
+[1] Stijn van Dongen. <i>Performance criteria for graph clustering and Markov
+cluster experiments</i>. Technical Report INS-R0012, National Research
+Institute for Mathematics and Computer Science in the Netherlands,
+Amsterdam, May 2000.<br>
+<a class="extern" href="http://www.cwi.nl/ftp/CWIreports/INS/INS-R0012.ps.Z">http://www.cwi.nl/ftp/CWIreports/INS/INS-R0012.ps.Z</a></p>
+</body>
+</html>

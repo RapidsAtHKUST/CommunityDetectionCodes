@@ -1,0 +1,123 @@
+\import{mcx.zmm}
+
+\begin{pud::man}{
+
+   {name}{mcx clcf}
+   {html_title}{The mcx clcf manual}
+   {author}{Stijn van Dongen}
+   {section}{1}
+   {synstyle}{long}
+   {defstyle}{long}
+
+   \man_share
+}
+
+\${html}{\"pud::man::maketoc"}
+
+\sec{name}{NAME}
+\NAME{mcx clcf}{compute the clustering coefficient of a graph}
+
+\sec{synopsis}{SYNOPSIS}
+\par{
+   \mcx{clcf} [options] [matrix-file]}
+
+\disclaim_mcx{clcf}
+
+\par{
+   \mcx{clcf}
+
+      \synoptopt{-abc}{<fname>}{specify label input}
+      \synoptopt{-imx}{<fname>}{specify matrix input}
+      \synoptopt{-tab}{<fname>}{use tab file}
+      \synoptopt{-o}{<fname>}{write to this file}
+      \shared_synoptopt{-t}
+      \shared_synoptopt{-J}
+      \shared_synoptopt{-j}
+      \synoptopt{--summary}{return mean clustering coefficient}
+      \stdsynopt
+   }
+
+\sec{description}{DESCRIPTION}
+\par{
+   \mcx{clcf} computes the clustering coefficient of a graph.}
+
+\par{
+   The input graph/matrix, if specified with the \genopt{-imx} option, has to
+   be in mcl matrix/graph format.  You can use label input instead by using the
+   \genopt{-abc} option.
+   Refer to \mysib{mcxio} for a description of these two input formats.
+   By default \mcx{diameter} reads from STDIN \it{and expects matrix format}.
+   To specify label input from STDIN use \useopt{-abc}{-}.}
+
+\sec{options}{OPTIONS}
+
+\begin{itemize}{\mcx_itemopts}
+
+\item{\defopt{-abc}{<fname>}{label input}}
+\car{
+   The file name for input that is in label format.}
+
+\item{\defopt{-imx}{<fname>}{input matrix}}
+\car{
+   The file name for input. STDIN is assumed if not specified.}
+
+\item{\defopt{-o}{<fname>}{output file}}
+\car{
+   The file name for output. STDOUT is the default output stream.
+   }
+
+\item{\defopt{-tab}{<fname>}{use tab file}}
+\car{
+   This option causes the output to be printed with the labels
+   found in the tab file.
+   With \genopt{-abc} this option will, additionally, construct
+   a graph only on the labels found in the tab file.
+   If this option is used in conjunction with \genopt{-imx} the
+   tab domain and the matrix domain are required to be identical.
+   }
+
+\item{\defopt{--summary}{return mean clustering coefficient}}
+\car{
+   By the default a 1-column table (with row names included) is output, one row
+   for each node.  This option causes the output of the average clustering
+   coefficient only.
+   }
+
+
+\items{
+   {\defopt{-t}{<int>}{use <int> threads}}
+   {\defopt{-J}{<intJ>}{a total of <intJ> jobs are used}}
+   {\defopt{-j}{<intj>}{this job has index <intj>}}
+}
+\car{
+   Computing clustering coefficients is time-intensive
+   for large graphs.  If you have multiple CPUs available consider using as
+   many threads. Additionally it is possible to spread the computation over
+   multiple jobs/machines.
+   These three options are described in the \sibref{clmprotocols} manual page.
+   The following set of options, if given to as many commands, defines three jobs, each running four threads.
+   }
+
+\verbatim{-t 4 -J 3 -j 0 -o out.0
+-t 4 -J 3 -j 1 -o out.1
+-t 4 -J 3 -j 2 -o out.2}
+
+\car{
+   The output can then be collected with
+   }
+
+\verbatim{mcx collect --add-column -o out.all out.[0-2]}
+
+\stddefopt
+
+\end{itemize}
+
+
+\sec{seealso}{SEE ALSO}
+\par{
+   \mysib{mcxio},
+   and \mysib{mclfamily} for an overview of all the documentation
+   and the utilities in the mcl family.}
+
+\end{pud::man}
+

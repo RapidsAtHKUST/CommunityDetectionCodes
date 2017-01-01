@@ -1,0 +1,87 @@
+.\" Copyright (c) 2014 Stijn van Dongen
+.TH "clm order" 1 "16 May 2014" "clm order 14-137" "USER COMMANDS "
+.po 2m
+.de ZI
+.\" Zoem Indent/Itemize macro I.
+.br
+'in +\\$1
+.nr xa 0
+.nr xa -\\$1
+.nr xb \\$1
+.nr xb -\\w'\\$2'
+\h'|\\n(xau'\\$2\h'\\n(xbu'\\
+..
+.de ZJ
+.br
+.\" Zoem Indent/Itemize macro II.
+'in +\\$1
+'in +\\$2
+.nr xa 0
+.nr xa -\\$2
+.nr xa -\\w'\\$3'
+.nr xb \\$2
+\h'|\\n(xau'\\$3\h'\\n(xbu'\\
+..
+.if n .ll -2m
+.am SH
+.ie n .in 4m
+.el .in 8m
+..
+.SH NAME
+clm order \- reorder clusterings conformal to inclusion structure
+
+clmorder is not in actual fact a program\&. This manual
+page documents the behaviour and options of the clm program when
+invoked in mode \fIorder\fP\&. The options \fB-h\fP, \fB--apropos\fP,
+\fB--version\fP, \fB-set\fP, \fB--nop\fP are accessible
+in all \fBclm\fP modes\&. They are described
+in the \fBclm\fP manual page\&.
+.SH SYNOPSIS
+
+\fBclm order\fP
+\fB[-prefix\fP <string> (\fIfile multiplex prefix\fP)\fB]\fP
+\fB[-o\fP <fname> (\fIconcatenated output in single file\fP)\fB]\fP
+<cluster|stack>+
+.SH DESCRIPTION
+
+Given a set of input clusterings \fBclm order\fP first transform it into a stack
+of strictly nesting clusterings\&. It does this by splitting clusters where
+necessary\&.
+It then reorders the coarsest (i\&.e\&. level-one) clustering, from large to
+small clusters\&. After that it reorders the second coarsest clustering
+conformally such that the first batch among its reordered clusters covers the
+level-one largest cluster, the second batch covers the level-one second
+largest cluster, and so on\&. Within these constraints, each batch of
+second-level clusters (corresponding to a single first-level cluster) is
+again ordered from larger to smaller clusters\&. This process is applied
+recursively throughout the entire stack of input clusters\&.
+
+The input can be specified in multiple files, and a single file may contain
+multiple clusterings\&. The output is by default written as a concatenation of
+matrix files, the so-called stack format\&. Use the \fB-o\fP option to
+specify the output file\&. The stacked format can be converted to Newick
+format using \fBmcxdump(1)\fP\&. The output can be written to multiple files,
+one for each projected clustering, by using the \fB-prefix\fP option\&. By
+example, \fB-prefix\fP\ \&\fBP\fP leads to output in files named \fCP1\fP, \fCP2\fP,
+\&.\&.\fCPN\fP, where \fCN\fP is the number of clusters in the input, \fCP1\fP is the
+most fine-grained ordered clustering, and \fCPN\fP is the coarsest clustering\&.
+.SH OPTIONS
+
+.ZI 2m "\fB-prefix\fP (\fI<string>\fP)"
+\&
+'in -2m
+.ZI 2m "\fB-o\fP (\fI<fname>\fP)"
+\&
+'in -2m
+'in +2m
+\&
+.br
+As decribed above\&.
+.in -2m
+.SH AUTHOR
+
+Stijn van Dongen\&.
+.SH SEE ALSO
+
+\fBmclfamily(7)\fP for an overview of all the documentation
+and the utilities in the mcl family\&.

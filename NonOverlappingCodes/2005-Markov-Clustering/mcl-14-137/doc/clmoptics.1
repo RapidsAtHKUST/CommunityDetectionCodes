@@ -1,0 +1,145 @@
+.\" Copyright (c) 2014 Stijn van Dongen
+.TH "clm optics" 1 "16 May 2014" "clm optics 14-137" "USER COMMANDS "
+.po 2m
+.de ZI
+.\" Zoem Indent/Itemize macro I.
+.br
+'in +\\$1
+.nr xa 0
+.nr xa -\\$1
+.nr xb \\$1
+.nr xb -\\w'\\$2'
+\h'|\\n(xau'\\$2\h'\\n(xbu'\\
+..
+.de ZJ
+.br
+.\" Zoem Indent/Itemize macro II.
+'in +\\$1
+'in +\\$2
+.nr xa 0
+.nr xa -\\$2
+.nr xa -\\w'\\$3'
+.nr xb \\$2
+\h'|\\n(xau'\\$3\h'\\n(xbu'\\
+..
+.if n .ll -2m
+.am SH
+.ie n .in 4m
+.el .in 8m
+..
+.SH NAME
+clm optics \- implementation of the OPTICS reachability ordering
+
+clmoptics is not in actual fact a program\&. This manual
+page documents the behaviour and options of the clm program when
+invoked in mode \fIoptics\fP\&. The options \fB-h\fP, \fB--apropos\fP,
+\fB--version\fP, \fB-set\fP, \fB--nop\fP are accessible
+in all \fBclm\fP modes\&. They are described
+in the \fBclm\fP manual page\&.
+.SH SYNOPSIS
+
+\fBclm optics\fP -imx <fname> [options]
+
+\fBclm optics\fP
+\fB-imx\fP fname (\fIinput graph file name\fP)
+\fB-max-eps\fP <num> (\fImaximum distance considered\fP)
+\fB-min-eps\fP <num> (\fIminimum similarity considered\fP)
+\fB-min-pts\fP <int> (\fIminimum eps-neighbourhood size\fP)
+\fB[-icl\fP fname (\fIinput clustering name\fP)\fB]\fP
+\fB[-o\fP fname (\fIoutput name\fP)\fB]\fP
+\fB[-ps\fP fname (\fIPostScript output name\fP)\fB]\fP
+\fB[-psx\fP fname (\fIscaling factor x axis\fP)\fB]\fP
+\fB[-psy\fP fname (\fIscaling factor y axis\fP)\fB]\fP
+\fB[-ps-rows\fP <num> (\fIsplit reachability plot into <num> rows\fP)\fB]\fP
+\fB[--ps-labels\fP (\fIshow identifiers in PS output\fP)\fB]\fP
+\fB[-h\fP (\fIprint synopsis, exit\fP)\fB]\fP
+\fB[--apropos\fP (\fIprint synopsis, exit\fP)\fB]\fP
+\fB[--version\fP (\fIprint version, exit\fP)\fB]\fP
+.SH DESCRIPTION
+
+This programs computes the reachability ordering according to the \fBOPTICS\fP
+clustering method\&. It can additionally output a PostScript plot of the reachability
+landscape\&. This plot can be annotated with a user-supplied clustering\&.
+The program does not implement the clustering method that is associated
+with \fBOPTICS\fP\&. It is part of \fBmcl-edge\fP primarily as a visualisation aid\&.
+.SH OPTIONS
+
+.ZI 2m "\fB-imx\fP fname (\fIinput file\fP)"
+\&
+.br
+The input file, encoding a graph in native format\&.
+.in -2m
+
+.ZI 2m "\fB-max-eps\fP <num> (\fImaximum distance considered\fP)"
+\&
+'in -2m
+.ZI 2m "\fB-min-eps\fP <num> (\fIminimum similarity considered\fP)"
+\&
+'in -2m
+.ZI 2m "\fB-min-pts\fP <int> (\fIminimum eps-neighbourhood size\fP)"
+\&
+'in -2m
+'in +2m
+\&
+.br
+These encode the \fBOPTICS\fP parameters\&. Use \fB-max-eps\fP if the
+edge weights encode a distance (for example the Euclidean distance between
+points), use \fB-min-eps\fP if the edge weights encode a similarity\&.
+.in -2m
+
+.ZI 2m "\fB-o\fP fname (\fIoutput file name\fP)"
+\&
+'in -2m
+.ZI 2m "\fB-ps\fP fname (\fIPostScript file name\fP)"
+\&
+'in -2m
+.ZI 2m "\fB-icl\fP fname (\fIinput clustering name\fP)"
+\&
+'in -2m
+'in +2m
+\&
+.br
+The \fB-o\fP\ \&\fIfname\fP option controls the name of the file in which the reachability
+values are written\&. By default these values are written to STDOUT\&.
+
+If \fB-ps\fP\ \&\fIfname\fP is supplied the program will additionally output a visualisation
+of the reachability landscape plot in a PostScript file\&.
+
+It is possible, in addition to \fB-ps\fP, to specify a clustering with \fB-icl\fP\ \&\fIfname\fP\&.
+Each vertical bar in the landscape plot will be coloured according to cluster membership,
+that is, nodes in the same cluster will have the same colour\&. This can be a useful way
+to visualise separation properties of clusterings\&.
+.in -2m
+
+.ZI 2m "\fB-psx\fP fname (\fIscaling factor x axis\fP)"
+\&
+'in -2m
+.ZI 2m "\fB-psy\fP fname (\fIscaling factor y axis\fP)"
+\&
+'in -2m
+.ZI 2m "\fB--ps-labels\fP (\fIshow identifiers in PS output\fP)"
+\&
+'in -2m
+.ZI 2m "\fB-ps-rows\fP <num> (\fIsplit reachability plot into <num> rows\fP)"
+\&
+'in -2m
+'in +2m
+\&
+.br
+By default the PostScript output will be scaled to fit onto an A3 page\&.
+The scaling options \fB-psx\fP and \fB-psy\fP can be used as additional
+scaling factors\&. By default these are set \fC1\&.0\fP\&.
+
+The \fB--ps-labels\fP can be used to annotate each vertical bar in the landscape
+plot with the \fBmcl-edge\fP identifier of the corresponding node\&.
+
+The \fB-ps-rows\fP option sets the number of rows\&. This is the primary
+option affect the width of a bar\&.
+.in -2m
+.SH AUTHOR
+
+Stijn van Dongen\&.
+.SH SEE ALSO
+
+\fBmclfamily(7)\fP for an overview of all the documentation
+and the utilities in the mcl family\&.

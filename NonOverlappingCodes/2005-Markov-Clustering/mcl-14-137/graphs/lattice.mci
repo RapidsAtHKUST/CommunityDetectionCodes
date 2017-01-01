@@ -1,0 +1,40 @@
+
+try e.g.
+   mcl lattice.mci -o -
+and
+   mcx /lattice.mci lm tp add /- wm | mcl - -o -
+(the mcx invocation transforms it to an undirected graph)
+
+            11           
+           /|\           
+         9/ | \10        
+          \ | /          
+         __\|/_          
+        /   8  \         
+      6/    ____\7       
+      /|\  /    /|\      
+    2/ | \/   4/ | \5    
+     \ | /3    \ | /     
+      \|/       \|/      
+      0         1        
+
+(mclheader
+mcltype matrix
+dimensions 12x12
+)
+(mclmatrix
+begin
+0  2 3 6 $
+1  4 5 7 $
+2  6 $
+3  6 7 $
+4  7 $
+5  7 $
+6  8 $
+7  8 $
+8  5 10 11 $
+9  11 $
+10 11 $
+11 $
+)
+

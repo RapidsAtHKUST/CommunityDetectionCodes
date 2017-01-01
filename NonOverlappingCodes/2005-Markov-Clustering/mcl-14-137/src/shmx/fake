@@ -1,0 +1,13 @@
+#!/bin/bash
+
+#todo: trap
+
+set -e
+
+mv mcxtest.c mcxtest.c.$$
+cp $1.c mcxtest.c
+make mcxtest || touch mcxtest
+cp mcxtest $1
+mv mcxtest.c.$$ mcxtest.c
+
+

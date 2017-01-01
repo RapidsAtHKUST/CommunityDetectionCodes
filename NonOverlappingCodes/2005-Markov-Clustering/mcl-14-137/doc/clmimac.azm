@@ -1,0 +1,108 @@
+\import{mcx.zmm}
+
+\begin{pud::man}{
+
+   {name}{clm imac}
+   {html_title}{The clm imac manual}
+   {author}{Stijn van Dongen}
+   {section}{1}
+   {synstyle}{long}
+   {defstyle}{long}
+
+   \man_share
+}
+
+\${html}{\"pud::man::maketoc"}
+
+\sec{name}{NAME}
+\NAME{clm imac}{Interpret Matrices (c.q. MCL iterands output by \mcl)\
+ As Clusterings.}
+\disclaim_clm{imac}
+
+\sec{synopsis}{SYNOPSIS}
+\par{
+   \clm{imac} -imx <fname> [options]
+   }
+
+\par{
+   \clm{imac}
+   \synreqopt{-imx}{fname}{input file}
+   \synoptopt{-o}{fname}{name/stem for output}
+   \synoptopt{-dag}{fname}{output DAG}
+   \synoptopt{-overlap}{str}{overlap mode}
+   \synoptopt{-sort}{str}{size|revsize|lex|none}
+   \synoptopt{-strict}{num}{in 0..1}
+   \stdsynopt
+   }
+
+\sec{description}{DESCRIPTION}
+
+\par{
+   Use \clm{imac} to interpret matrices (as clusterings) output by \mcl using
+   \mcl's \useopt{-dump}{ite} option.}
+
+\par{
+   Use \clm{imac} only if you have a special reason; the normal usage
+   of \mcl is to do multiple runs for varying \genopt{-I} parameters
+   and use the clusterings output by \mcl itself.
+   One reason is if you are interested in clusterings with overlap;
+   early MCL iterands generally induce clusterings possessing overlap.
+   Another reason is to investigate how the cluster structure
+   associated with the MCL process evolves over time.}
+
+\sec{options}{OPTIONS}
+
+\'begin{itemize}{\mcx_itemopts}
+
+\item{\defopt{-imx}{fname}{input file}}
+\car{
+   The input file is presumably an MCL iterand resulting
+   from the mcl option \useopt{-dump}{ite}.}
+
+\item{\defopt{-strict}{num}{in 0..1}}
+\car{
+   Higher values (up until 1) will thin out the DAG
+   constructed by \clmimac. The default value is 0.00001,
+   yielding the full DAG.
+   }
+
+\item{\defopt{-o}{fname}{file name/stem}}
+\car{
+   Write to file named \genarg{fname}.}
+
+\item{\defopt{-dag}{fname}{output DAG}}
+\car{
+   Write the DAG (directed acyclic graph) constructed from the input to
+   file. This DAG is constructed according to the structure associated
+   with diagonally positive semi-definite matrices as described
+   in the PhD thesis \it{Graph clustering by flow simulation}.
+   Consult \mysib{mclfamily} for references.}
+
+\item{\defopt{-sort}{str}{size|revsize|lex|none}}
+\car{
+   Sort the clusters either by increasing size, decreasing size,
+   lexicographically by the indices they contain, or use the clustering
+   exactly as obtained from the interpretation routine.}
+
+\item{\defopt{-overlap}{mode}{overlap mode}}
+\car{
+   With \genarg{mode} set to \it{cut}, remove any overlap  by allocating the
+   nodes in overlap to the first cluster in which they were found.  Mode
+   \it{keep} leaves overlap unchanged, and mode \it{split} results in overlapping
+   parts excised and introduced as clusters in their own right.
+   }
+
+\stddefopt
+
+\end{itemize}
+
+\sec{author}{AUTHOR}
+\par{
+   Stijn van Dongen.}
+
+\sec{seealso}{SEE ALSO}
+\par{
+   \mysib{mclfamily} for an overview of all the documentation
+   and the utilities in the mcl family.}
+
+\end{pud::man}

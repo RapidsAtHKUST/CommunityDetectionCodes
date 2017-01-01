@@ -1,0 +1,77 @@
+#!/bin/sh -e
+
+# $Id: bootstrap,v 1.21 2005/03/27 18:21:20 joostvb Exp $
+
+#
+# bootstrap - script to bootstrap the distribution rolling engine
+#
+# to build a tarball, ready for distribution, from fresh checked out
+# cvs sources, do
+#
+#    ./bootstrap && ./configure && make && make distcheck
+#
+# this will yield a tarball, e.g. mcl-20020109.tar.gz .  Once this has been
+# run, one can, after e.g. editing sources, run just
+#
+#     make distcheck
+#
+# to generate a new tarball.  (No need to run ./bootstrap again in this case.)
+# After downloading, users do
+#
+#    tar zxf mcl-20020109.tar.gz
+#    cd mcl-20020109
+#    ./configure && make
+#    make install
+#
+# To force a new configure.ac.in to get read, do either
+#
+#  make configure.ac
+#
+# or
+#
+#  rm VERSION ; ./bootstrap
+#
+# .
+
+set -x
+
+if test ! -f VERSION
+then
+    ./setversion
+fi
+
+# hack as used in systraq
+test -f acinclude.m4 || {
+    if test -f /usr/share/autoconf-archive/acx_pthread.m4
+    then
+        # we probably have the autoconf-archive Debian package installed
+        ln -s /usr/share/autoconf-archive/acx_pthread.m4 acinclude.m4
+    elif test -f /usr/share/aclocal/z-acx_pthread.m4
+    then
+        # we probably have an aclocal-archive RPM installed
+        ln -s /usr/share/aclocal/z-acx_pthread.m4 acinclude.m4
+    elif test -f $HOME/local/share/autoconf-archive/acx_pthread.m4
+    then
+        # some people prefer to maintain fresh copies of development tools
+        # in their home directories.  be nice to them too.
+        ln -s $HOME/local/share/autoconf-archive/acx_pthread.m4 acinclude.m4
+    else
+        cat <<EOT
+You need the autoconf-archive Debian package, or the aclocal-archive
+RPM package.  Alternatively, you could install the GNU Autoconf Macro
+Archive's http://www.gnu.org/software/ac-archive/htmldoc/acx_pthread.html
+as `pwd`/acinclude.m4.
+EOT
+   fi
+}
+
+if test ! -L util/Makefile.am
+then
+   ./mkutil
+fi
+
+aclocal \
+    && autoheader \
+    && automake --verbose --gnu --add-missing \
+    && autoconf
+

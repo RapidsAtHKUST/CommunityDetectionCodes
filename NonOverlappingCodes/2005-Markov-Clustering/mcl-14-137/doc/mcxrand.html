@@ -1,0 +1,304 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html>
+<!-- Copyright (c) 2014 Stijn van Dongen -->
+<head>
+<meta name="keywords" content="manual">
+<style type="text/css">
+/* START aephea.base.css */
+body
+{ text-align: justify;
+margin-left: 0%;
+margin-right: 0%;
+}
+a:link { text-decoration: none; }
+a:active { text-decoration: none; }
+a:visited { text-decoration: none; }
+a:link { color: #1111aa; }
+a:active { color: #1111aa; }
+a:visited { color: #111166; }
+a.local:link { color: #11aa11; }
+a.local:active { color: #11aa11; }
+a.local:visited { color: #116611; }
+a.intern:link { color: #1111aa; }
+a.intern:active { color: #1111aa; }
+a.intern:visited { color: #111166; }
+a.extern:link { color: #aa1111; }
+a.extern:active { color: #aa1111; }
+a.extern:visited { color: #661111; }
+a.quiet:link { color: black; }
+a.quiet:active { color: black; }
+a.quiet:visited { color: black; }
+div.verbatim
+{ font-family: monospace;
+margin-top: 1em;
+margin-bottom: 1em;
+font-size: 10pt;
+margin-left: 2em;
+white-space: pre;
+}
+div.indent
+{ margin-left: 8%;
+margin-right: 0%;
+}
+.right { text-align: right; }
+.left { text-align: left; }
+.nowrap { white-space: nowrap; }
+.item_leader
+{ position: relative;
+margin-left: 8%;
+}
+.item_compact { position: absolute; vertical-align: baseline; }
+.item_cascade { position: relative; }
+.item_leftalign { text-align: left; }
+.item_rightalign
+{ width: 2em;
+text-align: right;
+}
+.item_compact .item_rightalign
+{ position: absolute;
+width: 52em;
+right: -2em;
+text-align: right;
+}
+.item_text
+{ position: relative;
+margin-left: 3em;
+}
+.smallcaps { font-size: smaller; text-transform: uppercase }
+/* END aephea.base.css */
+body { font-family: "Garamond", "Gill Sans", "Verdana", sans-serif; }
+body
+{ text-align: justify;
+margin-left: 8%;
+margin-right: 8%;
+}
+</style>
+<title>The mcxrand manual</title>
+</head>
+<body>
+<p style="text-align:right">
+16 May 2014&nbsp;&nbsp;&nbsp;
+<a class="local" href="mcxrand.ps"><b>mcxrand</b></a>
+14-137
+</p>
+<div class=" itemize " style="margin-top:1em; font-size:100%">
+<div class=" item_compact"><div class=" item_rightalign nowrap " style="right:-3em">1.</div></div>
+<div class=" item_text " style="margin-left:4em">
+<a class="intern" href="#name">NAME</a>
+</div>
+<div class=" item_compact"><div class=" item_rightalign nowrap " style="right:-3em">2.</div></div>
+<div class=" item_text " style="margin-left:4em">
+<a class="intern" href="#synopsis">SYNOPSIS</a>
+</div>
+<div class=" item_compact"><div class=" item_rightalign nowrap " style="right:-3em">3.</div></div>
+<div class=" item_text " style="margin-left:4em">
+<a class="intern" href="#description">DESCRIPTION</a>
+</div>
+<div class=" item_compact"><div class=" item_rightalign nowrap " style="right:-3em">4.</div></div>
+<div class=" item_text " style="margin-left:4em">
+<a class="intern" href="#options">OPTIONS</a>
+</div>
+<div class=" item_compact"><div class=" item_rightalign nowrap " style="right:-3em">5.</div></div>
+<div class=" item_text " style="margin-left:4em">
+<a class="intern" href="#seealso">SEE ALSO</a>
+</div>
+</div>
+
+<a name="name"></a>
+<h2>NAME</h2>
+<p style="margin-bottom:0" class="asd_par">
+mcxrand &mdash; random shuffling, removal, addition, and perturbation of edges of graphs</p>
+
+<a name="synopsis"></a>
+<h2>SYNOPSIS</h2>
+<p style="margin-bottom:0" class="asd_par">
+<b>mcxrand</b> [options]
+</p>
+<p style="margin-bottom:0" class="asd_par">
+<div class="verbatim">mcxrand -gen K -add N -new-g-mean f    # random graph on K nodes, N edges
+mcxrand -imx &lt;name&gt; -remove N -add N   # remove then add edges
+mcxrand -imx &lt;name&gt; -shuffle N         # shuffle N edge pairs
+mcxrand -imx &lt;name&gt; -noise-radius f    # add noise to add weights</div>
+mcxrand -pa N/m # preferential attachment generation</p>
+<p style="margin-bottom:0" class="asd_par">
+<b>mcxrand</b>
+<a class="intern" href="#opt-imx"><b>[-imx</b> &lt;fname&gt; (<i>input matrix</i>)<b>]</b></a>
+<a class="intern" href="#opt-o"><b>[-o</b> &lt;fname&gt; (<i>output matrix to &lt;fname&gt;</i>)<b>]</b></a>
+<a class="intern" href="#opt--write-binary"><b>[--write-binary</b> (<i>write output in binary format</i>)<b>]</b></a>
+<a class="intern" href="#opt-gen"><b>[-gen</b> &lt;num&gt; (<i>generate new graph</i>)<b>]</b></a>
+<a class="intern" href="#opt-pa"><b>[-pa</b> &lt;N&gt;/&lt;m&gt; (<i>preferential attachment</i>)<b>]</b></a>
+<a class="intern" href="#opt-remove"><b>[-remove</b> &lt;num&gt; (<i>remove &lt;num&gt; edges</i>)<b>]</b></a>
+<a class="intern" href="#opt-add"><b>[-add</b> &lt;num&gt; (<i>add &lt;num&gt; edges not yet present</i>)<b>]</b></a>
+<a class="intern" href="#opt-shuffle"><b>[-shuffle</b> &lt;num&gt; (<i>shuffle edge pair &lt;num&gt; times</i>)<b>]</b></a>
+<a class="intern" href="#opt-icl"><b>[-icl</b> &lt;fname&gt; (<i>shuffle nodes preserving cluster sizes</i>)<b>]</b></a>
+<a class="intern" href="#opt-h"><b>[-h</b> (<i>print synopsis, exit</i>)<b>]</b></a>
+<a class="intern" href="#opt--apropos"><b>[--apropos</b> (<i>print synopsis, exit</i>)<b>]</b></a>
+<a class="intern" href="#opt--version"><b>[--version</b> (<i>print version, exit</i>)<b>]</b></a>
+</p>
+
+<a name="description"></a>
+<h2>DESCRIPTION</h2>
+<p style="margin-bottom:0" class="asd_par">
+This utility is a recent addition to the mcl suite and the schemes
+explained below will likely be evolved, simplified, and extended
+with future releases.</p>
+<p style="margin-bottom:0" class="asd_par">
+The <b>--shuffle</b>, <b>-gen</b> and <b>-pa</b> options can be deemend
+stable and robust. The options that determine edge weight perturbation and
+generation are likely to be subject to revision in the future.</p>
+<p style="margin-bottom:0" class="asd_par">
+The input graph/matrix, if specified with the <b>-imx</b> option,
+has to be in mcl matrix/graph format.
+You can use label input instead by preprocessing the label input
+with <a class="local sibling" href="mcxload.html">mcxload</a>, i.e.</p>
+<div class="verbatim">   mcxload -abc &lt;label-file&gt; | mcxrand [options]</div>
+<p style="margin-bottom:0" class="asd_par">
+Refer to <a class="local sibling" href="mcxio.html">mcxio</a> for a description of these two input formats.
+By default <b>mcxrand</b> reads from STDIN. Change this with the <a class="intern" href="#opt-imx"><b>-imx</b></a>
+option.</p>
+<p style="margin-bottom:0" class="asd_par">
+<b>mcxrand</b> can randomly remove and add edges to a graph, or add gaussian noise
+to the edge weights of a graph. It can also shuffle edge pairs while
+preserving the degree sequence of the graph.
+In <i>removal mode</i> (<a class="intern" href="#opt-remove"><b>-remove</b>&nbsp;<i>&lt;num&gt;</i></a>) and in
+<i>addition mode</i> (<a class="intern" href="#opt-add"><b>-add</b>&nbsp;<i>&lt;num&gt;</i></a>)
+<b>mcxrand</b> enforces arc symmetry by only working with edges
+<i>w(i,j)</i> where <i>i &lt; j</i> and symmetrifying the result and adding any
+loops that were present in the input graph just before the output stage.</p>
+<p style="margin-bottom:0" class="asd_par">
+In <i>perturbation mode</i> (<a class="intern" href="#opt-noise-radius"><b>-noise-radius</b></a>, with no other mode specified)
+the input can be any graph.</p>
+<p style="margin-bottom:0" class="asd_par">
+<i>Shuffle mode</i> (<a class="intern" href="#opt-shuffle"><b>-shuffle</b>&nbsp;<i>&lt;num&gt;</i></a>) requires an undirected graph
+but will only fail when it picks an arc for which the arc in the reverse
+direction is not present. This means it may or may not fail on directed
+input depending on the random choices. It does not check equality of the two
+arc weights and randomly picks one to represent the edge weight.</p>
+<p style="margin-bottom:0" class="asd_par">
+Edge removal, edge creation, and edge perturbation are applied in this order
+if both are specified. Edge shuffling presently cannot be combined with one
+of the previous modes.</p>
+<p style="margin-bottom:0" class="asd_par">
+A random graph can be generated with <a class="intern" href="#opt-gen"><b>-gen</b>&nbsp;<i>k</i></a>, which
+specifies the number of nodes the graph should have. It is equivalent
+with pasing (the file name of) an empty graph of the same dimensions as the argument
+to <b>-imx</b>.</p>
+<p style="margin-bottom:0" class="asd_par">
+When adding (i.e. creating) edges, the default is to use the uniform
+distribution for new edge weights ranging in some interval.
+The default interval is [0,1] and can be modified using the
+<a class="intern" href="#opt-edge-min"><b>-edge-min</b>&nbsp;<i>min</i></a> and <a class="intern" href="#opt-edge-max"><b>-edge-max</b>&nbsp;<i>max</i></a> options.
+A Gaussian edge weight distribution can be obtained by specifying
+<a class="intern" href="#opt-new-g-mean"><b>-new-g-mean</b>&nbsp;<i>num</i></a>. The standard deviation is by default
+1.0 and can be altered with <a class="intern" href="#opt-new-g-sdev"><b>-new-g-sdev</b>&nbsp;<i>num</i></a>.
+Currently the edge weigths are generated within the interval
+[<i>mean-radius</i>, <i>mean+radius</i>] where <i>radius</i> is specified
+with <a class="intern" href="#opt-new-g-radius"><b>-new-g-radius</b></a>. They are further selected to
+lie within the interval <i>[L,R]</i> if and only if
+<a class="intern" href="#opt-new-g-min"><b>-new-g-min</b>&nbsp;<i>L</i></a> and <a class="intern" href="#opt-new-g-max"><b>-new-g-max</b>&nbsp;<i>R</i></a> have
+been specified.
+</p>
+<p style="margin-bottom:0" class="asd_par">
+For both uniform and Gaussian edge creation the edge weights
+can be skewed towards either side of the distribution with
+<a class="intern" href="#opt-skew"><b>-skew</b>&nbsp;<i>c</i></a>. Skewing is applied by mapping
+the edge weights to the interval [0,1], applying
+the function <i>x^c</i>, and remapping the resulting number.
+For values <i>c&lt;1</i> this skews the edge weights towards
+the right bound and for values <i>c&gt;1</i> this skews the edge
+weights towards the left bound.
+This is a rather crude approach that will likely be
+changed in the future.
+</p>
+<p style="margin-bottom:0" class="asd_par">
+Edge weights can be perturbed by specifying <a class="intern" href="#opt-noise-radius"><b>-noise-radius</b>&nbsp;<i>radius</i></a>.
+This sets the maximum perturbation allowed. Noise is generated with
+a standard deviation that is by default set to 0.5 and can be altered
+using <a class="intern" href="#opt-noise-sdev"><b>-noise-sdev</b>&nbsp;<i>num</i></a>.
+Values are generated in the interval <i>[-fac*sdev, fac*sdev]</i>
+where <i>fac</i> is set with <a class="intern" href="#opt-noise-range"><b>-noise-range</b>&nbsp;<i>fac</i></a>.
+This interval is mapped to the interval <i>[-radius, radius]</i> before
+the resulting value is added to the actual edge weight.
+This becomes the new value. If an interval <i>[L,R]</i> is explicitly
+specified using <a class="intern" href="#opt-edge-min"><b>-edge-min</b>&nbsp;<i>L</i></a> and <a class="intern" href="#opt-edge-max"><b>-edge-max</b>&nbsp;<i>R</i></a>
+then the new value will be accepted only if it lies within the interval,
+otherwise the edge will not be perturbed.
+</p>
+
+<a name="options"></a>
+<h2>OPTIONS</h2>
+<div class=" itemize " style="margin-top:1em; font-size:100%">
+<div class=" item_cascade"><div class=" item_leftalign nowrap " ><a name="opt-imx"></a><b>-imx</b> &lt;fname&gt; (<i>input matrix</i>)</div></div>
+<div class=" item_text " style="margin-left:2em">
+<p style="margin-top:0em; margin-bottom:0em">
+The file name for input. STDIN is assumed if neither
+<b>-imx</b> nor <a class="intern" href="#opt-gen"><b>-gen</b>&nbsp;<i>num</i></a> is specified.</p>
+</div>
+<div style="margin-top:0em">&nbsp;</div><div class=" item_cascade"><div class=" item_leftalign nowrap " ><a name="opt-o"></a><b>-o</b> &lt;fname&gt; (<i>output matrix to &lt;fname&gt;</i>)</div></div>
+<div class=" item_text " style="margin-left:2em">
+<p style="margin-top:0em; margin-bottom:0em">
+The file to write the transformed matrix to.</p>
+</div>
+<div style="margin-top:0em">&nbsp;</div><div class=" item_cascade"><div class=" item_leftalign nowrap " ><a name="opt--write-binary"></a><b>--write-binary</b> (<i>write output in binary format</i>)</div></div>
+<div class=" item_text " style="margin-left:2em">
+<p style="margin-top:0em; margin-bottom:0em">
+Write the output matrix in native binary format.
+</p>
+</div>
+<div style="margin-top:0em">&nbsp;</div><div class=" item_cascade"><div class=" item_leftalign nowrap " ><a name="opt-shuffle"></a><b>-shuffle</b> &lt;num&gt; (<i>shuffle edge pair &lt;num&gt; times</i>)</div></div>
+<div class=" item_text " style="margin-left:2em">
+<p style="margin-top:0em; margin-bottom:0em">
+Shuffle edge pair &lt;num&gt; times. An edge shuffle
+acts on two randomly chosen edges
+edges <i>w(a,b)</i> and <i>w(c,d)</i> where all the nodes must
+be different. If either none of the edges in <i>w(a,c)</i>, <i>w(b,d)</i>
+or none of the edges in <i>w(a,d)</i>, <i>w(b,c)</i> exists
+the original two edges are removed and is replaced
+by an edge pair for which both edges did not exist before.</p>
+</div>
+<div style="margin-top:0em">&nbsp;</div><div class=" item_cascade"><div class=" item_leftalign nowrap " ><a name="opt-icl"></a><b>-icl</b> &lt;fname&gt; (<i>shuffle nodes preserving cluster sizes</i>)</div></div>
+<div class=" item_text " style="margin-left:2em">
+<p style="margin-top:0em; margin-bottom:0em">
+Use this option to generate a random clustering with the exact same
+cluster size distribution as the input clustering.
+</p>
+</div>
+<div style="margin-top:0em">&nbsp;</div><div class=" item_cascade"><div class=" item_leftalign nowrap " ><a name="opt-pa"></a><b>-pa</b> &lt;N&gt;/&lt;m&gt; (<i>preferential attachment</i>)</div></div>
+<div class=" item_text " style="margin-left:2em">
+<p style="margin-top:0em; margin-bottom:0em">
+This generates a random graph using preferential attachment.
+In this model new nodes are sequentially added to a graph.
+Each new node is connected with <i>&lt;m&gt;</i> of the existing
+nodes (including nodes previously added), where the likelihood
+of picking an existing node is proportional to the edge
+degree of that node. During construction multiple edges between
+two nodes are allowed (each with weight one), and these are collapsed by adding
+their weights before output.
+</p>
+</div>
+<div style="margin-top:0em">&nbsp;</div><div class=" item_cascade"><div class=" item_leftalign nowrap " ><a name="opt-remove"></a><b>-remove</b> &lt;num&gt; (<i>remove &lt;num&gt; edges</i>)</div></div>
+<div class=" item_text " style="margin-left:2em">
+<p style="margin-top:0em; margin-bottom:0em">
+Remove this many edges from the input graph.</p>
+</div>
+<div style="margin-top:0em">&nbsp;</div><div class=" item_cascade"><div class=" item_leftalign nowrap " ><a name="opt-add"></a><b>-add</b> &lt;num&gt; (<i>add &lt;num&gt; edges not yet present</i>)</div></div>
+<div class=" item_text " style="margin-left:2em">
+<p style="margin-top:0em; margin-bottom:0em">
+Create this many new edges.</p>
+</div>
+<div style="margin-top:0em">&nbsp;</div><div class=" item_cascade"><div class=" item_leftalign nowrap " ><a name="opt-gen"></a><b>-gen</b> &lt;num&gt; (<i>node number</i>)</div></div>
+<div class=" item_text " style="margin-left:2em">
+<p style="margin-top:0em; margin-bottom:0em">
+Use in conjunction with <b>-add</b> to generate
+a random graph on <i>&lt;num&gt;</i> nodes.</p>
+</div>
+</div>
+
+<a name="seealso"></a>
+<h2>SEE ALSO</h2>
+<p style="margin-bottom:0" class="asd_par">
+<a class="local sibling" href="mcxio.html">mcxio</a>,
+and <a class="local sibling" href="mclfamily.html">mclfamily</a> for an overview of all the documentation
+and the utilities in the mcl family.</p>
+</body>
+</html>

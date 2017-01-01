@@ -1,0 +1,215 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html>
+<!-- Copyright (c) 2014 Stijn van Dongen -->
+<head>
+<meta name="keywords" content="manual">
+<style type="text/css">
+/* START aephea.base.css */
+body
+{ text-align: justify;
+margin-left: 0%;
+margin-right: 0%;
+}
+a:link { text-decoration: none; }
+a:active { text-decoration: none; }
+a:visited { text-decoration: none; }
+a:link { color: #1111aa; }
+a:active { color: #1111aa; }
+a:visited { color: #111166; }
+a.local:link { color: #11aa11; }
+a.local:active { color: #11aa11; }
+a.local:visited { color: #116611; }
+a.intern:link { color: #1111aa; }
+a.intern:active { color: #1111aa; }
+a.intern:visited { color: #111166; }
+a.extern:link { color: #aa1111; }
+a.extern:active { color: #aa1111; }
+a.extern:visited { color: #661111; }
+a.quiet:link { color: black; }
+a.quiet:active { color: black; }
+a.quiet:visited { color: black; }
+div.verbatim
+{ font-family: monospace;
+margin-top: 1em;
+margin-bottom: 1em;
+font-size: 10pt;
+margin-left: 2em;
+white-space: pre;
+}
+div.indent
+{ margin-left: 8%;
+margin-right: 0%;
+}
+.right { text-align: right; }
+.left { text-align: left; }
+.nowrap { white-space: nowrap; }
+.item_leader
+{ position: relative;
+margin-left: 8%;
+}
+.item_compact { position: absolute; vertical-align: baseline; }
+.item_cascade { position: relative; }
+.item_leftalign { text-align: left; }
+.item_rightalign
+{ width: 2em;
+text-align: right;
+}
+.item_compact .item_rightalign
+{ position: absolute;
+width: 52em;
+right: -2em;
+text-align: right;
+}
+.item_text
+{ position: relative;
+margin-left: 3em;
+}
+.smallcaps { font-size: smaller; text-transform: uppercase }
+/* END aephea.base.css */
+body { font-family: "Garamond", "Gill Sans", "Verdana", sans-serif; }
+body
+{ text-align: justify;
+margin-left: 8%;
+margin-right: 8%;
+}
+</style>
+<title>The mcx clcf manual</title>
+</head>
+<body>
+<p style="text-align:right">
+16 May 2014&nbsp;&nbsp;&nbsp;
+<a class="local" href="mcxclcf.ps"><b>mcx clcf</b></a>
+14-137
+</p>
+<div class=" itemize " style="margin-top:1em; font-size:100%">
+<div class=" item_compact"><div class=" item_rightalign nowrap " style="right:-3em">1.</div></div>
+<div class=" item_text " style="margin-left:4em">
+<a class="intern" href="#name">NAME</a>
+</div>
+<div class=" item_compact"><div class=" item_rightalign nowrap " style="right:-3em">2.</div></div>
+<div class=" item_text " style="margin-left:4em">
+<a class="intern" href="#synopsis">SYNOPSIS</a>
+</div>
+<div class=" item_compact"><div class=" item_rightalign nowrap " style="right:-3em">3.</div></div>
+<div class=" item_text " style="margin-left:4em">
+<a class="intern" href="#description">DESCRIPTION</a>
+</div>
+<div class=" item_compact"><div class=" item_rightalign nowrap " style="right:-3em">4.</div></div>
+<div class=" item_text " style="margin-left:4em">
+<a class="intern" href="#options">OPTIONS</a>
+</div>
+<div class=" item_compact"><div class=" item_rightalign nowrap " style="right:-3em">5.</div></div>
+<div class=" item_text " style="margin-left:4em">
+<a class="intern" href="#seealso">SEE ALSO</a>
+</div>
+</div>
+
+<a name="name"></a>
+<h2>NAME</h2>
+<p style="margin-bottom:0" class="asd_par">
+mcx clcf &mdash; compute the clustering coefficient of a graph</p>
+
+<a name="synopsis"></a>
+<h2>SYNOPSIS</h2>
+<p style="margin-bottom:0" class="asd_par">
+<b>mcx&nbsp;clcf</b> [options] [matrix-file]</p>
+<p style="margin-bottom:0" class="asd_par">mcxclcf is not in actual fact a program. This manual
+page documents the behaviour and options of the mcx program when
+invoked in mode <i>clcf</i>. The options <b>-h</b>, <b>--apropos</b>,
+<b>--version</b>, <b>-set</b>, <b>--nop</b>, <b>-progress</b>&nbsp;<i>&lt;num&gt;</i>
+are accessible
+in all <b>mcx</b> modes. They are described
+in the <a class="local sibling" href="mcx.html">mcx</a> manual page.</p>
+<p style="margin-bottom:0" class="asd_par">
+<b>mcx&nbsp;clcf</b>
+<a class="intern" href="#opt-abc"><b>[-abc</b> &lt;fname&gt; (<i>specify label input</i>)<b>]</b></a>
+<a class="intern" href="#opt-imx"><b>[-imx</b> &lt;fname&gt; (<i>specify matrix input</i>)<b>]</b></a>
+<a class="intern" href="#opt-tab"><b>[-tab</b> &lt;fname&gt; (<i>use tab file</i>)<b>]</b></a>
+<a class="intern" href="#opt-o"><b>[-o</b> &lt;fname&gt; (<i>write to this file</i>)<b>]</b></a>
+<a class="intern" href="#opt-t"><b>[-t</b> &lt;int&gt; (<i>use &lt;int&gt; threads</i>)<b>]</b></a>
+<a class="intern" href="#opt-J"><b>[-J</b> &lt;intJ&gt; (<i>a total of &lt;intJ&gt; jobs are used</i>)<b>]</b></a>
+<a class="intern" href="#opt-j"><b>[-j</b> &lt;intj&gt; (<i>this job has index &lt;intj&gt;</i>)<b>]</b></a>
+<a class="intern" href="#opt--summary"><b>[--summary</b> (<i>return mean clustering coefficient</i>)<b>]</b></a>
+<a class="intern" href="#opt-h"><b>[-h</b> (<i>print synopsis, exit</i>)<b>]</b></a>
+<a class="intern" href="#opt--apropos"><b>[--apropos</b> (<i>print synopsis, exit</i>)<b>]</b></a>
+<a class="intern" href="#opt--version"><b>[--version</b> (<i>print version, exit</i>)<b>]</b></a>
+</p>
+
+<a name="description"></a>
+<h2>DESCRIPTION</h2>
+<p style="margin-bottom:0" class="asd_par">
+<b>mcx&nbsp;clcf</b> computes the clustering coefficient of a graph.</p>
+<p style="margin-bottom:0" class="asd_par">
+The input graph/matrix, if specified with the <b>-imx</b> option, has to
+be in mcl matrix/graph format. You can use label input instead by using the
+<b>-abc</b> option.
+Refer to <a class="local sibling" href="mcxio.html">mcxio</a> for a description of these two input formats.
+By default <b>mcx&nbsp;diameter</b> reads from STDIN <i>and expects matrix format</i>.
+To specify label input from STDIN use <b>-abc</b>&nbsp;<b>-</b>.</p>
+
+<a name="options"></a>
+<h2>OPTIONS</h2>
+<div class=" itemize " style="margin-top:1em; font-size:100%">
+<div class=" item_cascade"><div class=" item_leftalign nowrap " ><a name="opt-abc"></a><b>-abc</b> &lt;fname&gt; (<i>label input</i>)</div></div>
+<div class=" item_text " style="margin-left:2em">
+<p style="margin-top:0em; margin-bottom:0em">
+The file name for input that is in label format.</p>
+</div>
+<div style="margin-top:0em">&nbsp;</div><div class=" item_cascade"><div class=" item_leftalign nowrap " ><a name="opt-imx"></a><b>-imx</b> &lt;fname&gt; (<i>input matrix</i>)</div></div>
+<div class=" item_text " style="margin-left:2em">
+<p style="margin-top:0em; margin-bottom:0em">
+The file name for input. STDIN is assumed if not specified.</p>
+</div>
+<div style="margin-top:0em">&nbsp;</div><div class=" item_cascade"><div class=" item_leftalign nowrap " ><a name="opt-o"></a><b>-o</b> &lt;fname&gt; (<i>output file</i>)</div></div>
+<div class=" item_text " style="margin-left:2em">
+<p style="margin-top:0em; margin-bottom:0em">
+The file name for output. STDOUT is the default output stream.
+</p>
+</div>
+<div style="margin-top:0em">&nbsp;</div><div class=" item_cascade"><div class=" item_leftalign nowrap " ><a name="opt-tab"></a><b>-tab</b> &lt;fname&gt; (<i>use tab file</i>)</div></div>
+<div class=" item_text " style="margin-left:2em">
+<p style="margin-top:0em; margin-bottom:0em">
+This option causes the output to be printed with the labels
+found in the tab file.
+With <b>-abc</b> this option will, additionally, construct
+a graph only on the labels found in the tab file.
+If this option is used in conjunction with <b>-imx</b> the
+tab domain and the matrix domain are required to be identical.
+</p>
+</div>
+<div style="margin-top:0em">&nbsp;</div><div class=" item_cascade"><div class=" item_leftalign nowrap " ><a name="opt--summary"></a><b>--summary</b> (<i>return mean clustering coefficient</i>)</div></div>
+<div class=" item_text " style="margin-left:2em">
+<p style="margin-top:0em; margin-bottom:0em">
+By the default a 1-column table (with row names included) is output, one row
+for each node. This option causes the output of the average clustering
+coefficient only.
+</p>
+</div>
+<div style="margin-top:0em">&nbsp;</div><div class=" item_cascade item_leftalign nowrap" ><a name="opt-t"></a><b>-t</b> &lt;int&gt; (<i>use &lt;int&gt; threads</i>)</div><div class=" item_cascade item_leftalign nowrap" ><a name="opt-J"></a><b>-J</b> &lt;intJ&gt; (<i>a total of &lt;intJ&gt; jobs are used</i>)</div><div class=" item_cascade item_leftalign nowrap" ><a name="opt-j"></a><b>-j</b> &lt;intj&gt; (<i>this job has index &lt;intj&gt;</i>)</div>
+<div class=" item_text " style="margin-left:2em">
+<p style="margin-top:0em; margin-bottom:0em">
+Computing clustering coefficients is time-intensive
+for large graphs. If you have multiple CPUs available consider using as
+many threads. Additionally it is possible to spread the computation over
+multiple jobs/machines.
+These three options are described in the <a class="local sibling" href="clmprotocols.html">clmprotocols</a> manual page.
+The following set of options, if given to as many commands, defines three jobs, each running four threads.
+</p>
+<div class="verbatim">-t 4 -J 3 -j 0 -o out.0
+-t 4 -J 3 -j 1 -o out.1
+-t 4 -J 3 -j 2 -o out.2</div>
+<p style="margin-top:0em; margin-bottom:0em">
+The output can then be collected with
+</p>
+<div class="verbatim">mcx collect --add-column -o out.all out.[0-2]</div>
+</div>
+</div>
+
+<a name="seealso"></a>
+<h2>SEE ALSO</h2>
+<p style="margin-bottom:0" class="asd_par">
+<a class="local sibling" href="mcxio.html">mcxio</a>,
+and <a class="local sibling" href="mclfamily.html">mclfamily</a> for an overview of all the documentation
+and the utilities in the mcl family.</p>
+</body>
+</html>

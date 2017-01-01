@@ -1,0 +1,165 @@
+#!/usr/bin/env perl
+
+# granularity gauge.
+#
+# TODO:
+# syntax 0,10,0 does not work (i.e. until max)
+# need more cleverness in the range handling,
+# rather than spelling every range out.
+# note though that we now support overlapping ranges, 
+# which is nice.
+
+use strict;
+
+my $sep = "\t";
+my $rng = {};
+my $rngid = 1;
+my $shift = 0;
+my $buc = {};
+my $tag = "";
+my $quaxp = 0;
+
+my $emit = { hist => 1, range => 1};
+
+while ($ARGV[0] =~ /^--/) {
+   my $arg = shift @ARGV;
+   my ($val, $key) = ("", "");
+   if ($arg =~ /^--(.*?)(=(.*))?$/) {
+      $key = $1;
+      $val = $2 ? $3 : "";
+   }
+   else {
+      print "Arguments must be in <--key=val> or <--key> format\n";
+      exit;
+   }
+
+   if ($key eq 'sep') {
+      $sep = $val;
+   }
+   elsif ($key eq 'tag') {
+      $tag = $val;
+   }
+   elsif ($key eq 'quaxp') {
+      $quaxp = 1;
+   }
+   elsif ($key eq 'shift') {
+      $shift = $val;
+   }
+   elsif ($key eq 'emit') {
+      $emit = {};
+      if ($val =~ /\bhist\b/) {
+         $emit->{hist} = 1;
+      }
+      if ($val =~ /\brange\b/) {
+         $emit->{range} = 1;
+      }
+   }
+   elsif ($key eq 'range') {
+      my @vals = split ':', $val;
+      for my $pair  (@vals) {
+         if ($pair =~ /(\d+),(\d+),(\d+)/) {
+            my ($lo, $step, $hi) = ($1, $2, $3);
+            while ($lo < $hi) {
+               $rng->{$rngid} = {lo => $lo, hi => $lo+$step };
+               $rngid++;
+               $lo += $step;
+            }
+         }
+         elsif ($pair =~ /(\d+),(\d+)/) {
+            $rng->{$rngid} = {lo => $1, hi => $2 };
+            $rngid++;
+         }
+      }
+      $emit->{range} = 1;
+   }
+
+   else {
+      print "Unsupported option: --$key\n";
+      exit;
+   }
+}
+
+my $total = 0;
+my $linect = 0;
+
+while (<>) {
+   $linect++;
+   my $sz = 1 + s/$sep/$sep/g;
+   if ($shift) {
+      if ($sz < $shift) {
+         print STDERR "cannot shift $shift elems from line $linect\n";
+      }
+      else {
+         $sz -= $shift;
+      }
+   }
+   $buc->{$sz}++;
+   $total += $sz;
+}
+
+my $part = 0;
+my $cov = 0;
+my $maxsize = 0;
+
+if ($total) {
+   if ($tag) {
+      printf "%-30s", $tag;
+   }
+   for my $num (sort {$a <=> $b; } keys %$buc) {
+      my $cont = $buc->{$num} * $num;
+      $part += $cont;            # rrrribution
+      for my $rid (sort { $rng->{$a}->{lo} <=> $rng->{$b}->{lo}; } keys %$rng) {
+         my $lo = $rng->{$rid}{lo};
+         my $hi = $rng->{$rid}{hi};
+         if
+         (  (!$lo || $lo <= $num)
+         && (!$hi || $hi > $num)
+         )
+         {  $rng->{$rid}{cov} += $cont;
+         ;  $rng->{$rid}{ct}  += $buc->{$num};
+         }
+         last if $lo > $num;
+      }
+      $maxsize = $num;
+      if ($emit->{hist}) {
+         printf
+            "%12d %10d %12d %10.3f %10.3f\n"
+         ,  $num, $buc->{$num}, $cont, $cont / $total, $part / $total;
+      }
+   }
+   if ($emit->{range}) {
+      my $part = 0;
+      for my $rid (sort { $rng->{$a}->{lo} <=> $rng->{$b}->{lo}; } keys %$rng) {
+         my $cov  = $rng->{$rid}{cov};
+         my $lo   = $rng->{$rid}{lo};
+         my $hi   = $rng->{$rid}{hi};
+         my $ct   = $rng->{$rid}{ct};
+         $part += $cov;
+         my $pmcont = 1000 * ($cov / $total);
+         my $pmcuml = 1000 * ($part / $total);
+
+         if ($lo > $maxsize) {
+            next;
+         }
+         if (!$hi) {
+            $hi = $maxsize;
+         }
+         if ($quaxp) {
+            printf
+            "(range-count clct=%d lo-inc=%d hi-exc=%d pm=%.0f pm-cuml=%.0f)\n"
+            ,  $ct, $lo, $hi, $pmcont, $pmcuml;
+         }
+         else {
+            my $lead =
+            sprintf
+               "%4.0f pm in the range [%d, %d)"
+            ,  $pmcont, $lo, $hi, $ct;
+            printf
+               "%-40s %4d clusters   %4.0f pm cumulative\n"
+            ,  $lead, $ct, $pmcuml;
+         }
+      }
+   }
+}
+
+

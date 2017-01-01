@@ -1,0 +1,226 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html>
+<!-- Copyright (c) 2014 Stijn van Dongen -->
+<head>
+<meta name="keywords" content="manual">
+<style type="text/css">
+/* START aephea.base.css */
+body
+{ text-align: justify;
+margin-left: 0%;
+margin-right: 0%;
+}
+a:link { text-decoration: none; }
+a:active { text-decoration: none; }
+a:visited { text-decoration: none; }
+a:link { color: #1111aa; }
+a:active { color: #1111aa; }
+a:visited { color: #111166; }
+a.local:link { color: #11aa11; }
+a.local:active { color: #11aa11; }
+a.local:visited { color: #116611; }
+a.intern:link { color: #1111aa; }
+a.intern:active { color: #1111aa; }
+a.intern:visited { color: #111166; }
+a.extern:link { color: #aa1111; }
+a.extern:active { color: #aa1111; }
+a.extern:visited { color: #661111; }
+a.quiet:link { color: black; }
+a.quiet:active { color: black; }
+a.quiet:visited { color: black; }
+div.verbatim
+{ font-family: monospace;
+margin-top: 1em;
+margin-bottom: 1em;
+font-size: 10pt;
+margin-left: 2em;
+white-space: pre;
+}
+div.indent
+{ margin-left: 8%;
+margin-right: 0%;
+}
+.right { text-align: right; }
+.left { text-align: left; }
+.nowrap { white-space: nowrap; }
+.item_leader
+{ position: relative;
+margin-left: 8%;
+}
+.item_compact { position: absolute; vertical-align: baseline; }
+.item_cascade { position: relative; }
+.item_leftalign { text-align: left; }
+.item_rightalign
+{ width: 2em;
+text-align: right;
+}
+.item_compact .item_rightalign
+{ position: absolute;
+width: 52em;
+right: -2em;
+text-align: right;
+}
+.item_text
+{ position: relative;
+margin-left: 3em;
+}
+.smallcaps { font-size: smaller; text-transform: uppercase }
+/* END aephea.base.css */
+body { font-family: "Garamond", "Gill Sans", "Verdana", sans-serif; }
+body
+{ text-align: justify;
+margin-left: 8%;
+margin-right: 8%;
+}
+</style>
+<title>The clm close manual</title>
+</head>
+<body>
+<p style="text-align:right">
+16 May 2014&nbsp;&nbsp;&nbsp;
+<a class="local" href="clmclose.ps"><b>clm close</b></a>
+14-137
+</p>
+<div class=" itemize " style="margin-top:1em; font-size:100%">
+<div class=" item_compact"><div class=" item_rightalign nowrap " style="right:-3em">1.</div></div>
+<div class=" item_text " style="margin-left:4em">
+<a class="intern" href="#name">NAME</a>
+</div>
+<div class=" item_compact"><div class=" item_rightalign nowrap " style="right:-3em">2.</div></div>
+<div class=" item_text " style="margin-left:4em">
+<a class="intern" href="#synopsis">SYNOPSIS</a>
+</div>
+<div class=" item_compact"><div class=" item_rightalign nowrap " style="right:-3em">3.</div></div>
+<div class=" item_text " style="margin-left:4em">
+<a class="intern" href="#description">DESCRIPTION</a>
+</div>
+<div class=" item_compact"><div class=" item_rightalign nowrap " style="right:-3em">4.</div></div>
+<div class=" item_text " style="margin-left:4em">
+<a class="intern" href="#options">OPTIONS</a>
+</div>
+<div class=" item_compact"><div class=" item_rightalign nowrap " style="right:-3em">5.</div></div>
+<div class=" item_text " style="margin-left:4em">
+<a class="intern" href="#author">AUTHOR</a>
+</div>
+<div class=" item_compact"><div class=" item_rightalign nowrap " style="right:-3em">6.</div></div>
+<div class=" item_text " style="margin-left:4em">
+<a class="intern" href="#seealso">SEE ALSO</a>
+</div>
+</div>
+
+<a name="name"></a>
+<h2>NAME</h2>
+<p style="margin-bottom:0" class="asd_par">
+clm close &mdash; Fetch connected components from graphs or subgraphs</p>
+<p style="margin-bottom:0" class="asd_par">clmclose is not in actual fact a program. This manual
+page documents the behaviour and options of the clm program when
+invoked in mode <i>close</i>. The options <b>-h</b>, <b>--apropos</b>,
+<b>--version</b>, <b>-set</b>, <b>--nop</b> are accessible
+in all <b>clm</b> modes. They are described
+in the <a class="local sibling" href="clm.html">clm</a> manual page.</p>
+
+<a name="synopsis"></a>
+<h2>SYNOPSIS</h2>
+<p style="margin-bottom:0" class="asd_par">
+<b>clm close</b> -imx &lt;fname&gt; [options]
+</p>
+<p style="margin-bottom:0" class="asd_par">
+<b>clm close</b>
+<a class="intern" href="#opt-imx"><b>-imx</b> fname (<i>specify matrix input</i>)</a>
+<a class="intern" href="#opt-abc"><b>-abc</b> fname (<i>specify label input</i>)</a>
+<a class="intern" href="#opt-dom"><b>-dom</b> fname (<i>input domain/cluster file</i>)</a>
+<a class="intern" href="#opt-o"><b>[-o</b> fname (<i>output file</i>)<b>]</b></a>
+<a class="intern" href="#opt--is-undirected"><b>[--is-undirected</b> (<i>trust input graph to be undirected</i>)<b>]</b></a>
+<a class="intern" href="#opt--write-count"><b>[--write-count</b> (<i>output component count</i>)<b>]</b></a>
+<a class="intern" href="#opt--write-sizes"><b>[--write-sizes</b> (<i>output component sizes (default)</i>)<b>]</b></a>
+<a class="intern" href="#opt--write-cc"><b>[--write-cc</b> (<i>output components as clustering</i>)<b>]</b></a>
+<a class="intern" href="#opt--write-block"><b>[--write-block</b> (<i>output graph restricted to -dom argument</i>)<b>]</b></a>
+<a class="intern" href="#opt--write-blockc"><b>[--write-blockc</b> (<i>output graph complement of -dom argument</i>)<b>]</b></a>
+<a class="intern" href="#opt-cc-bound"><b>[-cc-bound</b> num (<i>select components with size at least num</i>)<b>]</b></a>
+<a class="intern" href="#opt-tf"><b>[-tf</b> spec (<i>apply tf-spec to input matrix</i>)<b>]</b></a>
+<a class="intern" href="#opt-h"><b>[-h</b> (<i>print synopsis, exit</i>)<b>]</b></a>
+<a class="intern" href="#opt--apropos"><b>[--apropos</b> (<i>print synopsis, exit</i>)<b>]</b></a>
+<a class="intern" href="#opt--version"><b>[--version</b> (<i>print version, exit</i>)<b>]</b></a>
+</p>
+
+<a name="description"></a>
+<h2>DESCRIPTION</h2>
+<p style="margin-bottom:0" class="asd_par">
+Use <b>clm close</b> to fetch the connected components from a graph. Different
+output modes are supported (see below). In matrix mode (i.e. using
+the <b>-imx</b> option) the output returned with
+<b>--write-cc</b> can be used in conjunction with <b>mcxsubs</b>
+to retrieve individual subgraphs corresponding to connected components.
+</p>
+
+<a name="options"></a>
+<h2>OPTIONS</h2>
+<div class=" itemize " style="margin-top:1em; font-size:100%">
+<div class=" item_cascade"><div class=" item_leftalign nowrap " ><a name="opt-abc"></a><b>-abc</b> &lt;fname&gt; (<i>label input</i>)</div></div>
+<div class=" item_text " style="margin-left:2em">
+<p style="margin-top:0em; margin-bottom:0em">
+The file name for input that is in label format.</p>
+</div>
+<div style="margin-top:0em">&nbsp;</div><div class=" item_cascade"><div class=" item_leftalign nowrap " ><a name="opt-imx"></a><b>-imx</b> &lt;fname&gt; (<i>input matrix</i>)</div></div>
+<div class=" item_text " style="margin-left:2em">
+<p style="margin-top:0em; margin-bottom:0em">
+The file name for input that is in mcl native matrix format.</p>
+</div>
+<div style="margin-top:0em">&nbsp;</div><div class=" item_cascade"><div class=" item_leftalign nowrap " ><a name="opt-o"></a><b>-o</b> fname (<i>output file</i>)</div></div>
+<div class=" item_text " style="margin-left:2em">
+<p style="margin-top:0em; margin-bottom:0em">
+Specify the file where output is sent to. The default is STDOUT.
+</p>
+</div>
+<div style="margin-top:0em">&nbsp;</div><div class=" item_cascade"><div class=" item_leftalign nowrap " ><a name="opt-dom"></a><b>-dom</b> fname (<i>input domain/cluster file</i>)</div></div>
+<div class=" item_text " style="margin-left:2em">
+<p style="margin-top:0em; margin-bottom:0em">
+If this option is used, clm close will, as a first step,
+for each of the domains in file&nbsp;<i>fname</i> retrieve the associated
+subgraph from the input graph. These are then further decomposed into
+connected components, and the program will process these in the normal
+manner.
+</p>
+</div>
+<div style="margin-top:0em">&nbsp;</div><div class=" item_cascade item_leftalign nowrap" ><a name="opt--write-count"></a><b>--write-count</b> (<i>output component count</i>)</div><div class=" item_cascade item_leftalign nowrap" ><a name="opt--write-sizes"></a><b>--write-sizes</b> (<i>output component sizes (default)</i>)</div><div class=" item_cascade item_leftalign nowrap" ><a name="opt--write-cc"></a><b>--write-cc</b> (<i>output components as clustering</i>)</div><div class=" item_cascade item_leftalign nowrap" ><a name="opt--write-block"></a><b>--write-block</b> (<i>output graph restricted to -dom argument</i>)</div><div class=" item_cascade item_leftalign nowrap" ><a name="opt--write-blockc"></a><b>--write-blockc</b> (<i>output graph complement of -dom argument</i>)</div>
+<div class=" item_text " style="margin-left:2em">
+<p style="margin-top:0em; margin-bottom:0em">
+The default behaviour is currently to output the sizes of the
+connected components. It is also possible to simply output
+the number of components with <b>--write-count</b> or to
+write the components as a clustering in mcl format with
+<b>-write-cc</b>. Even more options exist: it is possible
+to output the restriction of the input graph to a domain, or
+to output the complement of this restriction.
+</p>
+</div>
+<div style="margin-top:0em">&nbsp;</div><div class=" item_cascade"><div class=" item_leftalign nowrap " ><a name="opt--is-undirected"></a><b>--is-undirected</b> (<i>omit graph undirected check</i>)</div></div>
+<div class=" item_text " style="margin-left:2em">
+<p style="margin-top:0em; margin-bottom:0em">
+With this option the transformation to make sure
+that the input is undirected is omitted. This will
+be slightly faster. Using this option while the
+input is directed may lead to erronenous results.
+</p>
+</div>
+<div style="margin-top:0em">&nbsp;</div><div class=" item_cascade"><div class=" item_leftalign nowrap " ><a name="opt-cc-bound"></a><b>-cc-bound</b> num (<i>select components with size at least num</i>)</div></div>
+<div class=" item_text " style="margin-left:2em">
+Transform the input matrix values according
+to the syntax described in <a class="local sibling" href="mcxio.html">mcxio</a>.
+</div>
+</div>
+
+<a name="author"></a>
+<h2>AUTHOR</h2>
+<p style="margin-bottom:0" class="asd_par">
+Stijn van Dongen.
+</p>
+
+<a name="seealso"></a>
+<h2>SEE ALSO</h2>
+<p style="margin-bottom:0" class="asd_par">
+<a class="local sibling" href="mclfamily.html">mclfamily</a> for an overview of all the documentation
+and the utilities in the mcl family.
+</p>
+</body>
+</html>

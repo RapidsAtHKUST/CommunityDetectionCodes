@@ -1,0 +1,263 @@
+#!/usr/local/bin/perl -w
+
+#  (C) Copyright 2006 Stijn van Dongen
+ #
+#  This file is part of MCL.  You can redistribute and/or modify MCL under the
+#  terms of the GNU General Public License; either version 2 of the License or
+#  (at your option) any later version.  You should have received a copy of the
+#  GPL along with MCL, in the file COPYING.
+
+
+sub explain {
+print <<EOH;
+purpose:
+   A small mcl implementation for educational purposes.  It uses terse perl
+   though, so the education might be twofold.
+
+implementation:
+   It is hash based, which implies that we get sparse matrices easily but at
+   the cost of using hashes.  The hash-based matrices only store non-zero
+   entries.
+
+   The code is pretty straightforward. The interpretation routine implements
+   the mapping as described in the publications referenced in the (maxi) mcl
+   manual.
+
+bonus:
+   Since the implementation is hash based you can use any type of labels, not
+   necessarily numbers.
+
+Usage:
+   minimcl [--I=<num>] [--verbose] LABEL-INPUT
+
+   This means --I=<num> is optional (with 2.0 the default) and so is --verbose.
+   LABEL-INPUT should be a file name or stream (STDIN) where each line is of
+   the form
+            LABEL1 LABEL2 NUMBER
+   or
+            LABEL1 LABEL2
+EOH
+}
+
+use strict;
+use Getopt::Long;
+
+$::verbose  =  0;
+my $I       =  2.0;
+my $help    =  0;
+
+if (!@ARGV) {
+   print STDERR "issue 'minimcl --help' for help\n";
+   print STDERR "expecting STDIN now\n";
+}
+
+if
+(! GetOptions
+   (  "verbose"         =>   \$::verbose
+   ,  "I=f"             =>   \$I
+   ,  "help"            =>   \$help
+   )
+)
+   {  print STDERR "option processing failed\n";
+      exit(1);
+   }
+
+&explain && exit(0) if $help;
+
+my $mx = {};
+
+while (<>) {
+   next if /^\s*#/;
+   if (/(\S+)\s+(\S+)\s+(\S+)/) {
+      my ($x, $y, $val) = ($1, $2, $3);
+      $val = 1.0 if $val !~ /^[0-9]/;
+      $mx->{$x}{$y} = $val+0;
+      $mx->{$y}{$x} = $val+0;
+   }
+   elsif (/(\S+)\s+(\S+)/) {
+      $mx->{$1}{$2} = 1.0;
+      $mx->{$2}{$1} = 1.0;
+   }
+}
+
+matrix_add_loops($mx);
+matrix_make_stochastic($mx);
+matrix_dump($mx, 3, "start") if $::verbose;
+
+my ($cl, $limit) = mcl($mx, $I);
+
+matrix_dump($limit, 1, "limit") if $::verbose;
+matrix_dump($cl, 0, "clustering");
+
+
+sub mcl {
+   my ($mx, $I) = @_;
+   my $chaos = 1;
+   my $ite = 1;
+   while ($chaos > 0.001) {
+      my $sq = matrix_square($mx);
+      my $progress = sprintf "chaos %.5f ite %d", $chaos, $ite;
+matrix_dump($sq, 3, "X $progress") if $::verbose;
+      $chaos = matrix_inflate($sq, $I);
+matrix_dump($sq, 3, sprintf "I $progress") if $::verbose;
+print STDERR "$progress\n" if !$::verbose;
+      $mx = $sq;
+      $ite++;
+   }
+   my $cl = matrix_interpret($mx);
+   return ($cl, $mx);
+}
+
+                        # dangersign:
+                        # can this yield a < b < c < a ?
+
+sub cmpany { local $^W = 0; $a <=> $b || $a cmp $b }
+
+sub matrix_dump {
+   my ($mx, $modes, $msg) = @_;
+   print "($msg\n";
+   for my $n (sort cmpany keys %$mx) {
+      my @nb =    $modes & 2
+               ?  map { sprintf "%s:%.3f", $_, $mx->{$n}{$_}; } sort cmpany keys %{$mx->{$n}}
+               :  map { sprintf "%s", $_; } sort cmpany keys %{$mx->{$n}};
+      local $" = "\t";
+      if ($modes & 1) {
+         printf "%-20s%s\n", $n, "@nb";
+      }
+      else {
+         print "@nb\n";
+      }
+   }
+   print ")\n";
+}
+
+
+sub matrix_square {
+   my ($mx) = @_;
+   my $sq = {};
+   my @nodes = keys %$mx;
+   for my $n (@nodes) {
+      $sq->{$n} = matrix_multiply_vector($mx, $mx->{$n});
+   }
+   return $sq;
+}
+
+
+sub matrix_multiply_vector {
+   my ($mx, $v) = @_;
+   my $w = {};
+   for my $e (keys %$v) {
+      my $val = $v->{$e};
+      for my $f (keys %{$mx->{$e}}) {
+         $w->{$f} += $val * $mx->{$e}{$f};
+      }
+   }
+   return $w;
+}
+
+
+sub matrix_make_stochastic {
+   my ($mx) = @_;
+   matrix_inflate($mx, 1); # return value chaos is meaningless for
+                           # non stochastic input.
+}
+
+sub matrix_add_loops {
+   my ($mx) = @_;
+   for my $n (keys %$mx) {
+      my $max        =  vector_max($mx->{$n});
+      $mx->{$n}{$n}  =  $max ? $max : 1;
+   }
+}
+
+sub vector_max {
+   my ($v) = (@_);
+   my $max = 0;
+   for my $n (keys %$v) {
+      $max = $v->{$n} if $v->{$n} > $max;
+   }
+   return $max;
+}
+
+sub vector_sum {
+   my ($v, $p) = (@_);
+   my $sum = 0;
+   for my $n (keys %$v) {
+      $sum += $v->{$n} ** $p;
+   }
+   return $sum;
+}
+
+
+sub matrix_inflate {          # prunes small elements as well.
+   my ($mx, $I) = @_;
+   my @nodes = keys %$mx;
+   my $chaos = 0;
+   for my $n (@nodes) {
+      my $sum = 0;
+      my $sumsq = 0;
+      my $max = 0;
+      for my $nb (keys %{$mx->{$n}}) {
+         if ($mx->{$n}{$nb} < 0.00001) {
+            delete($mx->{$n}{$nb});
+            next;
+         }
+         $mx->{$n}{$nb} **= $I;
+         $sum += $mx->{$n}{$nb};
+      }
+      if ($sum) {
+         for my $nb (keys %{$mx->{$n}}) {
+            $mx->{$n}{$nb} /= $sum;
+            $sumsq += $mx->{$n}{$nb} ** 2;  # sum x_i^2 over stochastic vector x
+            $max = $mx->{$n}{$nb} if $max < $mx->{$n}{$nb};
+         }
+      }
+      $chaos = $max - $sumsq if $max - $sumsq > $chaos;
+   }
+   return $chaos;       # only meaningful if input is stochastic
+}
+
+
+                        # assumes but does not check doubly idempotent matrix.
+                        # can handle attractor systems of size < 10.
+sub matrix_interpret {  # recognizes/preserves overlap.
+
+   my ($limit) =  @_;
+   my $clusters=  {};   # hash of arrayrefs.
+   my $attrid  =  {};
+   my $clid    =  0;
+
+   for my $n (keys %$limit) {           # crude removal of small elements.
+      for my $nb (keys %{$limit->{$n}}) {
+         delete $limit->{$n}{$nb} if $limit->{$n}{$nb} < 0.1;
+      }
+   }
+   my $attr    =  { map { ($_, 1) } grep { $limit->{$_}{$_} } keys %$limit };
+                        # _ contract 'connected attractors', assign cluster id.
+   for my $a (keys %$attr) {
+      next if defined($attrid->{$a});
+      my @aa = ($a);
+      while (@aa) {
+         my @bb = ();
+         for my $aa (@aa) {
+            $attrid->{$aa} = $clid;
+            push @bb, grep { defined($attr->{$_}) } keys %{$limit->{$aa}};
+         }
+         @aa = grep { !defined($attrid->{$_}) } @bb;
+      }
+      $clid++;
+   }
+   for my $n (keys %$limit) {
+      if (!defined($attr->{$n})) {     # look at attractors
+         for my $a (grep { defined($attr->{$_}) } keys %{$limit->{$n}}) {
+            $clusters->{$attrid->{$a}}{$n}++;
+         }
+      }
+      else {
+         $clusters->{$attrid->{$n}}{$n}++; 
+      }
+   }
+   return $clusters;
+}
+
+

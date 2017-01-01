@@ -1,0 +1,780 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html>
+<!-- Copyright (c) 2014 Stijn van Dongen -->
+<head>
+<meta name="keywords" content="manual">
+<style type="text/css">
+/* START aephea.base.css */
+body
+{ text-align: justify;
+margin-left: 0%;
+margin-right: 0%;
+}
+a:link { text-decoration: none; }
+a:active { text-decoration: none; }
+a:visited { text-decoration: none; }
+a:link { color: #1111aa; }
+a:active { color: #1111aa; }
+a:visited { color: #111166; }
+a.local:link { color: #11aa11; }
+a.local:active { color: #11aa11; }
+a.local:visited { color: #116611; }
+a.intern:link { color: #1111aa; }
+a.intern:active { color: #1111aa; }
+a.intern:visited { color: #111166; }
+a.extern:link { color: #aa1111; }
+a.extern:active { color: #aa1111; }
+a.extern:visited { color: #661111; }
+a.quiet:link { color: black; }
+a.quiet:active { color: black; }
+a.quiet:visited { color: black; }
+div.verbatim
+{ font-family: monospace;
+margin-top: 1em;
+margin-bottom: 1em;
+font-size: 10pt;
+margin-left: 2em;
+white-space: pre;
+}
+div.indent
+{ margin-left: 8%;
+margin-right: 0%;
+}
+.right { text-align: right; }
+.left { text-align: left; }
+.nowrap { white-space: nowrap; }
+.item_leader
+{ position: relative;
+margin-left: 8%;
+}
+.item_compact { position: absolute; vertical-align: baseline; }
+.item_cascade { position: relative; }
+.item_leftalign { text-align: left; }
+.item_rightalign
+{ width: 2em;
+text-align: right;
+}
+.item_compact .item_rightalign
+{ position: absolute;
+width: 52em;
+right: -2em;
+text-align: right;
+}
+.item_text
+{ position: relative;
+margin-left: 3em;
+}
+.smallcaps { font-size: smaller; text-transform: uppercase }
+/* END aephea.base.css */
+body { font-family: "Garamond", "Gill Sans", "Verdana", sans-serif; }
+body
+{ text-align: justify;
+margin-left: 8%;
+margin-right: 8%;
+}
+</style>
+<title>The mcl matrix format specification</title>
+</head>
+<body>
+<p style="text-align:right">
+16 May 2014&nbsp;&nbsp;&nbsp;
+<a class="local" href="mcxio.ps"><b>mcxio</b></a>
+14-137
+</p>
+
+<a name="name"></a>
+<h2>NAME</h2>
+<p style="margin-bottom:0" class="asd_par">
+mcxio &mdash; the format specifications for input and output in <b>mcl-edge</b></p>
+
+<a name="description"></a>
+<h2>DESCRIPTION</h2>
+<p style="margin-bottom:0" class="asd_par">
+The easiest format to create graphs from is a line-based format where each lines
+represents an edge or arc. This format is known as the <i>Large Graph Layout</i>, as
+<i>ncol</i> format (in <i>igraph</i>), and as <i>pairwise</i> format in BioLayout.
+In <b>mcl-edge</b> it is additionally refered to
+as <i>label</i> format or <i>abc</i> format.
+In this format each line has two or three fields. The first two fields
+define the source and destination node of an arc. Such an arc may be
+interpreted as a bidirectional edge, depending on the program reading the format.
+The third field is optional. If present, it should supply a numerical value
+that will be used as edge weights. By default, edge weights are set to one.
+</p>
+<p style="margin-bottom:0" class="asd_par">
+Several programs in <b>mcl-edge</b> are able to directly use label format.
+For more elaborate workflows it may be useful to utilise one of the
+native <b>mcl-edge</b> formats that are optimised for interoperability and/or speed.
+The remainder of this manual page documents the format specifications in
+<b>mcl-edge</b>. For hands-on examples of workflows involving both label and other
+formats it may be useful to have a look at <a class="local sibling" href="clmprotocols.html">clmprotocols</a>.
+</p>
+<p style="margin-bottom:0" class="asd_par">
+The primary objects in the MCL-edge network analysis suite are graphs and
+clusterings. Graphs can be directed and may have loops. Both graphs and
+clusterings are represented in a general unified format. This format
+specifies two domains (a <i>source domain</i> and a <i>destination domain</i>),
+along with lists of arcs linking pairs of elements from the two domains.
+For graphs the two domains are simply both equal to the graph node domain, whereas for
+clusterings one domain is the graph node domain and the other corresponds to
+the enumeration of clusters. Undirected graphs are a special instance of
+a directed graph, where an edge from the undirected graph is represented
+by two arcs of identical weight, one for each possible direction.
+</p>
+<p style="margin-bottom:0" class="asd_par">
+The general unified format alluded to above is in fact
+a simple rectangular sparse matrix representation.
+Sparse means that zero entries in the matrix are not stored.
+A zero entry corresponds to an ordered node pair in the graph
+for which no arc exists from the first to the second node.
+An undirected graph corresponds with a symmetric matrix.
+</p>
+<p style="margin-bottom:0" class="asd_par">
+The MCL suite uses a slight generalisation of the matrix concept, in
+that the row and column indices (that is, domains) can be arbitrary
+lists of nonnegative integers. Usually, but not necessarily, a domain
+of size&nbsp;<tt>N</tt> will use the common representation of the list
+of integers starting at&nbsp;<tt>0</tt> and ending at &nbsp;<tt>N-1</tt>.
+The <i>source domain</i> is always associated with the columns of
+a matrix, and the <i>destination domain</i> is always associated
+with the rows of a matrix. The matrix format, introduced below,
+first specifies the two domains. It then represents the nonzero matrix
+entries (corresponding with graph arc weights) in a column-wise
+fashion, as a list of lists. For each node from the source domain,
+it presents the list of all its neighbours in the destination domain
+along with the corresponding weights.
+This document describes
+</p>
+<div class=" itemize " style="margin-top:1em; font-size:100%">
+<div class=" item_cascade"><div class=" item_leftalign nowrap " ><i>native matrix format</i></div></div>
+<div class=" item_text " style="margin-left:2em">
+<p style="margin-top:0em; margin-bottom:0em">
+The format that can be read in by any mcl application
+expecting a matrix argument. The native format closely resembles
+the layout of matrices as residing in computer memory. There are
+two distinct encodings, respectively <i>interchange</i> and <i>binary</i>.
+Their relative merits are described further below.
+</p>
+</div>
+<div style="margin-top:0em">&nbsp;</div><div class=" item_cascade"><div class=" item_leftalign nowrap " ><i>concatenated native matrix format</i></div></div>
+<div class=" item_text " style="margin-left:2em">
+<p style="margin-top:0em; margin-bottom:0em">
+This always pertains to matrices in native format concatenated in a single
+file, refered to as a <i>cat file</i>. It is used for example to encode
+hierarchical clusterings as generated by <b>mclcm</b>. A cat file either
+consists of matrices in interchange format or of matrices in binary format.</p>
+</div>
+<div style="margin-top:0em">&nbsp;</div><div class=" item_cascade"><div class=" item_leftalign nowrap " ><i>raw intermediate format</i></div></div>
+<div class=" item_text " style="margin-left:2em">
+<p style="margin-top:0em; margin-bottom:0em">
+This is read by <a class="local sibling" href="mcxassemble.html">mcxassemble</a>.</p>
+</div>
+<div style="margin-top:0em">&nbsp;</div><div class=" item_cascade"><div class=" item_leftalign nowrap " ><i>tab format</i></div></div>
+<div class=" item_text " style="margin-left:2em">
+<p style="margin-top:0em; margin-bottom:0em">
+Used by applications such as <a class="local sibling" href="mcl.html">mcl</a> and <a class="local sibling" href="mcxdump.html">mcxdump</a> to
+convert between meaningful labels describing the input data and the
+numerical identifiers used internally.</p>
+</div>
+<div style="margin-top:0em">&nbsp;</div><div class=" item_cascade"><div class=" item_leftalign nowrap " ><i>label format</i></div></div>
+<div class=" item_text " style="margin-left:2em">
+<p style="margin-top:0em; margin-bottom:0em">
+The format used when streaming labels directly into
+<a class="local sibling" href="mcl.html">mcl</a>, various modes of <a class="local sibling" href="mcx.html">mcx</a>, or <a class="local sibling" href="mcxload.html">mcxload</a>.</p>
+</div>
+<div style="margin-top:0em">&nbsp;</div><div class=" item_cascade"><div class=" item_leftalign nowrap " ><i>transformation syntax</i></div></div>
+<div class=" item_text " style="margin-left:2em">
+<p style="margin-top:0em; margin-bottom:0em">
+The syntax accepted by <a class="local sibling" href="mcl.html">mcl</a>, <a class="local sibling" href="mcxalter.html">mcxalter</a> and
+many other programs to transform graphs and matrices.</p>
+</div>
+</div>
+<p style="margin-bottom:0" class="asd_par">
+The interchange format is a portable format that can be transmitted
+across computers and over networks and will work with any version
+of mcl or its sibling programs. It is documented (here) and very stable.
+Applications can easily create matrices in this format.
+The drawback of interchange format is that for very large graphs
+matrix encodings grow very big and are slow to read.</p>
+<p style="margin-bottom:0" class="asd_par">
+The binary format is <i>not</i> garantueed to be portable across
+machines or different versions of mcl or differently compiled
+versions of mcl. Its distinct advantage is that for very large
+graphs the speed advantage over interchange format is dramatic.</p>
+<p style="margin-bottom:0" class="asd_par">
+Conversion between the two formats is easily achieved with
+<b>mcxconvert</b>. Both <a class="local sibling" href="mcl.html">mcl</a> and <a class="local sibling" href="mcxload.html">mcxload</a>
+can save a matrix in either format after constructing it from
+label format.</p>
+<p style="margin-bottom:0" class="asd_par">
+The concatenated format is generated e.g. by <a class="local sibling" href="mclcm.html">mclcm</a> and can
+be transformed by <a class="local sibling" href="mcxdump.html">mcxdump</a> using the <b>-imx-cat</b>
+option. In cat format matrices are simply concatenated,
+so it is easily generated from the command line if needed.
+For native binary format it is imperative that no additional
+bytes are inserted inbetween the matrix encodings. For native
+interchange format the only requirement is that the last
+matrix is followed by nothing but white space.</p>
+<p style="margin-bottom:0" class="asd_par">
+A remark on the sloppy naming conventions used for <b>mcl</b> and its sibling
+utilities may be in order here. The prefix <b>mcx</b> is used for generic
+matrix functionality, the prefix <b>clm</b> is used for generic cluster
+functionaliy. The <i>utility</i> <b>mcx</b> is a general purpose interpreter for
+manipulating matrices (and grahps, sets, and clusterings). The set of all
+<b>mcl</b> siblings (cf. <a class="local sibling" href="mclfamily.html">mclfamily</a>) is loosely refered to as the mcl
+family, which makes use of the mcl libraries (rather than the mcx
+libraries). The full truth is even more horrible, as the mcl/mcx prefix
+conventions used in the C source code follow still other rules.</p>
+<p style="margin-bottom:0" class="asd_par">
+In this document, 'MCL' means 'the mcl setting' or 'the mcl family'. An MCL
+program is one of the programs in the mcl family. The remainder of this
+document contains the following sections.</p>
+<div class=" itemize " style="margin-top:1em; font-size:100%">
+<div class=" item_compact"><div class=" item_rightalign nowrap " style="right:-3em">3.</div></div>
+<div class=" item_text " style="margin-left:4em">
+<a class="intern" href="#internal">Internal representation of matrices in MCL</a>
+</div>
+<div class=" item_compact"><div class=" item_rightalign nowrap " style="right:-3em">4.</div></div>
+<div class=" item_text " style="margin-left:4em">
+<a class="intern" href="#mspec">Specifying matrices</a>
+</div>
+<div class=" item_compact"><div class=" item_rightalign nowrap " style="right:-3em">5.</div></div>
+<div class=" item_text " style="margin-left:4em">
+<a class="intern" href="#gspec">Specifying graphs</a>
+</div>
+<div class=" item_compact"><div class=" item_rightalign nowrap " style="right:-3em">6.</div></div>
+<div class=" item_text " style="margin-left:4em">
+<a class="intern" href="#raw">Raw format</a>
+</div>
+<div class=" item_compact"><div class=" item_rightalign nowrap " style="right:-3em">7.</div></div>
+<div class=" item_text " style="margin-left:4em">
+<a class="intern" href="#tab">Tab format / label information</a>
+</div>
+<div class=" item_compact"><div class=" item_rightalign nowrap " style="right:-3em">8.</div></div>
+<div class=" item_text " style="margin-left:4em">
+<a class="intern" href="#label">Label format</a>
+</div>
+<div class=" item_compact"><div class=" item_rightalign nowrap " style="right:-3em">9.</div></div>
+<div class=" item_text " style="margin-left:4em">
+<a class="intern" href="#trans">Transformation syntax</a>
+</div>
+<div class=" item_compact"><div class=" item_rightalign nowrap " style="right:-3em">10.</div></div>
+<div class=" item_text " style="margin-left:4em">
+<a class="intern" href="#seealso">SEE ALSO</a>
+</div>
+<div class=" item_compact"><div class=" item_rightalign nowrap " style="right:-3em">11.</div></div>
+<div class=" item_text " style="margin-left:4em">
+<a class="intern" href="#author">AUTHOR</a>
+</div>
+</div>
+
+<a name="internal"></a>
+<h2>Internal representation of matrices in MCL</h2>
+<p style="margin-bottom:0" class="asd_par">
+There are several aspects to the way in which MCL represents matrices.
+Internally, indices never act as an ofset in an array, and neither do they
+participate in ofset computations. This means that they purely act as
+identifiers. The upshot is that matrices can be handled in which the index
+domains are <i>non-sequential</i> (more below). Thus one can work with
+different graphs and matrices all using subsets of the same set of
+indices/identifiers. This aids in combining data sets in different ways and
+easily comparing the respective results when experimenting. Secondly, only
+<i>nonzero values</i> (and their corresponding indices) are stored. Thirdly,
+MCL stores a matrix as a listing of columns. Iterating over a column is
+trivial; iterating over a row requires a costly transposition computation.
+The last two points should matter little to the user of MCL programs.</p>
+<p style="margin-bottom:0" class="asd_par">
+In textbook expositions and in many matrix manipulation implementations,
+matrices are represented with sequentially indexed rows and columns, with
+the indices usually starting at either zero or one. In the MCL setting, the
+requirement of sequentiality is dropped, and it follows naturally that no
+requirement is posed on the first index. The only requirement MCL poses on
+the indices is that they be nonnegative, and can be represented by the
+integer type used by MCL. On many machines, the largest allowable integer
+will be 2147483647.</p>
+<p style="margin-bottom:0" class="asd_par">
+MCL associates two domains with a matrix&nbsp;<tt>M</tt>, the row domain and column
+domain. The matrix&nbsp;<tt>M</tt> can only have entries&nbsp;<tt>M[i,j]</tt> where&nbsp;<tt>i</tt> is
+in the row domain and&nbsp;<tt>j</tt> is in the column domain. This is vital when
+specifying a matrix: it is illegal to specify an entry&nbsp;<tt>M[i,j]</tt> violating
+this condition. However, it is not necessary to specify <i>all</i>
+entries&nbsp;<tt>M[i,j]</tt> for all possible combinations of&nbsp;<tt>i</tt> and&nbsp;<tt>j</tt>. One
+needs only specify those entries for which the value is nonzero, and only
+nonzero values will be stored internally. In the MCL matrix format, the
+matrix domains must be specified explicitly if they are not canonical (more
+below).</p>
+<p style="margin-bottom:0" class="asd_par">
+<b>Strictly as an aside</b>, the domains primarily exist to ensure data
+integrity. When combining matrices with addition or multiplication (e.g.
+using the <b>mcx</b> utility), MCL will happily combine matrices for which the
+domains do not match, although it will usually issue a warning.
+Conceptually, matrices auto-expand to the dimensions required for the
+operation. Alternatively, a matrix can be viewed as an infinite quadrant,
+with the domains delimiting the parts in which nonzero entries may exist.
+In the future, facilities could be added to MCL (c.q. <b>mcx</b>) to allow for
+placing strict domain requirements on matrices when submitted to binary
+operations such as addition and multiplication.</p>
+
+<a name="mspec"></a>
+<h2>Specifying matrices</h2>
+<p style="margin-bottom:0" class="asd_par">
+From here on, all statements about matrices and graphs are really statements
+about matrices and graphs <i>in the MCL setting</i>. The <i>specification</i>
+of a matrix quite closely matches the internal representation.</p>
+<p style="margin-bottom:0" class="asd_par">
+A matrix M has two domains: the column domain and the row domain. Both
+simply take the form of a set (represented as an ordered list) of indices. A
+<i>canonical domain</i> is a domain of some size <tt>K</tt> where the indices are
+simply the first <tt>K</tt> nonnegative integers <tt>0,1..,K-1</tt>. The domains
+dictate which nonzero entries are allowed to occur in a matrix; only entries
+M[i,j] are allowed where i is in the row domain and j is in the column
+domain.</p>
+<p style="margin-bottom:0" class="asd_par">
+The matrix M is specified in three parts, for which the second is optional.
+The parts are:</p>
+<div class=" itemize " style="margin-top:1em; font-size:100%">
+<div class=" item_cascade"><div class=" item_leftalign nowrap " >Header specification</div></div>
+<div class=" item_text " style="margin-left:2em">
+<p style="margin-top:0em; margin-bottom:0em">
+This specifies the dimensions K and L of the matrix, where K is the
+size of the row domain, and L is the size of the column domain.
+It looks as follows:</p>
+<div class="verbatim">(mclheader
+mcltype matrix
+dimensions 9x14
+)</div>
+<p style="margin-top:0em; margin-bottom:0em">
+This dictates that a matrix will be specified for which the row
+domain has dimension 9 and the column domain has dimension 14.
+</p>
+</div>
+<div style="margin-top:0em">&nbsp;</div><div class=" item_cascade"><div class=" item_leftalign nowrap " >Domain specification</div></div>
+<div class=" item_text " style="margin-left:2em">
+<p style="margin-top:0em; margin-bottom:0em">
+The domain specification can have various forms: if nothing is specified,
+the matrix will have canonical domains and a canonical representation,
+similar to the representation encountered in textbooks. Alternatively, the
+row and column domains can each be specified separately, and it is also
+possible to specify only one of them; the other will simply be a canonical
+domain again. Finally, it is possible to declare the two domains identical
+and specify them simultaneously. It is perfectly legal in each case to
+explicitly specify a canonical domain. It is <i>required</i> in each case
+that the number of indices listed in a domain corresponds with the dimension
+given in the header.</p>
+<p style="margin-bottom:0" class="asd_par">
+An example where both a row domain and a column domain are specified:</p>
+<div class="verbatim">(mclrows
+ 100 200 300 400 500 600 700 800 900 $
+)
+(mclcols
+ 30 32 34 36 38 40 42 44 46 48 50 52 56 58 $
+)</div>
+<p style="margin-top:0em; margin-bottom:0em">
+This example combines with the header given above, as the dimensions fit.
+Had the row domain specification been omitted, the row domain would
+automatically be set to the integers <tt>0,1,..8</tt>. Had the column
+specification been omitted, it would be set to <tt>0,1,..13</tt>.</p>
+<p style="margin-bottom:0" class="asd_par">
+Suppose now that the header did specify the dimensions 10x10.
+Because the dimensions are identical, this raises the possibility
+that the domains be identical.
+A valid way to specify the row domain and column domain in one go is this.</p>
+<div class="verbatim">(mcldoms
+ 11 22 33 44 55 66 77 88 99 100 $
+)</div>
+</div>
+<div style="margin-top:0em">&nbsp;</div><div class=" item_cascade"><div class=" item_leftalign nowrap " >Matrix specification</div></div>
+<div class=" item_text " style="margin-left:2em">
+<p style="margin-top:0em; margin-bottom:0em">
+The matrix specification starts with the sequence</p>
+<div class="verbatim">(mclmatrix
+begin</div>
+<p style="margin-top:0em; margin-bottom:0em">
+The 'begin' keyword in the '(mclmatrix' part is followed by a list of
+listings, where the primary list ranges over all column indices in M (i.e.
+indices in the column domain), and where each secondary lists encodes all
+positive entries in the corresponding column. A secondary list (or matrix
+column) starts with the index c of the column, and then contains a listing
+of all row entries in c (these are matrix entries M[r,c] for varying r). The
+entry M[r,c] is specified either as 'r' or as 'r:f', where f is a float. In
+the first case, the entry M[r,c] defaults to 1.0, in the second case, it is
+set to f. The secondary list is closed with the `$' character. A full
+fledged examples thus looks as follows:</p>
+<div class="verbatim">(mclheader
+mcltype matrix
+dimensions 12x3
+)
+(mclrows
+ 11 22 33 44 55 66 77 88 99 123 456 2147483647 $
+)
+(mclcols
+  0  1  2 $
+)
+(mclmatrix
+begin
+0    44 88 99 456 2147483647 $
+1    11 66 77 123 $
+2    22 33 55 $
+)</div>
+<p style="margin-top:0em; margin-bottom:0em">
+Note that the column domain is canonical; its specifiation could have been
+omitted. In this example, no values were specified. See below for more.</p>
+</div>
+</div>
+
+<a name="gspec"></a>
+<h2>Specifying graphs</h2>
+<p style="margin-top:0em; margin-bottom:0em">
+A graph is simply a matrix where the row domain is the same as the column
+domain. Graphs should have positive entries only. Example:</p>
+<div class="verbatim">(mclheader
+mcltype matrix
+dimensions 12x12
+)
+(mcldoms
+11 22 33 44 55 66 77 88 99 123 456 2147483647 $
+)
+(mclmatrix
+begin
+11    22:2  66:3.4  77:3  123:8 $
+22    11:2  33:3.8  55:8.1 $
+33    22:3.8  44:7  55:6.2 $
+44    33:7  88:5.7  99:7.0 456:3 $
+55    22:8.1  33:6.2  77:2.9  88:3.0 $
+66    11:3.4  123:5.1 $
+77    11:3  55:2.9  123:1.5 $
+88    44:5.7  55:3.0  99:3.0 456:4.2 $
+99    44:7.0  88:3.0 456:1.8 2147483647:3.9 $
+123   11:8  66:5.1  77:1.5 $
+456   44:3  88:4.2  99:1.8 2147483647:6.3 $
+2147483647   99:3.9 456:6.3 $
+)</div>
+<p style="margin-top:0em; margin-bottom:0em">
+Incidentally, clustering this graph with mcl, using default parameters,
+yields a cluster that is represented by the 12x3 matrix shown earlier.</p>
+<p style="margin-bottom:0" class="asd_par">
+The following example shows the same graph, now represented on a
+canonical domain, and with all values implicitly set to 1.0:</p>
+<div class="verbatim">(mclheader
+mcltype matrix
+dimensions 12x12
+)
+(mclmatrix
+begin
+0    1  5  6  9 $
+1    0  2  4 $
+2    1  3  4 $
+3    2  7  8 10 $
+4    1  2  6  7 $
+5    0  9 $
+6    0  4  9 $
+7    3  4  8 10 $
+8    3  7 10 11 $
+9    0  5  6 $
+10   3  7  8 11 $
+11   8 10 $
+)</div>
+<p style="margin-bottom:0"><b>Additional notes</b><br>
+There are few restrictions on the format that one might actually expect.
+Vectors and entries may occur in any order and need not be sorted.
+Repeated entries and repeated vectors are allowed but are always
+discarded while an error message is emitted.</p>
+<p style="margin-bottom:0" class="asd_par">
+If you want <i>functionally interesting behaviour</i> in combining
+repeated vectors and repeated entries, have a look at the next section
+and at <a class="local sibling" href="mcxassemble.html">mcxassemble</a>.</p>
+<p style="margin-bottom:0" class="asd_par">
+Within the vector listing, the '#' is a token that introduces
+a comment until the end of line.</p>
+
+<a name="raw"></a>
+<h2>Raw format</h2>
+<p style="margin-bottom:0" class="asd_par">
+A file in <i>raw format</i> is simply a listing of vectors without any
+sectioning structure. No header specification, no domain specification, and
+no matrix introduction syntax is used - these are supplied to the processing
+application by other means. The end-of-vector token '$' must still be used,
+and the comment token '#' is still valid. <a class="local sibling" href="mcxassemble.html">mcxassemble</a>
+imports a file in raw
+format, creates a native matrix from the data therein, and writes the
+matrix to (a different) file. It allows customizable behaviour in how to
+combine repeated entries and repeated vectors. This is typically used in the
+following procedure. A) Do a one-pass-parse on some external cooccurrence
+file/format, generate raw data during the parse and write it to file
+(without needing to build a huge data structure in memory). B) mcxassemble
+takes the raw data and assembles it according to instruction into a native
+mcl matrix.</p>
+
+<a name="tab"></a>
+<h2>Tab format / label information</h2>
+<p style="margin-top:0em; margin-bottom:0em">
+Several mcl programs accept options such as <b>-tab</b>, <b>-tabc</b>,
+<b>-tabr</b>, <b>-use-tab</b>, <b>-strict-tab</b>,
+and <b>-extend-tab</b>.
+The argument to these options is invariably the name of
+a so-called <i>tab file</i>.
+Tab files are used to convert between labels (describing entities
+in the data) and indices as used in the mcl matrix format.
+In a tab file each line starts with a unique number which presumably
+corresponds to an index used in a matrix file.
+The rest of the line contains a
+descriptive string associated with the number. It is required
+that each string is unique, although not all mcl programs enforce
+this at the time of writing.
+The string may contain spaces.
+Lines starting with
+<tt>#</tt> are considered comment and are disregarded.
+</p>
+<p style="margin-bottom:0"><b>Tab domain</b><br>The ordered set of indices found in the tab file
+is called the <i>tab domain</i>.</p>
+<p style="margin-bottom:0" class="asd_par">
+Tab files are almost always employed in conjunction with an mcl matrix file.
+<a class="local sibling" href="mcxdump.html">mcxdump</a> and <a class="local sibling" href="clmformat.html">clmformat</a> require by
+default that the tab domain coincides with the matrix domain (either row or
+column or both) to which they will be applied. This can be relaxed for
+either by supplying the <b>--lazy-tab</b> option.</p>
+<p style="margin-bottom:0" class="asd_par">
+mcl provides explicit modes for dealing with tab structures by means of
+the <b>-extend-tab</b>, <b>-restrict-tab</b> and
+<b>-strict-tab</b> options. Refer to the <a class="local sibling" href="mcl.html">mcl</a>
+documentation.</p>
+
+<a name="label"></a>
+<h2>Label format</h2>
+<p style="margin-top:0em; margin-bottom:0em">
+Label format is a line based input where two nodes and an optional value are
+specified on each line. The nodes should be specified by labels. If the
+labels contain spaces they should be separated by tabs (and the value if
+present should be separated from the second label by a tab as well). The
+parse code will assume tab-separated labels if it sees a tab character in
+the input, otherwise it will split the input on any kind of whitespace.
+Any line where the first non-whitespace character is the octothorp (#) is
+ignored. The following is an example of label format.</p>
+<div class="verbatim">---8&lt;------8&lt;------8&lt;------8&lt;------8&lt;---
+# the cat and the hat example
+cat hat  0.2
+hat bat  0.16
+bat cat  1.0
+bat bit  0.125
+bit fit  0.25
+fit hit  0.5
+hit bit  0.16
+---&gt;8------&gt;8------&gt;8------&gt;8------&gt;8---</div>
+<p style="margin-top:0em; margin-bottom:0em">
+<a class="local sibling" href="mcl.html">mcl</a> can read in label format and cluster it when it is
+given the <b>--abc</b> option. It can optionally save
+the input graph in native format and save the label information
+in a tab file with the <b>-save-graph</b> and <b>-save-tab</b>
+options.</p>
+<p style="margin-bottom:0" class="asd_par">
+Refer to the <a class="local sibling" href="mcl.html#started">MCL getting started</a> and
+<a class="local sibling" href="mcl.html#examples">MCL manual examples</a> sections
+for more information on how MCL deals with label format.</p>
+<p style="margin-bottom:0" class="asd_par">
+<a class="local sibling" href="mcxload.html">mcxload</a> is a general purpose program for reading
+in label data and other stream formats. It
+encodes them in native mcl format and tab files.
+It allows intermediate transformations on the values.</p>
+
+<a name="trans"></a>
+<h2>Transformation syntax</h2>
+<p style="margin-top:0em; margin-bottom:0em">
+<a class="local sibling" href="mcl.html">mcl</a>, <a class="local sibling" href="mcxload.html">mcxload</a>, <a class="local sibling" href="mcxsubs.html">mcxsubs</a>, <a class="local sibling" href="mcxassemble.html">mcxassemble</a>
+and <a class="local sibling" href="mcxalter.html">mcxalter</a>
+all accept the same transformation language in their
+respective <b>tf</b>-type options and mcxsub's <b>val</b>
+specification.</p>
+<p style="margin-bottom:0" class="asd_par">
+A statement in this language is simply a comma-separated
+list of functions accepting a single numerical value.
+The syntax of a function invocation in general is
+<b>func</b>(<i>arg</i>).
+The functions <b>exp</b>, <b>log</b>, <b>neglog</b> can
+also be given an empty parameter list, indicating that
+<i>e</i> is taken as the exponent base. In this case,
+the invocation looks like <b>func</b>().
+Functions with names that start with <tt>#</tt> operate
+on graphs in their entirety. For example, <tt>#knn(50)</tt>
+indicates the k-Nearest Neighbour transformation for
+<tt>k=50</tt>.
+All other names encode functions that operate
+directly on edges.
+Functions with names that start with <tt>#arc</tt> operate
+on directed graphs and yield directed graphs.
+Most of the other <tt>#</tt> functions either expect
+an undirected graph (such as <tt>#knn()</tt>) or yield
+an undirected graph (such as <tt>#add()</tt> and <tt>#max()</tt>.
+The following are supported.
+</p>
+<div class=" itemize " style="margin-top:1em; font-size:100%">
+<div class=" item_compact"><div class=" item_leftalign nowrap " >lt</div></div>
+<div class=" item_text " style="margin-left:12em">
+Filter out values greater than or equal to arg.
+</div>
+<div class=" item_compact"><div class=" item_leftalign nowrap " >lq</div></div>
+<div class=" item_text " style="margin-left:12em">
+Filter out values greater than arg.
+</div>
+<div class=" item_compact"><div class=" item_leftalign nowrap " >gq</div></div>
+<div class=" item_text " style="margin-left:12em">
+Filter out values less than arg.
+</div>
+<div class=" item_compact"><div class=" item_leftalign nowrap " >gt</div></div>
+<div class=" item_text " style="margin-left:12em">
+Filter out values less than or equal to arg.
+</div>
+<div class=" item_compact"><div class=" item_leftalign nowrap " >ceil</div></div>
+<div class=" item_text " style="margin-left:12em">
+Set everything higher than arg to arg.
+</div>
+<div class=" item_compact"><div class=" item_leftalign nowrap " >floor</div></div>
+<div class=" item_text " style="margin-left:12em">
+Set everything lower than arg to arg.
+</div>
+<div class=" item_compact"><div class=" item_leftalign nowrap " >mul</div></div>
+<div class=" item_text " style="margin-left:12em">
+Multiply values by arg.
+</div>
+<div class=" item_compact"><div class=" item_leftalign nowrap " >add</div></div>
+<div class=" item_text " style="margin-left:12em">
+Add arg to values.
+</div>
+<div class=" item_compact"><div class=" item_leftalign nowrap " >power</div></div>
+<div class=" item_text " style="margin-left:12em">
+Raise values to power arg.
+</div>
+<div class=" item_compact"><div class=" item_leftalign nowrap " >exp</div></div>
+<div class=" item_text " style="margin-left:12em">
+Raise arg (<i>e</i> if omitted) to value.
+</div>
+<div class=" item_compact"><div class=" item_leftalign nowrap " >log</div></div>
+<div class=" item_text " style="margin-left:12em">
+Take log in base arg (<i>e</i> if omitted).
+</div>
+<div class=" item_compact"><div class=" item_leftalign nowrap " >neglog</div></div>
+<div class=" item_text " style="margin-left:12em">
+Take minus log in base arg (<i>e</i> if omitted).
+</div>
+<div class=" item_compact"><div class=" item_leftalign nowrap " >rand</div></div>
+<div class=" item_text " style="margin-left:12em">
+Keep arc with probablity arg.
+</div>
+<div class=" item_compact"><div class=" item_leftalign nowrap " >scale</div></div>
+<div class=" item_text " style="margin-left:12em">
+Divide values by arg.
+</div>
+<div class=" item_compact"><div class=" item_leftalign nowrap " >abs</div></div>
+<div class=" item_text " style="margin-left:12em">
+Replace value by its absolute value.
+</div>
+<div class=" item_compact"><div class=" item_leftalign nowrap " >acos</div></div>
+<div class=" item_text " style="margin-left:12em">
+Take acos of value.
+</div>
+<div class=" item_compact"><div class=" item_leftalign nowrap " >#knn</div></div>
+<div class=" item_text " style="margin-left:12em">
+k-Nearest Neighbour reduction with <tt>k=arg</tt> (intersect lists).
+</div>
+<div class=" item_compact"><div class=" item_leftalign nowrap " >#knnj</div></div>
+<div class=" item_text " style="margin-left:12em">
+As <tt>#knn</tt> above, but join selected neighbour lists.
+</div>
+<div class=" item_compact"><div class=" item_leftalign nowrap " >#ceilnb</div></div>
+<div class=" item_text " style="margin-left:12em">
+Cap number of neighbours at arg at most.
+</div>
+<div class=" item_compact"><div class=" item_leftalign nowrap " >#ils</div></div>
+<div class=" item_text " style="margin-left:12em">
+Inverted log-weight similarity (no argument).
+</div>
+<div class=" item_compact"><div class=" item_leftalign nowrap " >#mcl</div></div>
+<div class=" item_text " style="margin-left:12em">
+Cluster with inflation=arg, yields induced graph.
+</div>
+<div class=" item_compact"><div class=" item_leftalign nowrap " >#add</div></div>
+<div class=" item_text " style="margin-left:12em">
+Convert two arcs to one edge using addition.
+</div>
+<div class=" item_compact"><div class=" item_leftalign nowrap " >#min</div></div>
+<div class=" item_text " style="margin-left:12em">
+Convert two arcs to one edge using minimum.
+</div>
+<div class=" item_compact"><div class=" item_leftalign nowrap " >#max</div></div>
+<div class=" item_text " style="margin-left:12em">
+Convert two arcs to one edge using maximum.
+</div>
+<div class=" item_compact"><div class=" item_leftalign nowrap " >#mul</div></div>
+<div class=" item_text " style="margin-left:12em">
+Convert two arcs to one edge using multiplication.
+</div>
+<div class=" item_compact"><div class=" item_leftalign nowrap " >#rev</div></div>
+<div class=" item_text " style="margin-left:12em">
+Encode graph in reverse direction.
+</div>
+<div class=" item_compact"><div class=" item_leftalign nowrap " >#tp</div></div>
+<div class=" item_text " style="margin-left:12em">
+Same as above in matrix speak (<i>t</i>rans<i>p</i>ose).
+</div>
+<div class=" item_compact"><div class=" item_leftalign nowrap " >#selfrm</div></div>
+<div class=" item_text " style="margin-left:12em">
+Remove loops.
+</div>
+<div class=" item_compact"><div class=" item_leftalign nowrap " >#selfmax</div></div>
+<div class=" item_text " style="margin-left:12em">
+Set loop value to maximum value.
+</div>
+<div class=" item_compact"><div class=" item_leftalign nowrap " >#tug</div></div>
+<div class=" item_text " style="margin-left:12em">
+Perturb edge weights with factor arg.
+</div>
+<div class=" item_compact"><div class=" item_leftalign nowrap " >#shrug</div></div>
+<div class=" item_text " style="margin-left:12em">
+Randomly perturb edge weights with factor arg.
+</div>
+<div class=" item_compact"><div class=" item_leftalign nowrap " >#step</div></div>
+<div class=" item_text " style="margin-left:12em">
+Use the k-step relation, where <tt>k=arg</tt>.
+</div>
+<div class=" item_compact"><div class=" item_leftalign nowrap " >#thread</div></div>
+<div class=" item_text " style="margin-left:12em">
+Set thread pool size to arg.
+</div>
+<div class=" item_compact"><div class=" item_leftalign nowrap " >#arcmax</div></div>
+<div class=" item_text " style="margin-left:12em">
+Only keep largest arc between two nodes.
+</div>
+<div class=" item_compact"><div class=" item_leftalign nowrap " >#arcsub</div></div>
+<div class=" item_text " style="margin-left:12em">
+Replace G by G - G^T.
+</div>
+<div class=" item_compact"><div class=" item_leftalign nowrap " >#symmcl</div></div>
+<div class=" item_text " style="margin-left:12em">
+As <tt>#mcl</tt>, use symmetrised graph for clustering.
+</div>
+</div>
+<p style="margin-bottom:0"><b>NOTE</b><br>
+<a class="local sibling" href="mcl.html">mcl</a> accepts <b>--abc-neg-log</b> and <b>--abc-neg-log10</b>
+to specify log transformations. Similarly, <a class="local sibling" href="mcxload.html">mcxload</a> accepts
+<b>--stream-log</b>, <b>--stream-neg-log</b>, and
+<b>--stream-neg-log10</b>. The reason is that probabilities are sometimes
+encoded below the precision dictated by the IEEE (32 bit) float
+specification. This poses a problem as the mcl applications encode values
+by default as floats, and the transformation specifications are always
+applied to the mcl encoding. The options just mentioned are applied after a
+value has been read from an input stream and <i>before</i> it is converted to
+the native encoding.
+</p>
+
+<a name="seealso"></a>
+<h2>SEE ALSO</h2>
+<p style="margin-top:0em; margin-bottom:0em">
+<a class="local sibling" href="mcxassemble.html">mcxassemble</a>,
+and <a class="local sibling" href="mclfamily.html">mclfamily</a> for an overview of all the documentation
+and the utilities in the mcl family.</p>
+
+<a name="author"></a>
+<h2>AUTHOR</h2>
+<p style="margin-top:0em; margin-bottom:0em">
+Stijn van Dongen.</p>
+</body>
+</html>

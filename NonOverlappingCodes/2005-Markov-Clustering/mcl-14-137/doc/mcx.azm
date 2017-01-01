@@ -1,0 +1,131 @@
+\import{mcx.zmm}
+
+\begin{pud::man}{
+
+   {name}{mcx}
+   {html_title}{The mcx manual}
+   {author}{Stijn van Dongen}
+   {section}{1}
+   {synstyle}{long}
+   {defstyle}{long}
+
+   \man_share
+}
+
+\${html}{\"pud::man::maketoc"}
+
+\sec{name}{NAME}
+\NAME{mcx}{perform various computations on graphs and matrices}
+
+\sec{synopsis}{SYNOPSIS}
+\verbatim{\:/
+   \mcx <mode> [mode-options] [mode-files]}
+
+\sec{description}{DESCRIPTION}
+
+\par{
+   \mcx implements a variety of computations on graphs and matrices.  The
+   first argument to \mcx should be a \it{mode}, which is a string establishing
+   the type of computation to invoke.  Each mode \it{mode} is described in the
+   mcx\it{mode} manual page.  The currently available modes are
+   \bf{convert}, \bf{diameter}, \bf{clcf}, \bf{q} and \bf{ctty}.
+   The \bf{convert} mode is thus described in the
+   \sibref{mcxconvert} manual page.
+   }
+
+\par{
+   Invoking \mcx without arguments causes it to print out a list
+   of available modes with a short description of the type of
+   command line expected by that mode.
+   }
+
+\par{
+   Invoking \mcx with just a mode will print out a longer listing
+   of options available for that particular mode.
+   Modes that are able to function normally without arguments
+   can be invoked by adding the \genarg{--nop} argument.
+   }
+
+\par{
+   Several options are shared between all \mcx modes. Note that
+   these options are specified after the \bf{mode}. See \secref{options}.
+   }
+
+\par{
+   The \genopt{--version} causes \mcx to print out version
+   and license information.
+   }
+
+\par{
+   Issuing \it{mcx help mode} will cause \mcx to look for a manual page
+   describing \it{mode} and display it if found.  This requires that the
+   MANPATH environment variable contains the directory in which the MCL-edge
+   manual pages were installed. This will usually be \v{PREFIX/share},
+   where \v{PREFIX} is the path with which the software was configured.
+   }
+
+
+\sec{options}{OPTIONS}
+
+\par{
+   These are options that pertain to all modes. They should be specified 
+   \it{after} the mode argument.
+   }
+
+\'begin{itemize}{\mcx_itemopts}
+
+\items{
+   {\defopt{-h}{synopsis}}
+   {\defopt{--help}{synopsis}}
+}
+\car{
+   List available options.
+   }
+
+\item{\defopt{--nop}{no-op}}
+\car{
+   Not an option. This option has no effect then to increment
+   the argument count. This can be useful for \mcx modes which are able to
+   function without any options. Such a mode typically reads from STDIN, writes
+   to STDOUT, and uses default settings. However, simply specifying a mode
+   without options leads \mcx to output a list of available options for that
+   mode. This can be prevented by using the \genopt{--nop} option.
+   }
+
+\item{\defopt{-set}{key=val}}
+\car{
+   Sets the key\~\bf{key} to value\~\bf{val} in the environment.
+   Some modes allow adjustment of settings in this manner.
+   }
+
+
+\item{\defopt{-progress}{<num>}{progress interval size}}
+\car{
+   Defines the interval that defines the progress frequency.}
+
+
+\item{\defopt{--debug}{turn on debugging}}
+\car{
+   Turn debugging on.}
+
+
+\item{\defopt{--version}{show version}}
+\car{
+   Show version.}
+
+\'end{itemize}
+
+\sec{author}{AUTHOR}
+\par{
+   Stijn van Dongen.
+   }
+
+
+\sec{seealso}{SEE ALSO}
+\par{
+   \mysib{mclfamily} for an overview of all the documentation
+   and the utilities in the mcl family.
+}
+
+\end{pud::man}
+

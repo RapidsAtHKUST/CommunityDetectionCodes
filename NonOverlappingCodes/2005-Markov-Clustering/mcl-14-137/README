@@ -1,0 +1,92 @@
+
+   If you use MCL software in your research, cite it as you would cite a
+   journal or a book. This includes papers published in regular or electronic
+   journals, usage of MCL as a back-end to a database that is accessible via a
+   web interface, or inclusion of MCL in a larger framework of software that is
+   distributed for other people to use.  Include at least one of the following
+   citations:
+
+      Stijn van Dongen, Graph Clustering by Flow Simulation.
+      PhD thesis, University of Utrecht, May 2000.
+      ( http://www.library.uu.nl/digiarchief/dip/diss/1895620/inhoud.htm )
+
+      Stijn van Dongen. A cluster algorithm for graphs.  Technical Report
+      INS-R0010, National Research Institute for Mathematics and Computer
+      Science in the Netherlands, Amsterdam, May 2000.
+      ( http://www.cwi.nl/ftp/CWIreports/INS/INS-R0010.ps.Z )
+
+   and proper attributions to mcl's home http://micans.org/mcl/ and its author,
+   Stijn van Dongen.  Do this *also* if you are using some wrapper around mcl
+   such as the blast module.
+   For biological applications, it is appropriate to cite, additionally,
+   the reference article for the first application of mcl to biological data:
+
+      Enright A.J., Van Dongen S., Ouzounis C.A.
+      An efficient algorithm for large-scale detection of protein families,
+      Nucleic Acids Research 30(7):1575-1584 (2002).
+
+   Please be advised that the TribeMCL module has been disabled.  BLAST users
+   can use the blast package that is very well integrated with the core mcl
+   libraries and offers many options and extensive configurability.  Use
+   mcxdeblast to parse BLAST files, use mcxassemble to transform the parser's
+   output to mcl input.
+      The Ensembl Families at ensembl.org are created with these programs.
+      --------------------------------------------------------------------
+
+   It is also possible to use the pipeline script mclblastline that
+   encapsulates mcxdeblast, mcxassemble, mcl, and clmformat (the latter
+   prettyprints clustering results).
+
+   Finally, with mcl's new label streaming facilities it is possible to cluster
+   directly from BLAST files. Refer to the mcl website for examples.
+
+   MCL documentation is in doc/, in various formats. It gets installed in
+   <prefix>/share/doc/mcl/. A few example input graphs are in graphs/, in the
+   mcl matrix format; these are installed in <prefix>/share/doc/mcl/examples/.
+   The MCL webpage is at http://micans.org/mcl/ .
+
+   MCL usage and development is discussed on the  mcl-users mailing
+   list found at http://listserver.ebi.ac.uk/mailman/listinfo/mcl-users.
+   You can use this forum also for asking any MCL-related question.
+
+   The version tag, which is of the form dd-ddd, encodes the year and day in
+   year in which the distribution was made. So 02-058 encodes the 58-th day of
+   the year 2002.
+
+Configure and compiler options
+
+Synopsis
+
+   configure options:
+      --prefix=YOUR-PREFIX    (e.g. $HOME/local)
+      --enable-blast
+
+   By default, MCL is compiled using C ints and floats -- the ints are used to
+   encode graph nodes/matrix indices, and the floats are used to encode edge
+   weights / matrix entries.  These can be changed respectively to long and
+   double, by adding '-DINDEX_AS_LONG', and/or '-DVALUE_AS_DOUBLE' to the
+   CFLAGS environment variable.  The first enables a possibly wider range of
+   indices to be used, the second increases the precision (which is presumably
+   not useful in the vast majority of cases).  Using gcc under bash, you might
+   for example do
+
+      export CFLAGS='-g -O2 -Wall -ansi -pedantic -DVALUE_AS_DOUBLE'
+
+   before doing ./configure and make. If you are rebuilding, make sure to do
+   'make clean' first.  You need not use doubles though; MCL does fine with
+   floats.  These features (changing the basic types) have not yet been tested
+   thoroughly.
+
+   For enabling rudimentary runtime integrity checks, add -DRUNTIME_INTEGRITY.
+
+   MCL comes nowadays packaged with the BLAST parsing script mcxdeblast and the
+   pipeline script mclblastline. It encapsulates all the stages of parsing,
+   matrix creation, running mcl, and formatting the result into a single
+   application.  Enable them by adding --enable-blast to ./configure.
+   These scripts can be used in place of the now disabled TribeMCL module.
+
+See also
+
+   LICENSE for copyright and licensing, THANKS for contributors, INSTALL for
+   generic installation instructions.
+

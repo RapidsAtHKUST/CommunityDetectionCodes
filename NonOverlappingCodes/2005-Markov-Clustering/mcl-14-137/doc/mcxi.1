@@ -1,0 +1,349 @@
+.\" Copyright (c) 2014 Stijn van Dongen
+.TH "mcxi" 1 "16 May 2014" "mcxi 14-137" "USER COMMANDS "
+.po 2m
+.de ZI
+.\" Zoem Indent/Itemize macro I.
+.br
+'in +\\$1
+.nr xa 0
+.nr xa -\\$1
+.nr xb \\$1
+.nr xb -\\w'\\$2'
+\h'|\\n(xau'\\$2\h'\\n(xbu'\\
+..
+.de ZJ
+.br
+.\" Zoem Indent/Itemize macro II.
+'in +\\$1
+'in +\\$2
+.nr xa 0
+.nr xa -\\$2
+.nr xa -\\w'\\$3'
+.nr xb \\$2
+\h'|\\n(xau'\\$3\h'\\n(xbu'\\
+..
+.if n .ll -2m
+.am SH
+.ie n .in 4m
+.el .in 8m
+..
+.SH NAME
+mcx \- a stack language interpreter for interaction with the \fBmcl\fP libraries\&.
+.SH SYNOPSIS
+
+\fBmcxi\fP (enter interactive mode)
+
+\fBmcxi\fP <mcxi expression>
+.SH DESCRIPTION
+
+\fBmcxi\fP can be used both from the command line and interactively, and supports
+a rich set of operations such as transposition, scaling, column scaling,
+multiplication, Hadamard powers and products, et cetera\&. It has variables,
+control primitives, and stack manipulation primitives\&.
+The general aim is to support basic number and matrix arithmetic, as well as
+graph, set, and clustering operations\&. The language will be kept simple,
+and should serve only as a means of making the \fBmcl\fP framework a pleasant one
+for working with graphs, matrices, clusterings, and sets\&.
+The language is typed, and currently has the types \fIinteger, real,
+matrix, string, and block\fP\&.
+Blocks are used both in control statements such as \fBifelse\fP and
+\fBwhile\fP, and for defining compound statements resembling procedures or
+functions\&.
+Some of \fBmcxi\fP\&'s primitives are overloaded\&. The following is a very simple
+example of implementing and using \fBmcl\fP in this language\&.
+
+.di ZV
+.in 0
+.nf \fC
+
+ 2\&.0 \&.i def                   # define inflation value\&.
+ /small lm                    # load matrix in file \&'small\&'\&.
+ dim id add                   # add identity matrix\&.
+ st \&.x def                    # make stochastic, bind to x\&.
+ { xpn \&.i infl vm } \&.mcl def  # define one mcl iteration\&.
+ 20 \&.x \&.mcl repeat            # iterate 20 times
+ imac                         # interpret matrix as clustering\&.
+ vm                           # view matrix (clustering)\&.
+.fi \fR
+.in
+.di
+.ne \n(dnu
+.nf \fC
+.ZV
+.fi \fR
+
+Somewhat misleadingly, \&'#\&' is not recognized as a comment
+symbol by \fBmcxi\fP, so don\&'t use it (yet)\&.
+
+\fBmcxi\fP has quite a lot of primitives, and they are not all explained in here\&.
+However, \fBmcxi\fP has several help facilities\&. \fBmcxi\fP\&'s munge modes (command
+line, interactive, and file) are discussed first, followed by some syntactic
+and semantic rules\&.
+Several groups of related primitives are then discussed\&. These are the help
+primitives \fBhelp\fP, \fBgrep\fP, \fBops\fP, and others,
+the binding primitives \fBdef\fP, \fBfree\fP, and \fBunlink\fP,
+the control primitives \fBifelse\fP, \fBdo\fP, \fBrepeat\fP, and \fBwhile\fP,
+and the stack manipulation primitives \fBpop\fP, \fBexch\fP, \fBdup\fP,
+\fBmdup\fP, \fBcopy\fP, \fBroll\fP, \fBclear\fP\&.
+And for the record, \fBmcxi\fP has \fBlt\fP, \fBlq\fP, \fBeq\fP, \fBgq\fP, and
+\fBgt\fP\&.
+In the grandiloquently named \fBINDEX\fP section, you find a list
+of all current \fBmcxi\fP primitives\&.
+
+First, there is no difference as far as \fBmcxi\fP is concerned whether
+you give it a bunch of operators and operands directly from the command
+line, or whether you do it in interactive mode\&. Interactive mode is
+line-based; each time you type a carriage return, \fBmcxi\fP starts interpreting
+the line you typed\&. Newlines can be escaped by preceding them with a
+backslash;
+\fBmcxi\fP will delay interpretation and keep building up your expression\&.
+Command line mode is the same as entering interactive mode and entering a
+single line\&. For non-batch processing, interactive mode is the safest,
+because \fBmcxi\fP will simply refuse to carry out impossible operations,
+whereas in command line mode it will exit\&.
+
+In interactive mode, \fBmcxi\fP will by default list the stack after each line you
+type\&. This is verbosity level 1\&. There are four verbosity levels, namely 0,
+1, 2, and 3 (in increasingly verbose order)\&. Set the level with the \fBvb\fP
+primitive\&. Verbosity control is still a bit crude, this is one of the areas
+in which \fBmcxi\fP will be improved\&.
+
+There is another \fBmcxi\fP munge mode which is entered when reading files
+with the \fBlf\fP (load file) primitive\&. This mode is not line-based,
+the whole file is interpreted in one go \- there is little
+difference with line-based mode\&. Beware though, it is currently
+not possible (nor necessary) to escape newlines in files\&.
+
+Currently, \fBmcxi\fP parses lines of text into atoms in an extremely
+straightforward way: Whitespace is the only separator, and it is always a
+separator\&. This has as a consequence that the block delimiters \fB{\fP and
+\fB}\fP are not allowed to appear next to a non-white character\&. Another
+consequence is that strings cannot contain white spaces\&. Both these
+conditions may be relaxed in the future though\&.
+
+Strings are always entered
+with a leading slash, and anything with a leading slash is a string, so
+\fC/this\fP is a string\&. Currently, the double quote has no special
+meaning, but it may acquire meaning in the future, especially as in
+\fC/"maybe the mcxi future will be brighter"\fP\&.
+
+Variables names are always entered with a leading dot, and anything with a
+leading dot is a variable name\&. Variables are implicitly typed by the
+object to which they are bound\&. There is no support for arrays (yet)\&.
+If variables are used, as in \fC\&.x \&.y add\fP, only the names of
+the variables are popped, and the binding between the names and their
+values stays intact\&.
+
+There are some operators that do in-place modification of the object that
+they act on, such as \fCinfl\fP (inflation)\&. Currently, these are all
+operators acting on matrices\&. When presented with a variable,
+they do change the object associated with the variable\&.
+In the built-in documentation strings (accessible with \fBhelp\fP
+and \fBgrep\fP), such in-place modification is denoted with
+a prime as in \fC<m> -> <m\&'>\fP\&.
+
+\fBdup\fP can be used to duplicate objects\&. In case of variables,
+this will be a copy of the variable name\&. If one occurrence is
+used to free the associated object by some operator, all other
+instances of the variable become \fIstale\fP\&.
+\fBmcxi\fP will notice this and you will see such elements marked as stale
+handles in the stack listing\&. \fBcopy\fP can be used to copy the
+object associated with a variable\&.
+
+\fBmcxi\fP is/interprets a stack language\&. In order to add 1 and 2 you need to
+write \fC1 2 add\fP\&. When add is evaluated, it removes the previous two
+items from the stack and replaces it with their sum, in this case the
+integer 3\&.
+\fBmcxi\fP\&'s types are denoted as \fC<int>\fP, \fC<real>\fP, \fC<mx>\fP,
+\fC<str>\fP, \fC<block>\fP, and so are objects that can be of that type\&. An
+object that is of underspecified type (such as taken by overloaded
+operators) is denoted \fC<obj>\fP\&.
+Where a variable name must occur, \fC<var>\fP is written\&.
+In \fBmcxi\fP parlance a \&'variable\&' is the same as \&'handle\&'\&.
+Remember that a variable named \fCx\fP is written \fC\&.x\fP, and
+that a string "foo" is entered as \fC/foo\fP in \fBmcxi\fP\&.
+.SH OPERATORS
+
+.ZI 2m "\fBhelp\fP"
+\&
+.br
+\fBhelp\fP with no arguments prints a descriptory line for each primitive\&.
+Can only be used at bottom of stack\&.
+Alias: \fBh\fP\&.
+.in -2m
+
+.ZI 2m "\fC/str\fP \fBhelp\fP"
+\&
+.br
+\fBhelp\fP with argument \fC/str\fP prints a descriptive line for the
+primitive named \fCstr\fP\&. The string must be identical to the primitive\&'s
+name, or help will not show anything\&. Alias: \fBh\fP\&.
+.in -2m
+
+.ZI 2m "\fC/str\fP \fBgrep\fP"
+\&
+.br
+Prints each descriptive line in which the string str occurs (literally)\&.
+So \fC/matrix grep\fP should produce a lot of matrix related
+primitives (although it may miss generic primitives such as \fBadd\fP
+and \fBmul\fP)\&. At bottom of stack, prints all descriptive lines\&.
+Alias: \fBg\fP\&.
+.in -2m
+
+.ZI 2m "\fBops\fP"
+\&
+.br
+Lists all primitives and aliases concisely in a paragraph\&.
+.in -2m
+
+.ZI 2m "\fBlist\fP"
+\&
+.br
+Lists the contents of the operand stack\&.
+.in -2m
+
+.ZI 2m "\fBinfo\fP"
+\&
+.br
+Lists the top element of the operand stack\&.
+.in -2m
+
+.ZI 2m "\fC<int>\fP \fBtell\fP"
+\&
+.br
+Lists the top \fC<int>\fP elements of the operand stack\&.
+The trio of \fBlist\fP, \fBinfo\fP, and \fBtell\fP
+is perhaps overdoing it slightly, but anyway there it is\&.
+.in -2m
+
+.ZI 2m "\fBvars\fP"
+\&
+.br
+Lists all variables currently bound\&.
+.in -2m
+
+.ZI 2m "\fC<obj>\fP \fC<var>\fP \fBdef\fP"
+\&
+.br
+Bind \fC<obj>\fP to \fC<var>\fP\&. Redefinition is allowed\&.
+.in -2m
+
+.ZI 2m "\fC<var>\fP \fBfree\fP"
+\&
+.br
+Break the binding between \fC<var>\fP and the object it currently binds,
+and remove object\&.
+.in -2m
+
+.ZI 2m "\fBunlink\fP"
+\&
+.br
+Break the binding between \fC<var>\fP and the object it currently binds,
+and push object on the stack\&.
+.in -2m
+
+.ZI 2m "\fC<int> <block1> <block2>\fP \fBifelse\fP"
+\&
+.br
+If \fC<int>\fP is nonzero execute \fC<block1>\fP,
+otherwise execute \fC<block2>\fP\&.
+The equate operators \fBlt\fP, \fBlq\fP, \fBeq\fP, \fBgq\fP, and \fBgt\fP
+can be used to leave an \fC<int>\fP on the stack\&.
+.in -2m
+
+.ZI 2m "\fC<block>\fP \fBdo\fP"
+\&
+.br
+Execute \fC<block>\fP (one time)\&.
+.in -2m
+
+.ZI 2m "\fC<int> <block>\fP \fBrepeat\fP"
+\&
+.br
+Execute \fC<block>\fP \fC<int>\fP times\&.
+.in -2m
+
+.ZI 2m "\fC<block1> <block2>\fP \fBwhile\fP"
+\&
+.br
+This primitive repeatedly executes the \fIcondition\fP \fC<block1>\fP,
+\fIwhich must push an integer each time it is executed\fP\&. Each time, the
+pushed integer is popped\&. If it was non-zero, \fC<block2>\fP is executed,
+\fC<block1>\fP is executed, and the cycle continues\&. If it was zero,
+\fBwhile\fP is done\&.
+.in -2m
+
+.ZI 2m "\fBpop\fP"
+\&
+.br
+Pops one element off of the stack\&.
+.in -2m
+
+.ZI 2m "\fBexch\fP"
+\&
+.br
+Exchanges the top two elements of the stack\&.
+.in -2m
+
+.ZI 2m "\fBdup\fP"
+\&
+.br
+Duplicates the top element and pushes the duplicate onto the stack\&. In case
+of a variable, the name is duplicated and not the object it points to\&. In
+case of anonymous matrices and strings (and whatever other (composite)
+objects may emerge), a \fIdeep copy\fP is made that is completely independent
+of the original object\&.
+.in -2m
+
+.ZI 2m "\fC<int>\fP \fBmdup\fP"
+\&
+.br
+Duplicates the top \fC<int>\fP elements\&. See the \fBdup\fP entry
+above for the semantics of duplication\&. I wrote \fBmdup\fP because
+I thought some other operator needed it, which turned out to be false\&.
+In the meantime, I became very much attached to \fBmdup\fP,
+so mail me if you think you have any useful use for it\&.
+.in -2m
+
+.ZI 2m "\fBcopy\fP"
+\&
+.br
+Copies the top element and pushes the copy onto the stack\&.
+In case of a variable, copies the object associated with the variable
+rather than the variable\&'s name (as \fBdup\fP would do)\&.
+.in -2m
+
+.ZI 2m "\fC<int1> <int2>\fP \fBroll\fP"
+\&
+.br
+Shift \fC<int1>\fP objects cyclically \fC<int2>\fP times to the right
+if \fC<int2>\fP is positive, to the left otherwise\&.
+.in -2m
+
+.ZI 2m "\fBclear\fP"
+\&
+.br
+Empty the stack\&. All objects bound to variables are unaffected\&.
+.in -2m
+.SH INDEX
+
+This is a list of all \fBmcxi\fP\&'s primitives, including aliases\&.
+Do \&'mcxi /<op> help\&' to see a short descriptive string, where <op>
+is one of the primitives below (remember, strings need a leading slash)\&.
+
+\fBadd\fP \fBaddto\fP \fBcdim\fP \fBch\fP \fBclear\fP \fBcopy\fP \fBdef\fP \fBdgt\fP
+\fBdim\fP \fBdiv\fP \fBdo\fP \fBdup\fP \fBeq\fP \fBexch\fP \fBfree\fP \fBgq\fP
+\fBgrep\fP \fBgt\fP \fBhdm\fP \fBhdp\fP \fBhelp\fP \fBid\fP \fBifelse\fP \fBimac\fP
+\fBinfl\fP \fBinfo\fP \fBjj\fP \fBlf\fP \fBlist\fP \fBlm\fP \fBlq\fP \fBlt\fP \fBmax\fP
+\fBmdup\fP \fBmin\fP \fBmod\fP \fBmul\fP \fBops\fP \fBpop\fP \fBpow\fP \fBquit\fP
+\fBrdim\fP \fBrepeat\fP \fBroll\fP \fBst\fP \fBtell\fP \fBtp\fP \fBtut\fP \fBunlink\fP
+\fBvars\fP \fBvb\fP \fBvm\fP \fBwhile\fP \fBwm\fP \fBxpn\fP \fBbye=quit\fP \fBd=def\fP
+\fBf=free\fP \fBh=help\fP \fBi=info\fP \fBl=list\fP \fBp=pop\fP \fBg=grep\fP
+\fBu=unlink\fP \fBx=exch\fP\&.
+.SH AUTHOR
+
+Stijn van Dongen\&.
+.SH SEE ALSO
+
+\fBmclfamily(7)\fP for an overview of all the documentation
+and the utilities in the mcl family\&.

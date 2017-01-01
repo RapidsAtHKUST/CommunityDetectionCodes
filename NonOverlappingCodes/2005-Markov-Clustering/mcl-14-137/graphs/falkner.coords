@@ -1,0 +1,67 @@
+
+/v0 [4 19] def /v1 [5 19] def /v2 [7 19] def /v3 [8 19] def
+/v4 [10 19] def /v5 [11 19] def /v6 [16 19] def /v7 [17 19] def
+/v8 [18 19] def
+
+/v9 [3 18] def /v10 [4 18] def /v11 [6 18] def /v12 [7 18] def
+/v13 [11 18] def /v14 [15 18] def /v15 [16 18] def /v16 [17 18] def
+
+/v17 [4 17] def /v18 [5 17] def /v19 [6 17] def /v20 [7 17] def
+/v21 [8 17] def /v22 [10 17] def /v23 [14 17] def /v24 [15 17] def
+/v25 [17 17] def /v26 [18 17] def /v27 [19 17] def
+
+/v28 [1 16] def /v29 [2 16] def /v30 [10 16] def /v31 [12 16] def
+/v32 [13 16] def /v33 [15 16] def /v34 [16 16] def /v35 [18 16] def
+/v36 [19 16] def
+
+/v37 [4 15] def /v38 [5 15] def /v39 [8 15] def /v40 [9 15] def
+/v41 [11 15] def /v42 [12 15] def
+
+/v43 [3 14] def /v44 [7 14] def /v45 [9 14] def /v46 [10 14] def
+/v47 [12 14] def /v48 [13 14] def /v49 [15 14] def /v50 [18 14] def
+
+/v51 [1 13] def /v52 [4 13] def /v53 [12 13] def /v54 [13 13] def
+/v55 [14 13] def /v56 [16 13] def /v57 [17 13] def /v58 [18 13] def
+/v59 [19 13] def
+
+/v60 [3 12] def /v61 [4 12] def /v62 [5 12] def /v63 [6 12] def
+/v64 [7 12] def /v65 [14 12] def /v66 [15 12] def /v67 [19 12] def
+
+/v68 [3 11] def /v69 [5 11] def /v70 [9 11] def /v71 [11 11] def
+/v72 [14 11] def /v73 [15 11] def /v74 [16 11] def /v75 [19 11] def
+
+/v76 [1 10] def /v77 [2 10] def /v78 [5 10] def /v79 [14 10] def
+/v80 [15 10] def /v81 [17 10] def /v82 [19 10] def
+
+/v83 [3 9] def /v84 [6 9] def /v85 [7 9] def /v86 [10 9] def
+/v87 [13 9] def /v88 [15 9] def /v89 [18 9] def
+
+/v90 [1 8] def /v91 [2 8] def /v92 [3 8] def /v93 [7 8] def
+/v94 [9 8] def /v95 [10 8] def /v96 [15 8] def /v97 [16 8] def
+/v98 [18 8] def
+
+/v99 [2 7] def /v100 [3 7] def /v101 [4 7] def /v102 [6 7] def
+/v103 [12 7] def /v104 [13 7] def /v105 [17 7] def
+
+/v106 [4 6] def /v107 [5 6] def /v108 [10 6] def /v109 [13 6] def
+/v110 [16 6] def /v111 [17 6] def
+
+/v112 [1 5] def /v113 [2 5] def /v114 [3 5] def /v115 [6 5] def
+/v116 [14 5] def /v117 [17 5] def
+
+/v118 [2 4] def /v119 [4 4] def /v120 [5 4] def /v121 [8 4] def
+/v122 [12 4] def /v123 [13 4] def /v124 [14 4] def /v125 [17 4] def
+/v126 [18 4] def /v127 [19 4] def
+
+/v128 [1 3] def /v129 [4 3] def /v130 [7 3] def /v131 [8 3] def
+/v132 [9 3] def /v133 [10 3] def /v134 [12 3] def /v135 [14 3] def
+/v136 [16 3] def
+
+/v137 [5 2] def /v138 [9 2] def /v139 [11 2] def /v140 [12 2] def
+/v141 [13 2] def /v142 [19 2] def
+
+/v143 [1 1] def /v144 [2 1] def /v145 [5 1] def /v146 [7 1] def
+/v147 [9 1] def /v148 [13 1] def /v149 [14 1] def
+
+/v150 [2 2] def
+/v151 [3 1] def

@@ -1,0 +1,162 @@
+#!/usr/local/bin/perl -w
+
+#  This program matches
+#  A)
+#     "progname --help"
+#  output with
+#  B)
+#     defopt, defkvp                                  (azm OPTIONS section)
+#     synoptopt, synreqopt, synoptkvp, synreqkvp      (azm SYNOPSIS section)
+#
+#  and looks for unsupported or undocumented options.
+
+use Getopt::Long;
+use strict;
+
+my @ARGV_COPY  = @ARGV;
+my $n_args = @ARGV;
+
+$::amoixa =  0;
+$::silent =  0;
+$::exclude = "";
+$::nosynopsis = 0;
+$::doc_exceed = 0;
+
+my %exclude = ();
+
+if
+(! GetOptions
+   (  "--amoixa"        =>   \$::amoixa
+   ,  "--silent"        =>   \$::silent
+   ,  "--exclude=s"     =>   \$::exclude
+   ,  "--doc-exceed=i"  =>   \$::doc_exceed
+   ,  "--ignore-synopsis"   =>   \$::nosynopsis
+   )
+)
+   {  print STDERR "option processing failed\n";
+      exit(1);
+   }
+
+die "need <program-name> <zoem-manual>" unless @ARGV == 2;
+my ($progname, $azm) =  @ARGV;
+
+my $flag_apropos = $::amoixa ? "--amoixa" : "--help";
+%exclude = map { ($_, 1) } split ",", $::exclude;
+
+my $marker = '=' x 40;
+
+
+my %apropos
+=  
+   map { /\-{1,2}([^=\s]+)(.*)/; ($1, $2); }
+
+   grep { /^\s*\-{1,2}[^-]/; }
+
+   `$progname $flag_apropos`;
+
+
+die "program [$progname] failed\n" if $?; 
+
+my %def
+=  map
+   {  /def(opt|kvp)\{-+(.*?)\}/
+   ?  ($2, 1)
+   :     /item_def(opt|kvp)_(\w+)/
+      ?  ($2, 1)
+      :  ();
+   }
+   grep { ! /nodef/ }
+   `grep 'def\\(opt\\|kvp\\)\{' $azm`; 
+
+die "grep $azm failed (def)\n" if $?; 
+
+my %syn
+=  map
+   {  /syn(opt|req)(opt|kvp)\{-+(.*?)\}/
+   ?  ($3, 1)
+   :     /syn(opt|req)(opt|kvp)_(\w+)/
+      ?  ($3, 1)
+      :  ();
+   }
+   grep { ! /nosyn/ }
+   `grep 'syn\\(opt\\|req\\)\\(opt\\|kvp\\){' $azm`; 
+
+die "grep $azm failed (syn)\n" if $?; 
+
+   #{ ($_, 1) }
+   #`grep '\\syn\\(opt\\|\\req\\)\\(opt\\|kvp\\){' $azm`; 
+   #`grep 'synoptopt' $azm`; 
+
+# print "here comes:\n";
+# local $, = ' ';
+# print %syn;
+# print "--\n";
+# print %def;
+# print "--\n";
+# print %apropos;
+# print "--\n";
+
+for my $k (keys %exclude) {
+   delete($apropos{$k});
+   delete($def{$k});
+   delete($syn{$k});
+}
+
+
+my @undocumented = grep { !defined($def{$_}) } sort keys %apropos;
+print $marker . " Undocumented options:\n" unless $::silent && !@undocumented;
+for my $k (@undocumented) {
+   print "$k ## $apropos{$k}\n";
+}
+
+
+my @unsupported = grep { !defined($apropos{$_}) } sort keys %def;
+my $n_us = @unsupported;
+
+my @unsupported2 = grep { !defined($apropos{$_}) } sort keys %syn;
+my $n_us2 = @unsupported2;
+
+if ($::doc_exceed) {
+   my %u1 = map { ($_, 1); } @unsupported;
+   my %u2 = map { ($_, 1); } @unsupported2;
+   my @isect = grep { defined($u1{$_}) } keys %u2;
+
+   if (@isect >= $::doc_exceed) {
+      $#isect =  @isect - $::doc_exceed -1;     # remove arbitrary lot.
+   }
+   @unsupported = (@isect, grep { !defined($u2{$_}) } keys %u1);
+   @unsupported2 = (@isect, grep { !defined($u1{$_}) } keys %u2);
+}
+
+print $marker . " Unsupported options ($n_us):\n" unless $::silent && !@unsupported;
+for my $k (@unsupported) {
+   print "$k\n";
+}
+
+
+print $marker . " Unsupported options synopsis ($n_us2):\n" unless $::silent && !@unsupported2;
+for my $k (@unsupported2) {
+   print "$k\n";
+}
+
+
+my @unsynopsed = ();
+unless ($::nosynopsis) {
+   if (!@undocumented) {
+      @unsynopsed = grep { !defined($syn{$_}) } sort keys %apropos;
+      print $marker . " Undocumented options - synopsis\n"
+                              unless $::silent && !@unsynopsed;
+      for my $k (@unsynopsed) {
+         print "$k $apropos{$k}\n";
+      }
+   }
+   else {
+      print $marker . " Skipped synopsis section (fix defs first)\n" unless $::silent;
+   }
+}
+
+
+my $total = @unsupported + @undocumented + @unsupported2 + @unsynopsed;
+exit $total ? 1 : 0;
+
+

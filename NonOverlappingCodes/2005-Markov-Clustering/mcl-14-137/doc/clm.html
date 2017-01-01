@@ -1,0 +1,226 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html>
+<!-- Copyright (c) 2014 Stijn van Dongen -->
+<head>
+<meta name="keywords" content="manual">
+<style type="text/css">
+/* START aephea.base.css */
+body
+{ text-align: justify;
+margin-left: 0%;
+margin-right: 0%;
+}
+a:link { text-decoration: none; }
+a:active { text-decoration: none; }
+a:visited { text-decoration: none; }
+a:link { color: #1111aa; }
+a:active { color: #1111aa; }
+a:visited { color: #111166; }
+a.local:link { color: #11aa11; }
+a.local:active { color: #11aa11; }
+a.local:visited { color: #116611; }
+a.intern:link { color: #1111aa; }
+a.intern:active { color: #1111aa; }
+a.intern:visited { color: #111166; }
+a.extern:link { color: #aa1111; }
+a.extern:active { color: #aa1111; }
+a.extern:visited { color: #661111; }
+a.quiet:link { color: black; }
+a.quiet:active { color: black; }
+a.quiet:visited { color: black; }
+div.verbatim
+{ font-family: monospace;
+margin-top: 1em;
+margin-bottom: 1em;
+font-size: 10pt;
+margin-left: 2em;
+white-space: pre;
+}
+div.indent
+{ margin-left: 8%;
+margin-right: 0%;
+}
+.right { text-align: right; }
+.left { text-align: left; }
+.nowrap { white-space: nowrap; }
+.item_leader
+{ position: relative;
+margin-left: 8%;
+}
+.item_compact { position: absolute; vertical-align: baseline; }
+.item_cascade { position: relative; }
+.item_leftalign { text-align: left; }
+.item_rightalign
+{ width: 2em;
+text-align: right;
+}
+.item_compact .item_rightalign
+{ position: absolute;
+width: 52em;
+right: -2em;
+text-align: right;
+}
+.item_text
+{ position: relative;
+margin-left: 3em;
+}
+.smallcaps { font-size: smaller; text-transform: uppercase }
+/* END aephea.base.css */
+body { font-family: "Garamond", "Gill Sans", "Verdana", sans-serif; }
+body
+{ text-align: justify;
+margin-left: 8%;
+margin-right: 8%;
+}
+</style>
+<title>The clm manual</title>
+</head>
+<body>
+<p style="text-align:right">
+16 May 2014&nbsp;&nbsp;&nbsp;
+<a class="local" href="clm.ps"><b>clm</b></a>
+14-137
+</p>
+<div class=" itemize " style="margin-top:1em; font-size:100%">
+<div class=" item_compact"><div class=" item_rightalign nowrap " style="right:-3em">1.</div></div>
+<div class=" item_text " style="margin-left:4em">
+<a class="intern" href="#name">NAME</a>
+</div>
+<div class=" item_compact"><div class=" item_rightalign nowrap " style="right:-3em">2.</div></div>
+<div class=" item_text " style="margin-left:4em">
+<a class="intern" href="#synopsis">SYNOPSIS</a>
+</div>
+<div class=" item_compact"><div class=" item_rightalign nowrap " style="right:-3em">3.</div></div>
+<div class=" item_text " style="margin-left:4em">
+<a class="intern" href="#description">DESCRIPTION</a>
+</div>
+<div class=" item_compact"><div class=" item_rightalign nowrap " style="right:-3em">4.</div></div>
+<div class=" item_text " style="margin-left:4em">
+<a class="intern" href="#options">OPTIONS</a>
+</div>
+<div class=" item_compact"><div class=" item_rightalign nowrap " style="right:-3em">5.</div></div>
+<div class=" item_text " style="margin-left:4em">
+<a class="intern" href="#author">AUTHOR</a>
+</div>
+<div class=" item_compact"><div class=" item_rightalign nowrap " style="right:-3em">6.</div></div>
+<div class=" item_text " style="margin-left:4em">
+<a class="intern" href="#seealso">SEE ALSO</a>
+</div>
+</div>
+
+<a name="name"></a>
+<h2>NAME</h2>
+<p style="margin-bottom:0" class="asd_par">
+clm &mdash; perform various computations on graphs and clusterings</p>
+
+<a name="synopsis"></a>
+<h2>SYNOPSIS</h2>
+<div class="verbatim">   <b>clm</b> &lt;mode&gt; [mode-options] [mode-files]</div>
+
+<a name="description"></a>
+<h2>DESCRIPTION</h2>
+<p style="margin-bottom:0" class="asd_par">
+<b>clm</b> implements a variety of computations on graphs and clusterings. The
+first argument to <b>clm</b> should be a <i>mode</i>, which is a string establishing
+the type of computation to invoke. Each mode <i>mode</i> is described in the
+clm<i>mode</i> manual page. The currently available modes are
+<a class="local sibling" href="clmdist.html">clm&nbsp;dist</a>,
+<a class="local sibling" href="clminfo.html">clm&nbsp;info</a>,
+<a class="local sibling" href="clmmeet.html">clm&nbsp;meet</a>,
+<a class="local sibling" href="clmmate.html">clm&nbsp;mate</a>,
+<a class="local sibling" href="clmclose.html">clm&nbsp;close</a>,
+<a class="local sibling" href="clmorder.html">clm&nbsp;order</a>,
+<a class="local sibling" href="clmimac.html">clm&nbsp;imac</a>,
+<a class="local sibling" href="clmvol.html">clm&nbsp;vol</a>, and
+<a class="local sibling" href="clmresidue.html">clm&nbsp;residue</a>.
+The <b>dist</b> mode is thus described in the
+<a class="local sibling" href="clmdist.html">clmdist</a> manual page.
+</p>
+<p style="margin-bottom:0" class="asd_par">
+Invoking <b>clm</b> without arguments causes it to print out a list
+of available modes with a short description of the type of
+command line expected by that mode.
+</p>
+<p style="margin-bottom:0" class="asd_par">
+Invoking <b>clm</b> with just a mode will print out a longer listing
+of options available for that particular mode.
+Modes that are able to function normally without arguments
+can be invoked by adding the <i>--nop</i> argument.
+</p>
+<p style="margin-bottom:0" class="asd_par">
+Several options are shared between all <b>clm</b> modes. Note that
+these options are specified after the <b>mode</b>. See <a class="intern" href="#options">OPTIONS</a>.
+</p>
+<p style="margin-bottom:0" class="asd_par">
+The <b>--version</b> option causes <b>clm</b> to print out version
+and license information.
+</p>
+<p style="margin-bottom:0" class="asd_par">
+Issuing <i>clm help mode</i> will cause <b>clm</b> to look for a manual page
+describing <i>mode</i> and display it if found. This requires that the
+MANPATH environment variable contains the directory in which the MCL-edge
+manual pages were installed. This will usually be <tt>PREFIX/share</tt>,
+where <tt>PREFIX</tt> is the path with which the software was configured.
+</p>
+
+<a name="options"></a>
+<h2>OPTIONS</h2>
+<p style="margin-bottom:0" class="asd_par">
+These are options that pertain to all modes. They should be specified
+<i>after</i> the mode argument.
+</p>
+<div class=" itemize " style="margin-top:1em; font-size:100%">
+<div class=" item_cascade item_leftalign nowrap" ><a name="opt-h"></a><b>-h</b> (<i>synopsis</i>)</div><div class=" item_cascade item_leftalign nowrap" ><a name="opt--help"></a><b>--help</b> (<i>synopsis</i>)</div>
+<div class=" item_text " style="margin-left:2em">
+<p style="margin-top:0em; margin-bottom:0em">
+List available options.
+</p>
+</div>
+<div style="margin-top:0em">&nbsp;</div><div class=" item_cascade"><div class=" item_leftalign nowrap " ><a name="opt--nop"></a><b>--nop</b> (<i>no-op</i>)</div></div>
+<div class=" item_text " style="margin-left:2em">
+<p style="margin-top:0em; margin-bottom:0em">
+Not an option. This option has no effect then to increment
+the argument count. This can be useful for <b>clm</b> modes which are able to
+function without any options. Such a mode typically reads from STDIN, writes
+to STDOUT, and uses default settings. However, simply specifying a mode
+without options leads <b>clm</b> to output a list of available options for that
+mode. This can be averted by using the <b>--nop</b> option.
+</p>
+</div>
+<div style="margin-top:0em">&nbsp;</div><div class=" item_cascade"><div class=" item_leftalign nowrap " ><a name="opt-set"></a><b>-set</b> key=val (<i>set key-value pair</i>)</div></div>
+<div class=" item_text " style="margin-left:2em">
+<p style="margin-top:0em; margin-bottom:0em">
+Sets the key&nbsp;<b>key</b> to value&nbsp;<b>val</b> in the environment.
+Some modes allow adjustment of settings in this manner.
+</p>
+</div>
+<div style="margin-top:0em">&nbsp;</div><div class=" item_cascade item_leftalign nowrap" ><a name="opt-debug"></a><b>-debug</b> &lt;int&gt; (<i>set debug level/flags</i>)</div><div class=" item_cascade item_leftalign nowrap" ><a name="opt--debug"></a><b>--debug</b> (<i>turn default debugging on</i>)</div><div class=" item_cascade item_leftalign nowrap" ><a name="opt--test"></a><b>--test</b> (<i>turn default testing on</i>)</div>
+<div class=" item_text " style="margin-left:2em">
+<p style="margin-top:0em; margin-bottom:0em">
+The first two turn on debugging, the last is for testing. The effect of
+these options is otherwise undocumented.
+</p>
+</div>
+<div style="margin-top:0em">&nbsp;</div><div class=" item_cascade"><div class=" item_leftalign nowrap " ><a name="opt--progress"></a><b>--progress</b> (<i>enable progress reporting</i>)</div></div>
+<div class=" item_text " style="margin-left:2em">
+<p style="margin-top:0em; margin-bottom:0em">
+This will enable some kind of progress reporting, by
+writing to STDERR.
+</p>
+</div>
+</div>
+
+<a name="author"></a>
+<h2>AUTHOR</h2>
+<p style="margin-bottom:0" class="asd_par">
+Stijn van Dongen.
+</p>
+
+<a name="seealso"></a>
+<h2>SEE ALSO</h2>
+<p style="margin-bottom:0" class="asd_par">
+<a class="local sibling" href="mclfamily.html">mclfamily</a> for an overview of all the documentation
+and the utilities in the mcl family.
+</p>
+</body>
+</html>

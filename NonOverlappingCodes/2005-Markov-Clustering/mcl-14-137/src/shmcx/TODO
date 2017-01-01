@@ -1,0 +1,10 @@
+
+'dims' (sibling to dim, cdim, rdim).
+need mcopy for symmetry with mdup.
+
+What if user wants to make operators of mixed type?
+make meta primitives?
+
+perhaps help' can check the type of its argument ->
+if not string, act as if bottom ?
+

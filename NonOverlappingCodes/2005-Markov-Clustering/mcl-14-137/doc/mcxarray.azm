@@ -1,0 +1,355 @@
+\import{mcx.zmm}
+
+\begin{pud::man}{
+
+   {name}{mcxarray}
+   {html_title}{The mcxarray manual}
+   {author}{Stijn van Dongen}
+   {section}{1}
+   {synstyle}{long}
+   {defstyle}{long}
+
+   \man_share
+}
+
+\${html}{\"pud::man::maketoc"}
+
+\sec{name}{NAME}
+\NAME{mcxarray}{Transform array data to MCL matrices}
+
+
+\sec{synopsis}{SYNOPSIS}
+\par{
+   \mcxarray [options]}
+
+\par{
+   \mcxarray
+   \synoptopt{-data}{fname}{input data file}\|
+   \synoptopt{-imx}{fname}{input matrix file}\|
+   \synoptopt{-co}{num}{(absolute) cutoff for output values (required)}\|
+   \synoptopt{-skipr}{<num>}{skip <num> data rows}\|
+   \synoptopt{-skipc}{<num>}{skip <num> data columns}\|
+   \synoptopt{-o}{fname}{output file fname}\|
+   \synoptopt{--text-table}{write output in full text table format}\|
+   \synoptopt{-write-tab}{<fname>}{write row labels to file}\|
+   \synoptopt{-l}{<num>}{take labels from column <num>}\|
+\@{\P}
+   \synoptopt{--pearson}{use Pearson correlation (default)}\|
+   \synoptopt{--spearman}{use Spearman rank correlation}\|
+   \synoptopt{--dot}{use dot product}\|
+   \synoptopt{--cosine}{use cosine (similarity)}\|
+   \synoptopt{--slow-cosine}{use cosine(0.5 alpha) (similarity)}
+\@{\P}
+   \synoptopt{--angle}{use angle between vectors (note: a metric distance)}\|
+   \synoptopt{--acute-angle}{use acute angle between vectors}\|
+   \synoptopt{--angle-norm}{use normalised angle between vectors (by pi)}\|
+   \synoptopt{--acute-angle-norm}{use normalised acute angle between vectors\~(by\~pi/2)}\|
+   \synoptopt{--sine}{use sine (note: a metric distance)}\|
+   \synoptopt{--slow-sine}{use sine(0.5 alpha) (note: a metric distance)}\|
+   \synoptopt{--euclid}{use Euclidean distance between vectors}\|
+   \synoptopt{--max}{use L-oo, aka Chebyshev distance}\|
+   \synoptopt{--taxi}{use L-1, aka taxi, aka city-block distance}\|
+   \synoptopt{-minkowski}{<num>}{use Minkowski distance with power <num>}\|
+   \synoptopt{-fp}{<mode>}{use fingerprint measure}\|
+\@{\P}
+   \synoptopt{-digits}{<num>}{output precision}\|
+   \synoptopt{--write-binary}{write output in binary format}\|
+   \shared_synoptopt{-t}\|
+   \shared_synoptopt{-J}\|
+   \shared_synoptopt{-j}\|
+   \synoptopt{-start}{<int>}{start at column <int> inclusive}\|
+   \synoptopt{-end}{<int>}{end at column <int> EXclusive}\|
+   \synoptopt{--transpose-data}{work with the transposed data matrix}\|
+   \synoptopt{--rank-transform}{rank transform the data first}\|
+   \synoptopt{-tf}{spec}{transform result network}\|
+   \synoptopt{-table-tf}{spec}{transform input table before processing}\|
+   \synoptopt{-n}{mode}{normalize input}\|
+   \synoptopt{--zero-as-na}{treat zeroes as missing data}\|
+   \synoptopt{--sparse}{do not store zero values}\|
+   \synoptopt{-write-data}{<fname>}{write data to file}\|
+   \synoptopt{-write-na}{<fname>}{write NA matrix to file}\|
+   \synoptopt{--job-info}{print index ranges for this job}\|
+   \synoptopt{--help}{print this help}\|
+   \synoptopt{-h}{print this help}\|
+   \synoptopt{--version}{print version information}
+   }
+
+
+\sec{description}{DESCRIPTION}
+\par{
+   \mcxarray can either read a flat file containing array data (\genopt{-data})
+   or a matrix file satisfying the mcl input format (\genopt{-imx}).  In the
+   former case it will by default work with the rows as the data vectors. In
+   the latter case it will by default work with the columns as the data
+   vectors (note that mcl matrices are presented as a listing of columns).
+   This can be changed for both using the
+   \optref{--transpose-data}{\genopt{--transpose-data} option}.
+   }
+
+\par{
+   The input data may contain missing data in the form of empty columns,
+   NA values (not available/applicable), or NaN values (not a number).
+   The program keeps track of these, and when computing the correlation
+   between two rows or columns ignores all positions where any one of
+   the two has missing data.
+   }
+
+
+\sec{options}{OPTIONS}
+
+\begin{itemize}{\mcx_itemopts}
+
+\item{\defopt{-data}{fname}{input data file}}
+\car{
+   Specify the data file containing the expression values.
+   It should be tab-separated.
+   }
+
+\item{\defopt{-imx}{fname}{input matrix file}}
+\car{
+   The expression values are read from a file in mcl matrix format.
+   }
+
+\items{
+   {\defopt{--pearson}{use Pearson correlation (default)}}
+   {\defopt{--spearman}{use Spearman rank correlation}}
+   {\defopt{--cosine}{use cosine}}
+   {\defopt{--slow-cosine}{use cosine(0.5 alpha) (similarity)}}
+   {\defopt{--dot}{use the dot product}}
+}
+\car{
+   All these measures express the level of similarity or correlation
+   between two vectors.
+   Note that the dot product is not normalised and should only be used with
+   very good reason. A few more similarity measures are provided by
+   the fingerprint option \genopt{-fp} described below.
+   }
+
+
+\item{\defopt{-fp}{<mode>}{specify fingerprint measure}}
+\car{Fingerprints are used to define an entity in terms of it having
+   or not having certain traits. This means that a fingerprint can be
+   represented by a boolean vector, and a set of fingerprints can be represented
+   by an array of such vectors. In the presence of many traits and entities the dimensions
+   of such a matrix can grow large. The sparse storage employed by \MCL-edge is
+   ideally suited to this, and mcxarray is ideally suited to the computation
+   of all pairwise comparisons between such fingerprints.
+   Currently mcxarray supports five different types of fingerprint, described below. 
+   Given two fingerprints, the number of traits unique to the first is denoted by \it{a},
+   the number unique to the second is denoted by \it{b}, and the number that they
+   have in common is denoted by \it{c}.
+   }
+
+\begin{itemize}{
+   {flow}{cascade}
+   {interitem}{1}
+   {align}{left}
+}
+
+\item{hamming}
+\car{The Hamming distance, defined as \it{a}+\it{b}.}
+\item{tanimoto}
+\car{The Tanimoto similarity measure, \it{c}/(\it{a}+\it{b}+\it{c}).}
+\item{cosine}
+\car{The cosine similarity measure,  \it{c}/sqrt((\it{a}+\it{c})*(\it{b}+\it{c})).}
+\item{meet}
+\car{Simply the number of shared traits, identical to \it{c}.}
+\item{cover}
+\car{A normalised and non-symmetric similarity measure, representing the fraction
+   of traits shared relative to the number of traits by a single entity.
+   This gives the value \it{c}/(\it{a}+\it{c}) in one direction, and the value
+   \it{c}/(\it{b}+\it{c}) in the other.
+   }
+
+\end{itemize}
+
+\items{
+   {\defopt{--sine}{use sine (note: a metric distance)}}
+   {\defopt{--slow-sine}{use sine(0.5 alpha) (note: a metric distance)}}
+   {\defopt{--angle}{use angle between vectors (note: a metric distance)}}
+   {\defopt{--acute-angle}{use acute angle between vectors}}
+   {\defopt{--angle-norm}{use normalised angle between vectors (by pi)}}
+   {\defopt{--acute-angle-norm}{use normalised acute angle between vectors (by pi/2)}}
+   {\defopt{--euclid}{use Euclidean distance between vectors}}
+   {\defopt{--max}{use L-oo, aka Chebyshev distance}}
+   {\defopt{--taxi}{use L-1, aka taxi, aka city-block, aka Manhattan distance}}
+   {\defopt{-minkowski}{<num>}{use Minkowski distance with power <num>}}
+}
+\car{
+   All these measures express the level of dissimilarity or distance
+   between two vectors.
+   }
+
+\item{\defopt{-skipr}{<num>}{skip <num> data rows}}
+\car{
+   Skip the first \genarg{<num>} data rows.}
+
+\item{\defopt{-skipc}{<num>}{skip <num> data columns}}
+\car{
+   Ignore the first \genarg{<num>} data columns.}
+
+\item{\defopt{-l}{<num>}{take labels from column <num>}}
+\car{
+   Specifies to construct a tab of labels from this data column.
+   The tab can be written to file using \genoptref{-write-tab}{fname}.
+   }
+
+\item{\defopt{-write-tab}{<fname>}{write row labels to file}}
+\car{
+   Write a tab file. In the simple case where the labels are in the first
+   data column it is sufficient to issue \useopt{-skipc}{1}.
+   If more data columns need to be skipped one must explicitly specify
+   the data column to take labels from with \genopt{-l}{l}.
+   }
+
+
+\items{
+   {\defopt{-t}{<int>}{use <int> threads}}
+   {\defopt{-J}{<intJ>}{a total of <intJ> jobs are used}}
+   {\defopt{-j}{<intj>}{this job has index <intj>}}
+}
+\car{
+   Computing all pairwise correlations is time-intensive for large input.
+   If you have multiple CPUs available consider using as
+   many threads. Additionally it is possible to spread the computation over
+   multiple jobs/machines.
+   These three options are described in the \sibref{clmprotocols} manual page.
+   The following set of options, if given to as many commands, defines three jobs, each running four threads.
+   }
+
+\verbatim{-t 4 -J 3 -j 0 -o out.0
+-t 4 -J 3 -j 1 -o out.1
+-t 4 -J 3 -j 2 -o out.2}
+
+\car{
+   The output can then be collected with
+   }
+
+\verbatim{mcx collect --add-matrix -o out.all out.[0-2]}
+
+\items{
+   {\defopt{--job-info}{print index ranges for this job}}
+   {\defopt{-start}{<int>}{start at column <int> inclusive}}
+   {\defopt{-end}{<int>}{end at column <int> EXclusive}}
+}
+
+\car{
+   \genopt{--job-info} can be used to list the set of column
+   ranges to be processed by the job as a result of the command
+   line options \genopt{-t}, \genopt{-J}, and \genopt{-j}.
+   If a job has failed, this option can be used to manually
+   split those ranges into finer chunks, each to be processed
+   as a new sub-job specified with \genopt{-start} and \genopt{-end}.
+   With the latter two options, it is impossible to use
+   parallelization of any kind
+   (i.e. any of the \genopt{-t}, \genopt{-J}, and \genopt{-j} options).
+   }
+
+\item{\defopt{-o}{fname}{output file fname}}
+\car{
+   Output file name.}
+
+\item{\defopt{--text-table}{write output in full text table format}}
+\car{
+   The output will be written in tabular format rather than native \mcle format.
+   }
+
+\item{\defopt{-digits}{<num>}{output precision}}
+\car{
+   Specify the precision to use in native interchange format.}
+
+\item{\defopt{--write-binary}{write output in binary format}}
+\car{
+   Write output matrices in native binary format.
+   }
+
+\items{
+   {\defopt{-co}{num}{(absolute) cutoff for output values}}
+}
+\car{
+   Output values of magnitude smaller than \genarg{num} are removed (set to zero).
+   Thus, negative values are removed only if their positive counterpart
+   is smaller than \genarg{num}.
+   }
+
+\item{\defopt{--transpose-data}{work with the transpose}}
+\car{
+   Work with the transpose of the input data matrix.}
+
+\item{\defopt{--rank-transform}{rank transform the data first}}
+\car{
+   The data is rank-transformed prior to the computation of pairwise measures.
+   }
+
+\item{\defopt{-write-data}{<fname>}{write data to file}}
+\car{
+   This writes the data that was read in to file.
+   If \genopt{--spearman} is specified the data will
+   be rank-transformed.
+   }
+
+
+\item{\defopt{-write-na}{<fname>}{write NA matrix to file}}
+\car{
+   This writes all positions for which no data was found
+   to file, in native mcl matrix format.
+   }
+
+
+\item{\defopt{--zero-as-na}{treat zeroes as missing data}}
+\car{
+   This option can be useful when reading data with the \genopt{-imx} option,
+   for example after it has been loaded from label input by \sibref{mcxload}.
+   An example case is the processing of a large number of probe rankings,
+   where not all rankings contain all probe names. The rankings can be loaded
+   using \sibref{mcxload} with a tab file containing all probe names.
+   Probes that are present in the ranking are given a positive ordinal
+   number reflecting the ranking, and probes that are absent are implicitly
+   given the value zero. With the present option mcxarray will handle
+   the correlation computation in a reasonable way.
+}
+
+
+\item{\defopt{--sparse}{do not store zero data value}}
+\car{
+   With this option internal calculations are performed on compressed
+   data where zeroes are not stored. This can be useful when the input
+   data is very large.
+   }
+
+\item{\defopt{-n}{mode}{normalization mode}}
+\car{
+   If \genarg{mode} is set to \usearg{z} the data will be normalized
+   based on z-score. No other modes are currently supported.}
+
+\items{
+   {\defopt{-tf}{spec}{transform result network}}
+   {\defopt{-table-tf}{spec}{transform input table before processing}}
+   }
+\car{
+   The transformation syntax is described in \mysib{mcxio}.
+   }
+
+\items{
+   {\defopt{--help}{print help}}
+   {\defopt{-h}{print help}}
+}
+
+\item{\defopt{--version}{print version information}}
+
+
+\end{itemize}
+
+\sec{author}{AUTHOR}
+\par{
+   Stijn van Dongen.}
+
+\sec{seealso}{SEE ALSO}
+\par{
+   \mysib{mcl},
+   \mysib{mclfaq},
+   and \mysib{mclfamily} for an overview of all the documentation
+   and the utilities in the mcl family.}
+
+\end{pud::man}
+

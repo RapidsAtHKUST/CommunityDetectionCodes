@@ -1,0 +1,136 @@
+.\" Copyright (c) 2014 Stijn van Dongen
+.TH "mclblastline" 1 "16 May 2014" "mclblastline 14-137" "USER COMMANDS "
+.po 2m
+.de ZI
+.\" Zoem Indent/Itemize macro I.
+.br
+'in +\\$1
+.nr xa 0
+.nr xa -\\$1
+.nr xb \\$1
+.nr xb -\\w'\\$2'
+\h'|\\n(xau'\\$2\h'\\n(xbu'\\
+..
+.de ZJ
+.br
+.\" Zoem Indent/Itemize macro II.
+'in +\\$1
+'in +\\$2
+.nr xa 0
+.nr xa -\\$2
+.nr xa -\\w'\\$3'
+.nr xb \\$2
+\h'|\\n(xau'\\$3\h'\\n(xbu'\\
+..
+.if n .ll -2m
+.am SH
+.ie n .in 4m
+.el .in 8m
+..
+.SH NAME
+mclblastline \- a pipeline for clustering from BLAST files\&.
+.SH SYNOPSIS
+\fBmclblastline\fP file-name
+
+\fBmclblastline\fP [deblast options] [pipeline options] file-name
+
+\fBNOTE\fP
+.br
+\fBmcl\fP has acquired the ability to proceed from label input
+as produced by \fBmcxdeblast\fP\&. This enables a very lightweight
+mechanism of generating clusterings from BLAST files\&.
+You might want to use this mechanism,
+documented in the \fBmcl manual\fP\&.
+
+\fBNOTE\fP
+.br
+mclblastline used to require (given default parameters)
+the presence of the \fBzoem\fP macro processor to produce detailed output\&.
+This is no longer the case\&. By default mclblastline now creates
+a line-based tab-separated dump file\&.
+Zoem \fIwill\fP be invoked when the --fmt-fancy option is supplied\&.
+In that case, zoem obviously has to be installed\&.
+.SH DESCRIPTION
+\fBmclblastline\fP wraps around \fBmclpipeline\fP\&. It supplies the
+\fB--parser\fP=\fIapp\fP
+and \fB--parser-tag\fP=\fIstr\fP options, setting them respectively
+to \fImcxdeblast\fP and \fIblast\fP\&. This tells
+\fBmclpipeline\fP to use
+\fBmcxdeblast\fP as the parse script in its pipeline\&.
+The significance of
+the \fIblast\fP tag is that any mcxdeblast option can be passed through
+mclblastline and mclpipeline by inserting this tag into the option\&.
+For example, mcxdeblast accepts the \fB--score\fP=\fIx\fP option\&.
+When using mclblastline, you specify it as \fB--blast-score\fP=\fIx\fP\&.
+There are two exceptions to this rule, namely the
+\fB--xi-dat\fP=\fIstr\fP and \fB--xo-dat\fP=\fIstr\fP options\&. Refer to
+the \fBmclpipeline\fP manual for more information\&.
+
+Additionally, all mclpipeline options are acceptable to \fBmcxdeblast\fP as
+well\&. The \fB--whatif\fP is useful for getting a feel for the pipeline\&.
+The \fB--mcl-I\fP=\fIf\fP inflation option and \fB--mcl-scheme\fP=\fIi\fP scheme
+index options are your basic means for respectively manipulating cluster
+granularity and allocating resources\&. Read the \fBmcl\fP manual entries for
+a description of the corresponding \fB-I\fP and \fB-scheme\fP mcl
+options\&.
+
+The best advice is to glance over the \fBmcxdeblast\fP and \fBmclpipeline\fP
+options in order to get a feeling for which of those may come in handy for
+you\&. Then start experimenting\&. Use the \fB--whatif\fP option, it will
+tell you what would happen without actually doing it\&.
+.SH OPTIONS
+All \fBmcxdeblast\fP and \fBmclpipeline\fP options\&.
+mcxdeblast options must be passed using the mechanism described above\&.
+.SH EXAMPLES
+
+.nf \fC
+   mclblastline --blast-score=b
+      --blast-sort=a --blast-bcut=5 --mcl-I=2\&.5 myblastfile
+.fi \fR
+
+This will use bit scores, sort cluster indices such that the corresponding
+labels are ordered alphabetically, ignore bit scores not exceeding 5, and
+use inflation value 2\&.5\&. In this case, the output clustering will be in the
+file named \fCmyblastfile\&.I25s2\fP (I25 identifying the inflation value and s2
+identifying the resource scheme) and the formatted output will be in the
+file \fCmyblastfile\&.I25s2\&.fmt\fP\&.
+
+.nf \fC
+   mclblastline --prepare-mcl myblastfile
+   mclblastline --start-mcl --mcl-I=1\&.2 myblastfile
+   mclblastline --start-mcl --mcl-I=1\&.6 myblastfile
+   mclblastline --start-mcl --mcl-I=2\&.0 myblastfile
+   mclblastline --start-mcl --mcl-I=2\&.4 myblastfile
+   mclblastline --start-mcl --mcl-I=2\&.8 myblastfile
+   etc \&.\&.
+.fi \fR
+
+The first run prepares an input matrix to be read by \fBmcl\fP\&.
+In this case its file will be named \fCmyblastfile\&.sym\fP\&.
+The subsequent runs use this matrix\&.
+\fBCAVEAT\fP there are some options that you need to repeat
+when executing such a resumed run\&. They are clearly marked
+in the \fBmclpipeline\fP manual - namely those options
+that affect names of (intermediate) files\&. Most importantly,
+this concerns the mclpipeline options that have prefix
+\fB--xo\fP or \fB--xi\fP\&. For example,
+
+.nf \fC
+   mclblastline --prepare-mcl --blast-score=b --xo-dat=b myblastfile
+   mclblastline --start-mcl --xo-dat=b --mcl-I=1\&.2 myblastfile
+   mclblastline --start-mcl --xo-dat=b --mcl-I=1\&.6 myblastfile
+   mclblastline --start-mcl --xo-dat=b --mcl-I=2\&.0 myblastfile
+   mclblastline --start-mcl --xo-dat=b --mcl-I=2\&.4 myblastfile
+   mclblastline --start-mcl --xo-dat=b --mcl-I=2\&.8 myblastfile
+   etc \&.\&.
+.fi \fR
+
+In this case, the matrix file will be named \fCmyblastfile\&.b\&.sym\fP,
+and the \fB--xo-dat\fP options must be repeated in all runs
+so that the pipeline reconstructs the correct file name(s)\&.
+.SH AUTHOR
+
+Stijn van Dongen
+.SH SEE ALSO
+
+\fBmcxdeblast\fP, \fBmclpipeline\fP, \fBmcxassemble\fP\&.

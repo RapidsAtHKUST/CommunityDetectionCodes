@@ -1,0 +1,273 @@
+\import{mcx.zmm}
+
+\begin{pud::man}{
+
+   {name}{mcxrand}
+   {html_title}{The mcxrand manual}
+   {author}{Stijn van Dongen}
+   {section}{1}
+   {synstyle}{long}
+   {defstyle}{long}
+
+   \man_share
+}
+
+\${html}{\"pud::man::maketoc"}
+
+\sec{name}{NAME}
+\NAME{mcxrand}{random shuffling, removal, addition, and perturbation of edges of graphs}
+
+\sec{synopsis}{SYNOPSIS}
+\par{
+   \mcxrand [options]
+   }
+
+\par{
+\verbatim{\:/
+mcxrand -gen K -add N -new-g-mean f    # random graph on K nodes, N edges
+mcxrand -imx <name> -remove N -add N   # remove then add edges
+mcxrand -imx <name> -shuffle N         # shuffle N edge pairs
+mcxrand -imx <name> -noise-radius f    # add noise to add weights}
+mcxrand -pa N/m                        # preferential attachment generation}
+
+\par{
+   \mcxrand
+   \synoptopt{-imx}{<fname>}{input matrix}
+   \synoptopt{-o}{<fname>}{output matrix to <fname>}
+   \synoptopt{--write-binary}{write output in binary format}
+   \synoptopt{-gen}{<num>}{generate new graph}
+   \synoptopt{-pa}{<N>/<m>}{preferential attachment}
+   \synoptopt{-remove}{<num>}{remove <num> edges}
+   \synoptopt{-add}{<num>}{add <num> edges not yet present}
+   \synoptopt{-shuffle}{<num>}{shuffle edge pair <num> times}
+   \synoptopt{-icl}{<fname>}{shuffle nodes preserving cluster sizes}
+\""{
+   \nosynoptopt{-noise-radius}{<num>}{maximum spread to add noise with}
+   \nosynoptopt{-noise-sdev}{<num>}{noise standard deviation}
+   \nosynoptopt{-noise-range}{<num>}{noise range factor}
+   \nosynoptopt{-edge-min}{<num>}{absolute edge weight minimum}
+   \nosynoptopt{-edge-max}{<num>}{absolute edge weight maximum}
+   \nosynoptopt{-new-g-mean}{<num>}{mean for new edges (Gaussian)}
+   \nosynoptopt{-new-g-sdev}{<num>}{standard deviation for new edges (Gaussian)}
+   \nosynoptopt{-new-g-radius}{<num>}{maximum spread for new edges (Gaussian)}
+   \nosynoptopt{-new-g-min}{<num>}{lower bound selection (Gaussian)}
+   \nosynoptopt{-new-g-max}{<num>}{upper bound selection (Gaussian)}
+   \nosynoptopt{-skew}{<num>}{skew towards min or max}
+}
+   \stdsynopt
+   }
+
+\sec{description}{DESCRIPTION}
+\par{
+   This utility is a recent addition to the mcl suite and the schemes
+   explained below will likely be evolved, simplified, and extended
+   with future releases.}
+
+\par{
+   The \genopt{--shuffle}, \genopt{-gen} and \genopt{-pa} options can be deemend
+   stable and robust. The options that determine edge weight perturbation and
+   generation are likely to be subject to revision in the future.}
+
+\par{
+   The input graph/matrix, if specified with the \genopt{-imx} option,
+   has to be in mcl matrix/graph format.
+   You can use label input instead by preprocessing the label input
+   with \mysib{mcxload}, i.e.}
+
+\verbatim{\:/
+   mcxload -abc <label-file> | mcxrand [options]}
+
+\par{
+   Refer to \mysib{mcxio} for a description of these two input formats.
+   By default \mcxrand reads from STDIN. Change this with the \genoptref{-imx}
+   option.}
+
+\par{
+   \mcxrand can randomly remove and add edges to a graph, or add gaussian noise
+   to the edge weights of a graph. It can also shuffle edge pairs while
+   preserving the degree sequence of the graph.
+   In \it{removal mode} (\genoptref{-remove}{<num>}) and in
+   \it{addition mode} (\genoptref{-add}{<num>})
+   \mcxrand enforces arc symmetry by only working with edges
+   \it{w(i,j)} where \it{i < j} and symmetrifying the result and adding any
+   loops that were present in the input graph just before the output stage.}
+
+\par{
+   In \it{perturbation mode} (\genoptref{-noise-radius}, with no other mode specified)
+   the input can be any graph.}
+
+\par{
+   \it{Shuffle mode} (\genoptref{-shuffle}{<num>}) requires an undirected graph
+   but will only fail when it picks an arc for which the arc in the reverse
+   direction is not present. This means it may or may not fail on directed
+   input depending on the random choices. It does not check equality of the two
+   arc weights and randomly picks one to represent the edge weight.}
+
+\par{
+   Edge removal, edge creation, and edge perturbation are applied in this order
+   if both are specified.  Edge shuffling presently cannot be combined with one
+   of the previous modes.}
+
+\par{
+   A random graph can be generated with \genoptref{-gen}{k}, which
+   specifies the number of nodes the graph should have. It is equivalent
+   with pasing (the file name of) an empty graph of the same dimensions as the argument
+   to \genopt{-imx}.}
+
+\par{
+   When adding (i.e. creating) edges, the default is to use the uniform
+   distribution for new edge weights ranging in some interval.
+
+   The default interval is [0,1] and can be modified using the
+   \genoptref{-edge-min}{min} and \genoptref{-edge-max}{max} options.
+
+   A Gaussian edge weight distribution can be obtained by specifying
+   \genoptref{-new-g-mean}{num}. The standard deviation is by default
+   1.0 and can be altered with \genoptref{-new-g-sdev}{num}.
+   Currently the edge weigths are generated within the interval
+   [\it{mean-radius}, \it{mean+radius}] where \it{radius} is specified
+   with \genoptref{-new-g-radius}. They are further selected to
+   lie within the interval \it{[L,R]} if and only if
+   \genoptref{-new-g-min}{L} and \genoptref{-new-g-max}{R} have
+   been specified.
+   }
+
+\par{
+   For both uniform and Gaussian edge creation the edge weights
+   can be skewed towards either side of the distribution with
+   \genoptref{-skew}{c}. Skewing is applied by mapping
+   the edge weights to the interval [0,1], applying
+   the function \it{x^c}, and remapping the resulting number.
+   For values \it{c<1} this skews the edge weights towards
+   the right bound and for values \it{c>1} this skews the edge
+   weights towards the left bound.
+   This is a rather crude approach that will likely be
+   changed in the future.
+   }
+
+\par{
+   Edge weights can be perturbed by specifying \genoptref{-noise-radius}{radius}.
+   This sets the maximum perturbation allowed. Noise is generated with
+   a standard deviation that is by default set to 0.5 and can be altered
+   using \genoptref{-noise-sdev}{num}.
+   Values are generated in the interval \it{[-fac*sdev, fac*sdev]}
+   where \it{fac} is set with \genoptref{-noise-range}{fac}.
+   This interval is mapped to the interval \it{[-radius, radius]} before
+   the resulting value is added to the actual edge weight.
+   This becomes the new value.  If an interval \it{[L,R]}  is explicitly
+   specified using \genoptref{-edge-min}{L} and \genoptref{-edge-max}{R}
+   then the new value will be accepted only if it lies within the interval,
+   otherwise the edge will not be perturbed.
+   }
+
+\sec{options}{OPTIONS}
+
+\begin{itemize}{\mcx_itemopts}
+
+\item{\defopt{-imx}{<fname>}{input matrix}}
+\car{
+   The file name for input. STDIN is assumed if neither
+   \genopt{-imx} nor \genoptref{-gen}{num} is specified.}
+
+\item{\defopt{-o}{<fname>}{output matrix to <fname>}}
+\car{
+   The file to write the transformed matrix to.}
+
+\item{\defopt{--write-binary}{write output in binary format}}
+\car{
+   Write the output matrix in native binary format.
+   }
+
+\item{\defopt{-shuffle}{<num>}{shuffle edge pair <num> times}}
+\car{
+   Shuffle edge pair <num> times. An edge shuffle
+   acts on two randomly chosen edges
+   edges \it{w(a,b)} and \it{w(c,d)} where all the nodes must
+   be different. If either none of the edges in \it{w(a,c)}, \it{w(b,d)}
+   or none of the edges in \it{w(a,d)}, \it{w(b,c)} exists
+   the original two edges are removed and is replaced
+   by an edge pair for which both edges did not exist before.}
+
+\item{\defopt{-icl}{<fname>}{shuffle nodes preserving cluster sizes}}
+\car{
+   Use this option to generate a random clustering with the exact same
+   cluster size distribution as the input clustering.
+   }
+
+\item{\defopt{-pa}{<N>/<m>}{preferential attachment}}
+\car{
+   This generates a random graph using preferential attachment.
+   In this model new nodes are sequentially added to a graph.
+   Each new node is connected with \genarg{<m>} of the existing
+   nodes (including nodes previously added), where the likelihood
+   of picking an existing node is proportional to the edge
+   degree of that node. During construction multiple edges between
+   two nodes are allowed (each with weight one), and these are collapsed by adding
+   their weights before output.
+   }
+
+\item{\defopt{-remove}{<num>}{remove <num> edges}}
+\car{
+   Remove this many edges from the input graph.}
+
+\item{\defopt{-add}{<num>}{add <num> edges not yet present}}
+\car{
+   Create this many new edges.}
+
+\item{\defopt{-gen}{<num>}{node number}}
+\car{
+   Use in conjunction with \genopt{-add} to generate
+   a random graph on \it{<num>} nodes.}
+
+\stddefopt
+
+\end{itemize}
+
+
+\sec{seealso}{SEE ALSO}
+\par{
+   \mysib{mcxio},
+   and \mysib{mclfamily} for an overview of all the documentation
+   and the utilities in the mcl family.}
+
+\end{pud::man}
+
+
+
+
+
+
+\done
+
+
+\items{
+   {\nodefopt{-noise-radius}{<num>}{maximum spread to add noise with}}
+   {\nodefopt{-noise-sdev}{<num>}{standard deviation}}
+   {\nodefopt{-noise-range}{<fac>}{number of standard deviations allowed}}
+}
+\car{
+   See the discussion in \secref{description}.}
+
+\items{
+   {\nodefopt{-edge-min}{<num>}{global edge weight minimum}}
+   {\nodefopt{-edge-max}{<num>}{global edge weight maximum}}
+}
+\car{
+   See the discussion in \secref{description}.}
+
+\item{\nodefopt{-skew}{<num>}{skew towards min or max}}
+\car{
+   See the discussion in \secref{description}.}
+
+\items{
+   {\nodefopt{-new-g-mean}{<num>}{mean to generate new edges with}}
+   {\nodefopt{-new-g-sdev}{<num>}{standard deviation to generate new edges with}}
+   {\nodefopt{-new-g-radius}{<num>}{maximum spread to generate new edges with}}
+   {\nodefopt{-new-g-min}{<num>}{lower bound selection (Gaussian)}}
+   {\nodefopt{-new-g-max}{<num>}{upper bound selection (Gaussian)}}
+}
+\car{
+   See the discussion in \secref{description}.}
+
+
+

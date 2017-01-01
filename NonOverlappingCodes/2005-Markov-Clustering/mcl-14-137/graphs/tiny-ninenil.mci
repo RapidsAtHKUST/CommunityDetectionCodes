@@ -1,0 +1,14 @@
+
+(mclheader
+mcltype matrix
+dimensions 9x0
+)
+(mclrows
+3  6  9
+12 15 18
+21 24 27 $
+)
+(mclmatrix
+begin
+)
+

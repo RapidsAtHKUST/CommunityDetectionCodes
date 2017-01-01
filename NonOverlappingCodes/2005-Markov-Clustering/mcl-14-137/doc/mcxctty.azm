@@ -1,0 +1,159 @@
+\import{mcx.zmm}
+
+\begin{pud::man}{
+
+   {name}{mcx ctty}
+   {html_title}{The mcx ctty manual}
+   {author}{Stijn van Dongen}
+   {section}{1}
+   {synstyle}{long}
+   {defstyle}{long}
+
+   \man_share
+}
+
+\${html}{\"pud::man::maketoc"}
+
+\sec{name}{NAME}
+\NAME{mcx ctty}{compute betweenness centrality for network nodes or network edges}
+
+\sec{synopsis}{SYNOPSIS}
+\par{
+   \mcx{ctty} [options] [matrix-file]}
+
+\disclaim_mcx{ctty}
+
+\par{
+   \mcx{ctty}
+
+   \synoptopt{-abc}{<fname>}{specify label input}
+   \synoptopt{-imx}{<fname>}{specify matrix input}
+   \synoptopt{-extent}{<int>}{only consider paths of length at most <int>}
+   \synoptopt{--edge}{compute edge betweenness centrality}
+   \synoptopt{-o}{<fname>}{output file name}
+   \synoptopt{-tab}{<fname>}{use tab file}
+   \synoptopt{-t}{<int>}{use <int> threads}
+   \synoptopt{-J}{<intJ>}{a total of <intJ> jobs are used}
+   \synoptopt{-j}{<intj>}{this job has index <intj>}
+   \stdsynopt
+}
+
+\sec{description}{DESCRIPTION}
+\par{
+   \mcx{ctty} computes betweenness centrality for all nodes or all edges in a graph, using
+   the between centrality update algorithm from \refer{fabc}.
+   The program is not yet able to take into account edge weights.
+   }
+
+\par{
+   The input graph/matrix, if specified with the \genopt{-imx} option, has to
+   be in mcl matrix/graph format.  You can use label input instead by using the
+   \genopt{-abc} option.
+   Refer to \mysib{mcxio} for a description of these two input formats.
+   By default \mcx{diameter} reads from STDIN \it{and expects matrix format}.
+   To specify label input from STDIN use \useopt{-abc}{-}.}
+
+\sec{options}{OPTIONS}
+
+\begin{itemize}{\mcx_itemopts}
+
+\item{\defopt{-abc}{<fname>}{label input}}
+\car{
+   The file name for input that is in label format.}
+
+\item{\defopt{-imx}{<fname>}{input matrix}}
+\car{
+   The file name for input. STDIN is assumed if not specified.}
+
+\item{\defopt{-o}{<fname>}{output file name}}
+\car{
+   The name of the file to write output to.
+   }
+
+\item{\defopt{-extent}{<int>}{only consider paths of length at most <int>}}
+\car{
+   This option will lead to different results. Results
+   will still be informative however, being representative for
+   the local context in which nodes reside. It does probably not make
+   sense to use values smaller than four or five.
+   }
+
+\item{\defopt{--edge}{compute edge betweenness centrality}}
+\car{
+   The output will be a matrix rather than a labeled list of values.
+   If the program is split into multiple jobs with the \genopt{-j}
+   and \genopt{-J} options, the resulting outputs have to be collated
+   using \v{mcx\~collect\~--add-matrix} followed by the respective
+   output file names for each of the jobs.
+   }
+
+\item{\defopt{-tab}{<fname>}{use tab file}}
+\car{
+   This option causes the output to be printed with the labels
+   found in the tab file.
+   With \genopt{-abc} this option will, additionally, construct
+   a graph only on the labels found in the tab file.
+   If this option is used in conjunction with \genopt{-imx} the
+   tab domain and the matrix domain are required to be identical.
+   }
+
+
+
+\items{
+   {\defopt{-t}{<int>}{use <int> threads}}
+   {\defopt{-J}{<intJ>}{a total of <intJ> jobs are used}}
+   {\defopt{-j}{<intj>}{this job has index <intj>}}
+}
+\car{
+   Computing centrality scores in a graph is time-intensive
+   for large graphs.  If you have multiple CPUs available consider using as
+   many threads. Additionally it is possible to spread the computation over
+   multiple jobs/machines.
+   These three options are described in the \sibref{clmprotocols} manual page.
+   The following set of options, if given to as many commands, defines three jobs, each running four threads.
+   }
+
+\verbatim{-t 4 -J 3 -j 0 -o out.0
+-t 4 -J 3 -j 1 -o out.1
+-t 4 -J 3 -j 2 -o out.2}
+
+\car{
+   For node centrality (the default mode) the output can then be collected with
+   }
+
+\verbatim{mcx collect --add-column -o out.all out.[0-2]}
+
+\car{
+   For edge centrality (invoked with \genopt{--edge}) the output should be collected with
+   }
+
+\verbatim{mcx collect --add-matrix -o out.all out.[0-2]}
+
+\car{
+   This collection step is only necessary if the \genopt{-J} was used
+   with a value greater than one. In particular, if threads were used
+   but jobs were not, there will be a single output corresponding to
+   the end result.
+   }
+
+\stddefopt
+
+\end{itemize}
+
+\sec{references}{REFERENCES}
+
+\par{
+\reference{fabc}
+Ulrik Brandes, \it{A Faster Algorithm for Betweenness Centrality}.
+Journal of Mathematical Sociology 25(2): 163-177, (2001).
+\httpref{http://citeseerx.ist.psu.edu/viewdoc/summary?doi=10.1.1.11.2024}
+   }
+
+\sec{seealso}{SEE ALSO}
+\par{
+   \mysib{mcxio},
+   and \mysib{mclfamily} for an overview of all the documentation
+   and the utilities in the mcl family.}
+
+\end{pud::man}
+

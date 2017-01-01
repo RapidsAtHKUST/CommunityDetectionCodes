@@ -1,0 +1,195 @@
+.\" Copyright (c) 2014 Stijn van Dongen
+.TH "mcx ctty" 1 "16 May 2014" "mcx ctty 14-137" "USER COMMANDS "
+.po 2m
+.de ZI
+.\" Zoem Indent/Itemize macro I.
+.br
+'in +\\$1
+.nr xa 0
+.nr xa -\\$1
+.nr xb \\$1
+.nr xb -\\w'\\$2'
+\h'|\\n(xau'\\$2\h'\\n(xbu'\\
+..
+.de ZJ
+.br
+.\" Zoem Indent/Itemize macro II.
+'in +\\$1
+'in +\\$2
+.nr xa 0
+.nr xa -\\$2
+.nr xa -\\w'\\$3'
+.nr xb \\$2
+\h'|\\n(xau'\\$3\h'\\n(xbu'\\
+..
+.if n .ll -2m
+.am SH
+.ie n .in 4m
+.el .in 8m
+..
+.SH NAME
+mcx ctty \- compute betweenness centrality for network nodes or network edges
+.SH SYNOPSIS
+
+\fBmcx\ \&ctty\fP [options] [matrix-file]
+
+mcxctty is not in actual fact a program\&. This manual
+page documents the behaviour and options of the mcx program when
+invoked in mode \fIctty\fP\&. The options \fB-h\fP, \fB--apropos\fP,
+\fB--version\fP, \fB-set\fP, \fB--nop\fP, \fB-progress\fP\ \&\fI<num>\fP
+are accessible
+in all \fBmcx\fP modes\&. They are described
+in the \fBmcx\fP manual page\&.
+
+\fBmcx\ \&ctty\fP
+\fB[-abc\fP <fname> (\fIspecify label input\fP)\fB]\fP
+\fB[-imx\fP <fname> (\fIspecify matrix input\fP)\fB]\fP
+\fB[-extent\fP <int> (\fIonly consider paths of length at most <int>\fP)\fB]\fP
+\fB[--edge\fP (\fIcompute edge betweenness centrality\fP)\fB]\fP
+\fB[-o\fP <fname> (\fIoutput file name\fP)\fB]\fP
+\fB[-tab\fP <fname> (\fIuse tab file\fP)\fB]\fP
+\fB[-t\fP <int> (\fIuse <int> threads\fP)\fB]\fP
+\fB[-J\fP <intJ> (\fIa total of <intJ> jobs are used\fP)\fB]\fP
+\fB[-j\fP <intj> (\fIthis job has index <intj>\fP)\fB]\fP
+\fB[-h\fP (\fIprint synopsis, exit\fP)\fB]\fP
+\fB[--apropos\fP (\fIprint synopsis, exit\fP)\fB]\fP
+\fB[--version\fP (\fIprint version, exit\fP)\fB]\fP
+.SH DESCRIPTION
+
+\fBmcx\ \&ctty\fP computes betweenness centrality for all nodes or all edges in a graph, using
+the between centrality update algorithm from [1]\&.
+The program is not yet able to take into account edge weights\&.
+
+The input graph/matrix, if specified with the \fB-imx\fP option, has to
+be in mcl matrix/graph format\&. You can use label input instead by using the
+\fB-abc\fP option\&.
+Refer to \fBmcxio(5)\fP for a description of these two input formats\&.
+By default \fBmcx\ \&diameter\fP reads from STDIN \fIand expects matrix format\fP\&.
+To specify label input from STDIN use \fB-abc\fP\ \&\fB-\fP\&.
+.SH OPTIONS
+
+.ZI 2m "\fB-abc\fP <fname> (\fIlabel input\fP)"
+\&
+.br
+The file name for input that is in label format\&.
+.in -2m
+
+.ZI 2m "\fB-imx\fP <fname> (\fIinput matrix\fP)"
+\&
+.br
+The file name for input\&. STDIN is assumed if not specified\&.
+.in -2m
+
+.ZI 2m "\fB-o\fP <fname> (\fIoutput file name\fP)"
+\&
+.br
+The name of the file to write output to\&.
+.in -2m
+
+.ZI 2m "\fB-extent\fP <int> (\fIonly consider paths of length at most <int>\fP)"
+\&
+.br
+This option will lead to different results\&. Results
+will still be informative however, being representative for
+the local context in which nodes reside\&. It does probably not make
+sense to use values smaller than four or five\&.
+.in -2m
+
+.ZI 2m "\fB--edge\fP (\fIcompute edge betweenness centrality\fP)"
+\&
+.br
+The output will be a matrix rather than a labeled list of values\&.
+If the program is split into multiple jobs with the \fB-j\fP
+and \fB-J\fP options, the resulting outputs have to be collated
+using \fCmcx\ \&collect\ \&--add-matrix\fP followed by the respective
+output file names for each of the jobs\&.
+.in -2m
+
+.ZI 2m "\fB-tab\fP <fname> (\fIuse tab file\fP)"
+\&
+.br
+This option causes the output to be printed with the labels
+found in the tab file\&.
+With \fB-abc\fP this option will, additionally, construct
+a graph only on the labels found in the tab file\&.
+If this option is used in conjunction with \fB-imx\fP the
+tab domain and the matrix domain are required to be identical\&.
+.in -2m
+
+.ZI 2m "\fB-t\fP <int> (\fIuse <int> threads\fP)"
+\&
+'in -2m
+.ZI 2m "\fB-J\fP <intJ> (\fIa total of <intJ> jobs are used\fP)"
+\&
+'in -2m
+.ZI 2m "\fB-j\fP <intj> (\fIthis job has index <intj>\fP)"
+\&
+'in -2m
+'in +2m
+\&
+.br
+Computing centrality scores in a graph is time-intensive
+for large graphs\&. If you have multiple CPUs available consider using as
+many threads\&. Additionally it is possible to spread the computation over
+multiple jobs/machines\&.
+These three options are described in the \fBclmprotocols\fP manual page\&.
+The following set of options, if given to as many commands, defines three jobs, each running four threads\&.
+
+.di ZV
+.in 0
+.nf \fC
+-t 4 -J 3 -j 0 -o out\&.0
+-t 4 -J 3 -j 1 -o out\&.1
+-t 4 -J 3 -j 2 -o out\&.2
+.fi \fR
+.in
+.di
+.ne \n(dnu
+.nf \fC
+.ZV
+.fi \fR
+
+For node centrality (the default mode) the output can then be collected with
+
+.di ZV
+.in 0
+.nf \fC
+mcx collect --add-column -o out\&.all out\&.[0-2]
+.fi \fR
+.in
+.di
+.ne \n(dnu
+.nf \fC
+.ZV
+.fi \fR
+
+For edge centrality (invoked with \fB--edge\fP) the output should be collected with
+
+.di ZV
+.in 0
+.nf \fC
+mcx collect --add-matrix -o out\&.all out\&.[0-2]
+.fi \fR
+.in
+.di
+.ne \n(dnu
+.nf \fC
+.ZV
+.fi \fR
+
+This collection step is only necessary if the \fB-J\fP was used
+with a value greater than one\&. In particular, if threads were used
+but jobs were not, there will be a single output corresponding to
+the end result\&.
+.in -2m
+.SH REFERENCES
+
+[1]
+Ulrik Brandes, \fIA Faster Algorithm for Betweenness Centrality\fP\&.
+Journal of Mathematical Sociology 25(2): 163-177, (2001)\&.
+http://citeseerx\&.ist\&.psu\&.edu/viewdoc/summary?doi=10\&.1\&.1\&.11\&.2024
+.SH SEE ALSO
+
+\fBmcxio(5)\fP,
+and \fBmclfamily(7)\fP for an overview of all the documentation
+and the utilities in the mcl family\&.

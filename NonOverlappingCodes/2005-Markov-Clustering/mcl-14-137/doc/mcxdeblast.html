@@ -1,0 +1,303 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html>
+<!-- Copyright (c) 2014 Stijn van Dongen -->
+<head>
+<meta name="keywords" content="manual">
+<style type="text/css">
+/* START aephea.base.css */
+body
+{ text-align: justify;
+margin-left: 0%;
+margin-right: 0%;
+}
+a:link { text-decoration: none; }
+a:active { text-decoration: none; }
+a:visited { text-decoration: none; }
+a:link { color: #1111aa; }
+a:active { color: #1111aa; }
+a:visited { color: #111166; }
+a.local:link { color: #11aa11; }
+a.local:active { color: #11aa11; }
+a.local:visited { color: #116611; }
+a.intern:link { color: #1111aa; }
+a.intern:active { color: #1111aa; }
+a.intern:visited { color: #111166; }
+a.extern:link { color: #aa1111; }
+a.extern:active { color: #aa1111; }
+a.extern:visited { color: #661111; }
+a.quiet:link { color: black; }
+a.quiet:active { color: black; }
+a.quiet:visited { color: black; }
+div.verbatim
+{ font-family: monospace;
+margin-top: 1em;
+margin-bottom: 1em;
+font-size: 10pt;
+margin-left: 2em;
+white-space: pre;
+}
+div.indent
+{ margin-left: 8%;
+margin-right: 0%;
+}
+.right { text-align: right; }
+.left { text-align: left; }
+.nowrap { white-space: nowrap; }
+.item_leader
+{ position: relative;
+margin-left: 8%;
+}
+.item_compact { position: absolute; vertical-align: baseline; }
+.item_cascade { position: relative; }
+.item_leftalign { text-align: left; }
+.item_rightalign
+{ width: 2em;
+text-align: right;
+}
+.item_compact .item_rightalign
+{ position: absolute;
+width: 52em;
+right: -2em;
+text-align: right;
+}
+.item_text
+{ position: relative;
+margin-left: 3em;
+}
+.smallcaps { font-size: smaller; text-transform: uppercase }
+/* END aephea.base.css */
+body { font-family: "Garamond", "Gill Sans", "Verdana", sans-serif; }
+body
+{ text-align: justify;
+margin-left: 8%;
+margin-right: 8%;
+}
+</style>
+<title>The mcxdeblast manual</title>
+</head>
+<body>
+<p style="text-align:right">
+16 May 2014&nbsp;&nbsp;&nbsp;
+<a class="local" href="mcxdeblast.ps"><b>mcxdeblast</b></a>
+14-137
+</p>
+<div class=" itemize " style="margin-top:1em; font-size:100%">
+<div class=" item_compact"><div class=" item_rightalign nowrap " style="right:-3em">1.</div></div>
+<div class=" item_text " style="margin-left:4em">
+<a class="intern" href="#name">NAME</a>
+</div>
+<div class=" item_compact"><div class=" item_rightalign nowrap " style="right:-3em">2.</div></div>
+<div class=" item_text " style="margin-left:4em">
+<a class="intern" href="#synopsis">SYNOPSIS</a>
+</div>
+<div class=" item_compact"><div class=" item_rightalign nowrap " style="right:-3em">3.</div></div>
+<div class=" item_text " style="margin-left:4em">
+<a class="intern" href="#description">DESCRIPTION</a>
+</div>
+<div class=" item_compact"><div class=" item_rightalign nowrap " style="right:-3em">4.</div></div>
+<div class=" item_text " style="margin-left:4em">
+<a class="intern" href="#stream">STREAM MODE</a>
+</div>
+<div class=" item_compact"><div class=" item_rightalign nowrap " style="right:-3em">5.</div></div>
+<div class=" item_text " style="margin-left:4em">
+<a class="intern" href="#assemble">ASSEMBLE MODE</a>
+</div>
+<div class=" item_compact"><div class=" item_rightalign nowrap " style="right:-3em">6.</div></div>
+<div class=" item_text " style="margin-left:4em">
+<a class="intern" href="#options">OPTIONS</a>
+</div>
+<div class=" item_compact"><div class=" item_rightalign nowrap " style="right:-3em">7.</div></div>
+<div class=" item_text " style="margin-left:4em">
+<a class="intern" href="#author">AUTHOR</a>
+</div>
+<div class=" item_compact"><div class=" item_rightalign nowrap " style="right:-3em">8.</div></div>
+<div class=" item_text " style="margin-left:4em">
+<a class="intern" href="#sealso">SEE ALSO</a>
+</div>
+</div>
+
+<a name="name"></a>
+<h2>NAME</h2>
+<p style="margin-bottom:0" class="asd_par">
+mcxdeblast &mdash; parse BLAST files and stream
+output directly into mcl or write mcxassemble input.</p>
+
+<a name="synopsis"></a>
+<h2>SYNOPSIS</h2>
+<b>mcxdeblast</b> file-name
+<p style="margin-bottom:0" class="asd_par">
+<b>mcxdeblast</b>
+<a class="intern" href="#opt--score"><b>[--score=</b>&lt;b|e|r&gt; (<i>bit scores|e-values|normalize bit score</i>)<b>]</b></a>
+<a class="intern" href="#opt--m9"><b>[--m9</b> (<i>expect BLAST column format</i>)<b>]</b></a>
+<a class="intern" href="#opt--out"><b>[--out</b> &lt;fname&gt; (<i>output file</i>)<b>]</b></a>
+<a class="intern" href="#opt--line-mode"><b>[--line-mode</b> abc (<i>write ID1 ID2 score format</i>)<b>]</b></a>
+<a class="intern" href="#opt--sort"><b>[--sort=</b>&lt;a|o&gt; (<i>alphabetic|occurrence sorting</i>)<b>]</b></a>
+<a class="intern" href="#opt--xi-dat"><b>[--xi-dat=</b>&lt;suf&gt; (<i>strip &lt;suf&gt; from file-name</i>)<b>]</b></a>
+<a class="intern" href="#opt--xo-dat"><b>[--xo-dat=</b>&lt;suf&gt; (<i>add &lt;suf&gt; to base name</i>)<b>]</b></a>
+<a class="intern" href="#opt--bcut"><b>[--bcut=</b>&lt;val&gt; (<i>bit score cutoff</i>)<b>]</b></a>
+<a class="intern" href="#opt--ecut"><b>[--ecut=</b>&lt;val&gt; (<i>E-value cutoff</i>)<b>]</b></a>
+<a class="intern" href="#opt--rcut"><b>[--rcut=</b>&lt;val&gt; (<i>raw value cutoff</i>)<b>]</b></a>
+<a class="intern" href="#opt--tab"><b>[--tab=</b>&lt;fname&gt; (<i>tab file</i>)<b>]</b></a>
+&lt;file-name&gt;</p>
+
+<a name="description"></a>
+<h2>DESCRIPTION</h2>
+<p style="margin-bottom:0" class="asd_par">
+<b>mcxdeblast</b> parses BLAST files.</p>
+<p style="margin-bottom:0" class="asd_par">
+In <i>stream mode</i> mcxdeblast output can be directly streamed to mcl by
+using the mcxdeblast <b>--line-mode</b>=<i>abc</i> option and equipping mcl with
+either <b>--abc</b> or <b>--expect-abc</b>. This can be considered the
+easy, lightweight and fast track. This functionality was recently acquired
+by mcl.</p>
+<p style="margin-bottom:0" class="asd_par">
+In the classic and slightly more heavy-handed <i>assemble mode</i>, mcxdeblast
+creates output files suitable for use by mcxassemble. The latter can in
+turn create input suitable for mcl. This is the mode in which mcxdeblast is
+employed by <b>mclblastline</b>.</p>
+
+<a name="stream"></a>
+<h2>STREAM MODE</h2>
+<p style="margin-top:0em; margin-bottom:0em">Enter stream mode by specifiying <b>--line-mode</b>=<i>abc</i>.
+Use <b>--m9</b> if the input is in columnar output. Pipe the result
+to a file or directly to mcl. Example invocations can be found
+in <a class="local sibling" href="mcl.html">the mcl manual</a>.</p>
+
+<a name="assemble"></a>
+<h2>ASSEMBLE MODE</h2>
+<p style="margin-top:0em; margin-bottom:0em">
+If the input file is named <tt>iput</tt>, mcxdeblast will by
+default create files <tt>iput.hdr</tt>, <tt>iput.raw</tt>, <tt>iput.tab</tt>,
+<tt>iput.map</tt>, and <tt>iput.err</tt>. The <tt>hdr</tt> file contains
+information about the number of nodes found. It will be read
+by <a class="local sibling" href="mcxassemble.html">mcxassemble</a>. The <tt>raw</tt> file contains the co-occurrence
+scores between different nodes (peptides), also to be
+read by mcxassemble. The co-occurrence scores are in
+terms of mcl indentiers, which are subjected to rearranging
+by mcxassemble in order to correctly align them with the tab file.
+The <tt>tab</tt> file contains bindings between mcl identifiers
+(after rearranging as specified in the map file) and the BLAST labels
+(peptide identifiers). Refer to the manual of <a class="local sibling" href="mcxassemble.html">mcxassemble</a>
+for the syntax of a tab file.
+The <tt>err</tt> file contains a list of any errors encountered.</p>
+<p style="margin-bottom:0" class="asd_par">
+If the <b>--tab</b>=<b>fname</b> option is used mcxdeblast changes
+its behaviour. It will read the file <b>fname</b>, and use
+the bindings found therein. It will no longer output any
+of the <tt>hdr</tt>, <tt>map</tt>, or <tt>tab</tt> files. The <tt>hdr</tt>
+file should be provided by the same application that generated
+the specified tab file, and the <tt>map</tt> file should no longer be
+necessary (it might be convenient though and perhaps the
+future will bring a new <b>--map</b> option).</p>
+<p style="margin-bottom:0" class="asd_par">
+The <b>--tab</b>=<b>fname</b> option can be convenient e.g. if
+you split a BLAST job over multiple machines and want
+to apply mcxdeblast to each of the subresults. You do
+this by generating a single central tab file in advance.
+Then provide each instance of mcxdeblast with this tab file.
+Each instance will generate a <tt>raw</tt> file. The respective
+<tt>raw</tt> files can simply be concatenated and fed to mcxassemble
+using its <b>-raw</b> option. Additionally, a <tt>hdr</tt> file
+has to be specified for mcxassemble using its <b>-hdr</b>
+option. The syntax of <tt>hdr</tt> files is described in
+the <a class="local sibling" href="mcxassemble.html">mcxassemble</a> manual.
+Currently there is usually only one variable
+in the <tt>hdr</tt> file, which is the number of bindings
+listed in the tab file. This number, in turn, should equal
+the total number of different peptides encountered in the BLAST input.</p>
+
+<a name="options"></a>
+<h2>OPTIONS</h2>
+<div class=" itemize " style="margin-top:1em; font-size:100%">
+<div class=" item_cascade"><div class=" item_leftalign nowrap " ><a name="opt--tab"></a><b>--tab</b>=&lt;fname&gt; (<i>tab file</i>)</div></div>
+<div class=" item_text " style="margin-left:2em">
+<p style="margin-top:0em; margin-bottom:0em">
+Specify a tab file to use, rather than automatically generating one.
+</p>
+</div>
+<div style="margin-top:0em">&nbsp;</div><div class=" item_cascade"><div class=" item_leftalign nowrap " ><a name="opt--out"></a><b>--out</b> &lt;fname&gt; (<i>output file</i>)</div></div>
+<div class=" item_text " style="margin-left:2em">
+<p style="margin-top:0em; margin-bottom:0em">
+Specify the name for the output file.
+</p>
+</div>
+<div style="margin-top:0em">&nbsp;</div><div class=" item_cascade"><div class=" item_leftalign nowrap " ><a name="opt--score"></a><b>--score</b>=&lt;b|e|r&gt; (<i>bit scores|e-values|norm bit score</i>)</div></div>
+<div class=" item_text " style="margin-left:2em">
+<p style="margin-top:0em; margin-bottom:0em">
+Specify whether to use bit scores, E-values, or bit scores
+normalized by length of the HSP.
+</p>
+</div>
+<div style="margin-top:0em">&nbsp;</div><div class=" item_cascade"><div class=" item_leftalign nowrap " ><a name="opt--sort"></a><b>--sort</b>=&lt;a|o&gt; (<i>alphabetic|occurrence sorting</i>)</div></div>
+<div class=" item_text " style="margin-left:2em">
+<p style="margin-top:0em; margin-bottom:0em">
+Specify how to sort labels.
+</p>
+</div>
+<div style="margin-top:0em">&nbsp;</div><div class=" item_cascade"><div class=" item_leftalign nowrap " ><a name="opt--m9"></a><b>--m9</b> (<i>expect BLAST column format</i>)</div></div>
+<div class=" item_text " style="margin-left:2em">
+<p style="margin-top:0em; margin-bottom:0em">
+Use this option to parse BLAST output formatted with the -m 9 option.
+</p>
+</div>
+<div style="margin-top:0em">&nbsp;</div><div class=" item_cascade"><div class=" item_leftalign nowrap " ><a name="opt--line-mode"></a><b>--line-mode</b>=abc (<i>write ID1 ID2 SCORE format</i>)</div></div>
+<div class=" item_text " style="margin-left:2em">
+<p style="margin-top:0em; margin-bottom:0em">
+Use this to stream output directly into mcl. Here <tt>abc</tt>
+is a literal; <b>--line-mode</b> may acquire other line output
+modes.
+</p>
+</div>
+<div style="margin-top:0em">&nbsp;</div><div class=" item_cascade"><div class=" item_leftalign nowrap " ><a name="opt--xi-dat"></a><b>--xi-dat</b>=&lt;suf&gt; (<i>strip &lt;suf&gt; from &lt;file-name&gt;</i>)</div></div>
+<div class=" item_text " style="margin-left:2em">
+<p style="margin-top:0em; margin-bottom:0em">
+If set, the suffix &lt;suf&gt; is stripped from file-name in order
+to obtain the base name for output. If &lt;file-name&gt; does not
+end with suffix, it is assumed to be the base name, and &lt;suf&gt; is
+added in order to obtain the (real) file-name.
+</p>
+</div>
+<div style="margin-top:0em">&nbsp;</div><div class=" item_cascade"><div class=" item_leftalign nowrap " ><a name="opt--xo-dat"></a><b>--xo-dat</b>=&lt;suf&gt; (<i>add &lt;suf&gt; to base name</i>)</div></div>
+<div class=" item_text " style="margin-left:2em">
+<p style="margin-top:0em; margin-bottom:0em">
+Attaches the suffix to the base name. Use this to distinguish
+between different parses. One might for example
+use <b>--score</b>=<i>b</i> <b>--bcut</b>=<i>5</i> <b>--xo-dat</b>=<i>b</i>.
+</p>
+</div>
+<div style="margin-top:0em">&nbsp;</div><div class=" item_cascade"><div class=" item_leftalign nowrap " ><a name="opt--bcut"></a><b>--bcut</b>=&lt;val&gt; (<i>bit score cutoff</i>)</div></div>
+<div class=" item_text " style="margin-left:2em">
+<p style="margin-top:0em; margin-bottom:0em">
+Bit scores below the cutoff value are ignored. This
+triggers the output of bit scores and ignores all other values.
+</p>
+</div>
+<div style="margin-top:0em">&nbsp;</div><div class=" item_cascade"><div class=" item_leftalign nowrap " ><a name="opt--ecut"></a><b>--ecut</b>=&lt;val&gt; (<i>E-value cutoff</i>)</div></div>
+<div class=" item_text " style="margin-left:2em">
+<p style="margin-top:0em; margin-bottom:0em">
+E-values below the cutoff value are ignored. This triggers
+the output of E-values and ignores all other values.
+</p>
+</div>
+<div style="margin-top:0em">&nbsp;</div><div class=" item_cascade"><div class=" item_leftalign nowrap " ><a name="opt--rcut"></a><b>--rcut</b>=&lt;val&gt; (<i>raw value cutoff</i>)</div></div>
+<div class=" item_text " style="margin-left:2em">
+<p style="margin-top:0em; margin-bottom:0em">
+Raw values below the cutoff value are ignored. This
+triggers the output of raw values and ignores all other values.
+</p>
+</div>
+</div>
+
+<a name="author"></a>
+<h2>AUTHOR</h2>
+Stijn van Dongen.
+Jason Stajich implemented the <b>--m9</b> option.
+Abel Ureta-Vidal and Dinakarpandian Deendayal contributed helpful comments
+and fixes.
+
+<a name="sealso"></a>
+<h2>SEE ALSO</h2>
+<a class="local sibling" href="mclblastline.html">mclblastline</a>, <a class="local sibling" href="mcxassemble.html">mcxassemble</a>, <a class="local sibling" href="mcl.html">mcl</a>,
+<a class="local sibling" href="clmformat.html">clmformat</a>.
+</body>
+</html>

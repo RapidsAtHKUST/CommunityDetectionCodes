@@ -1,0 +1,245 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html>
+<!-- Copyright (c) 2014 Stijn van Dongen -->
+<head>
+<meta name="keywords" content="manual">
+<style type="text/css">
+/* START aephea.base.css */
+body
+{ text-align: justify;
+margin-left: 0%;
+margin-right: 0%;
+}
+a:link { text-decoration: none; }
+a:active { text-decoration: none; }
+a:visited { text-decoration: none; }
+a:link { color: #1111aa; }
+a:active { color: #1111aa; }
+a:visited { color: #111166; }
+a.local:link { color: #11aa11; }
+a.local:active { color: #11aa11; }
+a.local:visited { color: #116611; }
+a.intern:link { color: #1111aa; }
+a.intern:active { color: #1111aa; }
+a.intern:visited { color: #111166; }
+a.extern:link { color: #aa1111; }
+a.extern:active { color: #aa1111; }
+a.extern:visited { color: #661111; }
+a.quiet:link { color: black; }
+a.quiet:active { color: black; }
+a.quiet:visited { color: black; }
+div.verbatim
+{ font-family: monospace;
+margin-top: 1em;
+margin-bottom: 1em;
+font-size: 10pt;
+margin-left: 2em;
+white-space: pre;
+}
+div.indent
+{ margin-left: 8%;
+margin-right: 0%;
+}
+.right { text-align: right; }
+.left { text-align: left; }
+.nowrap { white-space: nowrap; }
+.item_leader
+{ position: relative;
+margin-left: 8%;
+}
+.item_compact { position: absolute; vertical-align: baseline; }
+.item_cascade { position: relative; }
+.item_leftalign { text-align: left; }
+.item_rightalign
+{ width: 2em;
+text-align: right;
+}
+.item_compact .item_rightalign
+{ position: absolute;
+width: 52em;
+right: -2em;
+text-align: right;
+}
+.item_text
+{ position: relative;
+margin-left: 3em;
+}
+.smallcaps { font-size: smaller; text-transform: uppercase }
+/* END aephea.base.css */
+body { font-family: "Garamond", "Gill Sans", "Verdana", sans-serif; }
+body
+{ text-align: justify;
+margin-left: 8%;
+margin-right: 8%;
+}
+</style>
+<title>The&nbsp;MCL&nbsp;family</title>
+</head>
+<body>
+<p style="text-align:right">
+16 May 2014&nbsp;&nbsp;&nbsp;
+<a class="local" href="mclfamily.ps"><b>mcl</b></a>
+14-137
+</p>
+<div class=" itemize " style="margin-top:1em; font-size:100%">
+<div class=" item_compact"><div class=" item_rightalign nowrap " style="right:-3em">1.</div></div>
+<div class=" item_text " style="margin-left:4em">
+<a class="intern" href="#name">NAME</a>
+</div>
+<div class=" item_compact"><div class=" item_rightalign nowrap " style="right:-3em">2.</div></div>
+<div class=" item_text " style="margin-left:4em">
+<a class="intern" href="#description">DESCRIPTION</a>
+</div>
+</div>
+
+<a name="name"></a>
+<h2>NAME</h2>
+<p style="margin-bottom:0" class="asd_par">
+mclfamily &mdash; a description of the mcl family of cluster applications.</p>
+<p style="margin-bottom:0" class="asd_par">
+<b>mcl</b> is an implementation of the Markov Cluster Algorithm, aka MCL algoritm.
+It is described in the <a class="local sibling" href="mcl.html">mcl manual</a>.
+Several other applications are part of the MCL distribution. This manual pages
+gives an overview.</p>
+
+<a name="description"></a>
+<h2>DESCRIPTION</h2>
+<div class=" itemize " style="margin-top:1em; font-size:100%">
+<div class=" item_compact"><div class=" item_leftalign nowrap " ><a class="local sibling" href="mcl.html">mcl</a></div></div>
+<div class=" item_text " style="margin-left:15em">
+<p style="margin-top:0em; margin-bottom:0em">the cluster algorithm</p>
+</div>
+<div class=" item_compact"><div class=" item_leftalign nowrap " ><a class="local sibling" href="mclfaq.html">mclfaq</a></div></div>
+<div class=" item_text " style="margin-left:15em">
+<p style="margin-top:0em; margin-bottom:0em">MCL Frequently Asked Questions</p>
+</div>
+<div class=" item_compact"><div class=" item_leftalign nowrap " ><a class="local sibling" href="mcxio.html">mcxio</a></div></div>
+<div class=" item_text " style="margin-left:15em">
+<p style="margin-top:0em; margin-bottom:0em">the network/matrix input/output format</p>
+</div>
+<div class=" item_compact"><div class=" item_leftalign nowrap " ><a class="local sibling" href="mcx.html">mcx</a></div></div>
+<div class=" item_text " style="margin-left:15em">
+<p style="margin-top:0em; margin-bottom:0em">general network/matrix tasks</p>
+</div>
+<div class=" item_compact"><div class=" item_leftalign nowrap " ><a class="local sibling" href="mcxdiameter.html">mcx&nbsp;diameter</a></div></div>
+<div class=" item_text " style="margin-left:15em">
+<p style="margin-top:0em; margin-bottom:0em">compute diameter of an undirected network</p>
+</div>
+<div class=" item_compact"><div class=" item_leftalign nowrap " ><a class="local sibling" href="mcxctty.html">mcx&nbsp;ctty</a></div></div>
+<div class=" item_text " style="margin-left:15em">
+<p style="margin-top:0em; margin-bottom:0em">compute betweenness centrality</p>
+</div>
+<div class=" item_compact"><div class=" item_leftalign nowrap " ><a class="local sibling" href="mcxclcf.html">mcx&nbsp;clcf</a></div></div>
+<div class=" item_text " style="margin-left:15em">
+<p style="margin-top:0em; margin-bottom:0em">compute clustering coefficient</p>
+</div>
+<div class=" item_compact"><div class=" item_leftalign nowrap " ><a class="local sibling" href="mcxerdos.html">mcx&nbsp;erdos</a></div></div>
+<div class=" item_text " style="margin-left:15em">
+<p style="margin-top:0em; margin-bottom:0em">compute shortest paths in graphs</p>
+</div>
+<div class=" item_compact"><div class=" item_leftalign nowrap " ><a class="local sibling" href="mcxquery.html">mcx&nbsp;query</a></div></div>
+<div class=" item_text " style="margin-left:15em">
+<p style="margin-top:0em; margin-bottom:0em">analyse networks at different thresholds</p>
+</div>
+<div class=" item_compact"><div class=" item_leftalign nowrap " ><a class="local sibling" href="mcxalter.html">mcx&nbsp;alter</a></div></div>
+<div class=" item_text " style="margin-left:15em">
+<p style="margin-top:0em; margin-bottom:0em">apply network transformations</p>
+</div>
+<div class=" item_compact"><div class=" item_leftalign nowrap " ><a class="local sibling" href="mcxconvert.html">mcx&nbsp;convert</a></div></div>
+<div class=" item_text " style="margin-left:15em">
+<p style="margin-top:0em; margin-bottom:0em">convert between interchange/binary storage types</p>
+</div>
+<div class=" item_compact"><div class=" item_leftalign nowrap " ><a class="local sibling" href="mcxarray.html">mcxarray</a></div></div>
+<div class=" item_text " style="margin-left:15em">
+<p style="margin-top:0em; margin-bottom:0em">transform array data to MCL matrices</p>
+</div>
+<div class=" item_compact"><div class=" item_leftalign nowrap " ><a class="local sibling" href="mcxdump.html">mcxdump</a></div></div>
+<div class=" item_text " style="margin-left:15em">
+<p style="margin-top:0em; margin-bottom:0em">dump a matrix optionally with label substitions</p>
+</div>
+<div class=" item_compact"><div class=" item_leftalign nowrap " ><a class="local sibling" href="mcxload.html">mcxload</a></div></div>
+<div class=" item_text " style="margin-left:15em">
+<p style="margin-top:0em; margin-bottom:0em">load label data into matrix and tab files</p>
+</div>
+<div class=" item_compact"><div class=" item_leftalign nowrap " ><a class="local sibling" href="mcxrand.html">mcxrand</a></div></div>
+<div class=" item_text " style="margin-left:15em">
+<p style="margin-top:0em; margin-bottom:0em">randomly remove, add, and perturb edge weights</p>
+</div>
+<div class=" item_compact"><div class=" item_leftalign nowrap " ><a class="local sibling" href="mcxmap.html">mcxmap</a></div></div>
+<div class=" item_text " style="margin-left:15em">
+<p style="margin-top:0em; margin-bottom:0em">relabel indices in a graph/matrix</p>
+</div>
+<div class=" item_compact"><div class=" item_leftalign nowrap " ><a class="local sibling" href="mcxsubs.html">mcxsubs</a></div></div>
+<div class=" item_text " style="margin-left:15em">
+<p style="margin-top:0em; margin-bottom:0em">extracting submatrices in various ways</p>
+</div>
+<div class=" item_compact"><div class=" item_leftalign nowrap " ><a class="local sibling" href="mcxi.html">mcxi</a></div></div>
+<div class=" item_text " style="margin-left:15em">
+<p style="margin-top:0em; margin-bottom:0em">general matrix operations</p>
+</div>
+<div class=" item_compact"><div class=" item_leftalign nowrap " ><a class="local sibling" href="mcxassemble.html">mcxassemble</a></div></div>
+<div class=" item_text " style="margin-left:15em">
+<p style="margin-top:0em; margin-bottom:0em">create matrices from raw data</p>
+</div>
+<div class=" item_compact"><div class=" item_leftalign nowrap " ><a class="local sibling" href="clm.html">clm</a></div></div>
+<div class=" item_text " style="margin-left:15em">
+<p style="margin-top:0em; margin-bottom:0em">general graph-clustering related tasks</p>
+</div>
+<div class=" item_compact"><div class=" item_leftalign nowrap " ><a class="local sibling" href="clmdist.html">clm&nbsp;dist</a></div></div>
+<div class=" item_text " style="margin-left:15em">
+<p style="margin-top:0em; margin-bottom:0em">compute split/join distance between clusterings</p>
+</div>
+<div class=" item_compact"><div class=" item_leftalign nowrap " ><a class="local sibling" href="clmvol.html">clm&nbsp;vol</a></div></div>
+<div class=" item_text " style="margin-left:15em">
+<p style="margin-top:0em; margin-bottom:0em">derive node volatility scores from a set of clusterings</p>
+</div>
+<div class=" item_compact"><div class=" item_leftalign nowrap " ><a class="local sibling" href="clminfo.html">clm&nbsp;info</a></div></div>
+<div class=" item_text " style="margin-left:15em">
+<p style="margin-top:0em; margin-bottom:0em">compute performance measure for clusterings</p>
+</div>
+<div class=" item_compact"><div class=" item_leftalign nowrap " ><a class="local sibling" href="clmmeet.html">clm&nbsp;meet</a></div></div>
+<div class=" item_text " style="margin-left:15em">
+<p style="margin-top:0em; margin-bottom:0em">compute intersection of clusterings</p>
+</div>
+<div class=" item_compact"><div class=" item_leftalign nowrap " ><a class="local sibling" href="clmmate.html">clm&nbsp;mate</a></div></div>
+<div class=" item_text " style="margin-left:15em">
+<p style="margin-top:0em; margin-bottom:0em">find best matching clusters between clusterings</p>
+</div>
+<div class=" item_compact"><div class=" item_leftalign nowrap " ><a class="local sibling" href="clmclose.html">clm&nbsp;close</a></div></div>
+<div class=" item_text " style="margin-left:15em">
+<p style="margin-top:0em; margin-bottom:0em">fetch connected components from graphs or subgraphs</p>
+</div>
+<div class=" item_compact"><div class=" item_leftalign nowrap " ><a class="local sibling" href="clmimac.html">clm&nbsp;imac</a></div></div>
+<div class=" item_text " style="margin-left:15em">
+<p style="margin-top:0em; margin-bottom:0em">interpret MCL iterand/matrix as clustering</p>
+</div>
+<div class=" item_compact"><div class=" item_leftalign nowrap " ><a class="local sibling" href="clmorder.html">clm&nbsp;order</a></div></div>
+<div class=" item_text " style="margin-left:15em">
+<p style="margin-top:0em; margin-bottom:0em">reorder indices to represent blocks from different clusterings</p>
+</div>
+<div class=" item_compact"><div class=" item_leftalign nowrap " ><a class="local sibling" href="clmresidue.html">clm&nbsp;residue</a></div></div>
+<div class=" item_text " style="margin-left:15em">
+<p style="margin-top:0em; margin-bottom:0em">extend subgraph clustering</p>
+</div>
+<div class=" item_compact"><div class=" item_leftalign nowrap " ><a class="local sibling" href="clmformat.html">clmformat</a></div></div>
+<div class=" item_text " style="margin-left:15em">
+<p style="margin-top:0em; margin-bottom:0em">display clusters as html or txt files</p>
+</div>
+<div class=" item_compact"><div class=" item_leftalign nowrap " ><a class="local sibling" href="mclpipeline.html">mclpipeline</a></div></div>
+<div class=" item_text " style="margin-left:15em">
+<p style="margin-top:0em; margin-bottom:0em">parsing/assembly/clustering/display</p>
+</div>
+<div class=" item_compact"><div class=" item_leftalign nowrap " ><a class="local sibling" href="mclblastline.html">mclblastline</a> <tt>*</tt></div></div>
+<div class=" item_text " style="margin-left:15em">
+<p style="margin-top:0em; margin-bottom:0em">BLAST pipeline</p>
+</div>
+<div class=" item_compact"><div class=" item_leftalign nowrap " ><a class="local sibling" href="mcxdeblast.html">mcxdeblast</a> <tt>*</tt></div></div>
+<div class=" item_text " style="margin-left:15em">
+<p style="margin-top:0em; margin-bottom:0em">parse BLAST files</p>
+</div>
+</div>
+<p style="margin-bottom:0" class="asd_par">
+Entries marked <tt>*</tt> are not available if only a default
+install is done.</p>
+</body>
+</html>

@@ -1,0 +1,135 @@
+\import{mcx.zmm}
+
+\begin{pud::man}{
+
+   {name}{mcx diameter}
+   {html_title}{The mcx diameter manual}
+   {author}{Stijn van Dongen}
+   {section}{1}
+   {synstyle}{long}
+   {defstyle}{long}
+
+   \man_share
+}
+
+\${html}{\"pud::man::maketoc"}
+
+\sec{name}{NAME}
+\NAME{mcx diameter}{compute the diameter of a graph}
+
+\sec{synopsis}{SYNOPSIS}
+\par{
+   \mcx{diameter} [options]}
+
+\disclaim_mcx{diameter}
+
+\par{
+   \mcx{diameter}
+   \synoptopt{-abc}{<fname>}{specify label input}
+   \synoptopt{-imx}{<fname>}{specify matrix input}
+   \synoptopt{-o}{<fname>}{output file name}
+   \synoptopt{-tab}{<fname>}{use tab file}
+   \shared_synoptopt{-t}
+   \shared_synoptopt{-J}
+   \shared_synoptopt{-j}
+   \synoptopt{--summary}{output diameter and average shortest path length}
+   \synoptopt{--list}{list eccentricity for all nodes}
+   \stdsynopt
+   }
+
+\sec{description}{DESCRIPTION}
+\par{
+   \mcx{diameter} computes the diameter of a graph.  The input graph should be
+   symmetric.  Results will be unpredictable for directed graphs.
+   For label input this is irrelevant as \mcx{diameter} will create
+   a symmetric graph from the input.}
+
+\par{
+   The input graph/matrix, if specified with the \genopt{-imx} option, has to
+   be in mcl matrix/graph format.  You can use label input instead by using the
+   \genopt{-abc} option.
+   Refer to \mysib{mcxio} for a description of these two input formats.
+   By default \mcx{diameter} reads from STDIN \it{and expects matrix format}.
+   To specify label input from STDIN use \useopt{-abc}{-}.}
+
+
+\sec{options}{OPTIONS}
+
+\begin{itemize}{\mcx_itemopts}
+
+\item{\defopt{-abc}{<fname>}{label input}}
+\car{
+   The file name for input that is in label format.}
+
+\item{\defopt{-imx}{<fname>}{input matrix}}
+\car{
+   The file name for input that is in mcl native matrix format.}
+
+\item{\defopt{-o}{<fname>}{output file name}}
+\car{
+   The name of the file to write output to.
+   }
+
+\item{\defopt{-tab}{<fname>}{use tab file}}
+\car{
+   This option causes the output to be printed with the labels
+   found in the tab file.
+   With \genopt{-abc} this option will, additionally, construct
+   a graph only on the labels found in the tab file.
+   If this option is used in conjunction with \genopt{-imx} the
+   tab domain and the matrix domain are required to be identical.
+   }
+
+
+\items{
+   {\defopt{-t}{<int>}{use <int> threads}}
+   {\defopt{-J}{<intJ>}{a total of <intJ> jobs are used}}
+   {\defopt{-j}{<intj>}{this job has index <intj>}}
+}
+\car{
+   Computing the diameter of a graph is time-intensive
+   for large graphs.  If you have multiple CPUs available consider using as
+   many threads. Additionally it is possible to spread the computation over
+   multiple jobs/machines.
+   These three options are described in the \sibref{clmprotocols} manual page.
+   The following set of options, if given to as many commands, defines three jobs, each running four threads.
+   }
+
+\verbatim{-t 4 -J 3 -j 0 -o out.0
+-t 4 -J 3 -j 1 -o out.1
+-t 4 -J 3 -j 2 -o out.2}
+
+\car{
+   The output can then be collected with
+   }
+
+\verbatim{mcx collect --add-column -o out.all out.[0-2]}
+
+
+\items{
+   {\defopt{--list}{list eccentricity for all nodes}}
+   {\defopt{--summary}{output diameter and average eccentricity}}
+}
+\car{
+   The default mode is \genopt{--list}, which results in output
+   of the eccentricity of all nodes. The eccentricity of
+   a node is the distance to any node that is the furthest
+   away from it. The diameter of a graph is the maximum
+   of the eccentricity taken over all nodes in a graph.
+   In this mode \mcx{diameter} will not output the diameter
+   itself. Use \genopt{--summary} to output just the diameter
+   and the average eccentricity.
+
+   }
+
+\end{itemize}
+
+
+\sec{seealso}{SEE ALSO}
+\par{
+   \mysib{mcxio},
+   and \mysib{mclfamily} for an overview of all the documentation
+   and the utilities in the mcl family.}
+
+\end{pud::man}
+

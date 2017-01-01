@@ -1,0 +1,114 @@
+.\" Copyright (c) 2014 Stijn van Dongen
+.TH "mcx convert" 1 "16 May 2014" "mcx convert 14-137" "USER COMMANDS "
+.po 2m
+.de ZI
+.\" Zoem Indent/Itemize macro I.
+.br
+'in +\\$1
+.nr xa 0
+.nr xa -\\$1
+.nr xb \\$1
+.nr xb -\\w'\\$2'
+\h'|\\n(xau'\\$2\h'\\n(xbu'\\
+..
+.de ZJ
+.br
+.\" Zoem Indent/Itemize macro II.
+'in +\\$1
+'in +\\$2
+.nr xa 0
+.nr xa -\\$2
+.nr xa -\\w'\\$3'
+.nr xb \\$2
+\h'|\\n(xau'\\$3\h'\\n(xbu'\\
+..
+.if n .ll -2m
+.am SH
+.ie n .in 4m
+.el .in 8m
+..
+.SH NAME
+mcx convert \- convert between mcx storage types
+.SH SYNOPSIS
+
+\fBmcx\ \&convert\fP <matrix-file-in> <matrix-file-out>
+.br
+\fBmcx\ \&convert\fP [--write-binary] --cone-to-stack <cat-file-in> <cat-file-out>
+.br
+\fBmcx\ \&convert\fP [--write-binary] --stack-to-cone <cat-file-in> <cat-file-out>
+
+mcxconvert is not in actual fact a program\&. This manual
+page documents the behaviour and options of the mcx program when
+invoked in mode \fIconvert\fP\&. The options \fB-h\fP, \fB--apropos\fP,
+\fB--version\fP, \fB-set\fP, \fB--nop\fP, \fB-progress\fP\ \&\fI<num>\fP
+are accessible
+in all \fBmcx\fP modes\&. They are described
+in the \fBmcx\fP manual page\&.
+
+\fBmcx\ \&convert\fP
+\fB[--cone-to-stack\fP (\fItransform cone file to stack file\fP)\fB]\fP
+\fB[--stack-to-cone\fP (\fItransform stack file to cone file\fP)\fB]\fP
+\fB[--write-binary\fP (\fIoutput native binary format\fP)\fB]\fP
+\fB[--cat\fP (\fIread and write cat format\fP)\fB]\fP
+\fB[-cat-max\fP <num> (\fIlimit the stack conversion to <num> matrices\fP)\fB]\fP
+
+In the two-argument invocation without additional arguments, \fBmcx\ \&convert\fP
+converts from the format found in the first file to the other format, i\&.e\&.
+from native interchange to native binary format or the other way around\&. When
+querying with the \fB-q\fP option, mcx{convert} will output a one-line
+synopsis describing the matrix in the argument\&. The
+\fB--cone-to-stack\fP and \fB--stack-to-cone\fP options convert
+between the two types of concatenated output provided by \fBmclcm\fP\&.
+.SH DESCRIPTION
+
+The \fBmcl\fP libraries make extensive use of matrices\&. Matrices
+are used to encode graphs, matrices and clusterings\&.
+They can be stored either in interchange or in binary format\&. The latter is
+somewhat more efficient in storage and much faster in both reading and
+writing, but the default is interchange format\&.
+
+The \fBmcl\fP input routines recognize the type of storage they are dealing
+with\&. If you want to convert a matrix to the other storage type,
+simply specify the file name of the matrix you want to convert\&.
+\fBmcx\ \&convert\fP will recognize its type, and write the other type
+to the file specified as the second argument\&.
+.SH OPTIONS
+
+.ZI 2m "\fB--cone-to-stack\fP (\fItransform cone file to stack file\fP)"
+\&
+.br
+This option requires two trailing options, the names of respectively the
+source cone file and the target stack file\&.
+.in -2m
+
+.ZI 2m "\fB--stack-to-cone\fP (\fItransform stack file to cone file\fP)"
+\&
+.br
+This option requires two trailing options, the names of respectively the
+source stack file and the target cone file\&.
+.in -2m
+
+.ZI 2m "\fB--cat\fP (\fIread and write cat format\fP)"
+\&
+.br
+.in -2m
+
+.ZI 2m "\fB-cat-max\fP <num> (\fIlimit the stack conversion to <num> matrices\fP)"
+\&
+.br
+.in -2m
+
+.ZI 2m "\fB--write-binary\fP (\fIoutput native binary format\fP)"
+\&
+.br
+This option is only useful with either of the options \fB--cone-to-stack\fP,
+\fB--stack-to-cone\fP, or \fB--cat\fP\&.
+.in -2m
+.SH AUTHOR
+
+Stijn van Dongen\&.
+.SH SEE ALSO
+
+\fBmcxio(5)\fP,
+and \fBmclfamily(7)\fP for an overview of all the documentation
+and the utilities in the mcl family\&.

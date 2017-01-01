@@ -1,0 +1,11 @@
+(mclheader
+mcltype matrix
+dimensions 26x4
+)
+(mclmatrix
+begin
+0  0 1 12 13 14 $
+1  2 3 15 16 $
+2  4 5 17 18 $
+3  6 7 8 9 10 11 19 20 21 22 23 24 25 $
+)

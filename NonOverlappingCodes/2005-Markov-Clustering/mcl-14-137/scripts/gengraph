@@ -1,0 +1,54 @@
+#!/usr/local/bin/perl -w
+
+#  (C) Copyright 2009 Stijn van Dongen
+ #
+#  This file is part of MCL.  You can redistribute and/or modify MCL under the
+#  terms of the GNU General Public License; either version 3 of the License or
+#  (at your option) any later version.  You should have received a copy of the
+#  GPL along with MCL, in the file COPYING.
+
+
+sub explain {
+print <<EOH;
+to be written
+EOH
+}
+
+use strict;
+use Getopt::Long;
+
+
+if (!@ARGV) {
+   print STDERR "issue 'gengraph --help' for help\n";
+}
+
+my $mode = "";
+my $help = 0;
+my $N = 4;
+my $W = 1;
+
+if
+(! GetOptions
+   (  "mode=s"          =>   \$mode
+   ,  "N=i"             =>   \$N
+   ,  "weight=f"        =>   \$W
+   ,  "help"            =>   \$help
+   )
+)
+   {  print STDERR "option processing failed\n";
+      exit(1);
+   }
+
+&explain && exit(0) if $help;
+
+$mode = lc($mode);
+
+if ($mode eq 'k') {
+   for (my $i=0;$i<$N;$i++) {
+      for (my $j=0;$j<$N;$j++) {
+         print "$i\t$j\t$W\n";
+      }
+   }
+}
+
+

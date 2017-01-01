@@ -1,0 +1,155 @@
+
+\: what's with the funny name index.in.azm ?
+\: this document is a regular manual page in the roff edition;
+\: the html edition is not however, as it uses tables (coded ad hoc).
+\: as a result the macro code below looks messy - more so
+\: becaues the html edition is split into two incarnations,
+\: a 'distribution index' and an 'installed index'.
+\: the incarnations correspond with the keys dist#0 and install#0.
+
+
+\import{mcx.zmm}
+
+\if{\defined{key}{dist}}{
+   \set{modal}{Install with}
+   \set{subtitle}{Distribution index \"mcx::stamp"}
+}{}
+\if{\defined{key}{install}}{
+   \set{modal}{Documentation only available if installed with}
+   \set{subtitle}{Installation index \"mcx::stamp"}
+}{}
+
+
+\${html}{
+   \set{mkentry#3}{\@{<tr>
+      <td><b>\1</b> - \3</td>
+      <td><a href="\1.html">html</a></td>
+      <td><a href="\1.ps">ps</a></td>
+   </tr>}}
+   \set{mkheader#3}{\@{<tr>
+      <th colspan="3">}
+      \bf{\1} - \2 \bf{\3}
+      \@{</th>
+   </tr>}}
+
+   \set{utsection#1}{\@{
+   <h3 style="margin-top:2em">}\1\@{</h3>
+   <table width="100%" border=1 cellpadding=3 rules=all style="margin-top:0em">
+   }}
+   \set{modsection#1}{\@{
+   <h3 style="margin-top:2em">}\1\@{</h3>
+   <table width="100%" border=1 cellpadding=3 rules=all style="margin-top:0em">
+   }}
+   \set{utend}{\@{</table>}}
+   \set{modend}{\@{</table>}}
+
+   \@{\w}
+   \@{<html>
+
+   <head>
+      <title>MCL manuals</title>
+      <style type="text/css">
+        body
+        { text-align: justify;
+          color: #001111;
+          background: white;
+          margin-left: 8%;
+          margin-right: 8%;
+        }
+        h3 { margin-top:1em; }
+        h2 { margin-top:2em; }
+      </style>
+   </head>
+
+   <body>
+   }
+
+   \@{
+   <hr noshade size=1>
+   <h1> MCL user manuals </h1>
+   <h3> \&{\subtitle} </h3>
+   <hr noshade size=1>
+   }
+}
+
+
+\${roff}{
+
+   \begin{pud::man}{
+
+      {name}{mclindex}
+      {author}{Stijn van Dongen}
+      {section}{7}
+
+      \man_share
+   }
+
+\sec{name}{NAME}
+\NAME{mclindex}{a list of the utilities and modules present in the MCL distribution.}
+\par
+      For more information, consult \mysib{mclfamily}.
+   \set{utsection#1}{\par\sec{}{\1}
+      \par
+      \begin{itemize}{{compact}{1}{contiguous}{1}{w1}{14}{w2}{1}}
+   }
+   \set{modsection#1}{\par\sec{}{\1}
+      \~\par
+      \begin{itemize}{{compact}{1}{contiguous}{1}{w1}{18}{w2}{1}}
+   }
+   \set{mkentry#3}{\item{\bf{\1(\2)}} \3}
+   \set{mkheader#3}{\bf{\1} - \2 \bf{\3}\|}
+   \set{utend}{\end{itemize}}
+   \set{modend}{\end{itemize}}
+}
+
+
+
+\utsection{Generic stuff}
+\mkentry{mcl}{1}{the mcl manual page}
+\mkentry{mclfaq}{7}{the mcl FAQ}
+\mkentry{mcxio}{5}{the mcl matrix format specification}
+\mkentry{mclpipeline}{1}{generic pipeline (parsing/matrix creation/clustering/display)}
+\mkentry{mcx}{1}{interface to basic matrix operations}
+\mkentry{mcxassemble}{1}{prepare input matrix from cooccurrence scores}
+\mkentry{mcxdump}{1}{dump matrices, optionally map indices to labels}
+\mkentry{mcxarray}{1}{transform array data to MCL matrices}
+\mkentry{mcxconvert}{1}{convert between ascii/binary storage types}
+\utend
+
+
+\utsection{Dealing with clustering results}
+\mkentry{clmformat}{1}{display clusterings in browsable format}
+\mkentry{clmdist}{1}{compute distances between clusterings}
+\mkentry{clminfo}{1}{performance measures for clusterings}
+\mkentry{clmmeet}{1}{compute intersection of clusterings}
+\mkentry{clmmate}{1}{compute best matches between two clusterings}
+\mkentry{clmimac}{1}{Interpret Matrices (c.q. MCL iterands) As Clusterings}
+\mkentry{clmresidue}{1}{extend subgraph clusterings onto encompassing graph}
+\mkentry{clmorder}{1}{reorder indices to represent blocks from different clusterings}
+\mkentry{clmclose}{1}{fetch connected components from graphs or subgraphs}
+\utend
+
+
+\utsection{Dealing with matrices}
+\mkentry{mcxio}{5}{the mcl matrix format specification}
+\mkentry{mcx}{1}{interface to basic matrix operations}
+\mkentry{mcxsubs}{1}{extract submatrices by specifiying sets of nodes and clusters}
+\mkentry{mcxmap}{1}{remap matrix indices / relabel graph nodes}
+\mkentry{mcxassemble}{1}{prepare input matrix from cooccurrence scores}
+\utend
+
+
+\modsection{Application specific parsers and wrappers}
+   \mkheader{BLAST package}{\modal}{--enable-blast}
+   \${roff}{\v{__________________}\|}
+   \mkentry{mclblastline}{1}{pipeline for clustering from blast files}
+   \mkentry{mcxdeblast}{1}{prepare input from blast files}
+\modend
+
+\${html}{\@{
+</body>
+</html>
+}}
+
+\${roff}{\end{pud::man}}
+

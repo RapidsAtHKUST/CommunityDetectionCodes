@@ -1,0 +1,605 @@
+.\" Copyright (c) 2014 Stijn van Dongen
+.TH "mcxsubs" 1 "16 May 2014" "mcxsubs 14-137" "USER COMMANDS "
+.po 2m
+.de ZI
+.\" Zoem Indent/Itemize macro I.
+.br
+'in +\\$1
+.nr xa 0
+.nr xa -\\$1
+.nr xb \\$1
+.nr xb -\\w'\\$2'
+\h'|\\n(xau'\\$2\h'\\n(xbu'\\
+..
+.de ZJ
+.br
+.\" Zoem Indent/Itemize macro II.
+'in +\\$1
+'in +\\$2
+.nr xa 0
+.nr xa -\\$2
+.nr xa -\\w'\\$3'
+.nr xb \\$2
+\h'|\\n(xau'\\$3\h'\\n(xbu'\\
+..
+.if n .ll -2m
+.am SH
+.ie n .in 4m
+.el .in 8m
+..
+.SH NAME
+mcxsubs \- extract submatrices (subgraphs) of a matrix (graph)\&.
+
+\fBmcxsubs\fP can be used to
+inspect local cluster structure in a graph, for example by looking at the
+subgraph induced by a single cluster or a couple of clusterings, or the
+edge set where all tail nodes are from a set of domains and all head
+nodes are from the complement of this set, and many other variants and
+refinements\&.
+
+Additionally, mcxsubs enables
+
+.ZI 2m "\(bu"
+selecting matrix entries based on value\&.
+.in -2m
+.ZI 2m "\(bu"
+making the result characteristic (set all nonzero values to 1\&.0)\&.
+.in -2m
+.ZI 2m "\(bu"
+pruning empty columns and empty rows\&.
+.in -2m
+.ZI 2m "\(bu"
+transposing the result\&.
+.in -2m
+.ZI 2m "\(bu"
+remapping the indices of the result to consecutive indices\&.
+.in -2m
+.ZI 2m "\(bu"
+and other miscellaneous operations\&.
+.in -2m
+.SH SYNOPSIS
+
+\fBmcxsubs\fP \fB-imx\fP <fname> [options] <specs>+
+
+\fBmcxsubs\fP
+\fB-imx\fP <fname> (\fIinput matrix\fP)
+\fB[-dom\fP <fname> (\fIdomain matrix\fP)\fB]\fP
+\fB[-tf\fP spec (\fIapply tf-spec to input matrix\fP)\fB]\fP
+\fB[--block\fP (\fIuse block matrix\fP)\fB]\fP
+\fB[--blockc\fP (\fIuse complement of block matrix\fP)\fB]\fP
+\fB[--skin-read\fP (\fIread domain structure without entries\fP)\fB]\fP
+\fB[--extend\fP (\fIread extended submatrices\fP)\fB]\fP
+\fB[-tab\fP (\fIread tab file\fP)\fB]\fP
+\fB[--from-disk\fP (\fIspace/speed optimizer\fP)\fB]\fP
+\fB[-out\fP <fname> (\fIspecial purpose output file name\fP)\fB]\fP
+\fB[-efac\fP <num> (\fIrandom edge selection\fP)\fB]\fP
+\fB[-dfac\fP <num> (\fIrandom domain selection\fP)\fB]\fP
+\fB[-rfac\fP <num> (\fIrandom column selection\fP)\fB]\fP
+\fB[-cfac\fP <num> (\fIrandom row selection\fP)\fB]\fP
+\fB[--rand-discard\fP (\fIremove random selections\fP)\fB]\fP
+\fB[--rand-merge\fP (\fImerge random selections\fP)\fB]\fP
+\fB[--rand-intersect\fP (\fIintersect random selections\fP)\fB]\fP
+\fB[--rand-exclusive\fP (\fIonly random selections\fP)\fB]\fP
+\fB[-tag-digits\fP k (\fIset precision\fP)\fB]\fP
+\fB[--tag\fP (\fItag nodes\fP)\fB]\fP
+<specs>+
+
+If you are a frequent \fBmcxsubs\fP user with very large graphs, consider
+converting the input matrix into binary format using
+\fBmcxconvert\fP and then using the mcxsubs
+\fB--from-disk\fP option\&. This should give you a 400-fold speed gain\&.
+.SH DESCRIPTION
+
+\fBmcxsubs\fP lets you extract submatrices/subgraphs corresponding with index
+sets and (possibly) sets of domains from a given domain matrix (e\&.g\&.
+a matrix representing a clustering)\&. Columns and
+rows of the target submatrix can be specified both independently and
+simultaneously, and can be specified as unions of simple index and domain
+ranges and complements of these\&.
+
+Because a submatrix or subgraph specification is composed of type,
+location, column, row, index, and set specifications,
+the word specification is
+abbreviated as spec\&. Multiple submatrices can be specified
+simultaneously\&. A submatrix is created for each submatrix spec\&. Everything
+encountered after the \fBmcxsubs\fP options are exhausted should be a spec\&.
+The syntax of specs is described in the \fBSUBMATRIX SPECIFICATIONS\fP section\&.
+By default, the domains of the submatrix will be set to the domains
+as described in the specification\&. This can be changed using the
+\fIuni\fP directives from the \fBfin\fP part\&.
+.SH OPTIONS
+
+.ZI 2m "\fB-imx\fP <fname> (\fIinput matrix\fP)"
+\&
+.br
+Submatrices will all be selected from the matrix in file \fC<fname>\fP\&.
+This option is obligatory, and throughout this manual its argument
+is called the \fIsource matrix\fP\&.
+.in -2m
+
+.ZI 2m "\fB-dom\fP <fname> (\fIdomain matrix\fP)"
+\&
+.br
+Submatrices are specified in terms of sets (or domains) of
+indices\&. These sets are specified by (the label of) the vectors
+from the matrix given by this options\&.
+.in -2m
+
+.ZI 2m "\fB--block\fP (\fIuse block matrix\fP)"
+\&
+.br
+This replaces the input matrix by the block diagonal matrix
+induced by the domain matrix specified by the \fB-dom\fP option\&.
+It works by including a block for each domain in the domain matrix,
+and will work if there are overlapping domains\&. That is, it
+will not include overlapping parts more than once\&.
+The output file name can either be specified in the submatrix
+specification language using the \fBout\fP(\fIfname\fP) directive,
+or with the \fB-out\fP option\&.
+.in -2m
+
+.ZI 2m "\fB--blockc\fP (\fIuse complement of block matrix\fP)"
+\&
+.br
+This replaces the input matrix by the complement of the block diagonal
+matrix described above, and selection of the output name
+is exactly the same\&.
+.in -2m
+
+.ZI 2m "\fB--skin-read\fP (\fIread domain structure without entries\fP)"
+\&
+.br
+This reads a skeleton matrix by only considering its domain structure
+and not reading any entries, pertaining to the matrix
+specified by the \fB-imx\fP option\&.
+Transform the input matrix values according
+to the syntax described in \fBmcxio(5)\fP\&.
+.in -2m
+
+.ZI 2m "\fB-tab\fP (\fIread tab file\fP)"
+\&
+.br
+Read a tab file\&. Its domain can be used by the \fCt\fP and \fCT\fP
+indicators\&.
+.in -2m
+
+.ZI 2m "\fB--extend\fP (\fIread extended submatrices\fP)"
+\&
+.br
+This causes the selection of submatrices where either a row index
+is in the selected row domain or a columns index is in the selected
+column domain or both\&. Equivalently it only excludes matrix entries
+for which neither the column nor row index is in the selected domains\&.
+The resulting matrix has both domains equal to the source matrix\&.
+.in -2m
+
+.ZI 2m "\fB-out\fP <fname> (\fIspecial purpose output file name\fP)"
+\&
+.br
+This specifies an output name that can be used for special purposes\&.
+Normally, output file names are specified in the submatrix specification
+using the \fBout\fP(\fIfname\fP) directive\&.
+.in -2m
+
+.ZI 2m "\fB-efac\fP <num> (\fIrandom edge selection\fP)"
+\&
+.br
+\fInum\fP should be inbetween zero and one\&. It denotes the probability
+with which each edge is selected\&.
+.in -2m
+
+.ZI 2m "\fB-dfac\fP <num> (\fIrandom domain selection\fP)"
+\&
+.br
+\fInum\fP should be inbetween zero and one\&. It denotes the probability
+with which entries in the domains will make it into the randomized
+selection used for subsequent processing\&. By default the randomized
+selection is intersected with whatever the other selection criteria (if any)
+yield, i\&.e\&. the behaviour under the \fB--rand-intersect\fP option\&.
+
+If the column and row domain are identical, they are submitted to
+the same selection process and will end up identical\&. If you don\&'t want
+this, use \fB-rfac\fP and \fB-cfac\fP separately\&.
+
+If you just want a randomized selection, doing
+
+.di ZV
+.in 0
+.nf \fC
+mcxsubs -imx foo -dfac 0\&.5 \&'out(foo\&.rnd)\&'
+.fi \fR
+.in
+.di
+.ne \n(dnu
+.nf \fC
+.ZV
+.fi \fR
+
+will not yield the expected result\&. Randomized selections only work
+if a domain has explicitly been specified\&. The minimal way to achieve
+this is the following:
+
+.di ZV
+.in 0
+.nf \fC
+mcxsubs -imx foo -dfac 0\&.5 \&'dom(cr), out(foo\&.rnd)\&'
+.fi \fR
+.in
+.di
+.ne \n(dnu
+.nf \fC
+.ZV
+.fi \fR
+
+.in -2m
+
+.ZI 2m "\fB-rfac\fP <num> (\fIrandom column selection\fP)"
+\&
+.br
+As \fB-dfac\fP, limited to the column domain\&.
+.in -2m
+
+.ZI 2m "\fB-cfac\fP <num> (\fIrandom row selection\fP)"
+\&
+.br
+As \fB-dfac\fP, limited to the row domain\&.
+.in -2m
+
+.ZI 2m "\fB--rand-merge\fP (\fImerge random selections\fP)"
+\&
+.br
+The random selection(s) of domains identify parts of the
+matrix that will be merged with the result of the main
+selection process (default)\&.
+.in -2m
+
+.ZI 2m "\fB--rand-discard\fP (\fIremove random selections\fP)"
+\&
+.br
+The random selection(s) of domains identify parts of the
+matrix that will be removed from the result of the main
+selection process\&.
+.in -2m
+
+.ZI 2m "\fB--rand-intersect\fP (\fIintersect random selections\fP)"
+\&
+.br
+The random selection(s) of domains identify parts of the
+matrix that will be intersected with the result of the main
+selection process\&. This is the default\&.
+.in -2m
+
+.ZI 2m "\fB--rand-exclusive\fP (\fIonly random selections\fP)"
+\&
+.br
+The random selection(s) of domains identify parts of the
+matrix from which the result of the main
+selection process will be removed\&.
+.in -2m
+
+.ZI 2m "\fB-tag-digits\fP k (\fIset precision\fP)"
+\&
+.br
+Sets the precision for tagged output\&.
+Setting it to \fB-tag-digits\fP\ \&\fB-1\fP
+disables the output of values altogether \- only the node indices
+and the cluster indices are written\&.
+.in -2m
+
+.ZI 2m "\fB--tag\fP (\fItag nodes\fP)"
+\&
+.br
+Each node in the column (tail node) listing of the matrix (graph)
+spec is tagged with the domain it is in\&. This requires
+the use of the \fB-dom\fP option\&.
+This output mode, called \fItagged matrix\fP, is currently not
+recognized by any of the \fBmcl\fP/\fBmcx\fP input routines\&. It is present
+to facilitate easier visual inspection of clustering results\&.
+.in -2m
+
+.ZI 2m "\fB--from-disk\fP (\fIspace/speed optimizer\fP)"
+\&
+.br
+Use this if the input graph is in binary format, or if the
+input graph is very large and the subgraph(s) to extract
+are small in comparison, or if the available memory
+does not comfortably exceed the size of the graph\&.
+
+The effect of this option is that the subgraph will be read
+directly from disk, without reading in the entire graph
+in advance\&. This will be done repeatedly for all subgraphs that are
+specified\&.
+
+This option reduces memory consumption to the size of the subgraph(s)
+to be extracted\&.
+
+For graphs in interchange format, the speed gain is not
+dramatic\&. If more than one subgraph is specified, there will most
+likely be a loss in speed\&.
+
+With input graphs in binary format, \fBmcxsubs\fP will
+be *very* much faster, to the extent of 400-fold speed gains\&.
+It does not matter whether more than one subgraph is specified\&.
+.in -2m
+.SH SUBMATRIX SPECIFICATIONS
+
+A submatrix or subgraph spec may contain a number of spec parts\&. Each part
+is specified in a function-style notation\&. Different parts are separated by
+commas\&. Parts may occur multiple times, but for most parts only the last one
+specified will be effective\&. The spec parts are the following: \fBdom\fP,
+\fBext\fP, \fBval\fP, \fBsize\fP, \fBfin\fP, and \fBout\fP\&. These are described
+below in the sections DOMAINS, EXTENSION, VALUES, SIZE, FINALIZE and OUTPUT\&.
+
+\fBDOMAINS\fP
+.br
+The domain part is specified as
+
+\fBdom\fP(\fIX\fP <, \fIY\fP(\fIispec\fP) >+)
+
+Here \fIX\fP is the row/column indicator\&. Rows are indicated with
+either \fCr\fP or \fCR\fP, columns are indicated with either
+\fCc\fP or \fCC\fP\&. \fIX\fP may contain one or two indicators, with
+a single indicator per column domain and row domain allowed\&.
+Uppercase indicators indicate that the complement is being specified
+relative to the corresponding domain in the target matrix\&.
+
+\fIY\fP is the type indicator, it is exactly one of
+\fCi\fP, \fCI\fP, \fCd\fP, \fCD\fP, \fCc\fP, \fCr\fP, \fCt\fP, or \fCT\fP\&.
+The \fCi/I\fP indicators specify
+that \fIispec\fP contains a simple index specifation\&.
+The \fCd/D\fP specify that \fIispec\fP contains domain indices\&.
+\fIispec\fP must contain a comma-separated list of integers or
+integer ranges (e\&.g\&. 2, 5, 4-8)\&.
+\fCc\fP and \fCr\fP are restricted indicators that refer
+to the domains in the \fIdomain matrix\fP\&.
+\fCt\fP and \fCT\fP are restricted indicators that refer
+to the domain encoded in the tab file as specified by the
+\fB-tab\fP option\&. Their usage is described further below\&.
+
+For domain specifications (\fCd/D\fP) the columns indexed by
+these integers in the matrix specified in the \fB-dom\fP
+option will be fetched and merged\&. If \fB-dom\fP was not used
+the target matrix itself (as specified by the \fB-imx\fP option) will be
+used\&. For simple specifications
+(\fCi/I\fP) the result is simply the list of integers itself\&. Uppercase
+indicators indicate that the complement is being specified\&.
+
+Examples:
+
+.ZI 2m "\fCdom(cr, i(0-6,10,11-14))\fP"
+\&
+.br
+Principal submatrix on indices 0-6, 10, and 11-14 \- all column and row
+indices are from this set\&. Equivalently, this encodes the subgraph on
+nodes 0-6, 10, 11-14\&. The \&'c\&' stands for column, the \&'r\&' for row, and the
+\&'i\&' for index\&. It is also possible to specify a \&'d\&' part
+(standing for domain), this is shown further below\&.
+.in -2m
+
+.ZI 2m "\fCdom(c, i(0-6,10,11-14)), dom(r, i(1-6,10,11-14))\fP"
+\&
+.br
+Equivalent (but less clear) spec of the above\&.
+.in -2m
+
+.ZI 2m "\fCdom(cR, i(0-6,10,11-14))\fP"
+\&
+.br
+Matrix with column indices in 0-6, 10, 11-14, and row indices
+in the complement of this set\&. Corresponds with all edges going
+\fIout\fP from the set 0-6, 10, 11-14\&. Complements are triggered
+by the use of a capital; see the next examples\&.
+.in -2m
+
+.ZI 2m "\fCdom(c, i(0-6,10,11-14)), dom(R, i(1-6,10,11-14))\fP"
+\&
+'in -2m
+.ZI 2m "\fCdom(c, i(0-6,10,11-14)), dom(r, I(1-6,10,11-14))\fP"
+\&
+'in -2m
+'in +2m
+\&
+.br
+Both these examples are equivalent to the previous one\&.
+In the last example, the capital \&'I\&' indicates that the complement
+should be taken\&. In this example, \&'r\&' combined with \&'I\&' has the
+same effect as \&'R\&' combined with \&'i\&'\&.
+.in -2m
+
+.ZI 2m "\fCdom(c, d(3,5-9)), dom(r, d(8-14), i(10-30))\fP"
+\&
+.br
+Column indices are taken from the domains 3, 5-9 (from the
+domain matrix specified by \fB-dom\fP), row indices are taken
+from domains 8-14 plus the indices 10-30\&.
+.in -2m
+
+.ZI 2m "\fCdom(cR, d(0-2))\fP"
+\&
+.br
+Column indices are all indices from domains 0-2, row indices
+are all other indices\&. This gives all edges going \fIout\fP
+from domains 0-2\&.
+
+The use of \&'D\&' is analogous to that of \&'C\&', \&'R\&', and \&'I\&'\&.
+Thus, \fCD(0-3,8,21-30)\fP specifies all indices which are in the
+complement of the set formed by taking the union of
+domains 0-3,8,21-30\&.
+.in -2m
+
+The \fCc\fP and \fCr\fP indicators must be followed by a
+pair of matching parentheses\&. They specify to take respectively
+the column domain and the row domain of the domain matrix (cf\&. \fB-dom\fP)\&.
+
+The \fCt\fP and \fCT\fP indicators must be followed by a
+pair of matching parentheses\&. They specify to take the domain
+found in the tab file or its complement\&.
+
+As seen above, indices (either representing themselves or domains) are
+entered as comma-separated lists of single indices, ranges of indices
+(which may overlap), or staircases of indices (lists of indices with
+a fixed increment inbetween successive indices)\&.
+The union of the corresponding elements is taken and
+passed along\&. Before anything else, the result set is replaced by its
+complement if \&'I\&' is specified (for simple indices) or \&'D\&' is specified
+(for domains)\&. If there is both an index and a set spec string, the
+union of the results of both is taken and passed along\&. If the latter
+result is passed to either \&'C\&' or \&'R\&', it is replaced by its complement\&.
+
+A range is specified e\&.g\&. as \fC10-14\fP and it is inclusive, denoting
+in this case the indices \fC{10,11,12,13,14}\fP\&.
+
+\fBEXTENSION\fP
+.br
+The extension part is specified as
+
+\fBext\fP( < \fBdisc\fP(\fIk\fP) | \fBcdisc\fP(\fIk\fP) | \fBrdisc\fP(\fIk\fP) >)
+
+This option requires the input matrix to be held in memory\&. This implies it
+will not work with the \fB--from-disk\fP option\&.
+
+This \fIassumes that the input matrix encodes a graph\fP, so the column
+and row domains must be equal\&.
+It will take the currently selected domain (column domain for
+\fBdisc\fP and \fBcdisc\fP, row domain for \fBrdisc\fP), and add
+all nodes to it that are reachable in \fIk\fP steps\&.
+The \fBdisc\fP variant replaces both column and row domains by
+the extended domain, the other variants just change a single domain\&.
+
+Setting \fIk\fP to \fC-1\fP results in adding \fIall\fP nodes that
+can be reached from the start domain\&.
+
+\fBVALUES\fP
+.br
+The value part is specified as
+
+\fBval\fP(<tf-spec>)
+
+It transforms or removes values according to \fI<tf-spec>\fP\&.
+Refer to \fBmcxio(5)\fP for a description of the transformation
+specification syntax and the available transformation primitives\&.
+
+\fBSIZE\fP
+.br
+The size part is specified as
+
+\fBsize\fP( < \fBlt\fP(\fIx\fP) | \fBceil\fP(\fIx\fP) | \fBgq\fP(\fIx\fP) | \fBrmgq\fP(\fIx\fP) > + )
+
+Where \fIx\fP is a nonnegative integer, and multiple specifications
+are separated by commas\&.
+The strings \&'lt\&', \&'lq\&', \&'gq\&', \&'gt\&', respectively denote
+\fIless than\fP,
+\fIless than or equal to\fP,
+\fIgreater than or equal to\fP,
+and
+\fIgreater than\fP\&.
+
+This prunes or removes column vectors based on their size\&. If \fBlt\fP
+is used, column vectors are removed if the number of entries exceeds
+the specified bound\&. If \fBgq\fP is used, vectors are discarded
+if the number of entries is smaller than the specified bound\&. If a column
+vector has an excess of entries over the bound specified by \fBceil\fP, the
+smallest entries are removed\&. Ties are not arbitrarily broken, implying that
+the resulting vector may still have more entries than the specified bound\&.
+
+\fBFINALIZE\fP
+.br
+The finalize part is specified as
+\fBfin\fP( < \fIkey\fP > )
+where \fIkey\fP is a string and multiple keys are separated by commas\&. The
+corresponding actions are generally applied to the matrix that was extracted
+according to the domain and value specifications\&. Exceptions are indicated
+below\&. Currently, there is a fixed order in which actions are considered,
+corresponding with the order in which they are listed below\&.
+
+.ZI 2m "skel"
+\&
+.br
+This creates an empty submatrix on the specified domains, and does
+\fInot\fP fill it with the corresponding entries from the
+source matrix\&.
+Options from the \fBfin\fP part that affect the column and
+row domains of a matrix will still be in effect\&.
+.in -2m
+
+.ZI 2m "uni"
+\&
+'in -2m
+.ZI 2m "unir"
+\&
+'in -2m
+.ZI 2m "unic"
+\&
+'in -2m
+'in +2m
+\&
+.br
+After the submatrix is selected from the source matrix, its domains
+are changed to mirror one or both of the domains of the source matrix\&.
+.in -2m
+
+.ZI 2m "tp"
+\&
+.br
+The resulting submatrix is replaced by its transpose\&.
+.in -2m
+
+.ZI 2m "cc"
+\&
+.br
+The resulting submatrix is made characteristic\&.
+.in -2m
+
+.ZI 2m "scrubc"
+\&
+'in -2m
+.ZI 2m "scrubr"
+\&
+'in -2m
+.ZI 2m "scrubg"
+\&
+'in -2m
+.ZI 2m "scrub"
+\&
+'in -2m
+'in +2m
+\&
+.br
+Domains are shrunk if there are no corresponding entries in the matrix\&.
+This is done for both domains if \fCscrub\fP is specified, for the
+column domain if \fCscrubc\fP is specified, and for the row domain
+if \fCscrubr\fP is specified\&. Thus, with \fCscrubc\fP columns are removed
+from the domain and the matrix if they are empty\&.
+With \fCscrubg\fP the union of the resulting domains is taken\&.
+.in -2m
+
+.ZI 2m "mapc"
+\&
+'in -2m
+.ZI 2m "mapr"
+\&
+'in -2m
+.ZI 2m "map"
+\&
+'in -2m
+'in +2m
+\&
+.br
+The appropriate domains are mapped onto consecutive indices starting at zero\&.
+.in -2m
+
+\fBOUTPUT\fP
+.br
+The output part is specified as
+\fBout\fP( \fIfname\fP <, \fIkey\fP >* )
+that is, the \fIfname\fP option is obligatory if the \fBout\fP part is specified\&.
+Currently, key can be a single directive, namely \fBwb\fP specifying that
+the resulting matrix should be output in binary format\&.
+.SH AUTHOR
+
+Stijn van Dongen\&.
+.SH SEE ALSO
+
+\fBmcx(1)\fP,
+and \fBmclfamily(7)\fP for an overview of all the documentation
+and the utilities in the mcl family\&.

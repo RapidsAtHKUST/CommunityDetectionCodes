@@ -1,0 +1,627 @@
+.\" Copyright (c) 2014 Stijn van Dongen
+.TH "clmformat" 1 "16 May 2014" "clmformat 14-137" "USER COMMANDS "
+.po 2m
+.de ZI
+.\" Zoem Indent/Itemize macro I.
+.br
+'in +\\$1
+.nr xa 0
+.nr xa -\\$1
+.nr xb \\$1
+.nr xb -\\w'\\$2'
+\h'|\\n(xau'\\$2\h'\\n(xbu'\\
+..
+.de ZJ
+.br
+.\" Zoem Indent/Itemize macro II.
+'in +\\$1
+'in +\\$2
+.nr xa 0
+.nr xa -\\$2
+.nr xa -\\w'\\$3'
+.nr xb \\$2
+\h'|\\n(xau'\\$3\h'\\n(xbu'\\
+..
+.if n .ll -2m
+.am SH
+.ie n .in 4m
+.el .in 8m
+..
+.SH NAME
+clm format \- display cluster results in readable form
+
+(optionally with labels and/or cohesion and stickiness measures
+attached)\&.
+
+Unless used with the \fB-dump\fP\ \&\fIfname\fP or \fB--dump\fP option,
+\fBclm format\fP depends on the presence of the macro processor \fBzoem\fP, as
+described further below\&.
+
+The \fB-icl\fP\ \&\fIfname\fP input clustering option is always required\&. The
+\fB-imx\fP\ \&\fIfname\fP input matrix option is required in fancy mode\&. The tab
+file option \fB-tab\fP\ \&\fIfname\fP is needed if you want label information in
+the output rather than mcl identifiers\&.
+.SH SYNOPSIS
+
+\fBclm format\fP has two different modes of output: \fIdump\fP and \fIfancy\fP\&.
+If neither is specified, \fIfancy\fP is used\&. In this mode, \fBclm format\fP
+generates a large arrary of performance measures related to nodes and
+clusters in both interlinked html output and plain text files\&. The files
+will be contained in an output directory that is newly created if not yet
+existing\&. In fancy mode the \fB-imx\fP option is required and the macro
+processor \fBzoem\fP must be available (http://micans\&.org/zoem)\&.
+
+If \fIdump\fP is specified (see below how to do this) \fBclm format\fP just
+generates a dump file where each line
+contains a cluster in the form of tab-separated indices, or tab-separated
+labels in case the \fB-tab\fP option is used\&. This dump is easy to parse
+with a simple or even quick-and-dirty script\&.
+You can include some very simple performance measures in this dump file
+by supplying \fB--dump-measures\fP\&. Use
+\fB-dump\fP\ \&\fIfname\fP to specify the name of the file to dump to, rather
+than having \fBclm format\fP construct a file name by itself\&.
+
+\fBclm format\fP can combine the both modes by using either \fB--dump\fP or
+\fB-dump\fP\ \&\fIfname\fP \fIand\fP \fB--fancy\fP\&. In this case the dump file
+will be created in the output directory that is used by \fIfancy\fP mode\&.
+
+\fBclm format\fP
+
+\fB-icl\fP fname (\fIinput cluster file\fP)
+\fB-imx\fP fname (\fIinput matrix/graph file\fP)
+\fB[-tf\fP spec (\fIapply tf-spec to input matrix\fP)\fB]\fP
+\fB[-pi\fP num (\fIapply pre-inflation to matrix\fP)\fB]\fP
+\fB[-tab\fP fname (\fIread tab file\fP)\fB]\fP
+\fB[--lazy-tab\fP (\fIallow mismatched tab-file\fP)\fB]\fP
+\fB[-lump-count\fP n (\fInode threshold\fP)\fB]\fP
+\fB[--dump\fP (\fIwrite dump to dump\&.<icl-name>\fP)\fB]\fP
+\fB[-dump\fP fname (\fIwrite dump to file\fP)\fB]\fP
+\fB[--dump-pairs\fP (\fIwrite cluster/node pair per line\fP)\fB]\fP
+\fB[--dump-measures\fP (\fIwrite simple performance measures\fP)\fB]\fP
+\fB[-dump-node-sep\fP str (\fIseparate entries with str\fP)\fB]\fP
+\fB[--fancy\fP (\fIspawn information blizzard\fP)\fB]\fP
+\fB[-dir\fP dirname (\fIwrite results to directory\fP)\fB]\fP
+\fB[-infix\fP str (\fIuse after base name/directory\fP)\fB]\fP
+\fB[-nsm\fP fname (\fIoutput node stickiness file\fP)\fB]\fP
+\fB[-ccm\fP fname (\fIoutput cluster cohesion file\fP)\fB]\fP
+\fB[--adapt\fP (\fIallow domain mismatch\fP)\fB]\fP
+\fB[--subgraph\fP (\fItake subgraph with --adapt\fP)\fB]\fP
+\fB[-zmm\fP fname (\fIassume macro definitions are in fname\fP)\fB]\fP
+\fB[-fmt\fP fname (\fIwrite to encoding file fname\fP)\fB]\fP
+\fB[-h\fP (\fIprint synopsis, exit\fP)\fB]\fP
+\fB[--apropos\fP (\fIprint synopsis, exit\fP)\fB]\fP
+\fB[--version\fP (\fIprint version, exit\fP)\fB]\fP
+
+Consult the option descriptions and the introduction above for
+interdependencies of options\&.
+
+\fBclm format\fP generates in fancy mode a logical description of the
+to-be-formatted content in a very small vocabulary of format-specific
+zoem macros\&. The appearance of the output can be easily changed by adapting
+a zoem macro definition file (also output by \fBclm format\fP) that is used by the
+zoem interpreter to interpret the logical elements\&.
+
+The output format is apt to change over subsequent releases, as a result of
+user feedback\&. Such changes will most likely be confined to the zoem macro
+definition file\&.
+
+The OUTPUT EXPLAINED section further below is likely to be of interest\&.
+.SH DESCRIPTION
+
+The primary function of \fBclm format\fP is to display cluster results and
+associated confidence measures in a readable form, by listing clusters in
+terms of the labels associated with the indices that are used in the mcl
+matrix\&. The labels must be stored in a so called \fItab\fP file; see the
+\fB-tab\fP option for more information\&.
+
+\fBNOTE\fP
+.br
+\fBclm format\fP output is in the form of \fIzoem\fP macros\&.
+You need to have zoem installed in your system if you want \fBclm format\fP
+to be of use\&. Zoem will not be necessary if you are using
+the \fB-dump\fP option\&.
+
+The \fB-imx\fP\ \&\fImx\fP option is required
+unless the \fB-dump\fP option is used\&. The latter option
+results in special behaviour described under the
+\fB-dump\fP\ \&\fIfname\fP entry\&.
+
+Output is by default written in a directory that
+is newly created if it does not yet exist (normally several files
+will be created, for which the directory acts as a natural container)\&.
+It is possible to simply output to the current directory, for that you need
+to specify \fB-dir\fP\ \&\fB\&./\fP\&. If \fB-dir\fP is not specified, the output
+directory \fCfmt\&.<clname>\fP will be used, where \fC<clname>\fP is the argument
+to the \fB-cl\fP option\&. In the output directory, \fBclm format\fP will
+normally write two files\&. One contains zoem macros encoding formatted output
+(the encoding file), and the second (the definition file) contains zoem
+macro definitions which are used by the former\&.
+
+The encoding file is by default called \fCfmt\&.azm\fP
+(cf\&. the \fB-fmt\fP\ \&\fIfname\fP option)\&.
+It contains \fIzoem\fP macros\&. It imports the macro definition file
+called \fCclmformat\&.zmm\fP
+that is normally also written by \fBclm format\fP\&. Another macro definition
+file can be specified by using the \fB-zmm\fP\ \&\fI<defsname>\fP
+option\&. In this case \fBclm format\fP will refrain from writing the definition
+file and replace mentions of \fCclmformat\&.zmm\fP in the encoding file
+by \fC<defsname>\fP\&.
+
+The encoding file needs to be processed by issuing one of the following
+commands from within the directory where the file is located\&.
+
+.di ZV
+.in 0
+.nf \fC
+   zoem -i fmt -d html
+   zoem -i fmt -d txt
+.fi \fR
+.in
+.di
+.ne \n(dnu
+.nf \fC
+.ZV
+.fi \fR
+
+The first will result in HTML formatted output, the second in
+plain text format\&. Obviously, you need to have installed zoem
+(e\&.g\&. from http://micans\&.org/zoem/src/) for this to work\&.
+
+For each cluster a paragraph is output\&. First comes a listing of other
+clusters (in order of relevance, possibly empty) for which a significant
+amount of edges exists between the other and the current cluster\&. Second
+comes a listing of the nodes in the current cluster\&. For each node a small
+sublist is made (in order of relevance, possibly empty) of other clusters in
+which the node has neighbours and for which the total sum of corresponding
+edge weights is significant\&.
+Several quantities are output for each node/cluster pair that is
+deemed relevant\&. These are explained in the section OUTPUT EXPLAINED\&.
+
+Clusters will by default be output to file until the total node count has
+exceeded a threshold (refer to the \fB-lump-count\fP
+option)\&.
+
+\fBclm format\fP also shows how well each node fits in the cluster it is in and
+how cohesive each cluster is, using simple but effective measures
+(described in section OUTPUT EXPLAINED)\&.
+This enables you to compare the quality of the clusters in a clustering
+relative to each other, and may help in identifying both interesting areas
+and areas for which cluster structure is hard to find or perhaps absent\&.
+.SH OPTIONS
+
+.ZI 2m "\fB-icl\fP fname (\fIinput cluster file\fP)"
+\&
+.br
+Name of the clustering file\&.
+.in -2m
+
+.ZI 2m "\fB-imx\fP fname (\fIinput matrix/graph file\fP)"
+\&
+.br
+Name of the graph/matrix file\&.
+.in -2m
+
+.ZI 2m "\fB-tf\fP spec (\fIapply tf-spec to input matrix\fP)"
+\&
+.br
+Transform the input matrix values according
+to the syntax described in \fBmcxio(5)\fP\&.
+.in -2m
+
+.ZI 2m "\fB-tab\fP fname (\fIread tab file\fP)"
+\&
+.br
+The file \fCfname\fP should be in \fItab format\fP\&. Refer
+to \fBmcxio(5)\fP\&.
+.in -2m
+
+.ZI 2m "\fB--lazy-tab\fP (\fIallow mismatched tab-file\fP)"
+\&
+.br
+Allow missing and spurious entries in the tab file\&.
+.in -2m
+
+.ZI 2m "\fB-dump\fP fname (\fIwrite dump to file\fP)"
+\&
+.br
+Clusters are written to file\&. For each cluster a single line is written
+containing all indices of all nodes in that cluster\&. The indices are
+separated by tabs\&. If a tab file is specified, the indices are replaced by
+the corresponding tab file entry\&.
+.in -2m
+
+.ZI 2m "\fB--dump\fP (\fIwrite dump to file\fP)"
+\&
+.br
+As \fB-dump\fP\ \&\fIfname\fP except that \fBclm format\fP writes to the file
+named \fCdump\&.<icl-name>\fP where \fC<icl-name>\fP is the argument to
+the \fB-icl\fP option\&.
+.in -2m
+
+.ZI 2m "\fB-infix\fP str (\fIincorporate in base name\fP)"
+\&
+.br
+\fIstr\fP is included in the output file names\&.
+This can be used to store the results of different \fBclm format\fP runs
+(e\&.g\&. with differing \fB-tf\fP arguments) in the same directory\&.
+.in -2m
+
+.ZI 2m "\fB--fancy\fP (\fIforce fancy mode\fP)"
+\&
+.br
+This enforces fancy mode if either of \fB-dump\fP or \fB--dump\fP
+is given\&. The dump file will be created in the output directory\&.
+.in -2m
+
+.ZI 2m "\fB--dump-pairs\fP (\fIwrite cluster/node pair per line\fP)"
+\&
+.br
+Rather than writing a single cluster on each line, write a single
+cluster index/node (either tab entry or index) pair per line\&.
+Works in conjunction with the
+\fB-tab\fP and \fB-imx\fP options\&.
+.in -2m
+
+.ZI 2m "\fB--dump-measures\fP (\fIwrite simple performance measures\fP)"
+\&
+.br
+If an input matrix is specified with \fB-imx\fP\ \&\fIfname\fP, three
+measures of efficiency are prepended, respectively the simple projection
+score, efficiency or coverage, and the max-efficiency or max-coverage\&.
+.in -2m
+
+.ZI 2m "\fB-dump-node-sep\fP str (\fIseparate entries with str\fP)"
+\&
+.br
+Separate entries in the dump file with \fBstr\fP\&.
+.in -2m
+
+.ZI 2m "\fB-pi\fP num (\fIapply pre-inflation to matrix\fP)"
+\&
+.br
+Apply pre-inflation to the matrix specified with the \fB-imx\fP option\&.
+This will cause the efficiency scores to place a higher reward on
+high-weight edges being covered by a clustering (assuming that
+\fInum\fP is larger than one)\&.
+
+This option is also useful when \fBmcl\fP itself was instructed to use
+pre-inflation when clustering a graph\&.
+.in -2m
+
+.ZI 2m "\fB-lump-count\fP n (\fInode threshold\fP)"
+\&
+.br
+The zoem file is created such that during zoem processing clusters are
+formatted and output within a single file until the node threshold has been
+exceeded\&. A new file is then opened and the procedure repeats itself\&.
+.in -2m
+
+.ZI 2m "\fB--adapt\fP (\fIallow domain mismatch\fP)"
+\&
+.br
+Allow the cluster domain to differ from the graph domain\&. Presumably
+the clustering is a clustering of a subgraph\&. The cohesion and stickiness
+measures will pertain to the relevant part of the graph only\&.
+.in -2m
+
+.ZI 2m "\fB--subgraph\fP (\fIuse restriction\fP)"
+\&
+.br
+If the cluster domain is a subset of the graph domain, the cohesion and
+stickiness measures will by default still pertain to the entire graph\&. By
+setting this option, the measures will pertain to the subgraph induced by
+the cluster domain\&.
+.in -2m
+
+.ZI 2m "\fB-dir\fP dirname (\fIwrite results to directory\fP)"
+\&
+.br
+Use \fBdirname\fP as output directory\&. It will be created
+if it does not exist already\&.
+.in -2m
+
+.ZI 2m "\fB-fmt\fP fname (\fIwrite to encoding file fname\fP)"
+\&
+.br
+Write to encoding file \fBfname\fP rather than the default \fCfmt\&.azm\fP\&.
+It is best to supply fname with the standard zoem suffix \fC\&.azm\fP\&. Zoem
+will process file of any name, but those lacking the \fC\&.azm\fP suffix must be
+specified using the zoem \fB-I\fP\ \&\fIfname\fP option\&.
+.in -2m
+
+.ZI 2m "\fB-zmm\fP defsname (\fIassume macro definitions are in fname\fP)"
+\&
+.br
+If this option is used, \fBclm format\fP will not output the definition file,
+and mentions of the definition file in the encoding file will use
+the file name \fCdefsname\fP\&. This option assumes that a valid definition
+file by the name of \fCdefsname\fP does exist\&.
+.in -2m
+
+.ZI 2m "\fB-nsm\fP fname (\fIoutput node stickiness file\fP)"
+\&
+.br
+This option specifies the name in which to store (optionally) the \fBnode
+stickiness matrix\fP\&. It has the following structure\&. The columns range over
+all elements in the graph as specified by the \fB-imx\fP option\&.
+The rows range over the clusters as specified by the \fB-icl\fP option\&.
+The entries contain the projection value of that particular
+node onto that particular clusters, i\&.e\&. the sum of the weights of
+all arcs going out from the node to some node in that cluster, written
+as a fraction relative to the sum of weights of all outgoing arcs\&.
+.in -2m
+
+.ZI 2m "\fB-ccm\fP fname (\fIoutput cluster cohesion file\fP)"
+\&
+.br
+This option specifies the name of the file in which to store (optionally)
+the \fBcluster cohesion matrix\fP\&. It has the following structure\&.
+Both columns and rows range over all clusters in the clustering as specified
+by the \fB-icl\fP option\&. An entry specifies the projection
+of one cluster onto another cluster, which is simply the average
+of the projection value onto the second cluster of all nodes in the
+first cluster\&.
+.in -2m
+.SH OUTPUT EXPLAINED
+
+What follows is an explanation of the output provided by the
+standard zoem macros\&. The output comes in a pretty terse number-packed
+format\&. The decision was made not to include headers and captions
+in the output in order to keep it readable\&.
+You might want to print out the following annotated examples\&.
+At the same side of the equation, the following is probably tough
+reading unless you have an actual example of clmformatted output at hand\&.
+
+If you are reading this in a terminal, you might need to resize
+it to have width larger than 80 columns, as the examples below
+are formatted in verbatim mode\&.
+
+Below mention is made of the projection value for a node/cluster pair\&.
+This is simply the total amount of edge weights for that node
+in that cluster (corresponding to neighbours of the node in the
+cluster) relative to the overall amount of edge weights for that node
+(corresponding to all its neighbours)\&.
+The coverage measure (refered to as \fBcov\fP)
+is also used\&. This is similar to the projection
+value, except that a) the coverage measure rewards the inclusion
+of large edge weights (and penalizes the inclusion of insignificant
+edge weights) and b) rewards node/cluster pairs for which the neighbour set
+of the node is very similar to the cluster\&.
+The maximum coverage measure (refered to as \fBmaxcov\fP) is similar
+to the normal coverage measure except that it rewards inclusion
+of large edge weights even more\&.
+The cov and maxcov performance measures have several nice continuity and
+monotonicity properties and are described in [1]\&.
+
+\fBExample cluster header\fP
+.br
+
+.di ZV
+.in 0
+.nf \fC
+Cluster 0 sz 15 self 0\&.82 cov 0\&.43-0\&.26
+   10: 0\&.11
+   18: 0\&.05
+   12: 0\&.02
+.fi \fR
+.in
+.di
+.ne \n(dnu
+.nf \fC
+.ZV
+.fi \fR
+
+\fBexplanation\fP
+.br
+
+.di ZV
+.in 0
+.nf \fC
+Cluster 0 sz 15 self 0\&.82 cov 0\&.43-0\&.26
+        |    |       |           | |
+        clid count   proj      cov covmax
+
+   10: 0\&.11
+    |  |
+clidx1 projx1
+
+   18: 0\&.05
+    |  |
+clidx2 projx2
+
+clid    Numeric cluster identifier (arbitrarily) assigned by MCL\&.
+count   The size of cluster clid\&.
+proj    Projection value for cluster clid [d]\&.
+cov     Coverage measure for cluster clid [d]\&.
+maxcov  Max-coverage measure for cluster clid [d]\&.
+clidx1  Index of other cluster sharing relatively many edges\&.
+projx1  Projection value for the clid/clidx1 pair of clusters [e]\&.
+clidx2  :
+projx2  : as clidx1 and projx1
+.fi \fR
+.in
+.di
+.ne \n(dnu
+.nf \fC
+.ZV
+.fi \fR
+
+\fBExample inner node\fP
+.br
+An inner node is listed under a cluster, and it is simply a member of that
+cluster\&. The name is as opposed to \&'outer node\&', described below\&.
+
+.di ZV
+.in 0
+.nf \fC
+[foo bar zut]
+    21     7-5      0\&.73 0\&.420-0\&.331  0\&.282-0\&.047  0\&.071-0\&.035 <3\&.54>
+      10   6/3      0\&.16 0\&.071-0\&.047  0\&.268-0\&.442 
+      12   4/2      0\&.11 0\&.071-0\&.035  0\&.296-0\&.515
+.fi \fR
+.in
+.di
+.ne \n(dnu
+.nf \fC
+.ZV
+.fi \fR
+
+\fBexplanation\fP
+.br
+
+.di ZV
+.in 0
+.nf \fC
+[label]
+    21     7-5      0\&.73 0\&.420-0\&.331  0\&.282-0\&.047  0\&.071-0\&.035 <3\&.54>
+     |     | |      |        | |          | |          | |     |
+    idx  nbi nbo    proj   cov covmax max_i min_i  max_o-min_o SUM
+
+      10   6/3      0\&.16 0\&.268-0\&.442  0\&.071-0\&.047
+       |   | |      |        | |          | |
+  clusid  sz nb     proj   cov covmax max_i min_i
+
+label   Optional; with -tab <tabfile> option\&.
+idx     Numeric (mcl) identifier\&.
+nbi     Count of the neighbours of node idx within its cluster\&.
+nbo     Count of the neighbours of node idx outside its cluster\&.
+proj    Projection value [a] of nbi edges\&.
+cov     Skewed projection [b], rewards inclusion of large edge weights\&.
+covmax  As cov above, rewarding large edge weights even more\&.
+max_i   Largest edge weight in the nbi set, normalized [c]\&.
+min_i   Smallest edge weight in the nbi set [c]\&.
+max_o   Largest edge weight outside the nbi set [c]
+min_o   Smallest edge weight outside the nbi set [c]\&.
+SUM     The sum of all edges leaving node idx\&.
+
+clusid  Index of other cluster that is relevant for node idx\&.
+sz      Size of that cluster\&.
+nb      Count of neighbours of node idx in cluster clusid\&.
+proj    Projection value of edges from node idx to cluster clusid\&.
+cov     Skewed projection of edges from node idx to cluster clusid\&.
+covmax  Maximally skewed projection, as above\&.
+max_o   Largest edge weight for node idx to cluster clusid [c]\&.
+min_o   Smallest edge weight for  node idx to cluster clusid [c]\&.
+.fi \fR
+.in
+.di
+.ne \n(dnu
+.nf \fC
+.ZV
+.fi \fR
+
+\fBExample outer node\fP
+.br
+An outer node is listed under a cluster\&. The node is not part of that
+cluster, but seems to have substantial connections to that cluster\&.
+
+.di ZV
+.in 0
+.nf \fC
+[zoo eek few]
+    29   18#2        2-5      0\&.65 0\&.883-0\&.815  0\&.436-0\&.218  0\&.073-0\&.055
+                      /4      0\&.27 0\&.070-0\&.109  0\&.073-0\&.055
+.fi \fR
+.in
+.di
+.ne \n(dnu
+.nf \fC
+.ZV
+.fi \fR
+
+\fBexplanation\fP
+.br
+
+.di ZV
+.in 0
+.nf \fC
+[label]
+    29   18#2        2-5      0\&.65 0\&.883-0\&.815  0\&.436-0\&.218  0\&.073-0\&.055
+    |    |  |        | |      |        | |          | |          | |
+    idx  cl sz     nbi nbo    proj   cov maxcov max_i min_i  max_o min_o
+         id
+                      /4      0\&.27 0\&.070-0\&.109  0\&.073-0\&.055  <2\&.29>
+                       |      |        | |          | |      |
+                       nb     proj   cov maxcov max_i min_i  SUM
+
+label   Optional; with -tab <tabfile> option\&.
+idx     Numeric (mcl) identifier
+clid    Index of the cluster that node idx belongs to
+sz      Size of the cluster that node idx belongs to
+proj    :
+cov     :  All these entries are the same as described above
+covmax  :  for inner nodes, pertaining to cluster clid,
+max_i   :  i\&.e\&. the native cluster for node idx
+min_i   :  (it is a member of that cluster)\&.
+max_o   :
+min_o   :
+
+nb      The count of neighbours of node idx in the current cluster
+proj    Projection value for node idx relative to current cluster\&.
+cov     Skewed projection (rewards large edge weights), as above\&.
+covmax  Maximally skewed projection, as above\&.
+max_o   Largest edge weight for node idx in current cluster [c]\&.
+min_o   smallest edge weight for node idx in current cluster [c]\&.
+SUM     The sum of *all* edges leaving node idx\&.
+.fi \fR
+.in
+.di
+.ne \n(dnu
+.nf \fC
+.ZV
+.fi \fR
+
+.ZJ 1m 2m "[a]"
+The projection value for a node relative to some subset of
+its neighbours is the sum of edge weights of all edges to that
+subset\&. The sum is witten as a fraction relative to the sum
+of edge weights of all neighbours\&.
+.in -3m
+
+.ZJ 1m 2m "[b]"
+cov and covmax stand for coverage and maximal coverage\&.
+The coverage measure of a node/cluster pair is a generalized and skewed
+projection value [a] that rewards the presence of large edge weights in the
+cluster, relative to the collection of weights of all edges departing from
+the node\&. The maxcov measure is a projection value skewed even further,
+correspondingly rewarding the inclusion of large edge weights\&. The cov and
+maxcov performance measures have several nice continuity properties and are
+described in [1]\&.
+.in -3m
+
+.ZJ 1m 2m "[c]"
+All edge weights are written as the fraction of the sum
+SUM of all edge weights of edges leaving node idx\&.
+.in -3m
+
+.ZJ 1m 2m "[d]"
+For clusters the projection value and the coverage measures
+are simply the averages of all projection values [a], respectively
+coverage measures [b], taken over all nodes in the cluster\&.
+The cluster projection value simply measures the sum of edge
+weights internal to the cluster, relative to the total sum of
+edge weights of all edges where at least one node in the edge
+is part of the cluster\&.
+.in -3m
+
+.ZJ 1m 2m "[e]"
+The projection value for start cluster x and end cluster y
+is the sum of edge weights of edges between x and y as a fraction
+of the sum of all edge weights of edges leaving x\&.
+.in -3m
+.SH AUTHOR
+
+Stijn van Dongen\&.
+.SH REFERENCES
+
+[1]
+Stijn van Dongen\&. \fIPerformance criteria for graph clustering and Markov
+cluster experiments\fP\&. Technical Report INS-R0012, National Research
+Institute for Mathematics and Computer Science in the Netherlands,
+Amsterdam, May 2000\&.
+.br
+http://www\&.cwi\&.nl/ftp/CWIreports/INS/INS-R0012\&.ps\&.Z
+.SH SEE ALSO
+
+\fBmclfamily(7)\fP for an overview of all the documentation
+and the utilities in the mcl family\&.

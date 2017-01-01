@@ -1,0 +1,163 @@
+\import{mcx.zmm}
+
+\begin{pud::man}{
+
+   {name}{mcx erdos}
+   {html_title}{The mcx erdos manual}
+   {author}{Stijn van Dongen}
+   {section}{1}
+   {synstyle}{long}
+   {defstyle}{long}
+
+   \man_share
+}
+
+\${html}{\"pud::man::maketoc"}
+
+\sec{name}{NAME}
+\NAME{mcx erdos}{compute shortest paths in a graph}
+
+\sec{synopsis}{SYNOPSIS}
+\par{
+   \mcx{erdos} [options]}
+
+\disclaim_mcx{erdos}
+
+\par{
+   \mcx{erdos}
+   \synoptopt{-query}{<fname>}{query input stream}
+   \synoptopt{-abc}{<fname>}{specify label input}
+   \synoptopt{-imx}{<fname>}{specify matrix input}
+   \synoptopt{-tab}{<fname>}{use tab file}
+   \synoptopt{-o}{<fname>}{output file name}
+   \synoptopt{--is-directed}{input graph is directed}
+   \synoptopt{--is-undirected}{input graph is directed}
+   \synoptopt{-write-path}{<fname>}{path matrix file}
+   \synoptopt{-write-step}{<fname>}{step matrix file}
+   \stdsynopt
+   }
+
+\sec{description}{DESCRIPTION}
+\par{
+   \mcx{erdos} computes shortest paths in graphs.
+   It can read  a graph either in label format with \genopt{-abc}
+   or in native format with \genopt{-imx}.
+   It reads pairs of node indices from an input stream, and for
+   each pair outputs a data structure describing the full
+   set of shortest paths between the two nodes.
+   Edge weights are not taken into account, so an
+   edge always represents a unit step size between two nodes
+   irrespective of its weight. A mode to compute shortest paths while taking into
+   account edge weights will be implemented later as \mcx{dijkstra}.
+   }
+
+\par{
+   Note that the full set of shortest paths between two nodes in
+   a graph can be described as a directed acyclic graph (DAG),
+   and this is how \mcx{erdos} operates. It is easy to construct
+   graphs and node pairs for which the number of shortest paths
+   between the two nodes becomes exponential in the size of
+   the graph, whereas the lattice description is always
+   garantueed to map to a subset of the graph edge set.
+   }
+
+
+\par{
+   By default it is assumed that the input graph should be treated as
+   undirected. To this end a transformation step is applied to ensure that the
+   graph in memory is undirected. It is possible to compute shortest
+   paths in directed graphs by using \genopt{--is-directed}, and
+   it is possible to omit the transformation step by using \genopt{--is-undirected}.
+   If the latter is specified while the input graph is in native format and in
+   fact directed, results will be erroneous.  This could in theory be mitigated
+   by checking that the  input graph is undirected. However, the reason to use
+   \genopt{--is-undirected} is simply to increase speed of operation, whereas
+   such a check would be equally expensive as the transformation step that is
+   omitted with \genopt{--is-undirected}.
+   }
+   
+
+\par{
+   The input graph/matrix, if specified with the \genopt{-imx} option, has to
+   be in mcl matrix/graph format.  You can use label input instead by using the
+   \genopt{-abc} option.
+   Refer to \mysib{mcxio} for a description of these two input formats.
+   By default \mcx{erdos} reads from STDIN \it{and expects matrix format}.
+   To specify label input from STDIN use \useopt{-abc}{-}.
+   }
+
+
+\sec{options}{OPTIONS}
+
+\begin{itemize}{\mcx_itemopts}
+
+\item{\defopt{-query}{<fname>}{query input}}
+\car{
+   The name for the file from which queries are read.
+   A query consists of two white-space separated node indices
+   or two white-space separated labels. Labels can only be used
+   if either \genopt{-abc} or \genopt{-tab} is specified.
+   }
+
+\item{\defopt{-abc}{<fname>}{label input}}
+\car{
+   The file name for input that is in label format.}
+
+\item{\defopt{-imx}{<fname>}{input matrix}}
+\car{
+   The file name for input that is in mcl native matrix format.}
+
+\item{\defopt{-o}{<fname>}{output file name}}
+\car{
+   The name of the file to write output to.
+   }
+
+\item{\defopt{-tab}{<fname>}{use tab file}}
+\car{
+   This option causes the output to be printed with the labels
+   found in the tab file.
+   With \genopt{-abc} this option will, additionally, construct
+   a graph only on the labels found in the tab file.
+   If this option is used in conjunction with \genopt{-imx} the
+   tab domain and the matrix domain are required to be identical.
+   }
+
+\item{\defopt{--is-directed}{compute directed shortest paths}}
+\car{
+   The input graph is not transformed and assumed to be directed.
+   Shortest paths are computed taking this into account.
+   }
+
+\item{\defopt{--is-undirected}{skip symmetrification step}}
+\car{
+   The input graph is not transformed and assumed to be undirected.
+   Shortest paths are computed on the assumption that the input
+   is undirected. Use this option only if you are sure the input
+   is undirected and need to have faster execution.
+   }
+
+\items{
+   {\defopt{-write-path}{<fname>}{path matrix file}}
+   {\defopt{-write-step}{<fname>}{step matrix file}}
+}
+\car{
+   The path matrix enumerates the nodes that take
+   part in all shortest paths. The first list contains
+   those nodes that lie at distance 1 of the source node,
+   the second list contains nodes lying at distance 2,
+   and so on.
+   The step matrix contains all the edges that make up
+   the lattice of shortest paths between the two query nodes.
+   }
+
+\end{itemize}
+
+
+\sec{seealso}{SEE ALSO}
+\par{
+   \mysib{mcxio},
+   and \mysib{mclfamily} for an overview of all the documentation
+   and the utilities in the mcl family.}
+
+\end{pud::man}
+

@@ -1,0 +1,74 @@
+.\" Copyright (c) 2014 Stijn van Dongen
+.TH "clm meet" 1 "16 May 2014" "clm meet 14-137" "USER COMMANDS "
+.po 2m
+.de ZI
+.\" Zoem Indent/Itemize macro I.
+.br
+'in +\\$1
+.nr xa 0
+.nr xa -\\$1
+.nr xb \\$1
+.nr xb -\\w'\\$2'
+\h'|\\n(xau'\\$2\h'\\n(xbu'\\
+..
+.de ZJ
+.br
+.\" Zoem Indent/Itemize macro II.
+'in +\\$1
+'in +\\$2
+.nr xa 0
+.nr xa -\\$2
+.nr xa -\\w'\\$3'
+.nr xb \\$2
+\h'|\\n(xau'\\$3\h'\\n(xbu'\\
+..
+.if n .ll -2m
+.am SH
+.ie n .in 4m
+.el .in 8m
+..
+.SH NAME
+clm meet \- compute the intersection of a set of clusterings\&.
+
+clmmeet is not in actual fact a program\&. This manual
+page documents the behaviour and options of the clm program when
+invoked in mode \fImeet\fP\&. The options \fB-h\fP, \fB--apropos\fP,
+\fB--version\fP, \fB-set\fP, \fB--nop\fP are accessible
+in all \fBclm\fP modes\&. They are described
+in the \fBclm\fP manual page\&.
+.SH SYNOPSIS
+
+\fBclm meet\fP
+\fB[-o\fP fname (\fIoutput file name\fP)\fB]\fP
+\fB[-h\fP (\fIprint synopsis, exit\fP)\fB]\fP
+\fB[--apropos\fP (\fIprint synopsis, exit\fP)\fB]\fP
+\fB[--version\fP (\fIprint version, exit\fP)\fB]\fP
+<file name>+
+.SH DESCRIPTION
+
+\fBclm meet\fP computes the intersection of a set of clusterings, that is,
+the largest clustering that is a subclustering of all the clusterings
+in the set\&. It stores the intersection (or meet) in the argument
+to the \fB-o\fP flag, which must be the first option given\&.
+All remaining arguments are interpreted as names of files containing
+clusterings in mcl format (see \fBmcxio(5)\fP), which must all
+pertain to a set of the same cardinality\&.
+
+This utility can be useful in measuring (in conjunction with
+\fBclm\ \&dist\fP) the consistency of a set of clusterings at different
+levels of granularity \- if the meet of all those clusterings is close to
+being a subclustering of each of them, consistency is good\&. See
+\fBclm\ \&dist\fP for an example\&.
+.SH OPTIONS
+
+.ZI 2m "\fB-o\fP fname (\fIoutput file name\fP)"
+\&
+.br
+.in -2m
+.SH AUTHOR
+
+Stijn van Dongen\&.
+.SH SEE ALSO
+
+\fBmclfamily(7)\fP for an overview of all the documentation
+and the utilities in the mcl family\&.

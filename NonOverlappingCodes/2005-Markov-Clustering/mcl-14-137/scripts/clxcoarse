@@ -1,0 +1,295 @@
+#!/usr/bin/env bash
+
+# TODO
+#     Allow specification of cl0 (to extend previous run)
+#
+#     Check the effect of using the block method. Tune it?
+#
+#     Trap exit and delete rubbish if necessary.
+#
+#     Prepare the next level matrix for further reclustering.
+#
+#     small clusters may lead to undesirable chaining.
+#
+#     check cache at all levels.
+#     make code so that it uses the same function for each level.
+#     ? encapsulate block construction in a function.
+
+
+set -e
+new=0
+block=0
+delete=0
+groundup=0
+
+cl0=""
+
+declare -a rubbish
+n_rubbish=0
+
+export MCLXIOVERBOSITY=2
+
+function more_rubbish {
+   rubbish[$n_rubbish]="./$1"
+   n_rubbish=$(($n_rubbish+1))
+}
+
+
+function do_tell () {
+   local msg=$1
+   echo "________ $msg"
+}
+
+function do_create() {
+
+   local file=$1
+   local new=$2
+
+   if ( test ! -e $file ); then
+      new=1
+      do_tell "CREATING FILE $file"
+   elif let $(($new)); then
+      do_tell "RECREATING FILE $file"
+   else
+      do_tell "REUSING FILE $file"
+   fi
+
+   let $(($new))
+}
+
+opts1=""
+opts2=""
+mx0=""
+tag0=""
+outfile=""
+
+T=M
+TT=MM
+
+while getopts :ndbghz0:1:2:C:M:o: opt
+do
+    case "$opt" in
+    M)
+      mx0=$OPTARG
+      ;;
+    C)
+      cl0=$OPTARG
+      ;;
+    o)
+      outfile=$OPTARG
+      ;;
+    d)
+      delete=1
+      ;;
+    g)
+      groundup=1
+      ;;
+    b)
+      block=1
+      ;;
+    z)
+      export MCLXIOFORMAT=8
+      ;;
+    0)
+      opts0=$OPTARG
+      ;;
+    1)
+      opts1=$OPTARG
+      ;;
+    2)
+      opts2=$OPTARG
+      ;;
+    n)
+      new=1
+      ;;
+    h)
+      cat <<EOU
+Usage: coarse.sh <options>
+Options
+-n    Force recreation of files (do not use existing files)
+-b    Work with adapted matrix which has intra-cluster edges removed
+-z    Create all files in binary format (saves a little space)
+-d    Delete intermediate results
+-g    Groundup, compute coarsened matrices relative to input matrix
+
+-o <mx-file>   final output cluster file.
+-M <mx-file> * input matrix file.
+-C <cl-file>   (optional) input cluster file.
+-0 <opt0>    * level 0 clustering options.
+-1 <opt1>    * level 1 clustering options.
+-2 <opt2>      level 2 clustering options.
+
+NOTE
+<stem> is <mx-file> as supplied by the -M option.
+The files
+
+c0      <stem>.<ctag0>.C                 clustering of <stem>
+m1    T.<stem>.<ctag0>                   coarsened matrix file relative to c0
+c1    T.<stem>.<ctag>0>.<ctag1>.C        clustering of m1
+p1-0  T.<stem>.<ctag>0>.<ctag1>.CP       c1 projected onto m0
+
+will be created in the 1-level approach.
+The 2-level approach will create
+
+m2   TT.<stem>.<ctag0>.<ctag1>               coarsened relative to c1
+c2   TT.<stem>.<ctag0>.<ctag1>.<ctag2>.C     clustering of m2
+p2-1 TT.<stem>.<ctag0>.<ctag1>.<ctag2>.CP    c2 projected onto m1
+p2-0 TT.<stem>.<ctag0>.<ctag1>.<ctag2>.CPP   c2 projected onto m0
+
+where T is either M or B.
+EOU
+      exit
+      ;;
+    :) echo "Flag $OPTARG needs argument"
+        exit 1;;
+    ?) echo "Flag $OPTARG unknown"
+        exit 1;;
+   esac
+done
+
+# OPTIND=$(($OPTIND-1))
+# shift $OPTIND
+# if let $(($# != 3 + $rere)); then
+#    echo "Need 3 arguments,  <graph-file> <cluster-file> <mcl-opts>"
+#    echo "Need 4 arguments if -2 option is used (additional <mcl-opts2> spec)"
+#    echo "<mcl-opts> may be empty"
+#    exit 1
+# fi
+
+if ! (test "$mx0" && test "$opts0" ); then
+   echo "-M, -0 and -1 options are required (see -h)"
+   false
+fi
+
+
+if  !(test "$cl0"); then
+   cl0=`mcl $mx0 -ap = -aa '.C' $opts0 -az`
+   tag0=cl0
+   stem=cl0
+   if do_create $cl0 $new; then
+      mcl $mx0 -o $cl0 $opts0 --append-log=y --analyze=y
+   fi
+else
+   do_tell "Using $cl0 as first level clustering"
+   tag0=`mcl $mx0 $opts0 -ax`
+   stem=$mx0.$tag0
+fi
+
+
+do_tell "SIZE DISTRIBUTION LEVEL 0"
+clxdo gr $cl0
+
+if !(test "$opts1"); then
+   exit 0
+fi
+            more_rubbish $cl0
+
+
+##
+##    block matrix.
+
+if let $(($block)); then
+   if do_create diff.$stem $new; then
+      mcxsubs -imx $mx0 -dom $cl0 --blockc -out diff.$stem
+      # mcx /$mx0 lm /block.$stem lm -1 mul add /diff.$stem wm
+   fi
+   mx0=diff.$stem
+   T=B
+            more_rubbish diff.$stem
+fi
+
+
+
+##
+##    coarse matrix.
+
+      mx1=$T.$stem
+
+if do_create $mx1 $new; then
+   mcx /$cl0 lm tp exch st /$mx0 lm exch mul mul st /$mx1 wm
+fi
+            more_rubbish $mx1
+
+
+
+cl1=`mcl $mx1 -ap = -aa '.C' $opts1 -az`
+tag1=`mcl $mx1 $opts1 -ax`
+
+if do_create $cl1 $new; then
+   mcl $mx1 -o $cl1 $opts1 --append-log=y --analyze=y
+fi
+            more_rubbish $cl1
+
+
+if test "$opts2" && let $(($block)); then
+   if do_create diff.$mx1 $new; then
+      mcxsubs -imx $mx1 -dom $cl1 --blockc -out diff.$mx1
+      # mcx /$mx1 lm /block.$mx1 lm -1 mul add /diff.$mx1 wm
+   fi
+            more_rubbish diff.$mx1
+   mx1=diff.$mx1
+   TT=BB
+fi
+
+if let $(($groundup)); then
+   TT=$TT''G
+fi
+
+
+
+if test "$outfile" && ! test "$opts2"; then
+   cl1P=$outfile
+else
+   cl1P=$cl1'P'
+fi
+
+mcx -1 dgt /$cl0 lm /$cl1 lm mul /$cl1P wm
+
+do_tell "SIZE DISTRIBUTION LEVEL 1"
+clxdo gr $cl1P
+
+
+
+if test "$opts2"; then
+
+   mx2=$TT.$stem.$tag1
+   if do_create $mx2 $new; then
+      if let $(($groundup)); then
+         mcx /$cl1P lm tp exch st /$mx0 lm exch mul mul st /$mx2 wm
+      else
+         mcx /$cl1 lm tp exch st /$mx1 lm exch mul mul st /$mx2 wm
+      fi
+   fi
+            more_rubbish $mx2
+
+   mcl $mx2 -ap = -aa '.C' $opts2 --append-log=y --analyze=y
+   cl2=`mcl $mx2 -ap = -aa '.C' $opts2 -az`
+
+            more_rubbish $cl2
+
+   cl2P=$cl2'P'
+   mcx -1 dgt /$cl1 lm /$cl2 lm mul /$cl2P wm
+
+            more_rubbish $cl2P
+
+   if test "$outfile"; then
+      cl2PP=$outfile
+   else
+      cl2PP=$cl2'PP'
+   fi
+
+   mcx -1 dgt /$cl0 lm /$cl2P lm mul /$cl2PP wm
+
+   do_tell "SIZE DISTRIBUTION LEVEl 2"
+   clxdo gr $cl2PP
+fi
+
+
+if let $(($delete)); then
+   rm ${rubbish[*]}
+fi
+
+#  mcxdump -imx $cl1 --no-values --dump-rlines -o - \
+#| perl -ne '$x = s/(\w+)//g; print $x, "\n";' \
+#| sort -n
+

@@ -1,0 +1,173 @@
+.\" Copyright (c) 2014 Stijn van Dongen
+.TH "mcx erdos" 1 "16 May 2014" "mcx erdos 14-137" "USER COMMANDS "
+.po 2m
+.de ZI
+.\" Zoem Indent/Itemize macro I.
+.br
+'in +\\$1
+.nr xa 0
+.nr xa -\\$1
+.nr xb \\$1
+.nr xb -\\w'\\$2'
+\h'|\\n(xau'\\$2\h'\\n(xbu'\\
+..
+.de ZJ
+.br
+.\" Zoem Indent/Itemize macro II.
+'in +\\$1
+'in +\\$2
+.nr xa 0
+.nr xa -\\$2
+.nr xa -\\w'\\$3'
+.nr xb \\$2
+\h'|\\n(xau'\\$3\h'\\n(xbu'\\
+..
+.if n .ll -2m
+.am SH
+.ie n .in 4m
+.el .in 8m
+..
+.SH NAME
+mcx erdos \- compute shortest paths in a graph
+.SH SYNOPSIS
+
+\fBmcx\ \&erdos\fP [options]
+
+mcxerdos is not in actual fact a program\&. This manual
+page documents the behaviour and options of the mcx program when
+invoked in mode \fIerdos\fP\&. The options \fB-h\fP, \fB--apropos\fP,
+\fB--version\fP, \fB-set\fP, \fB--nop\fP, \fB-progress\fP\ \&\fI<num>\fP
+are accessible
+in all \fBmcx\fP modes\&. They are described
+in the \fBmcx\fP manual page\&.
+
+\fBmcx\ \&erdos\fP
+\fB[-query\fP <fname> (\fIquery input stream\fP)\fB]\fP
+\fB[-abc\fP <fname> (\fIspecify label input\fP)\fB]\fP
+\fB[-imx\fP <fname> (\fIspecify matrix input\fP)\fB]\fP
+\fB[-tab\fP <fname> (\fIuse tab file\fP)\fB]\fP
+\fB[-o\fP <fname> (\fIoutput file name\fP)\fB]\fP
+\fB[--is-directed\fP (\fIinput graph is directed\fP)\fB]\fP
+\fB[--is-undirected\fP (\fIinput graph is directed\fP)\fB]\fP
+\fB[-write-path\fP <fname> (\fIpath matrix file\fP)\fB]\fP
+\fB[-write-step\fP <fname> (\fIstep matrix file\fP)\fB]\fP
+\fB[-h\fP (\fIprint synopsis, exit\fP)\fB]\fP
+\fB[--apropos\fP (\fIprint synopsis, exit\fP)\fB]\fP
+\fB[--version\fP (\fIprint version, exit\fP)\fB]\fP
+.SH DESCRIPTION
+
+\fBmcx\ \&erdos\fP computes shortest paths in graphs\&.
+It can read a graph either in label format with \fB-abc\fP
+or in native format with \fB-imx\fP\&.
+It reads pairs of node indices from an input stream, and for
+each pair outputs a data structure describing the full
+set of shortest paths between the two nodes\&.
+Edge weights are not taken into account, so an
+edge always represents a unit step size between two nodes
+irrespective of its weight\&. A mode to compute shortest paths while taking into
+account edge weights will be implemented later as \fBmcx\ \&dijkstra\fP\&.
+
+Note that the full set of shortest paths between two nodes in
+a graph can be described as a directed acyclic graph (DAG),
+and this is how \fBmcx\ \&erdos\fP operates\&. It is easy to construct
+graphs and node pairs for which the number of shortest paths
+between the two nodes becomes exponential in the size of
+the graph, whereas the lattice description is always
+garantueed to map to a subset of the graph edge set\&.
+
+By default it is assumed that the input graph should be treated as
+undirected\&. To this end a transformation step is applied to ensure that the
+graph in memory is undirected\&. It is possible to compute shortest
+paths in directed graphs by using \fB--is-directed\fP, and
+it is possible to omit the transformation step by using \fB--is-undirected\fP\&.
+If the latter is specified while the input graph is in native format and in
+fact directed, results will be erroneous\&. This could in theory be mitigated
+by checking that the input graph is undirected\&. However, the reason to use
+\fB--is-undirected\fP is simply to increase speed of operation, whereas
+such a check would be equally expensive as the transformation step that is
+omitted with \fB--is-undirected\fP\&.
+
+The input graph/matrix, if specified with the \fB-imx\fP option, has to
+be in mcl matrix/graph format\&. You can use label input instead by using the
+\fB-abc\fP option\&.
+Refer to \fBmcxio(5)\fP for a description of these two input formats\&.
+By default \fBmcx\ \&erdos\fP reads from STDIN \fIand expects matrix format\fP\&.
+To specify label input from STDIN use \fB-abc\fP\ \&\fB-\fP\&.
+.SH OPTIONS
+
+.ZI 2m "\fB-query\fP <fname> (\fIquery input\fP)"
+\&
+.br
+The name for the file from which queries are read\&.
+A query consists of two white-space separated node indices
+or two white-space separated labels\&. Labels can only be used
+if either \fB-abc\fP or \fB-tab\fP is specified\&.
+.in -2m
+
+.ZI 2m "\fB-abc\fP <fname> (\fIlabel input\fP)"
+\&
+.br
+The file name for input that is in label format\&.
+.in -2m
+
+.ZI 2m "\fB-imx\fP <fname> (\fIinput matrix\fP)"
+\&
+.br
+The file name for input that is in mcl native matrix format\&.
+.in -2m
+
+.ZI 2m "\fB-o\fP <fname> (\fIoutput file name\fP)"
+\&
+.br
+The name of the file to write output to\&.
+.in -2m
+
+.ZI 2m "\fB-tab\fP <fname> (\fIuse tab file\fP)"
+\&
+.br
+This option causes the output to be printed with the labels
+found in the tab file\&.
+With \fB-abc\fP this option will, additionally, construct
+a graph only on the labels found in the tab file\&.
+If this option is used in conjunction with \fB-imx\fP the
+tab domain and the matrix domain are required to be identical\&.
+.in -2m
+
+.ZI 2m "\fB--is-directed\fP (\fIcompute directed shortest paths\fP)"
+\&
+.br
+The input graph is not transformed and assumed to be directed\&.
+Shortest paths are computed taking this into account\&.
+.in -2m
+
+.ZI 2m "\fB--is-undirected\fP (\fIskip symmetrification step\fP)"
+\&
+.br
+The input graph is not transformed and assumed to be undirected\&.
+Shortest paths are computed on the assumption that the input
+is undirected\&. Use this option only if you are sure the input
+is undirected and need to have faster execution\&.
+.in -2m
+
+.ZI 2m "\fB-write-path\fP <fname> (\fIpath matrix file\fP)"
+\&
+'in -2m
+.ZI 2m "\fB-write-step\fP <fname> (\fIstep matrix file\fP)"
+\&
+'in -2m
+'in +2m
+\&
+.br
+The path matrix enumerates the nodes that take
+part in all shortest paths\&. The first list contains
+those nodes that lie at distance 1 of the source node,
+the second list contains nodes lying at distance 2,
+and so on\&.
+The step matrix contains all the edges that make up
+the lattice of shortest paths between the two query nodes\&.
+.in -2m
+.SH SEE ALSO
+
+\fBmcxio(5)\fP,
+and \fBmclfamily(7)\fP for an overview of all the documentation
+and the utilities in the mcl family\&.

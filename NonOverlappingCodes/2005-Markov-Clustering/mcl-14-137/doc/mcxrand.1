@@ -1,0 +1,236 @@
+.\" Copyright (c) 2014 Stijn van Dongen
+.TH "mcxrand" 1 "16 May 2014" "mcxrand 14-137" "USER COMMANDS "
+.po 2m
+.de ZI
+.\" Zoem Indent/Itemize macro I.
+.br
+'in +\\$1
+.nr xa 0
+.nr xa -\\$1
+.nr xb \\$1
+.nr xb -\\w'\\$2'
+\h'|\\n(xau'\\$2\h'\\n(xbu'\\
+..
+.de ZJ
+.br
+.\" Zoem Indent/Itemize macro II.
+'in +\\$1
+'in +\\$2
+.nr xa 0
+.nr xa -\\$2
+.nr xa -\\w'\\$3'
+.nr xb \\$2
+\h'|\\n(xau'\\$3\h'\\n(xbu'\\
+..
+.if n .ll -2m
+.am SH
+.ie n .in 4m
+.el .in 8m
+..
+.SH NAME
+mcxrand \- random shuffling, removal, addition, and perturbation of edges of graphs
+.SH SYNOPSIS
+
+\fBmcxrand\fP [options]
+
+.di ZV
+.in 0
+.nf \fC
+mcxrand -gen K -add N -new-g-mean f    # random graph on K nodes, N edges
+mcxrand -imx <name> -remove N -add N   # remove then add edges
+mcxrand -imx <name> -shuffle N         # shuffle N edge pairs
+mcxrand -imx <name> -noise-radius f    # add noise to add weights
+.fi \fR
+.in
+.di
+.ne \n(dnu
+.nf \fC
+.ZV
+.fi \fR
+
+mcxrand -pa N/m # preferential attachment generation
+
+\fBmcxrand\fP
+\fB[-imx\fP <fname> (\fIinput matrix\fP)\fB]\fP
+\fB[-o\fP <fname> (\fIoutput matrix to <fname>\fP)\fB]\fP
+\fB[--write-binary\fP (\fIwrite output in binary format\fP)\fB]\fP
+\fB[-gen\fP <num> (\fIgenerate new graph\fP)\fB]\fP
+\fB[-pa\fP <N>/<m> (\fIpreferential attachment\fP)\fB]\fP
+\fB[-remove\fP <num> (\fIremove <num> edges\fP)\fB]\fP
+\fB[-add\fP <num> (\fIadd <num> edges not yet present\fP)\fB]\fP
+\fB[-shuffle\fP <num> (\fIshuffle edge pair <num> times\fP)\fB]\fP
+\fB[-icl\fP <fname> (\fIshuffle nodes preserving cluster sizes\fP)\fB]\fP
+\fB[-h\fP (\fIprint synopsis, exit\fP)\fB]\fP
+\fB[--apropos\fP (\fIprint synopsis, exit\fP)\fB]\fP
+\fB[--version\fP (\fIprint version, exit\fP)\fB]\fP
+.SH DESCRIPTION
+
+This utility is a recent addition to the mcl suite and the schemes
+explained below will likely be evolved, simplified, and extended
+with future releases\&.
+
+The \fB--shuffle\fP, \fB-gen\fP and \fB-pa\fP options can be deemend
+stable and robust\&. The options that determine edge weight perturbation and
+generation are likely to be subject to revision in the future\&.
+
+The input graph/matrix, if specified with the \fB-imx\fP option,
+has to be in mcl matrix/graph format\&.
+You can use label input instead by preprocessing the label input
+with \fBmcxload(1)\fP, i\&.e\&.
+
+.di ZV
+.in 0
+.nf \fC
+   mcxload -abc <label-file> | mcxrand [options]
+.fi \fR
+.in
+.di
+.ne \n(dnu
+.nf \fC
+.ZV
+.fi \fR
+
+Refer to \fBmcxio(5)\fP for a description of these two input formats\&.
+By default \fBmcxrand\fP reads from STDIN\&. Change this with the \fB-imx\fP
+option\&.
+
+\fBmcxrand\fP can randomly remove and add edges to a graph, or add gaussian noise
+to the edge weights of a graph\&. It can also shuffle edge pairs while
+preserving the degree sequence of the graph\&.
+In \fIremoval mode\fP (\fB-remove\fP\ \&\fI<num>\fP) and in
+\fIaddition mode\fP (\fB-add\fP\ \&\fI<num>\fP)
+\fBmcxrand\fP enforces arc symmetry by only working with edges
+\fIw(i,j)\fP where \fIi < j\fP and symmetrifying the result and adding any
+loops that were present in the input graph just before the output stage\&.
+
+In \fIperturbation mode\fP (\fB-noise-radius\fP, with no other mode specified)
+the input can be any graph\&.
+
+\fIShuffle mode\fP (\fB-shuffle\fP\ \&\fI<num>\fP) requires an undirected graph
+but will only fail when it picks an arc for which the arc in the reverse
+direction is not present\&. This means it may or may not fail on directed
+input depending on the random choices\&. It does not check equality of the two
+arc weights and randomly picks one to represent the edge weight\&.
+
+Edge removal, edge creation, and edge perturbation are applied in this order
+if both are specified\&. Edge shuffling presently cannot be combined with one
+of the previous modes\&.
+
+A random graph can be generated with \fB-gen\fP\ \&\fIk\fP, which
+specifies the number of nodes the graph should have\&. It is equivalent
+with pasing (the file name of) an empty graph of the same dimensions as the argument
+to \fB-imx\fP\&.
+
+When adding (i\&.e\&. creating) edges, the default is to use the uniform
+distribution for new edge weights ranging in some interval\&.
+The default interval is [0,1] and can be modified using the
+\fB-edge-min\fP\ \&\fImin\fP and \fB-edge-max\fP\ \&\fImax\fP options\&.
+A Gaussian edge weight distribution can be obtained by specifying
+\fB-new-g-mean\fP\ \&\fInum\fP\&. The standard deviation is by default
+1\&.0 and can be altered with \fB-new-g-sdev\fP\ \&\fInum\fP\&.
+Currently the edge weigths are generated within the interval
+[\fImean-radius\fP, \fImean+radius\fP] where \fIradius\fP is specified
+with \fB-new-g-radius\fP\&. They are further selected to
+lie within the interval \fI[L,R]\fP if and only if
+\fB-new-g-min\fP\ \&\fIL\fP and \fB-new-g-max\fP\ \&\fIR\fP have
+been specified\&.
+
+For both uniform and Gaussian edge creation the edge weights
+can be skewed towards either side of the distribution with
+\fB-skew\fP\ \&\fIc\fP\&. Skewing is applied by mapping
+the edge weights to the interval [0,1], applying
+the function \fIx^c\fP, and remapping the resulting number\&.
+For values \fIc<1\fP this skews the edge weights towards
+the right bound and for values \fIc>1\fP this skews the edge
+weights towards the left bound\&.
+This is a rather crude approach that will likely be
+changed in the future\&.
+
+Edge weights can be perturbed by specifying \fB-noise-radius\fP\ \&\fIradius\fP\&.
+This sets the maximum perturbation allowed\&. Noise is generated with
+a standard deviation that is by default set to 0\&.5 and can be altered
+using \fB-noise-sdev\fP\ \&\fInum\fP\&.
+Values are generated in the interval \fI[-fac*sdev, fac*sdev]\fP
+where \fIfac\fP is set with \fB-noise-range\fP\ \&\fIfac\fP\&.
+This interval is mapped to the interval \fI[-radius, radius]\fP before
+the resulting value is added to the actual edge weight\&.
+This becomes the new value\&. If an interval \fI[L,R]\fP is explicitly
+specified using \fB-edge-min\fP\ \&\fIL\fP and \fB-edge-max\fP\ \&\fIR\fP
+then the new value will be accepted only if it lies within the interval,
+otherwise the edge will not be perturbed\&.
+.SH OPTIONS
+
+.ZI 2m "\fB-imx\fP <fname> (\fIinput matrix\fP)"
+\&
+.br
+The file name for input\&. STDIN is assumed if neither
+\fB-imx\fP nor \fB-gen\fP\ \&\fInum\fP is specified\&.
+.in -2m
+
+.ZI 2m "\fB-o\fP <fname> (\fIoutput matrix to <fname>\fP)"
+\&
+.br
+The file to write the transformed matrix to\&.
+.in -2m
+
+.ZI 2m "\fB--write-binary\fP (\fIwrite output in binary format\fP)"
+\&
+.br
+Write the output matrix in native binary format\&.
+.in -2m
+
+.ZI 2m "\fB-shuffle\fP <num> (\fIshuffle edge pair <num> times\fP)"
+\&
+.br
+Shuffle edge pair <num> times\&. An edge shuffle
+acts on two randomly chosen edges
+edges \fIw(a,b)\fP and \fIw(c,d)\fP where all the nodes must
+be different\&. If either none of the edges in \fIw(a,c)\fP, \fIw(b,d)\fP
+or none of the edges in \fIw(a,d)\fP, \fIw(b,c)\fP exists
+the original two edges are removed and is replaced
+by an edge pair for which both edges did not exist before\&.
+.in -2m
+
+.ZI 2m "\fB-icl\fP <fname> (\fIshuffle nodes preserving cluster sizes\fP)"
+\&
+.br
+Use this option to generate a random clustering with the exact same
+cluster size distribution as the input clustering\&.
+.in -2m
+
+.ZI 2m "\fB-pa\fP <N>/<m> (\fIpreferential attachment\fP)"
+\&
+.br
+This generates a random graph using preferential attachment\&.
+In this model new nodes are sequentially added to a graph\&.
+Each new node is connected with \fI<m>\fP of the existing
+nodes (including nodes previously added), where the likelihood
+of picking an existing node is proportional to the edge
+degree of that node\&. During construction multiple edges between
+two nodes are allowed (each with weight one), and these are collapsed by adding
+their weights before output\&.
+.in -2m
+
+.ZI 2m "\fB-remove\fP <num> (\fIremove <num> edges\fP)"
+\&
+.br
+Remove this many edges from the input graph\&.
+.in -2m
+
+.ZI 2m "\fB-add\fP <num> (\fIadd <num> edges not yet present\fP)"
+\&
+.br
+Create this many new edges\&.
+.in -2m
+
+.ZI 2m "\fB-gen\fP <num> (\fInode number\fP)"
+\&
+.br
+Use in conjunction with \fB-add\fP to generate
+a random graph on \fI<num>\fP nodes\&.
+.in -2m
+.SH SEE ALSO
+
+\fBmcxio(5)\fP,
+and \fBmclfamily(7)\fP for an overview of all the documentation
+and the utilities in the mcl family\&.

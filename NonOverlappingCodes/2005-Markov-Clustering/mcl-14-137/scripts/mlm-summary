@@ -1,0 +1,317 @@
+#!/usr/local/bin/perl -w
+
+#  (C) Copyright 2007 Stijn van Dongen
+ #
+#  This file is part of MCL.  You can redistribute and/or modify MCL under the
+#  terms of the GNU General Public License; either version 3 of the License or
+#  (at your option) any later version.  You should have received a copy of the
+#  GPL along with MCL, in the file COPYING.
+
+# TODO
+#     when removing singletons tree could disappear in extreme cases.
+#
+
+use Getopt::Long;
+use strict;
+
+
+my @ARGV_COPY  = @ARGV;
+my $n_args = @ARGV;
+
+$::debug =  0;
+$::test  =  0;
+$::rmsingle = 0;
+$::ignroot = 0;
+$::pedigree = 0;
+my $help  =  0;
+my $progname = 'mlmsummary';
+my $size_cutoff = 0;
+my $fntab = "";
+my $fninfo = "";
+my $fncone = "";
+my $mode = 'cov';
+
+sub help {
+   print <<EOH;
+Usage:
+   $progname [options] STREAM--{cone-file}
+   mcxdump -imx-cat mcl.cone | $progname
+   mcxdump -imx-cat mcl.cone | $progname --remove-singletons | mlmtree <OPTIONS>
+Options:
+--cut=<num>             granularity cutoff
+--help                  this
+--debug                 debug
+--fninfo=<file>         hierarchical info file
+--fntab=<file>          tab file (not functional)
+--fncone=<file>         cone dump file
+--ignore-root           ignore the top level clustering when removing singletons 
+--remove-singletons     remove singletons, return output in input format
+--hist-pedigree         dump histogram of number of (((..))(grand)grand)parents
+EOH
+}
+
+if
+(! GetOptions
+   (  "help"            =>   \$help
+   ,  "test"            =>   \$::test
+   ,  "debug=i"         =>   \$::debug
+   ,  "fninfo=s"        =>   \$fninfo
+   ,  "mode=s"          =>    \$mode
+   ,  "remove-singletons"  =>   \$::rmsingle
+   ,  "ignore-root"     =>   \$::ignroot
+   ,  "hist-pedigree"   =>   \$::pedigree
+   ,  "cut=i"           =>   \$size_cutoff
+   ,  "fntab=s"         =>   \$fntab
+   ,  "fncone=s"        =>   \$fncone
+   )
+)
+   {  print STDERR "option processing failed\n";
+      exit(1);
+   }
+
+if (!$n_args || $help) {
+   help();
+   exit;
+}
+
+die "need cone file name" unless $fncone;
+die "unknown mode $mode" unless grep { $_ eq $mode } qw ( cov covmax );
+
+my $tree = {};
+my $level = 0;
+
+open (CONE, "<$fncone") || die "cannot open file <$fncone>";
+
+my %tab = ();
+if ($fntab) {
+   open (TAB, "<$fntab") || die "no open $fntab";
+   %tab = map { chomp; my @ij = split; @ij; } <TAB>;
+}
+
+my %parent = ();
+
+
+while (<CONE>) {
+   my ($clus, $node) = (undef, undef);
+   if (/^===$/) {
+      $level++;
+      next;
+   }
+   if (/(\S+)\s+(\S+)/) {
+      ($clus, $node) = ($1, $2);
+   }
+   else {
+      # print STDERR "no match at line $.";
+      next;
+   }
+
+   my $size = $level > 0 ? $tree->{$level-1}{$node}{SIZE} : 1;
+   die "no size for (cl,node,lev) ($clus,$node,$level)" unless defined($size);
+   $tree->{$level}{$clus}{SIZE} += $size;
+   $tree->{$level}{$clus}{JOIN}++;
+   $tree->{$level}{$clus}{NODES}{$node} = 1;
+
+   if ($::pedigree) {
+      $parent{$level}{$node} = $clus; 
+   }
+
+   if (!$level && !$fntab) {
+      $tab{$node} = $node;
+   }
+}
+
+
+my $acc = {};
+
+if ($fninfo) {
+   my $lev = 0;
+   open (INFO, "<$fninfo") || die "cannot open $fninfo for reading";
+
+   while (<INFO>) {
+
+      ++$lev && next if /^===/;
+      die "uhhh" unless /^(\d+)/;
+      my $clid = $1;
+
+      my ($glo, $loc) = ("", "");
+      if (/GLOBAL\[(.*?)\]/) {
+         $glo = $1;
+      }
+      elsif (/TRIVIAL\[(.*?)\]/) {
+         $glo = $1;
+      }
+      elsif (/^0\b/) {
+      }
+      else {
+         chomp;
+         print STDERR "no match at line $. [$_]\n";
+         next;
+      }
+
+      $acc->{$lev}{$clid}{ANNOT} = $glo;
+
+      if (/PARENT\[(\d+)\]/) {
+         $acc->{$lev}{$clid}{PARENT} = $1;
+         push @{$acc->{$lev+1}{$1}{CHILDREN}}, $clid;
+      }
+      if (/CHILDREN\[(.*?)\]/) {
+         $acc->{$lev}{$clid}{NODES} = $1;
+      }
+      else {
+         $acc->{$lev}{$clid}{NODES} = "";
+      }
+   }
+   close INFO;
+}
+
+if ($::rmsingle && keys %{$tree->{$level}} == 1) {
+   print STDERR "root contains a single node; assuming --ignore-root\n";
+   $::ignroot = 1;
+}
+
+my $I_have_deleted = 0;
+
+if ($::ignroot && $level) {
+   warn "root contains multiple nodes" if keys %{$tree->{$level}} > 1;
+   delete($tree->{$level});
+   $level--;
+   $I_have_deleted = 1;
+}
+
+
+if ($::pedigree) {
+   my @hist = (0) x ($level+1);
+   my @hist_leaves = map { []; } (0..$level+1);
+   my @leaves = keys %{$parent{0}}; 
+   for my $l (@leaves) {
+      my $lev = 0;
+      my $join = 0;
+      my $l1 = $l;
+      while ($lev < $level) {
+         my $p = $parent{$lev}{$l};
+         $join++ if $tree->{$lev}{$p}{JOIN} > 1;
+         $lev++;
+         $l = $p;
+      }
+      $hist[$join]++;
+      push @{$hist_leaves[$join]}, $l1;
+   }
+
+   for (my $i=0;$i<=$level;$i++) {
+      # my $h = $hist_leaves[$i];
+      printf "%4d %8d\n", $i, $hist[$i];
+   }
+   exit(0);
+}
+
+
+if ($::rmsingle) {
+   my $l = $level;
+   my %singletons = map { ($_, 1) }
+                    grep { $tree->{$l}{$_}{SIZE} <= 1 }
+                    keys %{$tree->{$l}};
+   my $n_singletons = keys %singletons;
+   local $" = ' ';
+   print STDERR "deleting $n_singletons singletons\n";
+
+   while ($l >= 0) {
+      my %new_singletons = map { %{$tree->{$l}{$_}{NODES}} } keys %singletons;
+      for my $e (keys %singletons) {
+         delete($tree->{$l}{$e});
+# print STDERR "delete level $l cluster $e\n";
+      }
+      if ($l == 0) {
+         my @singletons = sort keys %new_singletons;
+         local $" = ' ';
+         # print STDERR "deleting @singletons\n";
+      }
+      $l--;
+      %singletons = %new_singletons;
+   }
+
+   if ($I_have_deleted) {
+      print STDERR "re-adding root level\n";
+      for my $clus (keys %{$tree->{$level}}) {
+         $tree->{$level+1}{0}{SIZE} += $tree->{$level}{$clus}{SIZE};
+         $tree->{$level+1}{0}{NODES}{$clus} = 1;
+      }
+      $level++;
+   }
+
+   for (my $i=0;$i<=$level;$i++) {
+      for my $k (sort { $a <=> $b } keys %{$tree->{$i}}) {
+         for my $n (sort { $a <=> $b } keys %{$tree->{$i}{$k}{NODES}}) {
+            print "$k\t$n\n";
+         }
+      }
+      print "===\n" if $i < $level;
+   }
+   exit(0);
+}
+
+my $level_max = $level;
+
+my @todo =  (  map
+                  { [ $level_max, $_ ] }
+               sort
+                  { $tree->{$level_max}{$b}{SIZE} <=> $tree->{$level_max}{$a}{SIZE} }
+               grep
+                  { $tree->{$level_max}{$_}{SIZE} >= $size_cutoff }
+               keys
+                  %{$tree->{$level_max}}
+            )  ;
+
+while (@todo) {
+   my $item = shift @todo;
+   my ($level, $clus) = @$item;
+
+   print '|  ' x ($level_max - $level);
+   my $thissize = $tree->{$level}{$clus}{SIZE};
+
+   print $thissize;
+
+   if ($level > 0 && $thissize >= $size_cutoff) {
+      my $sizes
+      =  join
+            ' ', 
+         map
+            { $tree->{$level-1}{$_}{SIZE} }
+         sort
+            { $tree->{$level-1}{$b}{SIZE} <=> $tree->{$level-1}{$a}{SIZE} }
+         keys
+            %{$tree->{$level}{$clus}{NODES}}
+      ;
+      print "   $sizes";
+      if ($fninfo) {
+         print "  $acc->{$level}{$clus}{ANNOT}" if defined($acc->{$level}{$clus}{ANNOT});
+      }
+      unshift @todo,
+         map
+            { [ $level-1, $_ ] }
+         sort
+            { $tree->{$level-1}{$b}{SIZE} <=> $tree->{$level-1}{$a}{SIZE} }
+         #grep
+         #   { $tree->{$level-1}{$_}{SIZE} >= $size_cutoff }
+         keys
+            %{$tree->{$level}{$clus}{NODES}}
+         ;
+   }
+   else {
+      my @labels = keys %{$tree->{$level}{$clus}{NODES}};
+      my $l = $level;
+      while ($l > 0) {
+         @labels = map { keys %{$tree->{$l-1}{$_}{NODES}} } @labels;
+         $l--;
+      }
+      @labels = map { $tab{$_} } @labels;
+      local $" = '+';
+      my $star = $level > 1 ? '*' : '';
+      print "   $star\[@labels]";
+      if ($fninfo) {
+         print "  $acc->{$level}{$clus}{ANNOT}" if defined($acc->{$level}{$clus}{ANNOT});
+      }
+   }
+   print "\n";
+}
+
+
