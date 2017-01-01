@@ -1,7 +1,9 @@
 # CommunityDetectionCodes
 Locality-Based Overlapping Community Detection Algorithms. 
 And I recommend you to use jetbrains' ide namely clion, pycharm and intellij to 
-read related codes.
+read related codes. 
+
+I also write a community-detection survey in [Survey](Survey), you can have a look, if interested. 
 
 ##Algorithms
 
@@ -18,16 +20,27 @@ Algorithm | Implementation Language | Dependency
 [2014-Heat-Kernel](2014-Heat-Kernel) | c++, matlab, python | pylibbvg 
 [2015-LEMON](2015-LEMON) | python | pulp
 
+
+##Submodules
+
+Submodule | Implementation Language
+--- | ---
+[igraph](https://github.com/igraph/igraph) | c
+
 ##Datasets
 
-###Small
+###Synthetic-Graph Generation Benchmark
+- [2009-LFM](2009-LFM-Benchmark), it is the link of lfm-benchmark codes.
+
+
+###Small Real-World
 
 Dataset | Nodes Number | Undirected Edge Number
 --- | --- | --- | --- 
 [football_edge_list.txt](Datasets/football_edge_list.txt) | 115 | 613
 [karate_edge_list.txt](Datasets/karate_edge_list.txt) | 34 | 78
 
-##Medium
+##Medium Real-World
 
 Dataset |  Nodes Number | Undirected Edge Number
 --- | ---  | --- 
@@ -39,11 +52,6 @@ Dataset |  Nodes Number | Undirected Edge Number
 [wiki_vote_edge_list.txt](Datasets/wiki_vote_edge_list.txt)  | 7,115 | 100,762
 
 
-##Submodules
-
-Submodule | Implementation Language
---- | ---
-[igraph](https://github.com/igraph/igraph) | c
 
 ##Scripts
 
