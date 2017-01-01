@@ -1,0 +1,21 @@
+package "Find Maximal Cliques"
+version "0.5"
+purpose "Runs the Bron-Kerbosch algorithm on an edge list"
+option  "k"                  k "minimum size of clique, k. Must be at least 3."               int        default="3" no
+option  "stringIDs"          - "string IDs in the input"             flag       off
+# option  "git-version"        - "detailed version description"        flag       off
+# option  "verbose"            v "detailed debugging"                  flag       off
+# option  "K"                  K "Number of clusters, K"               int        default="-1" no
+# option  "directed"           d "directed"                            flag       off
+# option  "weighted"           w "weighted"                            flag       off
+# option  "selfloop"           s "selfloops allowed"                   flag       off
+# option  "seed"               - "seed to drand48()"                   int        default="0" no
+# option  "GT.vector"          - "The ground truth. a file with N lines. Starts from ZERO." string  no
+# option  "algo.gibbs"         - "Use the simple Gibbs in the algorithm"          int       default="1" no
+# option  "algo.m3"            - "Use M3 in the algorithm"                        int       default="1" no
+# option  "iterations"         i "How many iterations"                 int       default="120000" no
+# option  "initGT"             - "Initialize to the ground truth"      flag       off
+# option  "model.scf"          - "Stochastic community finding"        flag       off
+# option  "stringIDs"          - "string IDs in the input"             flag       off
+# option  "mega"               - "dumb down the algorithm for *big* networks"  flag       off
+# option  "printEveryNIters"   - "How often to print an update"        int        default="10" no

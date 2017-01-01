@@ -1,0 +1,24 @@
+percolateCliques:   Find maximal cliques, via the Bron Kerbosch algorithm, http://en.wikipedia.org/wiki/Bron%E2%80%93Kerbosch_algorithm. Then perform k-clique percolation on these cliques, for a given value of k.
+
+== Copyright ==
+
+Copyright 2009-2011 -  Aaron McDaid aaronmcdaid@gmail.com and Fergal Reid fergal.reid@gmail.com
+Licensed under GPL v3. See gpl.txt included with this package.
+
+== Compiling ==
+
+	make clean percolateCliques 
+
+== Usage ==
+
+
+	./justTheCliques your_edge_list.txt kValue outputFile.out
+ 
+where kValue is the value of k required, and output file will be a list of communities; one community per line, each community is a space seperated list of node ids
+
+== Input file ==
+
+Each line of the your_edge_list.txt represents an edge. The first two fields
+(delimited by commas, pipes(|), spaces or tabs) are the names of the two
+nodes that are connected. Directionality is ignored, and self-loops will be rejected.
+Any other fields on the line are also ignored.
