@@ -18,19 +18,23 @@ Algorithm | Implementation Language | Dependency
 
 ##Datasets
 
-Dataset | Size | Nodes Number | Undirected Edge Number
---- | --- | --- | --- 
-[football_edge_list.txt](Datasets/football_edge_list.txt) | small | nodes num:115 | edges num:613
-[karate_edge_list.txt](Datasets/karate_edge_list.txt) | small | nodes num:34 | edges num:78
+###Small
 
-Dataset | Size | Nodes Number | Undirected Edge Number
+Dataset | Nodes Number | Undirected Edge Number
 --- | --- | --- | --- 
-[collaboration_edge_list](Datasets/collaboration_edge_list.txt) | medium | nodes num:9875 | edges num:25973
-[epinions_edge_list.txt](Datasets/epinions_edge_list.txt) | medium | nodes num:75879 | edges num:405740
-[facebook_edge_list.txt](Datasets/facebook_edge_list.txt) | medium | nodes num:4039 | edges num:88234
-[slashdot0811_edge_list.txt](Datasets/slashdot0811_edge_list.txt) | medium | nodes num:77360 | edges num:546487
-[slashdot0902_edge_list.txt](Datasets/slashdot0902_edge_list.txt) | medium | nodes num:82168 | edges num:582533
-[wiki_vote_edge_list.txt](Datasets/wiki_vote_edge_list.txt) | medium | nodes num:7115 | edges num:100762
+[football_edge_list.txt](Datasets/football_edge_list.txt) | 115 | 613
+[karate_edge_list.txt](Datasets/karate_edge_list.txt) | 34 | 78
+
+##Medium
+
+Dataset |  Nodes Number | Undirected Edge Number
+--- | ---  | --- 
+[collaboration_edge_list](Datasets/collaboration_edge_list.txt)  | 9875 | 25973
+[epinions_edge_list.txt](Datasets/epinions_edge_list.txt)  | 75879 | 405740
+[facebook_edge_list.txt](Datasets/facebook_edge_list.txt)  | 4039 | 88234
+[slashdot0811_edge_list.txt](Datasets/slashdot0811_edge_list.txt)  | 77360 | 546487
+[slashdot0902_edge_list.txt](Datasets/slashdot0902_edge_list.txt)  | 82168 | 582533
+[wiki_vote_edge_list.txt](Datasets/wiki_vote_edge_list.txt)  | 7115 | 100762
 
 
 ##Submodules
