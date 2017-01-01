@@ -1,7 +1,7 @@
 # CommunityDetectionCodes
 Locality-Based Overlapping Community Detection Algorithms.
 
-## Algorithms
+##Algorithms
 
 Algorithm | Implementation Language | Dependency
 --- | --- | ---
@@ -16,12 +16,15 @@ Algorithm | Implementation Language | Dependency
 [2014-Heat-Kernel](2014-Heat-Kernel) | c++, matlab, python | pylibbvg 
 [2015-LEMON](2015-LEMON) | python | pulp
 
-## Datasets
+##Datasets
 
 Dataset | Size | Nodes Number | Undirected Edge Number
 --- | --- | --- | --- 
 [football_edge_list.txt](Datasets/football_edge_list.txt) | small | nodes num:115 | edges num:613
 [karate_edge_list.txt](Datasets/karate_edge_list.txt) | small | nodes num:34 | edges num:78
+
+Dataset | Size | Nodes Number | Undirected Edge Number
+--- | --- | --- | --- 
 [collaboration_edge_list](Datasets/collaboration_edge_list.txt) | medium | nodes num:9875 | edges num:25973
 [epinions_edge_list.txt](Datasets/epinions_edge_list.txt) | medium | nodes num:75879 | edges num:405740
 [facebook_edge_list.txt](Datasets/facebook_edge_list.txt) | medium | nodes num:4039 | edges num:88234
@@ -30,11 +33,15 @@ Dataset | Size | Nodes Number | Undirected Edge Number
 [wiki_vote_edge_list.txt](Datasets/wiki_vote_edge_list.txt) | medium | nodes num:7115 | edges num:100762
 
 
-## Submodules
+##Submodules
 
 Submodule | Implementation Language
 --- | ---
 [igraph](https://github.com/igraph/igraph) | c
 
-## Attention
+##Scripts
+
+Some file processing utility python scripts are put in [Scripts](Scripts).
+
+##Attention
 These codes are all research codes, which I found through the internet. Please do not use them in production enviroment.
