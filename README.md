@@ -20,9 +20,9 @@ Algorithm | Implementation Language | Dependency
 
 Dataset | Size | Nodes Number | Undirected Edge Number
 --- | --- | --- | --- 
-[collaboration_edge_list](Datasets/collaboration_edge_list.txt) | small | nodes num:9875 | edges num:25973
 [football_edge_list.txt](Datasets/football_edge_list.txt) | small | nodes num:115 | edges num:613
 [karate_edge_list.txt](Datasets/karate_edge_list.txt) | small | nodes num:34 | edges num:78
+[collaboration_edge_list](Datasets/collaboration_edge_list.txt) | medium | nodes num:9875 | edges num:25973
 [epinions_edge_list.txt](Datasets/epinions_edge_list.txt) | medium | nodes num:75879 | edges num:405740
 [facebook_edge_list.txt](Datasets/facebook_edge_list.txt) | medium | nodes num:4039 | edges num:88234
 [slashdot0811_edge_list.txt](Datasets/slashdot0811_edge_list.txt) | medium | nodes num:77360 | edges num:546487
@@ -34,7 +34,7 @@ Dataset | Size | Nodes Number | Undirected Edge Number
 
 Submodule | Implementation Language
 --- | ---
-[igraph](SubModules/igraph) | c
+[igraph](https://github.com/igraph/igraph) | c
 
 ## Attention
 These codes are all research codes, which I found through the internet. Please do not use them in production enviroment.
