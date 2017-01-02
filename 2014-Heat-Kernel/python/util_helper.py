@@ -7,16 +7,15 @@ def get_sample_graph():
     return eval(eval_line)
 
 
-def compute_psis(N, t):
+def compute_psis(N, t=1):
     psis = {N: 1.}
     for i in xrange(N - 1, 0, -1):
         psis[i] = psis[i + 1] * t / (float(i + 1.)) + 1.
     return psis
 
 
-def compute_threshs(eps, N, psis):
-    threshs = {}
-    threshs[0] = (math.exp(1) * eps / float(N)) / psis[0]
+def compute_thresholds(eps, N, psis):
+    threshold_dict = {0: (math.exp(1) * eps / float(N)) / psis[0]}
     for j in xrange(1, N + 1):
-        threshs[j] = threshs[j - 1] * psis[j - 1] / psis[j]
-    return threshs
+        threshold_dict[j] = threshold_dict[j - 1] * psis[j - 1] / psis[j]
+    return threshold_dict

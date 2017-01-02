@@ -11,36 +11,27 @@ import collections
 from util_helper import *
 
 if __name__ == '__main__':
-
-    # setup the graph
-    G = get_sample_graph()
-    Gvol = 102
+    my_graph = get_sample_graph()
+    graph_vol = 102
     eps = 0.000917
 
-    # Estimate column c of
-    # the matrix exponential vector
-    # G is the graph as a dictionary-of-sets,
-    # eps is set to stopping tolerance
-
-    # Setup parameters and constants
     N = 6
-    c = 1  # the column to compute
+    col_num = 1
     psis = compute_psis(N)
-    threshs = compute_threshs(eps, N, psis)
+    thresholds = compute_thresholds(eps, N, psis)
 
-    # Initialize variables
     x = {}  # Store x, r as dictionaries
     r = {}  # initialize residual
     Q = collections.deque()  # initialize queue
-    sumresid = 0.
-    r[(c, 0)] = 1.
-    Q.append(c)
-    sumresid += psis[0]
+    sum_residual = 0.
+    r[(col_num, 0)] = 1.
+    Q.append(col_num)
+    sum_residual += psis[0]
 
     # Main loop
     for j in xrange(0, N):
         qsize = len(Q)
-        relaxtol = threshs[j] / float(qsize)
+        relaxtol = thresholds[j] / float(qsize)
         for qi in xrange(0, qsize):
             i = Q.popleft()  # v has r[(v,j)] ...
             rij = r[(i, j)]
@@ -52,10 +43,10 @@ if __name__ == '__main__':
                 x[i] = 0.
             x[i] += rij
             r[(i, j)] = 0.
-            sumresid -= rij * psis[j]
-            update = (rij / (float(j) + 1.)) / len(G[i])
+            sum_residual -= rij * psis[j]
+            update = (rij / (float(j) + 1.)) / len(my_graph[i])
 
-            for u in G[i]:  # for neighbors of i
+            for u in my_graph[i]:  # for neighbors of i
                 next = (u, j + 1)
                 if j == N - 1:
                     if u not in x:
@@ -66,16 +57,16 @@ if __name__ == '__main__':
                         r[next] = 0.
                         Q.append(u)
                     r[next] += update
-                    sumresid += update * psis[j + 1]
+                    sum_residual += update * psis[j + 1]
             # after all neighbors u
-            if sumresid < eps:
+            if sum_residual < eps:
                 break
         if len(Q) == 0:
             break
-        if sumresid < eps:
+        if sum_residual < eps:
             break
 
-    for v in xrange(1, len(G) + 1):
+    for v in xrange(1, len(my_graph) + 1):
         if v in x:
             print "x[%2i] = %.16lf" % (v, x[v])
         else:

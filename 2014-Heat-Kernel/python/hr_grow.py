@@ -1,6 +1,7 @@
 # Heat Kernel Based Community Detection
 # by Kyle Kloster and David F. Gleich
 # supported by NSF award CCF-1149756.
+# refactored by Yulin CHE
 #
 # This demo shows our algorithm running on the Twitter graph.
 # Our other codes are available from David's website:
@@ -67,7 +68,7 @@ if __name__ == '__main__':
     while True:
         if currun % 15 == 0:
             print "%10s  %5s  %4s  %4s  %7s  %7s  %7s" % (
-            'seed ID', 'degree', 'time', 'cond', 'edges', 'nnz', 'setsize')
+                'seed ID', 'degree', 'time', 'cond', 'edges', 'nnz', 'setsize')
         currun += 1
         time.sleep(0.5)
         randiseed = random.randint(1, len(G))
@@ -75,50 +76,46 @@ if __name__ == '__main__':
         start = time.time()
 
         # Estimate hkpr vector
-        # This is our main algorithm.
-        # G is a networkx graph, or something that implements the same interface
-        # t, tol, N, psis are precomputed
-        # npush tracks number of operations
-
         x_dict = {}
         residual_dict = {}
         task_queue = collections.deque()  # initialize queue
-        push_num = 0.
 
         for s in seed:
             residual_dict[(s, 0)] = 1. / len(seed)
             task_queue.append((s, 0))
-        push_num += len(seed)
+        push_num = float(len(seed))
 
         while len(task_queue) > 0:
             (v, j) = task_queue.popleft()  # v has r[(v,j)] ...
             rvj = residual_dict[(v, j)]
+
             # perform the hk-relax step
-            if v not in x_dict: x_dict[v] = 0.
+            if v not in x_dict:
+                x_dict[v] = 0.
             x_dict[v] += rvj
             residual_dict[(v, j)] = 0.
             update = rvj / G.out_degree(v)
             mass = (t / (float(j) + 1.)) * update
+
             for u in G[v]:  # for neighbors of v
                 next = (u, j + 1)  # in the next block
                 if j + 1 == N:
                     x_dict[u] += update
-                    continue
-                if next not in residual_dict: residual_dict[next] = 0.
-                thresh = math.exp(t) * eps * G.out_degree(u)
-                thresh /= N * psis[j + 1]
-                if residual_dict[next] < thresh <= residual_dict[next] + mass:
-                    task_queue.append(next)  # add u to queue
-                residual_dict[next] += mass
+                else:
+                    if next not in residual_dict:
+                        residual_dict[next] = 0.
+                    thresh = math.exp(t) * eps * G.out_degree(u)
+                    thresh /= N * psis[j + 1]
+                    if residual_dict[next] < thresh <= residual_dict[next] + mass:
+                        task_queue.append(next)  # add u to queue
+                    residual_dict[next] += mass
             push_num += G.out_degree(v)
 
         # Step 2 do a sweep cut based on this vector
-        # Find cluster, first normalize by degree
         for v in x_dict:
             x_dict[v] = x_dict[v] / G.out_degree(v)
-
-        # now sort x's keys by value, decreasing
         sv = sorted(x_dict.iteritems(), key=lambda x: x[1], reverse=True)
+
         S = set()
         volS = 0.
         cutS = 0.

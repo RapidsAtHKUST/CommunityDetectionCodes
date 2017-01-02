@@ -2,6 +2,9 @@
 .idea
 cmake-build-debug
 
+# python files
+*.pyc
+
 # output data
 output*.txt
 

@@ -8,7 +8,6 @@ refactored by Yulin CHE
 """
 
 import collections
-import math
 
 from util_helper import *
 

@@ -5,9 +5,7 @@ from util_helper import *
 if __name__ == '__main__':
     # setup the graph
     G = get_sample_graph()
-
     Gvol = 102
-    # G is graph as dictionary-of-sets
     alpha = 0.99
     tol = 0.01
     seed = [1]
