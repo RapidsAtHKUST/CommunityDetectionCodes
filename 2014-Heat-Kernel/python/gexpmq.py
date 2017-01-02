@@ -12,7 +12,7 @@ from util_helper import *
 
 if __name__ == '__main__':
     my_graph = get_sample_graph()
-    graph_vol = 102
+    edge_num = get_edge_num(my_graph)
     eps = 0.000917
 
     N = 6

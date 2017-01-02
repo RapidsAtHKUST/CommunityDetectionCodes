@@ -24,34 +24,12 @@
 # You need about 4-5GB of space and memory to run this demo.
 
 
-import math
-import bvg
 import collections
-import time
 import random
 
 from util_helper import *
 
-
-def load_twitter_graph():
-    print "Loading graph ..."
-    start_time = time.time()
-    G = bvg.BVGraph('twitter-2010-symm', 1)
-    print "   ... done!   %.1f seconds" % (time.time() - start_time)
-    time.sleep(0.75)
-    print "\n"
-    print "Twitter graph has"
-    print "nodes:   %i" % (G.nverts)
-    print "edges:   %i" % (G.nedges)
-    time.sleep(0.75)
-    print "\nt = 15"
-    print "eps = 10^-4\n"
-    time.sleep(0.75)
-    return G
-
-
 if __name__ == '__main__':
-
     G = load_twitter_graph()
     Gvol = G.nedges
 
@@ -63,13 +41,13 @@ if __name__ == '__main__':
     x_dict = {}
     residual_dict = {}
 
-    currun = 0
+    iter_round = 0
 
     while True:
-        if currun % 15 == 0:
+        if iter_round % 15 == 0:
             print "%10s  %5s  %4s  %4s  %7s  %7s  %7s" % (
                 'seed ID', 'degree', 'time', 'cond', 'edges', 'nnz', 'setsize')
-        currun += 1
+        iter_round += 1
         time.sleep(0.5)
         randiseed = random.randint(1, len(G))
         seed = [randiseed]
@@ -134,6 +112,5 @@ if __name__ == '__main__':
                 best_cond = cutS / min(volS, Gvol - volS)
                 best_set = set(S)  # make a copy
 
-        # print out the info on this cluster
         print "%10i  %5i  %4.2f  %4.2f  %7i  %7i  %7i" % (
             seed[0], G.out_degree(seed[0]), time.time() - start, best_cond, push_num, len(x_dict), len(best_set))
