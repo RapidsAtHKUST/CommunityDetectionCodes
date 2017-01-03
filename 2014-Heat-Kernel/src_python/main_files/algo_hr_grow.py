@@ -84,6 +84,10 @@ class HRGrow:
             seed_list[0], self.graph.out_degree(seed_list[0]), time.time() - start, best_cond, push_num, len(x_dict),
             len(best_set))
 
+    def generate_seed_list(self):
+        rand_int = random.randint(1, len(self.graph))
+        return [rand_int]
+
     def do_iterations(self):
         iter_round = 0
         while True:
@@ -93,8 +97,7 @@ class HRGrow:
             iter_round += 1
             time.sleep(0.5)
 
-            rand_int = random.randint(1, len(self.graph))
-            seed_list = [rand_int]
+            seed_list = self.generate_seed_list()
             start = time.time()
 
             # Step 1: Estimate hkpr vector
