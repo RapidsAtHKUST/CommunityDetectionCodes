@@ -2,66 +2,31 @@
 # by Kyle Kloster and David F. Gleich
 # supported by NSF award CCF-1149756.
 # refactored by Yulin CHE
-#
-# This demo shows our algorithm running on the Twitter graph.
-# Our other codes are available from David's website:
-#
-#   https://www.cs.purdue.edu/homes/dgleich/codes/hkgrow/
-#
-# To use this demo, you need pylibbvg graph by David Gleich, Wei-Yen Day, and
-# Yongyang Yu (heavily based on webgraph by Sebastiano Vigna -- he did all the
-# fundamental work!) as well as the symmetrized version of the twitter graph.
-#
-# If you are on a mac or linux, run
-#
-#   pip install pylibbvg
-#   wget https://www.cs.purdue.edu/homes/dgleich/data/twitter-2010-symm.graph
-#   wget https://www.cs.purdue.edu/homes/dgleich/data/twitter-2010-symm.offsets
-#   wget https://www.cs.purdue.edu/homes/dgleich/data/twitter-2010-symm.properties
-#
-# Then, as long as these files are in your directory, our code will run!
-#
-# You need about 4-5GB of space and memory to run this demo.
-
 
 import collections
 import random
 
 from util_helper import *
 
-if __name__ == '__main__':
-    G = load_twitter_graph()
-    Gvol = G.nedges
 
-    # Setup parameters that can be computed automatically
-    N = 47  # see paper for how to set this automatically
-    t = 15.
-    eps = 0.0001
-    psis = compute_psis(N, t)
-    x_dict = {}
-    residual_dict = {}
+class HRGrow:
+    def __init__(self, N, t, eps, svg_graph):
+        self.N = N
+        self.t = t
+        self.eps = eps
+        self.psis = compute_psis(N, t)
+        self.graph = svg_graph
+        self.volG = self.graph.nedges
 
-    iter_round = 0
-
-    while True:
-        if iter_round % 15 == 0:
-            print "%10s  %5s  %4s  %4s  %7s  %7s  %7s" % (
-                'seed ID', 'degree', 'time', 'cond', 'edges', 'nnz', 'setsize')
-        iter_round += 1
-        time.sleep(0.5)
-        randiseed = random.randint(1, len(G))
-        seed = [randiseed]
-        start = time.time()
-
-        # Estimate hkpr vector
+    def estimate_hkpr_vector(self, seed_list):
         x_dict = {}
         residual_dict = {}
         task_queue = collections.deque()  # initialize queue
 
-        for s in seed:
-            residual_dict[(s, 0)] = 1. / len(seed)
+        for s in seed_list:
+            residual_dict[(s, 0)] = 1. / len(seed_list)
             task_queue.append((s, 0))
-        push_num = float(len(seed))
+        push_num = float(len(seed_list))
 
         while len(task_queue) > 0:
             (v, j) = task_queue.popleft()  # v has r[(v,j)] ...
@@ -72,26 +37,28 @@ if __name__ == '__main__':
                 x_dict[v] = 0.
             x_dict[v] += rvj
             residual_dict[(v, j)] = 0.
-            update = rvj / G.out_degree(v)
-            mass = (t / (float(j) + 1.)) * update
+            update = rvj / self.graph.out_degree(v)
+            mass = (self.t / (float(j) + 1.)) * update
 
-            for u in G[v]:  # for neighbors of v
-                next = (u, j + 1)  # in the next block
-                if j + 1 == N:
+            for u in self.graph[v]:  # for neighbors of v
+                next_block = (u, j + 1)
+                if j + 1 == self.N:
                     x_dict[u] += update
                 else:
-                    if next not in residual_dict:
-                        residual_dict[next] = 0.
-                    thresh = math.exp(t) * eps * G.out_degree(u)
-                    thresh /= N * psis[j + 1]
-                    if residual_dict[next] < thresh <= residual_dict[next] + mass:
-                        task_queue.append(next)  # add u to queue
-                    residual_dict[next] += mass
-            push_num += G.out_degree(v)
+                    if next_block not in residual_dict:
+                        residual_dict[next_block] = 0.
 
-        # Step 2 do a sweep cut based on this vector
+                    thresh = math.exp(self.t) * self.eps * self.graph.out_degree(u)
+                    thresh /= self.N * self.psis[j + 1]
+                    if residual_dict[next_block] < thresh <= residual_dict[next_block] + mass:
+                        task_queue.append(next_block)  # add u to queue
+                    residual_dict[next_block] += mass
+            push_num += self.graph.out_degree(v)
+        return x_dict, push_num
+
+    def sweep_cut(self, x_dict, seed_list, push_num, start):
         for v in x_dict:
-            x_dict[v] = x_dict[v] / G.out_degree(v)
+            x_dict[v] = x_dict[v] / self.graph.out_degree(v)
         sv = sorted(x_dict.iteritems(), key=lambda x: x[1], reverse=True)
 
         S = set()
@@ -101,16 +68,42 @@ if __name__ == '__main__':
         best_set = sv[0]
         for p in sv:
             s = p[0]  # get the vertex
-            volS += G.out_degree(s)  # add degree to volume
-            for v in G[s]:
+            volS += self.graph.out_degree(s)  # add degree to volume
+            for v in self.graph[s]:
                 if v in S:
                     cutS -= 1
                 else:
                     cutS += 1
             S.add(s)
-            if cutS / min(volS, Gvol - volS) < best_cond:
-                best_cond = cutS / min(volS, Gvol - volS)
+            if cutS / min(volS, self.volG - volS) < best_cond:
+                best_cond = cutS / min(volS, self.volG - volS)
                 best_set = set(S)  # make a copy
 
         print "%10i  %5i  %4.2f  %4.2f  %7i  %7i  %7i" % (
-            seed[0], G.out_degree(seed[0]), time.time() - start, best_cond, push_num, len(x_dict), len(best_set))
+            seed_list[0], self.graph.out_degree(seed_list[0]), time.time() - start, best_cond, push_num, len(x_dict),
+            len(best_set))
+
+    def do_iterations(self):
+        iter_round = 0
+        while True:
+            if iter_round % 15 == 0:
+                print "%10s  %5s  %4s  %4s  %7s  %7s  %7s" % (
+                    'seed ID', 'degree', 'time', 'cond', 'edges', 'nnz', 'setsize')
+            iter_round += 1
+            time.sleep(0.5)
+
+            rand_int = random.randint(1, len(self.graph))
+            seed_list = [rand_int]
+            start = time.time()
+
+            # Step 1: Estimate hkpr vector
+            x_dict, push_num = self.estimate_hkpr_vector(seed_list)
+            # Step 2 do a sweep cut based on this vector
+            self.sweep_cut(x_dict, seed_list, push_num, start)
+
+
+if __name__ == '__main__':
+    twitter_graph = load_twitter_graph()
+
+    # Setup parameters that can be computed automatically
+    HRGrow(N=47, t=15, eps=0.0001, svg_graph=twitter_graph).do_iterations()
