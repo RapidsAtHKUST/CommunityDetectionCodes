@@ -114,12 +114,12 @@ namespace graph_loading {
                     bg.edge_targets.push_back(bg.key_for_vertexName(edge->second));
                     edge++;
                 }
-                bg.degrees.push_back(degree);
-                bg.offsets.push_back(offset);
+                bg.degrees.emplace_back(degree);
+                bg.offsets.emplace_back(offset);
                 offset += degree;
             }
             assert(offset == bg.edge_targets.size());
-            bg.offsets.push_back(offset);
+            bg.offsets.emplace_back(offset);
         }
 
         PP(bg.ecount());

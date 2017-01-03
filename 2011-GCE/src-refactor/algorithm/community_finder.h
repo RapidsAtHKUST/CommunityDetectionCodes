@@ -17,7 +17,7 @@
 #include "../util/graph/graph_representation.hpp"
 #include "../util/graph/graph_loading.hpp"
 #include "cliques.hpp"
-#include "Seed.h"
+#include "seed.h"
 
 using namespace std;
 

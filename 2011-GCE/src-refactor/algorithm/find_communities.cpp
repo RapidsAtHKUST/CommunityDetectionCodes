@@ -4,7 +4,7 @@
 #include <algorithm>
 
 #include "../util/graph/graph_representation.hpp"
-#include "Seed.h"
+#include "seed.h"
 #include "community_finder.h"
 
 using namespace std;

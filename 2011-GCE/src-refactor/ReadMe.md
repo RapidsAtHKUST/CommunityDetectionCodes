@@ -2,8 +2,9 @@
 ##Current Status
 Build Successfully with `cmake` and `make`.
 
-
 ##File Organization
+
+All source files are refactored to be lower-cased.
 
 content | detail
 --- | ---
@@ -13,7 +14,7 @@ content | detail
 [CMakeLists.txt](CMakeLists.txt) | cmake config file
 
 ##Issues
-- [Range.hpp](util/Range.hpp), not so useful now in c++14, so `typeof` is changed into `decltype`,\
+- [range.hpp](util/range.hpp), not so useful now in c++14, so `typeof` is changed into `decltype`,\
  which is supported in modern C++
 
 Refer to [typeid-versus-typeof-in-cpp](http://stackoverflow.com/questions/1986418/typeid-versus-typeof-in-c).

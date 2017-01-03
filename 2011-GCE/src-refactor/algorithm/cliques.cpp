@@ -61,15 +61,15 @@ namespace cliques {
             bool fewestIsInCands = false;
 #define dout dummyOutputStream
 
-            ContainerRange<list < V> > nRange(Not);
-            ContainerRange<list < V> > cRange(Candidates);
-            ChainedRange<ContainerRange<list < V> > >
-            frontier(nRange, cRange); // The concatenated range of Not and Candidates
+            ContainerRange<std::list<V> > nRange(Not);
+            ContainerRange<std::list<V> > cRange(Candidates);
+            ChainedRange<ContainerRange<std::list<V> >> frontier(nRange,
+                                                                 cRange); // The concatenated range of Not and Candidates
             // TODO: Make use of degree, or something like that, to speed up this counting of disconnects?
             Foreach(V v, frontier) {
                         int currentDiscs = 0;
                         // dout << v << ": ";
-                        ContainerRange<list < V> > testThese(Candidates);
+                        ContainerRange<std::list<V> > testThese(Candidates);
                         Foreach(V v2, testThese) {
                                     if (!g.are_connected(make_pair(v, v2))) {
                                         // dout << "disconnected: (" << v << ',' << v2 << ") ";
@@ -89,7 +89,7 @@ namespace cliques {
 
             {
                 list <V> CandidatesCopy(Candidates);
-                ContainerRange<list < V> > useTheDisconnected(CandidatesCopy);
+                ContainerRange<std::list<V> > useTheDisconnected(CandidatesCopy);
                 Foreach(V v, useTheDisconnected) {
                             unless(Candidates.size() + Compsub.size() >= minimumSize) return;
                             if (fewestDisc > 0 && v != fewestDiscVertex &&

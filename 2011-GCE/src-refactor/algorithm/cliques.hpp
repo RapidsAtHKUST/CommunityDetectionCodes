@@ -10,7 +10,7 @@
 #include <algorithm>
 #include <stdexcept>
 
-#include "../util/Range.hpp"
+#include "../util/range.hpp"
 #include "../util/graph/graph_representation.hpp"
 
 namespace cliques {
@@ -36,7 +36,6 @@ namespace cliques {
 
     void cliquesToDirectory(const bloomGraph<int> &, const string &outputDirectory,
                             unsigned int minimumSize); // You're not allowed to ask for the 2-cliques
-
 
     template<class T, bool OriginalVertexNames>
     void findCliques(const SimpleIntGraph &g, T &cliquesOut, unsigned int minimumSize) {
@@ -94,5 +93,4 @@ namespace cliques {
     };
 
 } // namespace cliques
-
 #endif

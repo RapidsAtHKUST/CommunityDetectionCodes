@@ -59,7 +59,7 @@ public:
 
     int getExternalEdges();
 
-    const set<V> &getNodes();
+    const set <V> &getNodes();
 
     Seed();
 
@@ -93,7 +93,7 @@ public:
 private:
     //This vector stores the nodes that are in the graph.
     //This vector will be sorted.
-    set<V> nodes;
+    set <V> nodes;
 
     vector<V> nodesInOrderOfAddition;
     int internalEdges;
@@ -107,6 +107,6 @@ private:
 
 };
 
-extern vector<set<Seed *> > nodeToSeeds;
+extern vector<std::set<Seed *>> nodeToSeeds;
 
 #endif /* SEED_H_ */

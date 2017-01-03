@@ -5,7 +5,7 @@
  *      Author: freid
  */
 
-#include "Seed.h"
+#include "seed.h"
 
 //////////////////////////////
 //CONSTRUCTION AND DESTRUCTION
@@ -164,7 +164,7 @@ float Seed::addBestNodeFromFrontierToSeed() {
 void Seed::addNode(V newNode) {
     this->nodesInOrderOfAddition.push_back(newNode);
     this->nodes.insert(newNode);
-    (nodeToSeeds[newNode]).insert(this);
+    (nodeToSeeds[newNode]).emplace(this);
 }
 
 
@@ -176,7 +176,7 @@ void Seed::addNodeNoCaching(V newNode) {
 //put all of this seeds nodes into the NodeToSeeds Cache
 void Seed::putIntoNodeToSeedsCache() {
     for (set<V>::iterator innerSeedItr = this->nodes.begin(); innerSeedItr != this->nodes.end(); ++innerSeedItr) {
-        (nodeToSeeds[(*innerSeedItr)]).insert(this);
+        (nodeToSeeds[(*innerSeedItr)]).emplace(this);
     }
 }
 

@@ -1,6 +1,6 @@
 
 #include "graph_representation.hpp"
-#include "../Range.hpp"
+#include "../range.hpp"
 
 namespace graph_loading {
 
