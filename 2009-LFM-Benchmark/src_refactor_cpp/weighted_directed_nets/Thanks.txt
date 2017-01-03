@@ -1,0 +1,7 @@
+
+
+Thanks to:
+	
+  Peter Ronhovde and Conrad Lee, for many usuful advises.
+  Rodrigo Rocha Gomes e Souza, for reporting bugs (and also fixing them).
+  Filippo Radicchi and José Ramasco for testing the program.

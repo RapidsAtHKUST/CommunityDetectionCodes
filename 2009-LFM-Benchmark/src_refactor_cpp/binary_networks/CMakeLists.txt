@@ -1,0 +1,1 @@
+add_executable(lfm_bin_net src/benchm.cpp src/cast.cpp src/cc.cpp src/combinatorics.cpp src/histograms.cpp src/print.cpp src/print.cpp src/random.cpp src/set_parameters.cpp src/standard_include.cpp )
