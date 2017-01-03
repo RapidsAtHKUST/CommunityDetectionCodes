@@ -3,6 +3,8 @@ Locality-Based Overlapping Community Detection Algorithms.
 And I recommend you to use jetbrains' ide namely clion, pycharm and intellij to 
 read related codes. 
 
+Some Non-Overlapping Community Detections Algorithms could be found in [NonOverlappingCodes](NonOverlappingCodes).
+
 I also write a community-detection survey in [Survey](Survey), you can have a look, if interested. 
 
 ##Algorithms
