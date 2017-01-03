@@ -20,42 +20,21 @@ Algorithm | Implementation Language | Dependency
 [2014-Heat-Kernel](2014-Heat-Kernel) | c++, matlab, python | pylibbvg 
 [2015-LEMON](2015-LEMON) | python | pulp
 
-
 ##Submodules
+
+Detailed information is in [SubModules](SubModules).
 
 Submodule | Implementation Language
 --- | ---
 [igraph](https://github.com/igraph/igraph) | c
 
-##Datasets
-
-###Synthetic-Graph Generation Benchmark
-- [2009-LFM](2009-LFM-Benchmark), it is the link of lfm-benchmark codes.
-
-
-###Small Real-World
-
-Dataset | Nodes Number | Undirected Edge Number
---- | --- | --- | --- 
-[football_edge_list.txt](Datasets/football_edge_list.txt) | 115 | 613
-[karate_edge_list.txt](Datasets/karate_edge_list.txt) | 34 | 78
-
-##Medium Real-World
-
-Dataset |  Nodes Number | Undirected Edge Number
---- | ---  | --- 
-[collaboration_edge_list](Datasets/collaboration_edge_list.txt)  | 9,875 | 25,973
-[epinions_edge_list.txt](Datasets/epinions_edge_list.txt)  | 75,879 | 405,740
-[facebook_edge_list.txt](Datasets/facebook_edge_list.txt)  | 4,039 | 88,234
-[slashdot0811_edge_list.txt](Datasets/slashdot0811_edge_list.txt)  | 77,360 | 546,487
-[slashdot0902_edge_list.txt](Datasets/slashdot0902_edge_list.txt)  | 82,168 | 582,533
-[wiki_vote_edge_list.txt](Datasets/wiki_vote_edge_list.txt)  | 7,115 | 100,762
-
-
-
 ##Scripts
 
 Some file processing utility python scripts are put in [Scripts](Scripts).
+
+##DataSets
+
+Detailed information is in [Datasets](Datasets).
 
 ##Attention
 These codes are all research codes, which I found through the internet. Please do not use them in production enviroment.

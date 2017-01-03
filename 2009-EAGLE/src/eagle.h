@@ -1,8 +1,9 @@
 #ifndef __EAGLE_H
 #define __EAGLE_H
 
-#include "Communities.h"
 #include <string>
+
+#include "Communities.h"
 
 class MaxCache;
 
