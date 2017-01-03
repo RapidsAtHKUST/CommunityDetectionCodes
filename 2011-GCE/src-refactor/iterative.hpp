@@ -2,6 +2,6 @@
 
 namespace iterative {
 
-void planted(const SimpleIntGraph &g);
+    void planted(const SimpleIntGraph &g);
 
 } // namespace iterative 

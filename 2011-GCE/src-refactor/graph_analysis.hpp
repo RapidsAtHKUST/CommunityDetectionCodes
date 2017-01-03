@@ -4,9 +4,10 @@ namespace graph_analysis {
 
 /* Declarations */
 
-void basicGraphStats(const SimpleIntGraph &);
+    void basicGraphStats(const SimpleIntGraph &);
+
 #ifdef USE_BOOST
-void connectedComponents(const SimpleIntGraph &, const char * option_largestComponent);
+    void connectedComponents(const SimpleIntGraph &, const char * option_largestComponent);
 #endif
 
 
