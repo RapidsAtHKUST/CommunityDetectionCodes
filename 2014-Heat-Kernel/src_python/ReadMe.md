@@ -1,9 +1,9 @@
 #python scirpts 
 ##Utilities
-- Codes: [util_helper.py](main_files/util_helper.py), util codes is put in this file
-- [yche_exp.py](demo_files/yche_exp.py), some experimental codes
+- [util_helper.py](main_files/util_helper.py), util codes is put in this file
+- [yche_exp.py](demo_files/yche_exp.py), some experimental codes is put in this file
 
-- Demo Codes: 
+##Demo Codes: 
 
 content | detail
 --- | ---
