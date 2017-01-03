@@ -4,7 +4,7 @@ import time
 
 
 def get_sample_graph():
-    with open('graph_eval_script.txt') as ifs:
+    with open('../dataset/graph_eval_script.txt') as ifs:
         eval_line = ''.join(map(lambda ele: ele.strip(), ifs.readlines()))
     return eval(eval_line)
 
@@ -33,7 +33,7 @@ def compute_thresholds(eps, N, psis):
 def load_twitter_graph():
     print "Loading graph ..."
     start_time = time.time()
-    twitter_graph = bvg.BVGraph('twitter-2010-symm', 1)
+    twitter_graph = bvg.BVGraph('../dataset/twitter-2010-symm', 1)
     print "   ... done!   %.1f seconds" % (time.time() - start_time)
     time.sleep(0.75)
     print "\n"

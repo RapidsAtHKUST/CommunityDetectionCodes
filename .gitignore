@@ -2,7 +2,7 @@
 .idea
 cmake-build-debug
 
-# python files
+# src_cpp_matlab-python files
 *.pyc
 
 # output data

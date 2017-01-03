@@ -1,6 +1,18 @@
 #python scirpts 
-##Heat Kernel Growth
-- Code: [hr_grow.py](hr_grow.py), code is refactored by Yulin CHE to make it more easier to understand
+##Utilities
+- Codes: [util_helper.py](main_files/util_helper.py), util codes is put in this file
+- [yche_exp.py](demo_files/yche_exp.py), some experimental codes
+
+- Demo Codes: 
+
+content | detail
+--- | ---
+[gexpmq.py](demo_files/gexpmq.py) | A demonstration of the Gauss-Seidel coordinate relaxation scheme
+[hr_relax](demo_files/hr_relax.py) | A demonstration of a relaxation method for computing a heat-kernel based community
+
+
+##Heat Kernel Growth(With Relax)
+- Code: [hr_grow.py](main_files/hr_grow.py), code is refactored by Yulin CHE to make it more easier to understand
 
 - Authors:
 
@@ -28,3 +40,6 @@
 > Then, as long as these files are in your directory, our code will run!
 >
 > You need about 4-5GB of space and memory to run this demo.
+
+##Personalized Page  Rank
+- Code: [ppr.py](main_files/ppr.py), code is refactored by Yulin CHE to make it more easier to understand

@@ -8,7 +8,7 @@ Written by Kyle Kloster and David F. Gleich
 
 import collections
 
-from util_helper import *
+from main_files.util_helper import *
 
 if __name__ == '__main__':
     my_graph = get_sample_graph()

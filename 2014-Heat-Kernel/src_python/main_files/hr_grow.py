@@ -40,7 +40,8 @@ class HRGrow:
             update = rvj / self.graph.out_degree(v)
             mass = (self.t / (float(j) + 1.)) * update
 
-            for u in self.graph[v]:  # for neighbors of v
+            # for neighbors of v
+            for u in self.graph[v]:
                 next_block = (u, j + 1)
                 if j + 1 == self.N:
                     x_dict[u] += update
@@ -98,7 +99,7 @@ class HRGrow:
 
             # Step 1: Estimate hkpr vector
             x_dict, push_num = self.estimate_hkpr_vector(seed_list)
-            # Step 2 do a sweep cut based on this vector
+            # Step 2: do a sweep cut based on this vector
             self.sweep_cut(x_dict, seed_list, push_num, start)
 
 

@@ -1,4 +1,4 @@
-from util_helper import *
+from main_files.util_helper import *
 
 if __name__ == '__main__':
     adj_list_dict = get_sample_graph()
