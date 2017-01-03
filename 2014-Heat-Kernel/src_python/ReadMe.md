@@ -42,4 +42,4 @@ content | detail
 > You need about 4-5GB of space and memory to run this demo.
 
 ##Personalized Page  Rank
-- Code: [algo_ppr.py](main_files/algo_ppr.py, code is refactored by Yulin CHE to make it more easier to understand
+- Code: [algo_ppr.py](main_files/algo_ppr.py), code is refactored by Yulin CHE to make it more easier to understand
