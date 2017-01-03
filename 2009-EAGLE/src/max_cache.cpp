@@ -1,6 +1,6 @@
 #include <cmath>
 
-#include "MaxCache.h"
+#include "max_cache.h"
 
 using namespace std;
 

@@ -15,6 +15,6 @@ if (OPENMP_FOUND)
     set(CMAKE_EXE_LINKER_FLAGS "${CMAKE_EXE_LINKER_FLAGS} ${OpenMP_EXE_LINKER_FLAGS}")
 endif ()
 
-set(SourceFiles Communities.cpp MaxCache.cpp eagle.cpp main.cpp)
+set(SourceFiles communities.cpp max_cache.cpp eagle.cpp main.cpp)
 add_executable(2009-eagle ${SourceFiles})
 target_link_libraries(2009-eagle igraph)

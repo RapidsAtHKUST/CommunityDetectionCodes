@@ -3,7 +3,7 @@
 
 #include <string>
 
-#include "Communities.h"
+#include "communities.h"
 
 class MaxCache;
 

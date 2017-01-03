@@ -4,7 +4,7 @@
 #include <boost/archive/text_oarchive.hpp>
 
 #include "eagle.h"
-#include "MaxCache.h"
+#include "max_cache.h"
 
 
 using namespace std;
