@@ -18,7 +18,7 @@ Algorithm | Implementation Language | Dependency | Refactor Status
 [2009-Connected-Iterative-Scan](2009-Connected-Iterative-Scan) | c++ |  | build success
 [2009-EAGLE](2009-EAGLE) | c++ | igraph, boost | build success
 [2010-LinkComm](2010-LinkCommunity) | python|  |
-[2010-iLCD](2010-iLCD) | java | args4j, trove4j |
+[2010-iLCD](2010-iLCD) | java | args4j, trove4j | build success
 [2011-GCE](2011-GCE) | c++ | boost | build success
 [2011-OSLOM-v2](2011-OSLOM-v2) | c++ | |
 [2012-DEMON](2012-DEMON) | python | networkx | python okay

@@ -11,3 +11,7 @@ This algorithm is innovative because it was one of the very first algorithms to 
 In top of that, iLCD can also be used on static networks, works on large networks and can detect overlapping communities.
 
 iLCD is NOT based on the modularity, but, on the contrary, on the idea that communities are defined localy. (intrinsic communities) Several versions of iLCD have been devoloped, the code I give here is the one corresponding to the latest version.
+
+##Build 
+
+Use `maven compile`.
