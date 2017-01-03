@@ -1,8 +1,8 @@
 using namespace std;
 
-#include "graph_representation.hpp"
-#include <iostream>
 #include <algorithm>
+
+#include "graph_representation.hpp"
 
 
 template<>

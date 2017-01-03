@@ -1,16 +1,17 @@
 #ifndef _CLIQUES_HPP_
 #define _CLIQUES_HPP_
 
+#include <sys/stat.h>
+#include <cerrno>
+
 #include <list>
 #include <iostream>
 #include <fstream>
 #include <algorithm>
-#include <sys/stat.h>
-#include <cerrno>
 #include <stdexcept>
 
-#include "Range.hpp"
-#include "graph_representation.hpp"
+#include "../util/Range.hpp"
+#include "../util/graph/graph_representation.hpp"
 
 namespace cliques {
 
@@ -93,6 +94,5 @@ namespace cliques {
     };
 
 } // namespace cliques
-
 
 #endif

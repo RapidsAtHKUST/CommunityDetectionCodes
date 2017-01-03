@@ -1,15 +1,13 @@
-#include <iostream>
-#include <map>
-#include <algorithm>
-#include "graph_representation.hpp"
-#include "graph_loading.hpp"
-#include "cliques.hpp"
-#include "Seed.h"
-#include "Community_Finder.h"
 #include <string.h>
 
-using namespace std;
+#include <iostream>
+#include <algorithm>
 
+#include "../util/graph/graph_representation.hpp"
+#include "Seed.h"
+#include "community_finder.h"
+
+using namespace std;
 
 //global graph
 SimpleIntGraph theGlobalGraph;
@@ -70,7 +68,7 @@ int main(int argc, char **argv) {
 
 
     cerr << "Loading file: " << filename << endl;
-    Community_Finder communityFinder(filename, minimumCliqueSize, minimumOverlapToMerge, alphaValueForFitness,
+    community_finder communityFinder(filename, minimumCliqueSize, minimumOverlapToMerge, alphaValueForFitness,
                                      numberOfTimesRequiredToBeSpokenFor, spokenForThresholdOfUniqueness);
 
     cerr << "Edges in loaded graph:\t" << theGlobalGraph.ecount() << endl;

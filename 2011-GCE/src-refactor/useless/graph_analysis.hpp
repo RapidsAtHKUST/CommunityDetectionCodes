@@ -1,4 +1,4 @@
-#include "graph_representation.hpp"
+#include "../util/graph/graph_representation.hpp"
 
 namespace graph_analysis {
 

@@ -2,14 +2,15 @@
 #define _AARON_UTILS_H
 
 using namespace std;
-//#include <string>
-#include <iostream>
-#include <iomanip>
-#include <sstream>
+
+#include <sys/time.h>
 #include <assert.h>
 #include <stdlib.h>
 #include <stdio.h>
-#include <sys/time.h>
+
+#include <iostream>
+#include <iomanip>
+#include <sstream>
 
 enum {
     FALSE = 0, TRUE = 1

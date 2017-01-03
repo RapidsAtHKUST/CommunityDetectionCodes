@@ -1,5 +1,4 @@
-
-#include "graph_representation.hpp"
+#include "../util/graph/graph_representation.hpp"
 
 namespace modularity {
     void calculateModularity(const bloomGraph<int> &g, const string &assignmentsFileName,

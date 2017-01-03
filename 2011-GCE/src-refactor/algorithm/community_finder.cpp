@@ -6,7 +6,8 @@
  */
 
 //Release canidate.
-#include "Community_Finder.h"
+
+#include "community_finder.h"
 
 //TIMEKEEPING
 time_t t0 = clock();;
@@ -15,9 +16,9 @@ time_t t0 = clock();;
 #define REPORTING_OUTPUT_FREQUENCY 1000
 
 //PARAMETER STORAGE
-float Community_Finder::minimumOverlapToMerge;
-float Community_Finder::numberOfTimesRequiredToBeSpokenFor;
-float Community_Finder::spokenForThresholdOfUniqueness;
+float community_finder::minimumOverlapToMerge;
+float community_finder::numberOfTimesRequiredToBeSpokenFor;
+float community_finder::spokenForThresholdOfUniqueness;
 //SORT PREDICATES
 
 
@@ -42,19 +43,19 @@ bool vectorSizeSortFunctionSmallestFirst(vector<V> one, vector<V> two) {
 
 //CONSTRUCTURORS
 
-Community_Finder::Community_Finder(const char *filename, int minimumCliqueSize, float minimumOverlapToMerge,
+community_finder::community_finder(const char *filename, int minimumCliqueSize, float minimumOverlapToMerge,
                                    float alphaValueForFitness, float numberOfTimesRequiredToBeSpokenFor,
                                    float spokenForThresholdOfUniqueness) {
-    Community_Finder::minimumOverlapToMerge = minimumOverlapToMerge;
+    community_finder::minimumOverlapToMerge = minimumOverlapToMerge;
     Seed::minimumOverlapToMerge = minimumOverlapToMerge;
     Seed::alphaValueForFitness = alphaValueForFitness;
-    Community_Finder::numberOfTimesRequiredToBeSpokenFor = numberOfTimesRequiredToBeSpokenFor;
-    Community_Finder::spokenForThresholdOfUniqueness = spokenForThresholdOfUniqueness;
+    community_finder::numberOfTimesRequiredToBeSpokenFor = numberOfTimesRequiredToBeSpokenFor;
+    community_finder::spokenForThresholdOfUniqueness = spokenForThresholdOfUniqueness;
 
     this->initialiseSeeds(filename, minimumCliqueSize);
 }
 
-Community_Finder::~Community_Finder() {
+community_finder::~community_finder() {
     for (vector<Seed *>::iterator seedItr = this->seeds.begin(); seedItr != this->seeds.end(); ++seedItr) {
         delete (*seedItr);
     }
@@ -64,7 +65,7 @@ Community_Finder::~Community_Finder() {
 //INTERFACE WITH CLIQUE FINDING CODE
 int numberOfCliquesProcessed = 0;
 
-void Community_Finder::operator()(
+void community_finder::operator()(
         const vector<V> &clique) { // V is simply typedef'd to an int. I suppose it might become a long if we deal with graphs with over 2 billion nodes/edges.
     // WARNING: Do NOT take a pointer to the clique. It will be invalidated by the clique finding code upon returning. You must copy the data into your own structures.
     vector<V> temp;
@@ -85,7 +86,7 @@ void Community_Finder::operator()(
 }
 
 //Responsible for taking the initialised structures, and operating the algorithm on them.
-void Community_Finder::run() {
+void community_finder::run() {
 
     // print graph
 /*
@@ -194,9 +195,9 @@ void Community_Finder::run() {
 //In our release, we always use '1' as the value for this number.
 //It also checks what percentage of each candidate clique has then being 'spoken for' or 'covered'. If this percentage
 //is above a threshold, then the clique is rejected as being insufficiently distinct.
-//This function uses the following static parameters: Community_Finder::numberOfTimesRequiredToBeSpokenFor (normally set to 1)
-// and Community_Finder::spokenForThresholdOfUniqueness, normally set to around .75
-void Community_Finder::doSpokenForPruning() {
+//This function uses the following static parameters: community_finder::numberOfTimesRequiredToBeSpokenFor (normally set to 1)
+// and community_finder::spokenForThresholdOfUniqueness, normally set to around .75
+void community_finder::doSpokenForPruning() {
     sort(this->seeds.begin(), this->seeds.end(), sizeSortFunctionLargestFirst);
     cerr << "Cliques sorted. About to run spokenFor pruning..." << "number of seeds before: " << this->seeds.size()
          << endl;
@@ -216,7 +217,7 @@ void Community_Finder::doSpokenForPruning() {
         int numberOfNodesAlreadySpokenFor = 0;
         for (set<V>::iterator nodeItr = (*seedItr)->getNodes().begin();
              nodeItr != (*seedItr)->getNodes().end(); ++nodeItr) {
-            int numberOfTimesRequiredToBeSpokenFor = Community_Finder::numberOfTimesRequiredToBeSpokenFor;
+            int numberOfTimesRequiredToBeSpokenFor = community_finder::numberOfTimesRequiredToBeSpokenFor;
             if (spokenForTimes[(*nodeItr)] > numberOfTimesRequiredToBeSpokenFor) {
                 numberOfNodesAlreadySpokenFor++;
             }
@@ -226,7 +227,7 @@ void Community_Finder::doSpokenForPruning() {
         float proportionOfNodesAlreadySpokenFor =
                 (float) numberOfNodesAlreadySpokenFor / (float) (*seedItr)->getNodes().size();
 
-        if (proportionOfNodesAlreadySpokenFor >= Community_Finder::spokenForThresholdOfUniqueness) {
+        if (proportionOfNodesAlreadySpokenFor >= community_finder::spokenForThresholdOfUniqueness) {
             //if the proportion of nodes that have been taken is greater than the threshold, then discard this clique.
 
             //	cerr << "pruning, number of nodes spoken for: " << (float)numberOfNodesAlreadySpokenFor << " size of seed: " << (float)(*seedItr)->getNodes().size() <<  "value: " << (float)numberOfNodesAlreadySpokenFor / (float)(*seedItr)->getNodes().size()   << endl;
@@ -258,7 +259,7 @@ void Community_Finder::doSpokenForPruning() {
 //grow them into the candidate communities.
 //TODO this implementation stores _every_ clique into memory before any are pruned using the CCH.
 //this should later be optimised to run a clique at a time, only storing those not found to be discarded by the CCH, to save memory.
-void Community_Finder::initialiseSeeds(const char *filename, int minimumCliqueSize) {
+void community_finder::initialiseSeeds(const char *filename, int minimumCliqueSize) {
 
 
     graph_loading::loadSimpleIntGraphFromFile(theGlobalGraph, filename);
@@ -306,7 +307,7 @@ void Community_Finder::initialiseSeeds(const char *filename, int minimumCliqueSi
 //Utility function which discards seeds that have been marked as dead.
 //Remove all the seeds that have previously been marked as 'dead' from the vector storing the seeds
 //This is necessary because we store the seeds in a vector.
-void Community_Finder::sweepTheDead() {
+void community_finder::sweepTheDead() {
     //makes use of temporary vector
     //This temporary vector means we can write all the seeds to the new vector without having to delete and reallocate as we go.
     vector<Seed *> newVector;
@@ -331,7 +332,7 @@ void Community_Finder::sweepTheDead() {
 //They cache a map of nodes that make up their frontier.
 //The values in this map are the number of internal and external edges that each of these nodes has - ie, the internal and external degree of the frontier node.
 //We also cache the total internal and external degree of all the nodes inside the seed not on the frontier.
-void Community_Finder::refreshAllSeedInternalCaches() {
+void community_finder::refreshAllSeedInternalCaches() {
     for (vector<Seed *>::iterator seedItr = this->seeds.begin(); seedItr != this->seeds.end(); ++seedItr) {
         (*seedItr)->updateCachedEdgeValuesFromScratch();
         (*seedItr)->updateFrontierFromScratch();
@@ -339,18 +340,16 @@ void Community_Finder::refreshAllSeedInternalCaches() {
 }
 
 //TODO look up node names in map, here
-void Community_Finder::rawPrint() {
+void community_finder::rawPrint() {
     for (vector<Seed *>::iterator seedItr = this->seeds.begin(); seedItr != this->seeds.end(); ++seedItr) {
         //(*seedItr)->rawPrint();
         (*seedItr)->rawPrintInOrderOfAddition();
         //(*seedItr)->prettyPrintFrontier();
         //(*seedItr)->prettyPrintFrontier();
     }
-
-
 }
 
-void Community_Finder::printSeeds() {
+void community_finder::printSeeds() {
     for (vector<Seed *>::iterator seedItr = this->seeds.begin(); seedItr != this->seeds.end(); ++seedItr) {
         (*seedItr)->prettyPrint();
     }

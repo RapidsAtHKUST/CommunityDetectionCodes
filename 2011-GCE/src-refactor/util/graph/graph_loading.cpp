@@ -1,15 +1,15 @@
+#include <zconf.h>
+#include <fcntl.h>
+#include <sys/mman.h> // for mmap(2)
+#include <sys/stat.h> // for fstat64(2)
+
+#include <string.h>
 #include <cerrno>
+
 #include <bitset> // to help find the distinct vertices
 #include <algorithm>
 #include <set>
 
-#include <fcntl.h>
-#include <string.h>
-#include <sys/mman.h> // for mmap(2)
-#include <sys/stat.h> // for fstat64(2)
-
-//For close file_descriptor
-#include <zconf.h>
 #include "graph_loading.hpp"
 
 namespace graph_loading {

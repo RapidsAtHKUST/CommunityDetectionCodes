@@ -3,8 +3,8 @@
 
 
 #include <vector>
-#include "aaron_utils.hpp"
 
+#include "../aaron_utils.hpp"
 
 typedef pair<int, int> EdgeType; // TODO: Remove this hardcoding
 typedef int VertexIDType; // TODO: Remove this hardcoding

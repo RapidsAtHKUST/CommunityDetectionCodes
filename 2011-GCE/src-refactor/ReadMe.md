@@ -2,8 +2,18 @@
 ##Current Status
 Build Successfully with `cmake` and `make`.
 
+
+##File Organization
+
+content | detail
+--- | ---
+[algorithm](algorithm) | algorithm related files 
+[util](util) | utilities including graph io preprocessing and other utils
+[useless](useless) | not-used files
+[CMakeLists.txt](CMakeLists.txt) | cmake config file
+
 ##Issues
-- [Range.hpp](Range.hpp), not so useful now in c++14, so `typeof` is changed into `decltype`,\
+- [Range.hpp](util/Range.hpp), not so useful now in c++14, so `typeof` is changed into `decltype`,\
  which is supported in modern C++
 
 Refer to [typeid-versus-typeof-in-cpp](http://stackoverflow.com/questions/1986418/typeid-versus-typeof-in-c).

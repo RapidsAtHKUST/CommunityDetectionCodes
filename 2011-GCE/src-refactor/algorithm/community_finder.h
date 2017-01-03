@@ -8,14 +8,16 @@
 #ifndef COMMUNITY_FINDER_H_
 #define COMMUNITY_FINDER_H_
 
+#include <time.h>
+
 #include <iostream>
 #include <map>
 #include <algorithm>
-#include "graph_representation.hpp"
-#include "graph_loading.hpp"
+
+#include "../util/graph/graph_representation.hpp"
+#include "../util/graph/graph_loading.hpp"
 #include "cliques.hpp"
 #include "Seed.h"
-#include <time.h>
 
 using namespace std;
 
@@ -24,7 +26,7 @@ extern SimpleIntGraph theGlobalGraph;
 
 extern vector<set<Seed *> > nodeToSeeds;
 
-class Community_Finder {
+class community_finder {
 
 private:
     void initialiseSeeds(const char *filename, int minimumCliqueSize);
@@ -52,11 +54,11 @@ public:
 
     void operator()(const vector<V> &clique);
 
-    Community_Finder(const char *filename, int minimumCliqueSize, float minimumOverlapToMerge,
+    community_finder(const char *filename, int minimumCliqueSize, float minimumOverlapToMerge,
                      float alphaValueForFitness, float numberOfTimesRequiredToBeSpokenFor,
                      float spokenForThresholdOfUniqueness);
 
-    virtual ~Community_Finder();
+    virtual ~community_finder();
 
     void sweepTheDead();
 
