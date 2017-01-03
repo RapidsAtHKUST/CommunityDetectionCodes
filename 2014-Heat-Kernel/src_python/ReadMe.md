@@ -1,14 +1,14 @@
 #python scirpts 
 ##Utilities
-- Codes: [util_helper.py](main_files/util_helper.py), util codes is put in this file
-- [yche_exp.py](demo_files/yche_exp.py), some experimental codes
+- [util_helper.py](main_files/util_helper.py), util codes is put in this file
+- [yche_exp.py](demo_files/yche_exp.py), some experimental codes is put in this file
 
-- Demo Codes: 
+##Demo Codes: 
 
 content | detail
 --- | ---
 [gexpmq.py](demo_files/gexpmq.py) | A demonstration of the Gauss-Seidel coordinate relaxation scheme
-[hr_relax](demo_files/hr_relax.py) | A demonstration of a relaxation method for computing a heat-kernel based community
+[hr_relax.py](demo_files/hr_relax.py) | A demonstration of a relaxation method for computing a heat-kernel based community
 
 
 ##Heat Kernel Growth(With Relax)
