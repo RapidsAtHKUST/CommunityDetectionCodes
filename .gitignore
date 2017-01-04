@@ -2,6 +2,9 @@
 .idea
 cmake-build-debug
 
+#maven build
+target
+
 # src_cpp_matlab-python files
 *.pyc
 
