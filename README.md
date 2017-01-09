@@ -21,6 +21,7 @@ Algorithm | Implementation Language | Dependency | Refactor Status
 [2010-iLCD](2010-iLCD) | java | args4j, trove4j | build success
 [2011-GCE](2011-GCE) | c++ | boost | build success
 [2011-OSLOM-v2](2011-OSLOM-v2) | c++ | |
+[2011-SLPA](2011-SLPA) | python | networkx, numpy |
 [2012-DEMON](2012-DEMON) | python | networkx | python okay
 [2013-Seed-Set-Expansion](2013-Seed-Set-Expansion) | c++, matlab | graclus, matlabgl | 
 [2014-Heat-Kernel](2014-Heat-Kernel) | c++, matlab, python | pylibbvg | python okay
