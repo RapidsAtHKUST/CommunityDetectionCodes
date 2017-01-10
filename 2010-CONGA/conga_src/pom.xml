@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <modelVersion>4.0.0</modelVersion>
+
+    <groupId>conga</groupId>
+    <artifactId>conga</artifactId>
+    <version>1.0-SNAPSHOT</version>
+
+    <dependencies>
+        <dependency>
+            <groupId>copra_release</groupId>
+            <artifactId>copra_release</artifactId>
+            <version>1.0</version>
+            <scope>system</scope>
+            <systemPath>${project.basedir}/src/main/resources/copra.jar</systemPath>
+        </dependency>
+
+        <dependency>
+            <groupId>conga_release</groupId>
+            <artifactId>conga_release</artifactId>
+            <version>1.0</version>
+            <scope>system</scope>
+            <systemPath>${project.basedir}/src/main/resources/conga.jar</systemPath>
+        </dependency>
+
+        <dependency>
+            <groupId>clique_mod_release</groupId>
+            <artifactId>clique_mod_release</artifactId>
+            <version>1.0</version>
+            <scope>system</scope>
+            <systemPath>${project.basedir}/src/main/resources/CM.jar</systemPath>
+        </dependency>
+    </dependencies>
+
+</project>
