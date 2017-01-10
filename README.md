@@ -35,6 +35,7 @@ Detailed information is in [SubModules](SubModules).
 Submodule | Implementation Language
 --- | ---
 [igraph](https://github.com/igraph/igraph) | c
+[Graclus](https://github.com/GraphProcessor/Graclus) | c++
 
 ##Benchmarks
 

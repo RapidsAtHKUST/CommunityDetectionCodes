@@ -1,3 +1,6 @@
 [submodule "SubModules/igraph"]
 	path = SubModules/igraph
 	url = git@github.com:igraph/igraph.git
+[submodule "SubModules/Graclus"]
+	path = SubModules/Graclus
+	url = git@github.com:GraphProcessor/Graclus.git
