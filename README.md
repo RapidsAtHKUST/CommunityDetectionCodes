@@ -23,7 +23,7 @@ Algorithm | Implementation Language | Dependency | Refactor Status
 [2011-GCE](2011-GCE) | c++ | boost | build success
 [2011-OSLOM-v2](2011-OSLOM-v2) | c++ |  |
 [2011-MOSES](2011-MOSES) | c++ | boost | 
-[2011-SLPA](2011-SLPA) | python | networkx, numpy |
+[2011-SLPA](2011-SLPA) | c++, java, python | networkx, numpy |
 [2012-Fast-Clique-Percolation](2012-Fast-Clique-Percolation) | python, c++ | networkx |
 [2012-DEMON](2012-DEMON) | python | networkx | python okay
 [2013-Seed-Set-Expansion](2013-Seed-Set-Expansion) | c++, matlab | graclus, matlabgl | 
