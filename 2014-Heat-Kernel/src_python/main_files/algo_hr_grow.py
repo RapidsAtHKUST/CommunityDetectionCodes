@@ -19,8 +19,8 @@ class HRGrow:
         self.volG = self.graph.nedges
 
     def estimate_hkpr_vector(self, seed_list):
-        x_dict = {}
-        residual_dict = {}
+        x_dict = dict()
+        residual_dict = dict()
         task_queue = collections.deque()  # initialize queue
 
         for s in seed_list:

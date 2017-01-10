@@ -17,9 +17,9 @@ def get_edge_num(adj_list_dict):
 
 
 def compute_psis(N, t=1):
-    psis = {N: 1.}
+    psis = {N: 1.0}
     for i in xrange(N - 1, 0, -1):
-        psis[i] = psis[i + 1] * t / (float(i + 1.)) + 1.
+        psis[i] = psis[i + 1] * t / (float(i + 1)) + 1.
     return psis
 
 
