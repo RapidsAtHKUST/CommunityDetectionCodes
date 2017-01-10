@@ -16,19 +16,19 @@ and Comparative Study](http://dl.acm.org/citation.cfm?id=2501657).
 
 Algorithm | Category | Language | Dependency | Status
 --- | --- | --- | --- | ---
-[2009-Connected-Iterative-Scan](2009-Connected-Iterative-Scan) | seed expansion | c++ |  | build success
+[2009-CIS](2009-Connected-Iterative-Scan) | seed expansion | c++ |  | build success
 [2009-EAGLE](2009-EAGLE) | seed expansion | c++ | igraph, boost | build success
 [2010-LinkComm](2010-LinkCommunity) | link partition | python|  |
 [2010-iLCD](2010-iLCD) | seed expansion | java | args4j, trove4j | build success
-[2010-CONGA](2010-CONGA) | agent-based dynamics | java | | only jar-files now
+[2010-CONGA](2010-CONGA) | dynamics | java | | jars available
 [2011-GCE](2011-GCE) | seed expansion | c++ | boost | build success
-[2011-OSLOM-v2](2011-OSLOM-v2) | seed expansion | c++ |  |
+[2011-OSLOM](2011-OSLOM-v2) | seed expansion | c++ |  |
 [2011-MOSES](2011-MOSES) | fuzzy detection | c++ | boost | 
-[2011-SLPA](2011-SLPA) | agent-based dynamics | c++, java, python | networkx, numpy |
-[2012-Fast-Clique-Percolation](2012-Fast-Clique-Percolation) | clique percolation | python, c++ | networkx |
+[2011-SLPA](2011-SLPA) | dynamics | c++, java, python | networkx, numpy |
+[2012-CliquePercolation](2012-Fast-Clique-Percolation) | clique percolation | python, c++ | networkx |
 [2012-DEMON](2012-DEMON) | seed expansion | python | networkx | python okay
-[2013-Seed-Set-Expansion](2013-Seed-Set-Expansion) | page-rank | c++, matlab | graclus, matlabgl | 
-[2014-Heat-Kernel](2014-Heat-Kernel) | matrix-exponential | c++, matlab, python | pylibbvg | python okay
+[2013-SeedExpansion](2013-Seed-Set-Expansion) | page-rank | c++, matlab | graclus, matlabgl | 
+[2014-HRGrow](2014-Heat-Kernel) | matrix-exponential | c++, matlab, python | pylibbvg | python okay
 [2015-LEMON](2015-LEMON) | seed expansion | python | pulp | python okay
 
 ##Submodules(Dependencies)
