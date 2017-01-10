@@ -1,18 +1,23 @@
-# CommunityDetectionCodes
-Overlapping Community Detection Algorithms. 
-And I recommend you to use jetbrains' ide namely clion, pycharm and intellij to 
-read related codes. 
+#CommunityDetectionCodes
+The repository collects and refactors some overlapping Community detection algorithms. Major content is survey, algorithms' implementations, 
+submodules, benchmarks, scripts, datasets.
 
+Recommend ide are from jetbrains, namely clion, pycharm and intellij for c++, python and java.
+
+##Survey
 Some Non-Overlapping Community Detections Algorithms could be found in [NonOverlappingCodes](NonOverlappingCodes).
 
-I also write a community-detection survey in [Survey](Survey), you can have a look, if interested. 
+A community-detection survey in [Survey](Survey), you can have a look, if interested. 
 
 ##Algorithms
 
 In each algorithm, there is a `ReadMe.md`, which gives brief introduction of corresponding information of the algorithm and 
-current refactoring status. All c++ projects are built with `cmake`, java projects are built with `maven`, python projects 
-are not specified how to build. Category information are based on Xie's 2013 Survey paper [Overlapping Community Detection in Networks: The State-of-the-Art
+current refactoring status. Category information are extracted, 
+based on Xie's 2013 Survey paper [Overlapping Community Detection in Networks: The State-of-the-Art
 and Comparative Study](http://dl.acm.org/citation.cfm?id=2501657).
+
+All c++ projects are built with `cmake`, java projects are built with `maven`, python projects 
+are not specified how to build. 
 
 Algorithm | Category | Language | Dependency | Status
 --- | --- | --- | --- | ---
@@ -55,4 +60,4 @@ Some file processing utility python scripts are put in [Scripts](Scripts).
 Detailed information is in [Datasets](Datasets).
 
 ##Attention
-These codes are all research codes, which I found through the internet. Please do not use them in production enviroment.
+These codes are all research codes, which I found through the internet. Please do not use them in production environment.
