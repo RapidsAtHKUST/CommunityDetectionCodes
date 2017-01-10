@@ -1,5 +1,5 @@
 # CommunityDetectionCodes
-Locality-Based Overlapping Community Detection Algorithms. 
+Overlapping Community Detection Algorithms. 
 And I recommend you to use jetbrains' ide namely clion, pycharm and intellij to 
 read related codes. 
 
@@ -11,24 +11,25 @@ I also write a community-detection survey in [Survey](Survey), you can have a lo
 
 In each algorithm, there is a `ReadMe.md`, which gives brief introduction of corresponding information of the algorithm and 
 current refactoring status. All c++ projects are built with `cmake`, java projects are built with `maven`, python projects 
-are not specified how to build.
+are not specified how to build. Category information are based on Xie's 2013 Survey paper [Overlapping Community Detection in Networks: The State-of-the-Art
+and Comparative Study](http://dl.acm.org/citation.cfm?id=2501657).
 
-Algorithm | Implementation Language | Dependency | Refactor Status
---- | --- | --- | ---
-[2009-Connected-Iterative-Scan](2009-Connected-Iterative-Scan) | c++ |  | build success
-[2009-EAGLE](2009-EAGLE) | c++ | igraph, boost | build success
-[2010-LinkComm](2010-LinkCommunity) | python|  |
-[2010-iLCD](2010-iLCD) | java | args4j, trove4j | build success
-[2010-CONGA](2010-CONGA) | java | | only jar-files now
-[2011-GCE](2011-GCE) | c++ | boost | build success
-[2011-OSLOM-v2](2011-OSLOM-v2) | c++ |  |
-[2011-MOSES](2011-MOSES) | c++ | boost | 
-[2011-SLPA](2011-SLPA) | c++, java, python | networkx, numpy |
-[2012-Fast-Clique-Percolation](2012-Fast-Clique-Percolation) | python, c++ | networkx |
-[2012-DEMON](2012-DEMON) | python | networkx | python okay
-[2013-Seed-Set-Expansion](2013-Seed-Set-Expansion) | c++, matlab | graclus, matlabgl | 
-[2014-Heat-Kernel](2014-Heat-Kernel) | c++, matlab, python | pylibbvg | python okay
-[2015-LEMON](2015-LEMON) | python | pulp | python okay
+Algorithm | Category | Language | Dependency | Status
+--- | --- | --- | --- | ---
+[2009-Connected-Iterative-Scan](2009-Connected-Iterative-Scan) | seed expansion | c++ |  | build success
+[2009-EAGLE](2009-EAGLE) | seed expansion | c++ | igraph, boost | build success
+[2010-LinkComm](2010-LinkCommunity) | link partition | python|  |
+[2010-iLCD](2010-iLCD) | seed expansion | java | args4j, trove4j | build success
+[2010-CONGA](2010-CONGA) | agent-based dynamics | java | | only jar-files now
+[2011-GCE](2011-GCE) | seed expansion | c++ | boost | build success
+[2011-OSLOM-v2](2011-OSLOM-v2) | seed expansion | c++ |  |
+[2011-MOSES](2011-MOSES) | fuzzy detection | c++ | boost | 
+[2011-SLPA](2011-SLPA) | agent-based dynamics | c++, java, python | networkx, numpy |
+[2012-Fast-Clique-Percolation](2012-Fast-Clique-Percolation) | clique percolation | python, c++ | networkx |
+[2012-DEMON](2012-DEMON) | seed expansion | python | networkx | python okay
+[2013-Seed-Set-Expansion](2013-Seed-Set-Expansion) | page-rank | c++, matlab | graclus, matlabgl | 
+[2014-Heat-Kernel](2014-Heat-Kernel) | matrix-exponential | c++, matlab, python | pylibbvg | python okay
+[2015-LEMON](2015-LEMON) | seed expansion | python | pulp | python okay
 
 ##Submodules(Dependencies)
 
