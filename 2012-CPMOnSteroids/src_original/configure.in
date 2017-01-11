@@ -1,0 +1,54 @@
+AC_INIT([cos.c], 1.0)
+
+AC_PROG_CC
+
+
+if test -d "/usr/local/include/igraph"; then
+CFLAGS="${CFLAGS} -I/usr/local/include/igraph"
+CPPFLAGS="${CPPFLAGS} -I/usr/local/include/igraph"
+fi
+
+if test -d "/usr/include/igraph"; then
+CFLAGS="${CFLAGS} -I/usr/include/igraph"
+CPPFLAGS="${CPPFLAGS} -I/usr/include/igraph"
+fi
+
+if test -d "/opt/local/include/igraph"; then
+CFLAGS="${CFLAGS} -I/opt/local/include/igraph"
+CPPFLAGS="${CPPFLAGS} -I/opt/local/include/igraph"
+fi
+
+LDFLAGS="${LDFLAGS} -L/usr/local/lib -L/opt/local/lib"
+
+AC_CHECK_HEADERS([igraph.h])
+
+if test "x$ac_cv_header_igraph_h" != xyes; then :
+echo "You need to install igraph library/headers (version 0.6 or above)"
+exit 0
+fi
+
+AC_CHECK_LIB(igraph, igraph_vector_init)
+
+if test "x$ac_cv_lib_igraph_igraph_vector_init" = xyes; then :
+
+AC_CHECK_LIB(igraph, igraph_read_graph_dl)
+if test "x$ac_cv_lib_igraph_igraph_read_graph_dl" != xyes; then :
+echo "You are using an old version of igraph: you need version 0.6 or above"
+exit 0
+fi
+else
+echo "You need to install the igraph shared library (version 0.6 or above)"
+exit 0
+fi
+
+AC_CHECK_LIB(pthread, pthread_create)
+
+dnl> Variables to substitute
+AC_SUBST(CFLAGS)
+AC_SUBST(LDFLAGS)
+
+dnl> Files to generate
+AC_CONFIG_FILES(Makefile)
+AC_CONFIG_FILES(extras/Makefile)
+
+AC_OUTPUT

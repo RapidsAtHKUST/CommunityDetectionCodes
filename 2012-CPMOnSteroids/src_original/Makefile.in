@@ -1,0 +1,37 @@
+#CC = gcc
+CFLAGS  =-Wall -D_LARGEFILE_SOURCE -D_FILE_OFFSET_BITS=64 @CFLAGS@
+LDFLAGS = @LDFLAGS@  -ligraph -lpthread -lm
+
+OBJS = main.o cos.o cospoc.o output_communities.o matrix.o dsforest.o cliques.o
+EXECUTABLE = cos
+
+all : $(EXECUTABLE)
+
+$(EXECUTABLE) : $(OBJS)
+	$(CC) $(OBJS) $(LDFLAGS) -o $@ 
+
+clean :
+	\rm -rf *.o *.d $(EXECUTABLE) autom4te.cache config.status config.log
+
+#
+# Generate dependecies automatically
+#
+
+# pull in dependency info for *existing* .o files
+-include $(OBJS:.o=.d)
+
+# compile and generate dependency info;
+# more complicated dependency computation, so all prereqs listed
+# will also become command-less, prereq-less targets
+#   sed:    strip the target (everything before colon)
+#   sed:    remove any continuation backslashes
+#   fmt -1: list words one per line
+#   sed:    strip leading spaces
+#   sed:    add trailing colons
+%.o: %.c
+	gcc -c $(CFLAGS) $*.c -o $*.o
+	gcc -MM $(CFLAGS) $*.c > $*.d
+	@cp -f $*.d $*.d.tmp
+	@sed -e 's/.*://' -e 's/\\$$//' < $*.d.tmp | fmt -1 | \
+	  sed -e 's/^ *//' -e 's/$$/:/' >> $*.d
+	@rm -f $*.d.tmp
