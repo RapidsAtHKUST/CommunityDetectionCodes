@@ -21,6 +21,7 @@ are not specified how to build.
 
 Algorithm | Category | Language | Dependency | Status
 --- | --- | --- | --- | ---
+[2008-CliquePercolation](2008-CliquePercolation) | clique percolation | c++, python | | 
 [2009-CIS](2009-Connected-Iterative-Scan) | seed expansion | c++ |  | build success
 [2009-EAGLE](2009-EAGLE) | seed expansion | c++ | igraph, boost | build success
 [2010-LinkComm](2010-LinkCommunity) | link partition | python|  |
