@@ -27,6 +27,7 @@ Algorithm | Category | Language | Dependency | Status
 [2010-LinkComm](2010-LinkCommunity) | link partition | python|  |
 [2010-iLCD](2010-iLCD) | seed expansion | java | args4j, trove4j | build success
 [2010-CONGA](2010-CONGA) | dynamics | java | | jars available
+[2010-TopGC](2010-TopGC) | stochastic inference | java | | jars available
 [2011-GCE](2011-GCE) | seed expansion | c++ | boost | build success
 [2011-OSLOM](2011-OSLOM-v2) | seed expansion | c++ |  |
 [2011-MOSES](2011-MOSES) | fuzzy detection | c++ | boost | 

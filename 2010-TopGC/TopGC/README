@@ -1,0 +1,129 @@
+
+TopGC
+-----
+TopGC is a Graph Clustering program that probabilistically finds the top
+clusterings of nodes within large graphs.
+
+
+Usage:
+------
+java -jar TopGC.jar -i <inputGraph> [OPTIONS]
+
+
+Options:
+-----
+	-d	directed
+			Treats the input as a directed, rather than undirected
+			graph. Default is undirected
+
+	-max	maxClusterSize
+			The maximum size allowed for a cluster.
+			Default is 20.
+
+	-min	minClusterSize
+			The minimum size allowed for a cluster.
+			Default is 5.
+
+	-p	mostProm
+			The pruning parameter. Limits the number of nodes to
+			consider for final clustering. Lower values will
+			achieve greater pruning, as well as limit memory
+			usage of the program. Ranges from 1 to graph size.
+			Default is 0.3*(# of nodes in graph) or
+			50,000 (whichever is smaller).
+
+	-lambda	overlapThreshold
+			The maximum overlap allowed between the nodes of
+			two clusters. Calculated as the ratio of the
+			size of their intersection and the smallest cluster
+			size. A double value ranging from 0 to 1.
+			Default is 0.2.
+
+	-l	wordLength
+			Length of node signature. Experimentally, higher 
+			values tend to achieve greater precision, though 
+			lower recall.
+
+	-m	m
+			Number of minhash values to obtain per node.
+
+	-w	w
+			Number of signatures to create per node.
+			Higher values may be necessary in graphs with loose
+			clusters.
+
+	-trials	trials
+			The number of neighborhood instances to create
+			per node. Used only in weighted graphs.	
+
+Input Graph Format:
+-----
+
+The mkidx.c program in the Graphs/original/ folder, distributed with 
+the zip file, will automatically convert a sorted, tab separated edge 
+graph file into a format usable by TopGC. (The formats are explained 
+at the end of this file.)
+
+1. 	Typing:
+
+	gcc Graphs/original/mkidx.c -o Graphs/original/mkidx
+
+	should compile the program.
+
+2.	The following command uses mkidx to convert an inputFile into
+	a usable outputFile:
+
+	Graphs/original/mkidx < inputFile > outputFile
+
+	(The "<" and ">" signs in this command are necessary to include).
+
+3.	The outputFile from this is an indexed graph file that can now be 
+	used with TopGC by typing:
+
+	java -jar TopGC.jar -i outputFile
+
+The inputFile is a sorted graph file (sorted by first column, and 
+then second column) of the form
+
+nodeID<tab>nodeID<tab>weight
+nodeID<tab>nodeID<tab>weight
+...
+
+Where a line represents a directed edge from the first nodeID to 
+the second, with edge weight of "weight". The weight may be ommited
+if the graph is unweighted. nodeIDs are assumed to be integers starting
+from 0 and ending at (# of nodes in graph - 1). Sorting 
+can be done on unix systems using 
+
+sort -k1,1 -k2,2 -n oldInputGraph > newInputGraph
+
+
+The Graph file format created by mkidx is as follows.
+
+TopGC assumes a sorted binary file graph input of this format:
+
+(number of nodes) (number of edges)
+(pointer to node1's edge list)
+(pointer to node2's edge list)
+...
+(node 1's edge list)
+(node 2's edge list)
+....
+
+The fixed length pointers at the beginning of the file allow the 
+program to index into the edge list to retreive
+a node's edges and edge weights.
+
+A sample graph is included in the zip file. To run TopGC with this 
+sample graph, type
+
+java -jar TopGC.jar -i Graphs/graph.sample
+
+The output will be stored in Graphs/graph.sample.clusters as a tab
+separated list of nodeIDs. Each line represents a single cluster.
+
+Authors
+	Kathy Macropol and Ambuj Singh
+
+Further information on TopGC may be found on the website:
+http://cs.ucsb.edu/~kpm/TopGC/
