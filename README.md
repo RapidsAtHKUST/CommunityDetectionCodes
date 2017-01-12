@@ -21,24 +21,24 @@ are not specified how to build.
 
 Algorithm | Category | Language | Dependency | Status
 --- | --- | --- | --- | ---
-[2008-CPM](2008-CliquePercolation) | clique percolation | c++, python | | 
-[2009-CIS](2009-Connected-Iterative-Scan) | seed expansion | c++ |  | build success
-[2009-EAGLE](2009-EAGLE) | seed expansion | c++ | igraph, boost | build success
-[2010-LinkComm](2010-LinkCommunity) | link partition | python|  |
-[2010-iLCD](2010-iLCD) | seed expansion | java | args4j, trove4j | build success
-[2010-CONGA](2010-CONGA) | dynamics | java | | jars available
-[2010-TopGC](2010-TopGC) | stochastic inference | java | | jars available
-[2011-GCE](2011-GCE) | seed expansion | c++ | boost | build success
-[2011-OSLOM](2011-OSLOM-v2) | seed expansion | c++ |  |
-[2011-MOSES](2011-MOSES) | fuzzy detection | c++ | boost | 
-[2011-SLPA](2011-SLPA) | dynamics | c++, java, python | networkx, numpy |
-[2012-FastCPM](2012-Fast-Clique-Percolation) | clique percolation | python, c++ | networkx |
-[2012-ParCPM](2012-CPMOnSteroids) | clique percolation | c | igraph |  
-[2012-DEMON](2012-DEMON) | seed expansion | python | networkx | python okay
-[2013-SVINET](2013-SVINET) | stochastic inference | c++ | | 
-[2013-SeedExpansion](2013-Seed-Set-Expansion) | page-rank | c++, matlab | graclus, matlabgl | 
-[2014-HRGrow](2014-Heat-Kernel) | matrix-exponential | c++, matlab, python | pylibbvg | python okay
-[2015-LEMON](2015-LEMON) | seed expansion | python | pulp | python okay
+[2008-CPM](Algorithms/2008-CliquePercolation) | clique percolation | c++, python | | 
+[2009-CIS](Algorithms/2009-Connected-Iterative-Scan) | seed expansion | c++ |  | build success
+[2009-EAGLE](Algorithms/2009-EAGLE) | seed expansion | c++ | igraph, boost | build success
+[2010-LinkComm](Algorithms/2010-LinkCommunity) | link partition | python|  |
+[2010-iLCD](Algorithms/2010-iLCD) | seed expansion | java | args4j, trove4j | build success
+[2010-CONGA](Algorithms/2010-CONGA) | dynamics | java | | jars available
+[2010-TopGC](Algorithms/2010-TopGC) | stochastic inference | java | | jars available
+[2011-GCE](Algorithms/2011-GCE) | seed expansion | c++ | boost | build success
+[2011-OSLOM](Algorithms/2011-OSLOM-v2) | seed expansion | c++ |  |
+[2011-MOSES](Algorithms/2011-MOSES) | fuzzy detection | c++ | boost | 
+[2011-SLPA](Algorithms/2011-SLPA) | dynamics | c++, java, python | networkx, numpy |
+[2012-FastCPM](Algorithms/2012-Fast-Clique-Percolation) | clique percolation | python, c++ | networkx |
+[2012-ParCPM](Algorithms/2012-CPMOnSteroids) | clique percolation | c | igraph |  
+[2012-DEMON](Algorithms/2012-DEMON) | seed expansion | python | networkx | python okay
+[2013-SVINET](Algorithms/2013-SVINET) | stochastic inference | c++ | | 
+[2013-SeedExpansion](Algorithms/2013-Seed-Set-Expansion) | page-rank | c++, matlab | graclus, matlabgl | 
+[2014-HRGrow](Algorithms/2014-Heat-Kernel) | matrix-exponential | c++, matlab, python | pylibbvg | python okay
+[2015-LEMON](Algorithms/2015-LEMON) | seed expansion | python | pulp | python okay
 
 ##Submodules(Dependencies)
 
