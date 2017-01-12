@@ -1,0 +1,37 @@
+Index: matrix.hh
+===================================================================
+--- matrix.hh	(revision 6096)
++++ matrix.hh	(working copy)
+@@ -93,19 +93,19 @@
+   _data = new T[n];
+ }
+ 
+-// template<> inline
+-// D1Array<std::vector<uint32_t> *>::D1Array(uint32_t n, bool zero)
+-//   :_n(n)
+-// {
+-//   printf("initializing D1Array\n");
+-//   typedef std::vector<uint32_t> * X;
+-//   _data = new X[n];
+-//   if (zero) {
+-//     printf("init D1Array to 0\n");
+-//     for (uint32_t i = 0; i < n; ++i)
+-//       _data[i] = NULL;
+-//   }
+-// }
++template<> inline
++D1Array<std::vector<uint32_t> *>::D1Array(uint32_t n, bool zero)
++  :_n(n)
++{
++  printf("initializing D1Array\n");
++  typedef std::vector<uint32_t> * X;
++  _data = new X[n];
++  if (zero) {
++    printf("init D1Array to 0\n");
++    for (uint32_t i = 0; i < n; ++i)
++      _data[i] = NULL;
++  }
++}
+ 
+ template<> inline
+ D1Array<double>::D1Array(uint32_t n, bool zero)
