@@ -10,6 +10,10 @@ from util_helper import *
 
 
 class HRGrow:
+    @staticmethod
+    def compute_conductance(cut_num, vol_s, vol_g):
+        return cut_num / min(vol_s, vol_g - vol_s)
+
     def __init__(self, N, t, eps, svg_graph):
         self.N = N
         self.t = t
@@ -18,42 +22,47 @@ class HRGrow:
         self.graph = svg_graph
         self.vol_of_graph = self.graph.nedges
 
-    def estimate_hkpr_vector(self, seed_list):
-        x_dict = dict()
-        residual_dict = dict()
-        task_queue = collections.deque()
+    def generate_seed_list(self):
+        rand_int = random.randint(1, len(self.graph))
+        return [rand_int]
 
+    def estimate_hkpr_vector(self, seed_list):
+        x_dict, r_dict = dict(), dict()
+        task_queue, iter_num = collections.deque(), 0
         for s in seed_list:
-            residual_dict[(s, 0)] = 1. / len(seed_list)
-            task_queue.append((s, 0))
-        push_num = float(len(seed_list))
+            r_dict[(s, iter_num)] = 1. / len(seed_list)
+            task_queue.append((s, iter_num))
+
+        push_num = len(seed_list)
 
         while len(task_queue) > 0:
-            (v, j) = task_queue.popleft()  # v has r[(v,j)] ...
-            rvj = residual_dict[(v, j)]
+            v, iter_num = task_queue.popleft()  # v has r[(v,j)] ...
+            r_weight = r_dict[(v, iter_num)]
 
             # perform the hk-relax step
             if v not in x_dict:
                 x_dict[v] = 0.
-            x_dict[v] += rvj
-            residual_dict[(v, j)] = 0.
-            update = rvj / self.graph.out_degree(v)
-            mass = (self.t / (float(j) + 1.)) * update
+
+            x_dict[v] += r_weight
+            r_dict[v, iter_num] = 0.
+            update = r_weight / self.graph.out_degree(v)
+            mass = (self.t / (float(iter_num) + 1.)) * update
 
             # for neighbors of v
-            for u in self.graph[v]:
-                next_block = (u, j + 1)
-                if j + 1 == self.N:
-                    x_dict[u] += update
+            for neighbor_v in self.graph[v]:
+                potential_task = (neighbor_v, iter_num + 1)
+                if iter_num + 1 == self.N:
+                    x_dict[neighbor_v] += update
                 else:
-                    if next_block not in residual_dict:
-                        residual_dict[next_block] = 0.
+                    if potential_task not in r_dict:
+                        r_dict[potential_task] = 0.
 
-                    thresh = math.exp(self.t) * self.eps * self.graph.out_degree(u)
-                    thresh /= self.N * self.psis[j + 1]
-                    if residual_dict[next_block] < thresh <= residual_dict[next_block] + mass:
-                        task_queue.append(next_block)  # add u to queue
-                    residual_dict[next_block] += mass
+                    thresh = math.exp(self.t) * self.eps * self.graph.out_degree(neighbor_v) \
+                             / (self.N * self.psis[iter_num + 1])
+
+                    if r_dict[potential_task] < thresh <= r_dict[potential_task] + mass:
+                        task_queue.append(potential_task)  # add u to queue
+                    r_dict[potential_task] += mass
             push_num += self.graph.out_degree(v)
         return x_dict, push_num
 
@@ -63,23 +72,16 @@ class HRGrow:
             key=lambda x: x[1], reverse=True)
 
         candidate_set = set()
-        vol_of_set = 0.
-        cut_of_set = 0.
-        best_cond = 1.
-        best_set = vertex_weight_list[0]
+        vol_of_set, cut_of_set = 0.0, 0.0
+        best_cond, best_set = 1.0, vertex_weight_list[0]
         for vertex, weight in vertex_weight_list:
             vol_of_set += self.graph.out_degree(vertex)
-            for neighbor_v in self.graph[vertex]:
-                cut_of_set = cut_of_set - 1 if neighbor_v in candidate_set else cut_of_set + 1
+            cut_of_set += sum(map(lambda neighbor_v: -1 if neighbor_v in candidate_set else 1, self.graph[vertex]))
             candidate_set.add(vertex)
-            if cut_of_set / min(vol_of_set, self.vol_of_graph - vol_of_set) < best_cond:
+            if HRGrow.compute_conductance(cut_of_set, vol_of_set, self.vol_of_graph) < best_cond:
                 best_cond = cut_of_set / min(vol_of_set, self.vol_of_graph - vol_of_set)
                 best_set = set(candidate_set)
         return best_set, best_cond
-
-    def generate_seed_list(self):
-        rand_int = random.randint(1, len(self.graph))
-        return [rand_int]
 
     def do_iterations(self):
         iter_round = 0
