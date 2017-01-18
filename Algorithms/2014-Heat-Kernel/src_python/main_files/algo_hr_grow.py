@@ -35,20 +35,16 @@ class HRGrow:
 
         push_num = len(seed_list)
 
-        while len(task_queue) > 0:
-            v, iter_num = task_queue.popleft()  # v has r[(v,j)] ...
-            r_weight = r_dict[(v, iter_num)]
+        while len(task_queue) > 0 and push_num < math.pow(len(self.graph), 1.5):
+            v, iter_num = task_queue.popleft()
+            r_weight = r_dict[v, iter_num]
 
-            # perform the hk-relax step
-            if v not in x_dict:
-                x_dict[v] = 0.
-
-            x_dict[v] += r_weight
+            x_dict[v] = 0 if v not in x_dict else x_dict[v] + r_weight
             r_dict[v, iter_num] = 0.
-            update = r_weight / self.graph.out_degree(v)
-            mass = (self.t / (float(iter_num) + 1.)) * update
 
-            # for neighbors of v
+            update = r_weight / self.graph.out_degree(v)
+            mass = (self.t / (iter_num + 1.)) * update
+
             for neighbor_v in self.graph[v]:
                 potential_task = (neighbor_v, iter_num + 1)
                 if iter_num + 1 == self.N:
@@ -63,6 +59,7 @@ class HRGrow:
                     if r_dict[potential_task] < thresh <= r_dict[potential_task] + mass:
                         task_queue.append(potential_task)  # add u to queue
                     r_dict[potential_task] += mass
+
             push_num += self.graph.out_degree(v)
         return x_dict, push_num
 
@@ -78,8 +75,9 @@ class HRGrow:
             vol_of_set += self.graph.out_degree(vertex)
             cut_of_set += sum(map(lambda neighbor_v: -1 if neighbor_v in candidate_set else 1, self.graph[vertex]))
             candidate_set.add(vertex)
-            if HRGrow.compute_conductance(cut_of_set, vol_of_set, self.vol_of_graph) < best_cond:
-                best_cond = cut_of_set / min(vol_of_set, self.vol_of_graph - vol_of_set)
+            tmp_cond = HRGrow.compute_conductance(cut_of_set, vol_of_set, self.vol_of_graph)
+            if tmp_cond < best_cond:
+                best_cond = tmp_cond
                 best_set = set(candidate_set)
         return best_set, best_cond
 

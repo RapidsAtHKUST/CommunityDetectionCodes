@@ -15,31 +15,28 @@ class PPR:
         return [1]
 
     def estimate_ppr_vector(self, seed_list):
-        x_dict = {}
-        residual_dict = {}
+        x_dict, r_dict = {}, {}
         task_queue = collections.deque()
 
-        seed_list = PPR.generate_seed_list()
         for vertex in seed_list:
-            residual_dict[vertex] = 1.0 / len(seed_list)
+            r_dict[vertex] = 1.0 / len(seed_list)
             task_queue.append(vertex)
 
-        # Personalized PageRank
         while len(task_queue) > 0:
             v = task_queue.popleft()  # v has r[v] > tol*deg(v)
             if v not in x_dict:
                 x_dict[v] = 0.
-            x_dict[v] += (1 - self.alpha) * residual_dict[v]
-            mass = self.alpha * residual_dict[v] / (2 * len(self.graph[v]))
-            for u in self.graph[v]:  # for neighbors of u
-                assert u is not v, "contact dgleich@purdue.edu for self-links"
-                if u not in residual_dict:
-                    residual_dict[u] = 0.
-                if residual_dict[u] < len(self.graph[u]) * self.tol <= residual_dict[u] + mass:
-                    task_queue.append(u)  # add u to queue if large
-                residual_dict[u] += mass
-            residual_dict[v] = mass * len(self.graph[v])
-            if residual_dict[v] >= len(self.graph[v]) * self.tol:
+            x_dict[v] += (1 - self.alpha) * r_dict[v]
+            mass = self.alpha * r_dict[v] / (2 * len(self.graph[v]))
+
+            for neighbor_v in self.graph[v]:
+                if neighbor_v not in r_dict:
+                    r_dict[neighbor_v] = 0.
+                if r_dict[neighbor_v] < len(self.graph[neighbor_v]) * self.tol <= r_dict[neighbor_v] + mass:
+                    task_queue.append(neighbor_v)
+                r_dict[neighbor_v] += mass
+            r_dict[v] = mass * len(self.graph[v])
+            if r_dict[v] >= len(self.graph[v]) * self.tol:
                 task_queue.append(v)
         print str(x_dict)
         return x_dict
@@ -71,7 +68,7 @@ class PPR:
         print "  set = ", str(bestset)
 
     def do_iterations(self):
-        x_dict = self.estimate_ppr_vector(self.generate_seed_list())
+        x_dict = self.estimate_ppr_vector(PPR.generate_seed_list())
         self.sweep_cut(x_dict)
 
 
