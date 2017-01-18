@@ -43,3 +43,14 @@ content | detail
 
 ##Personalized Page  Rank
 - Code: [algo_ppr.py](main_files/algo_ppr.py), code is refactored by Yulin CHE to make it more easier to understand
+
+- Bug, should update first
+
+```python
+            for neighbor_v in self.graph[v]:
+                if neighbor_v not in r_dict:
+                    r_dict[neighbor_v] = 0.
+                if r_dict[neighbor_v] < len(self.graph[neighbor_v]) * self.tolerance <= r_dict[neighbor_v] + mass:
+                    task_queue.append(neighbor_v)
+                r_dict[neighbor_v] += mass
+```

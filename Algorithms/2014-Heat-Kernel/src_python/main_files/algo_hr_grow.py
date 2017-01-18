@@ -10,10 +10,6 @@ from util_helper import *
 
 
 class HRGrow:
-    @staticmethod
-    def compute_conductance(cut_num, vol_s, vol_g):
-        return cut_num / min(vol_s, vol_g - vol_s)
-
     def __init__(self, N, t, eps, svg_graph):
         self.N = N
         self.t = t
@@ -75,7 +71,7 @@ class HRGrow:
             vol_of_set += self.graph.out_degree(vertex)
             cut_of_set += sum(map(lambda neighbor_v: -1 if neighbor_v in candidate_set else 1, self.graph[vertex]))
             candidate_set.add(vertex)
-            tmp_cond = HRGrow.compute_conductance(cut_of_set, vol_of_set, self.vol_of_graph)
+            tmp_cond = compute_conductance(cut_of_set, vol_of_set, self.vol_of_graph)
             if tmp_cond < best_cond:
                 best_cond = tmp_cond
                 best_set = set(candidate_set)

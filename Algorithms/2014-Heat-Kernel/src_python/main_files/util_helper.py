@@ -46,3 +46,7 @@ def load_twitter_graph():
     print "eps = 10^-4\n"
     time.sleep(0.75)
     return twitter_graph
+
+
+def compute_conductance(cut_num, vol_s, vol_g):
+    return cut_num / min(vol_s, vol_g - vol_s)
