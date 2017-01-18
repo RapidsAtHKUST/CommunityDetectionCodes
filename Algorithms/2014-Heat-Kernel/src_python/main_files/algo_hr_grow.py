@@ -16,12 +16,12 @@ class HRGrow:
         self.eps = eps
         self.psis = compute_psis(N, t)
         self.graph = svg_graph
-        self.volG = self.graph.nedges
+        self.vol_of_graph = self.graph.nedges
 
     def estimate_hkpr_vector(self, seed_list):
         x_dict = dict()
         residual_dict = dict()
-        task_queue = collections.deque()  # initialize queue
+        task_queue = collections.deque()
 
         for s in seed_list:
             residual_dict[(s, 0)] = 1. / len(seed_list)
@@ -57,32 +57,25 @@ class HRGrow:
             push_num += self.graph.out_degree(v)
         return x_dict, push_num
 
-    def sweep_cut(self, x_dict, seed_list, push_num, start):
-        for v in x_dict:
-            x_dict[v] = x_dict[v] / self.graph.out_degree(v)
-        sv = sorted(x_dict.iteritems(), key=lambda x: x[1], reverse=True)
+    def sweep_cut(self, x_dict):
+        vertex_weight_list = sorted(
+            map(lambda ele: (ele[0], ele[1] / self.graph.out_degree(ele[0])), x_dict.iteritems()),
+            key=lambda x: x[1], reverse=True)
 
-        S = set()
-        volS = 0.
-        cutS = 0.
+        candidate_set = set()
+        vol_of_set = 0.
+        cut_of_set = 0.
         best_cond = 1.
-        best_set = sv[0]
-        for p in sv:
-            s = p[0]  # get the vertex
-            volS += self.graph.out_degree(s)  # add degree to volume
-            for v in self.graph[s]:
-                if v in S:
-                    cutS -= 1
-                else:
-                    cutS += 1
-            S.add(s)
-            if cutS / min(volS, self.volG - volS) < best_cond:
-                best_cond = cutS / min(volS, self.volG - volS)
-                best_set = set(S)  # make a copy
-
-        print "%10i  %5i  %4.2f  %4.2f  %7i  %7i  %7i" % (
-            seed_list[0], self.graph.out_degree(seed_list[0]), time.time() - start, best_cond, push_num, len(x_dict),
-            len(best_set))
+        best_set = vertex_weight_list[0]
+        for vertex, weight in vertex_weight_list:
+            vol_of_set += self.graph.out_degree(vertex)
+            for neighbor_v in self.graph[vertex]:
+                cut_of_set = cut_of_set - 1 if neighbor_v in candidate_set else cut_of_set + 1
+            candidate_set.add(vertex)
+            if cut_of_set / min(vol_of_set, self.vol_of_graph - vol_of_set) < best_cond:
+                best_cond = cut_of_set / min(vol_of_set, self.vol_of_graph - vol_of_set)
+                best_set = set(candidate_set)
+        return best_set, best_cond
 
     def generate_seed_list(self):
         rand_int = random.randint(1, len(self.graph))
@@ -96,18 +89,17 @@ class HRGrow:
                     'seed ID', 'degree', 'time', 'cond', 'edges', 'nnz', 'setsize')
             iter_round += 1
             time.sleep(0.5)
-
-            seed_list = self.generate_seed_list()
             start = time.time()
 
-            # Step 1: Estimate hkpr vector
+            seed_list = self.generate_seed_list()
             x_dict, push_num = self.estimate_hkpr_vector(seed_list)
-            # Step 2: do a sweep cut based on this vector
-            self.sweep_cut(x_dict, seed_list, push_num, start)
+            best_set, best_cond = self.sweep_cut(x_dict)
+
+            print "%10i  %5i  %4.2f  %4.2f  %7i  %7i  %7i" % (
+                seed_list[0], self.graph.out_degree(seed_list[0]), time.time() - start, best_cond, push_num,
+                len(x_dict), len(best_set))
 
 
 if __name__ == '__main__':
     twitter_graph = load_twitter_graph()
-
-    # Setup parameters that can be computed automatically
     HRGrow(N=47, t=15, eps=0.0001, svg_graph=twitter_graph).do_iterations()
