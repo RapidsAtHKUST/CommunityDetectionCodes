@@ -1,0 +1,8 @@
+//"Comment: OCSA:: small-seeding only. Hope this priority_queue is fast on Idiro."
+"Comment: Gibbs on intermodel. Fix K=8. InternalPrior changes"
+"\n"
+//"Comment:  Lookahead 5, first positive local max.  \n"
+//"Comment: 'correct' equivalent grouping. env Lookahead controls the lookahead, first positive local max. Randomize p_i for first few iterations \n"
+//"Comment: Seed. More Deterministic. Save MOSES-scores for each group; MOSES_objective (unverified)  \n"
+//"Comment:  Lookahead 5, first positive local max. Early quit if >1000 \n"
+// "Comment:  Lookahead 5 again, First positive local max. tryAgain if no groups found \n"
