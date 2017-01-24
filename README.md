@@ -48,7 +48,7 @@ Submodule | Implementation Language | Detail
 --- | --- | ---
 [igraph](https://github.com/igraph/igraph) | c | also provide python wrapper, graph utilities 
 [graclus](https://github.com/GraphProcessor/Graclus) | c++ | graph partition algorithm
-[lcelib](https://github.com/CxAalto/lcelib) | c++ | graph utilities by author of [Complex Systems Group, Computer Science, Aalto University](http://complex.cs.aalto.fi/)
+[lcelib](https://github.com/CxAalto/lcelib) | c++ | graph utilities by [CxAalto](http://complex.cs.aalto.fi/)
 
 ##Benchmarks
 
