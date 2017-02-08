@@ -52,8 +52,9 @@ class HRGrow:
                     thresh = math.exp(self.t) * self.eps * self.graph.out_degree(neighbor_v) \
                              / (self.N * self.psis[iter_num + 1])
 
+                    # add u to queue, when it is new and has enough weight to  diffusion
                     if r_dict[potential_task] < thresh <= r_dict[potential_task] + mass:
-                        task_queue.append(potential_task)  # add u to queue
+                        task_queue.append(potential_task)
                     r_dict[potential_task] += mass
 
             push_num += self.graph.out_degree(v)
