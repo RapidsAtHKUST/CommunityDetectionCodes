@@ -1,10 +1,9 @@
 #Community Detection Related (Mainly Social Network)
 ##Basic Concepts
-- References  
-	- [Community Detection in Social Networks: An Indepth Benchmarking Study with a Procedure Oriented Framework](http://delivery.acm.org/10.1145/2800000/2794370/p998-wang.pdf) (Evaluation Framework, VLDB 2015)  
-	- [Exploring the limits of community detection strategies in complex networks](http://www.nature.com/articles/srep02216?message-global=remove&WT.ec_id=SREP-639-20130801) (Summarization(Test on 17 algorithms), Scientific Report 2013)  
-	- [Closed benchmarks for network community structure characterization](http://journals.aps.org/pre/pdf/10.1103/PhysRevE.85.026109) (Closed Benchmark(Mention RC benchmark), Physics Review 2012)  
-	- [Benchmark graphs for testing community detection algorithms](http://journals.aps.org/pre/pdf/10.1103/PhysRevE.78.046110) (LFR Graph Benchmark, Physics Review 2008)  
+- Non-Overlapping-Empirical-Study, [Community Detection in Social Networks: An Indepth Benchmarking Study with a Procedure Oriented Framework](http://delivery.acm.org/10.1145/2800000/2794370/p998-wang.pdf) (Evaluation Framework, VLDB 2015)  
+- Non-Overlapping-Benchmark, [Exploring the limits of community detection strategies in complex networks](http://www.nature.com/articles/srep02216?message-global=remove&WT.ec_id=SREP-639-20130801) (Summarization(Test on 17 algorithms), Scientific Report 2013)  
+- Non-Overlapping-Benchmark, [Closed benchmarks for network community structure characterization](http://journals.aps.org/pre/pdf/10.1103/PhysRevE.85.026109) (Closed Benchmark(Mention RC benchmark), Physics Review 2012)  
+- LFR-Benchmark, [Benchmark graphs for testing community detection algorithms](http://journals.aps.org/pre/pdf/10.1103/PhysRevE.78.046110) (LFR Graph Benchmark, Physics Review 2008)  
 
 - Benchmarks  
 	- 2002, GN benchmark(not appropriate for million to billion vertices)  
@@ -13,46 +12,40 @@
 	- 2012, closed benchmark(mention RC benchmark)  
 	- 2013, closed plus visualization for intermediate results  
 
-- Social Network Features  
+- Social Network Input Graph Features  
 	- scale-free(power law), small-world(small diameter)  
-
-- Algorithm Efficiency  
-	- Time comlexity  
-	- Parallelism (**My Imagination**)  
 
 - Algorithm Applicability  
 	- Density sensitivity  
 	- Overlapping sensitivity  
 	- Outliers sensitivity  
-	- Different distribution(e.g, DBLP , Twitter, Facebook, LiveJournal) sensitivity  
+	- Different graph-features(e.g, DBLP , Twitter, Facebook, LiveJournal) sensitivity  
 
-- Result Quality Metrics  
+- Result-Quality Evaluation Metrics  
 	- With ground truth : cross common fraction, jaccard index, normalized mutual information  
 	- W/O ground truth : clustering coefficient, strength(intensity of detected communitites), modularity(compares result with a randomized one)  
-	- Evalutation methods: 1) use closed benchmarks, 2) visualize hierarchically clustering results  
+	- Evaluation methods: 1) use closed benchmarks, 2) visualize hierarchically clustering results  
 
-##Possible Research Points(Especiallly on Directed Graph)
+##Possible Research Points
+1. Difference between directed graph and undirected graph
 1. Evaluate prior detection methods(non-overlapping, overlapping, hierarchical) on metric and scalability (**WWW, ASONAM**)
-2. Implement userful algorithms on **GraphX(Scala), PowerGraph(C++), Giraph(Java)** and estimate efficiency and analyze hwo to transparent sequential one into parallel environment (**SC, IPDPS**)  
-3. Implement algorithms with GPU/MIC acceleration (**My Imagination**)  
-2. Study fast local community search/query (**VLDB, SIGMOD**)  
-2. Study Sampling large scale graph for approximated structure (**KDD**)  
-3. Study index technique to help combine several algorithms for social network analysis (**My Imagination**)  
+1. Implement useful algorithms on **GraphX(Scala), PowerGraph(C++), Giraph(Java)** and estimate efficiency and analyze hwo to transparent sequential one into parallel environment (**SC, IPDPS**)  
+1. Implement algorithms with GPU/MIC acceleration (**My Imagination**)  
+1. Study fast local community search/query (**VLDB, SIGMOD**)  
+1. Study Sampling large scale graph for approximated structure (**KDD**)  
+1. Study index technique to help combine several algorithms for social network analysis (**My Imagination**)  
 1. Visulize algorithm execuation procedures(i.e. how community form especially in hierarchical algorithms) (**My Imagination**)  
 
-##Influential Researcher
-- Foreign
-	- **[Mark Newman](http://www-personal.umich.edu/~mejn/) (Michigan, Pioneer)** 
-	- **[Andrea Lancichinetti](https://sites.google.com/site/andrealancichinetti/) (Umeå University, LFR Benchmark)**  
-	- **[Peter Bickel](http://www.stat.berkeley.edu/~bickel/index.html)	(Berkeley, Spectral Algorithm, Model Selection)**  
-    - **[Jure Leskovec](http://cs.stanford.edu/people/jure/) (Stanford, Snap Software)**  
-	- **[Carlo Ratti](http://senseable.mit.edu/community_detection/) (MIT, Senseable Research)**  
+##Related Researcher
+- **[Mark Newman](http://www-personal.umich.edu/~mejn/) (Michigan, Pioneer)** 
+- **[Andrea Lancichinetti](https://sites.google.com/site/andrealancichinetti/) (Umeå University, LFR Benchmark)**  
+- **[Peter Bickel](http://www.stat.berkeley.edu/~bickel/index.html)	(Berkeley, Spectral Algorithm, Model Selection)**  
+- **[Jure Leskovec](http://cs.stanford.edu/people/jure/) (Stanford, Snap Software)**  
+- **[Carlo Ratti](http://senseable.mit.edu/community_detection/) (MIT, Senseable Research)**  
+- **[Jie Tang](http://keg.cs.tsinghua.edu.cn/jietang/) (Tsinghua)**  
+- **[Jianyong Wang](http://dbgroup.cs.tsinghua.edu.cn/wangjy/) (Tsinghua)**  
 
-- China
-    - **[Jie Tang](http://keg.cs.tsinghua.edu.cn/jietang/) (Tsinghua)**  
-    - **[Jianyong Wang](http://dbgroup.cs.tsinghua.edu.cn/wangjy/) (Tsinghua)**  
-
-## Good Survey
+##Good Survey
 - **[Overall Survey](http://lab41.github.io/survey-community-detection/)** (Home Page : http://lab41.github.io/Circulo)  
 
 ##Prior Famous Algorithms & Evaluation Benchmark
@@ -107,21 +100,20 @@
 - Optimization Techniques
 	- 2014, **General Optimization**, *[Stanislav Sobolevsky]*, General optimization technique for high-quality community detection in complex networks  
 
-## Tools
-- General Library
-    - **[Some Recommendations From CppReference](http://en.cppreference.com/w/cpp/links/libs)** (Boost.Graph, LEMON, OGDF, NGraph)  
-    - **Networkx** has implemented **[many graph algorithms](http://networkx.github.io/documentation/networkx-1.10/reference/algorithms.html)**  
-    - **[Snap](https://github.com/snap-stanford/snap)** (Infomap, Fast Newman, BIGCLAM, CESNA, CoDA, RoIX)  
-    - **[igraph](https://github.com/igraph/igraph)** (Infomap, WalkTrap, Leading Eginvector)  
-		- **Implementations**: edge_betweenness, leading_eigenvector, spinglass, fastgreedy , leading_eigenvector_naive, walktrap, infomap, multilevel, label_propagation, optimal_modularity  
-		- **Usage Explaination**: https://github.com/rabbanyk/CommunityEvaluation/blob/master/src/algorithms/communityMining/external_methods/iGraph/communityMinerInterface.py  
-
-- BLAS
-	- **[Boost BLAS](http://www.boost.org/doc/libs/1_60_0/libs/numeric/ublas/doc/index.html)** (Boost Library)  
-    - **[Egien](http://eigen.tuxfamily.org/index.php?title=Main_Page)** (Cpp template library for linear algebra related algorithms)  
-    - **[ArmAdillo](http://arma.sourceforge.net/)**(Primarily developed at Data61 (Australia) by Conrad Sanderson)  
-
-## Codes
+##Codes
+- Tools
+    - General Library
+        - **[Some Recommendations From CppReference](http://en.cppreference.com/w/cpp/links/libs)** (Boost.Graph, LEMON, OGDF, NGraph)  
+        - **Networkx** has implemented **[many graph algorithms](http://networkx.github.io/documentation/networkx-1.10/reference/algorithms.html)**  
+        - **[Snap](https://github.com/snap-stanford/snap)** (Infomap, Fast Newman, BIGCLAM, CESNA, CoDA, RoIX)  
+        - **[igraph](https://github.com/igraph/igraph)** (Infomap, WalkTrap, Leading Eginvector)  
+            - **Implementations**: edge_betweenness, leading_eigenvector, spinglass, fastgreedy , leading_eigenvector_naive, walktrap, infomap, multilevel, label_propagation, optimal_modularity  
+            - **Usage Explaination**: https://github.com/rabbanyk/CommunityEvaluation/blob/master/src/algorithms/communityMining/external_methods/iGraph/communityMinerInterface.py  
+    
+    - BLAS
+        - **[Boost BLAS](http://www.boost.org/doc/libs/1_60_0/libs/numeric/ublas/doc/index.html)** (Boost Library)  
+        - **[Egien](http://eigen.tuxfamily.org/index.php?title=Main_Page)** (Cpp template library for linear algebra related algorithms)  
+        - **[ArmAdillo](http://arma.sourceforge.net/)**(Primarily developed at Data61 (Australia) by Conrad Sanderson)  
 - C/C++:
 	- Benchmark  
         - [2009 Lancichi Benchmark](https://sites.google.com/site/santofortunato/inthepress2) (from GoogleSite)  
@@ -151,7 +143,7 @@
 	- [2013 Survey Circulo](https://github.com/Lab41/Circulo) (With Some Implementations and Refer to SNAP)  
     - [2007 Label Propagation](https://github.com/liyanghua/Label-Propagation) (Refer to Pyshics 2007) (from Github)  
 
-## Recent Interesting Published Papers(With Codes)
+## Recent Papers(With Codes)
 - Algorithms
 	- (**GossipMap, Use InfoTheory**) [GossipMap: a distributed community detection algorithm for billion-edge directed graphs](http://dl.acm.org/citation.cfm?id=2807668) (SC 2015)  
 	- (**Scalable Community Detection**) [High quality, scalable and parallel community detection for large real graphs](http://www.dama.upc.edu/publications/fp546prat.pdf) (WWW 2014)  

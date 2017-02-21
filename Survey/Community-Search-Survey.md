@@ -3,11 +3,9 @@
 1. Index for dynamic graphs, for faster k-truss, k-core, distance-related, desnse local subgraph queries  
 2. Evaluation and Bechmark for different dense subgraph detection algorithms on parallel platforms
 
-##Influential Researchers
-- Foreign
-- China
-	- **[Jeffrey Xu Yu](http://www.se.cuhk.edu.hk/people/yu.html) (CUHK)**
-	- **[James Cheng](http://www.cse.cuhk.edu.hk/~jcheng/) (CUHK)**
+##Researchers
+- **[Jeffrey Xu Yu](http://www.se.cuhk.edu.hk/people/yu.html) (CUHK)**
+- **[James Cheng](http://www.cse.cuhk.edu.hk/~jcheng/) (CUHK)**
 
 ##Codes
 - k-Truss
