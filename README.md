@@ -14,7 +14,7 @@ A community-detection survey in [Survey](Survey), you can have a look, if intere
 
 Content | Detail
 --- | ---
-[2009-LFR-Benchmark](Benchmark/2009-LFM-Benchmark) | LFR Benchmark to generate five types of graphs
+[2009-LFR-Benchmark](Benchmark/2009-LFR-Benchmark) | LFR Benchmark to generate five types of graphs
 
 ###Real-World DataSets(Edge List)
 
