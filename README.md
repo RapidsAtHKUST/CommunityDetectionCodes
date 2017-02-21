@@ -1,6 +1,7 @@
 #Community Detection Survey 
+##Introduction
 The repository collects and refactors some overlapping Community detection algorithms. Major content is survey, algorithms' implementations, 
-submodules, benchmarks, scripts, datasets.
+graph input benchmarks, submodules, scripts.
 
 Recommend ide are from jetbrains, namely clion, pycharm and intellij for c++, python and java.
 
