@@ -13,3 +13,6 @@ output*.txt
 
 # matlab
 *.mex*
+
+# datasets
+facebook100.zip
