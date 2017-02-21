@@ -4,22 +4,23 @@ submodules, benchmarks, scripts, datasets.
 
 Recommend ide are from jetbrains, namely clion, pycharm and intellij for c++, python and java.
 
-##Survey
 Some Non-Overlapping Community Detections Algorithms could be found in [NonOverlappingCodes](NonOverlappingCodes).
 
 A community-detection survey in [Survey](Survey), you can have a look, if interested. 
 
 ##Graph Benchmarks
 
+###Synthetic Tool
+
 Content | Detail
 --- | ---
 [2009-LFR-Benchmark](2009-LFM-Benchmark) | LFR Benchmark to generate five types of graphs
 
-##DataSets(Edge List)
+###Real-World DataSets(Edge List)
 
 Detailed information is in [Datasets](Datasets).
 
-##Metrics
+##Quality-Evaluation Metrics
 ###Without-Ground-Truth
 
 Evaluation Metric Name | Implementation
