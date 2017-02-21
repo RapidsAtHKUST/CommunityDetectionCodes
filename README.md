@@ -9,6 +9,23 @@ Some Non-Overlapping Community Detections Algorithms could be found in [NonOverl
 
 A community-detection survey in [Survey](Survey), you can have a look, if interested. 
 
+##Graph Benchmarks
+
+Content | Detail
+--- | ---
+[2009-LFR-Benchmark](2009-LFM-Benchmark) | LFR Benchmark to generate five types of graphs
+
+##DataSets(Edge List)
+
+Detailed information is in [Datasets](Datasets).
+
+##Metrics
+###Without-Ground-Truth
+
+Evaluation Metric Name | Implementation
+--- | ---
+Link-Belonging-Based Modularity | [link_belong_modularity.py](Metrics/metrics/link_belong_modularity.py)
+
 ##Algorithms
 
 In each algorithm, there is a `ReadMe.md`, which gives brief introduction of corresponding information of the algorithm and 
@@ -50,19 +67,9 @@ Submodule | Implementation Language | Detail
 [graclus](https://github.com/GraphProcessor/Graclus) | c++ | graph partition algorithm
 [lcelib](https://github.com/CxAalto/lcelib) | c++ | graph utilities by [CxAalto](http://complex.cs.aalto.fi/)
 
-##Benchmarks
-
-Content | Detail
---- | ---
-[2009-LFM-Benchmark](2009-LFM-Benchmark) | LFM Benchmark to generate five types of graphs
-
 ##Scripts
 
 Some file processing utility python scripts are put in [Scripts](Scripts).
-
-##DataSets
-
-Detailed information is in [Datasets](Datasets).
 
 ##Attention
 These codes are all research codes, which I found through the internet. Please do not use them in production environment.
