@@ -299,7 +299,7 @@ int int_histogram(vector<int> &c, ostream &out) {
     }
     for (map<int, double>::iterator it = hist.begin(); it != hist.end(); it++)
         it->second = it->second * freq;
-    prints(hist, out);
+    out << hist;
 }
 
 int int_histogram(deque<int> &c, ostream &out) {
@@ -314,7 +314,7 @@ int int_histogram(deque<int> &c, ostream &out) {
     }
     for (map<int, double>::iterator it = hist.begin(); it != hist.end(); it++)
         it->second = it->second * freq;
-    prints(hist, out);
+    out << hist;
 }
 
 #endif

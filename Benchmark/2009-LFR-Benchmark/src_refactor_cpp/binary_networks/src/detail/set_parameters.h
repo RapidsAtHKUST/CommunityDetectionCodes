@@ -4,10 +4,14 @@
 #ifndef INC_2009_LFM_SET_PARAMETERS_H
 #define INC_2009_LFM_SET_PARAMETERS_H
 
-#include "../standard_include.h"
+#include <string>
+#include <deque>
+#include <iostream>
+#include <fstream>
+#include "../../../util/cast.h"
 
 #define unlikely -214741
-
+using namespace std;
 
 class Parameters {
 public:

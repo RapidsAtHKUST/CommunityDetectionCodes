@@ -1,8 +1,11 @@
-#if !defined(CAST_INCLUDED)
-#define CAST_INCLUDED
+//
+// Created by cheyulin on 2/26/17.
+//
+
+#include "cast.h"
 
 bool cast_string_to_double(string &b, double &h) {
-// set h= the number written in b[]; 
+// set h= the number written in b[];
 // return false if there is an error
     h = 0;
     if (b.size() == 0)
@@ -51,5 +54,3 @@ int cast_string_to_char(string &file_name, char *b) {
     b[file_name.size()] = '\0';
     return 0;
 }
-
-#endif

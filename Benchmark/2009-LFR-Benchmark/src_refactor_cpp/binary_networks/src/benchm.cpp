@@ -25,7 +25,27 @@
  *                                                                               *
  * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *
  */
-#include "standard_include.h"
+#include <cmath>
+
+#include <iostream>
+#include <deque>
+#include <set>
+#include <vector>
+#include <map>
+#include <string> 
+#include <fstream>
+#include <ctime>
+#include <iterator>
+#include <algorithm>
+
+
+using namespace std;
+
+#include "../../pretty_print.h"
+#include "../../util/random.h"
+#include "../../util/combinatorics.h"
+#include "../../util/histograms.h"
+#include "../../util/cast.h"
 
 #include "detail/set_parameters.h"
 
@@ -93,8 +113,8 @@ int choose_the_least(deque<set<int> > &en, deque<int> &A, int a, int &cn_a_o) {
     return old_node;
 }
 
-int
-cclu(deque<set<int> > &en, const deque<deque<int> > &member_list, const deque<deque<int> > &member_matrix, double ca) {
+int cclu(deque<set<int> > &en, const deque<deque<int> > &member_list,
+         const deque<deque<int> > &member_matrix, double ca) {
     double cc0 = compute_cc(en);
     cout << "Average Clustering coefficient... " << cc0 << " trying to reach " << ca << endl;
     deque<double> ccs;
