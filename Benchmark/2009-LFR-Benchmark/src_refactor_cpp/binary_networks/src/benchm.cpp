@@ -32,7 +32,7 @@
 #include <set>
 #include <vector>
 #include <map>
-#include <string> 
+#include <string>
 #include <fstream>
 #include <ctime>
 #include <iterator>
@@ -41,13 +41,13 @@
 
 using namespace std;
 
-#include "../../pretty_print.h"
+#include "../../util/pretty_print.h"
 #include "../../util/random.h"
 #include "../../util/combinatorics.h"
 #include "../../util/histograms.h"
 #include "../../util/cast.h"
 
-#include "detail/set_parameters.h"
+#include "set_parameters.h"
 
 bool they_are_mate(int a, int b, const deque<deque<int> > &member_list) {
     for (int i = 0; i < member_list[a].size(); i++) {
