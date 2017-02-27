@@ -431,63 +431,21 @@ int internal_degree_and_membership(double mixing_parameter, int overlapping_node
     //cout<<"num_seq"<<endl;
     //prints(num_seq);
     int ncom = num_seq.size();
-    //cout<<"\n----------------------------------------------------------"<<endl;
-    /*
-    cout<<"community sizes"<<endl;
-    for (int i=0; i<num_seq.size(); i++)
-        cout<<num_seq[i]<<" ";
-    cout<<endl<<endl;
-    //*/
-    /*
-    deque <int> first;
-    for (int i=0; i<ncom; i++)
-        member_matrix.push_back(first);
-    // it puts the overlapping_nodes inside
-    cout<<ncom<<endl;
-    for (int i=degree_seq.size() - overlapping_nodes; i<degree_seq.size(); i++) {
-        cout<<i<<endl;
-        set<int> members;
-        int hh=0;
-        while(members.size()<max_mem_num) {
-            int random_module=irand(ncom-1);
-            if(member_matrix[random_module].size()!=num_seq[random_module])
-                members.insert(random_module);
-            hh++;
-            if(hh>3*num_nodes) {
-                cerr<<"it seems that the overlapping nodes need more communities that those I provided. Please increase the number of communities or decrease the number of overlapping nodes"<<endl;
-                return -1;
-            }
-        }
-        for (set<int>::iterator its=members.begin(); its!=members.end(); its++)
-            member_matrix[*its].push_back(i);
-    }
-    // it decides the memberships for the not overlapping nodes
-    int moment_module=0;
-    for (int i=0; i<num_nodes - overlapping_nodes; i++) {
-        while(member_matrix[moment_module].size()==num_seq[moment_module])
-             moment_module++;
-        member_matrix[moment_module].push_back(i);
-    }
-    */
+
     // I have to assign the degree to the nodes
     deque<int> member_numbers;
     for (int i = 0; i < overlapping_nodes; i++)
         member_numbers.push_back(max_mem_num);
     for (int i = overlapping_nodes; i < degree_seq.size(); i++)
         member_numbers.push_back(1);
-    //prints(member_numbers);
-    //prints(num_seq);
+
     if (build_bipartite_network(member_matrix, member_numbers, num_seq) == -1) {
-        cerr
-                << "it seems that the overlapping nodes need more communities that those I provided. Please increase the number of communities or decrease the number of overlapping nodes"
-                << endl;
+        cerr << "it seems that the overlapping nodes need more communities that those I provided."
+                " Please increase the number of communities or decrease the number of overlapping nodes"
+             << endl;
         return -1;
     }
-    //printm(member_matrix);
-    //cout<<"degree_seq"<<endl;
-    //prints(degree_seq);
-    //cout<<"internal_degree_seq"<<endl;
-    //prints(internal_degree_seq);
+
     deque<int> available;
     for (int i = 0; i < num_nodes; i++)
         available.push_back(0);
@@ -495,8 +453,6 @@ int internal_degree_and_membership(double mixing_parameter, int overlapping_node
         for (int j = 0; j < member_matrix[i].size(); j++)
             available[member_matrix[i][j]] += member_matrix[i].size() - 1;
     }
-    //cout<<"available"<<endl;
-    //prints(available);
     deque<int> available_nodes;
     for (int i = 0; i < num_nodes; i++)
         available_nodes.push_back(i);
@@ -551,36 +507,8 @@ int compute_internal_degree_per_node(int d, int m, deque<int> &a) {
     return 0;
 }
 
-/*
-int check_link_list(const deque<deque<int> > & link_list, const deque<int> & degree_seq) {
-	
-	for (int i=0; i<link_list.size(); i++) {
-	
-		int s=0;
-		for (int j=0; j<link_list[i].size(); j++)
-			s+=link_list[i][j];
-		
-		if(s!=degree_seq[i]) {
-			
-			int ok;
-			cerr<<"wrong link list"<<endl;
-			cin>>ok;
-		
-		}
-		
-		
-	
-	
-	}
-}
-*/
+
 int build_subgraph(deque<set<int> > &E, const deque<int> &nodes, const deque<int> &degrees) {
-    /*
-    cout<<"nodes"<<endl;
-    prints(nodes);
-    cout<<"degrees"<<endl;
-    prints(degrees);
-    */
     if (degrees.size() < 3) {
         cerr
                 << "it seems that some communities should have only 2 nodes! This does not make much sense (in my opinion) Please change some parameters!"

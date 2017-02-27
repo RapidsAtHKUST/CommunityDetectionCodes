@@ -1,17 +1,18 @@
 //
-// Created by cheyulin on 1/4/17.
+// Created by cheyulin on 2/27/17.
 //
 #ifndef INC_2009_LFM_SET_PARAMETERS_H
 #define INC_2009_LFM_SET_PARAMETERS_H
 
-#include <string>
-#include <deque>
+#ifndef unlikely
+#define unlikely -214741
+#endif
+
 #include <iostream>
 #include <fstream>
+#include <deque>
 
-#include "util/cast.h"
-
-#define unlikely -214741
+#include <util/cast.h>
 using namespace std;
 
 class Parameters {
@@ -33,7 +34,6 @@ public:
     bool excess;
     bool defect;
     bool randomf;
-    double clustering_coeff;
 
     bool set(string &, string &);
 
@@ -41,9 +41,9 @@ public:
 
     bool arrange();
 
-    deque<string> command_flags;
-};
+    deque <string> command_flags;
 
+};
 
 void statement();
 
