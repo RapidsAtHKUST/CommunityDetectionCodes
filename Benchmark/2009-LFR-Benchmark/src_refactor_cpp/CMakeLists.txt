@@ -14,8 +14,10 @@ if (OPENMP_FOUND)
     set(CMAKE_EXE_LINKER_FLAGS "${CMAKE_EXE_LINKER_FLAGS} ${OpenMP_EXE_LINKER_FLAGS}")
 endif ()
 
-#add_subdirectory(weighted_networks)
-#add_subdirectory(weighted_directed_nets)
-#add_subdirectory(hierarchical_bench2_2)
+
+
+#add_subdirectory(weighted_graph)
+#add_subdirectory(weighted_directed_graph)
+#add_subdirectory(hierarchical_comm_graph)
 add_subdirectory(directed_graph)
 add_subdirectory(binary_graph)
