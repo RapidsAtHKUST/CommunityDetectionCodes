@@ -2,7 +2,7 @@
 // Created by cheyulin on 2/27/17.
 //
 
-#include "histograms.h"
+#include "util/histograms.h"
 
 int int_histogram(vector<int> &c, ostream &out) {
     map<int, double> hist;

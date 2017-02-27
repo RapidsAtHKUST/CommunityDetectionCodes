@@ -2,7 +2,7 @@
 // Created by cheyulin on 2/27/17.
 //
 
-#include "combinatorics.h"
+#include "util/combinatorics.h"
 
 double log_factorial(int num) {
     double log_result = 0;

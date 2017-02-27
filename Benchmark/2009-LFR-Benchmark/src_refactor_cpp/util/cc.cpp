@@ -1,4 +1,4 @@
-#include "cc.h"
+#include "util/cc.h"
 
 bool they_are_mate(int a, int b, const deque<deque<int>> &member_list) {
     for (int i = 0; i < member_list[a].size(); i++) {

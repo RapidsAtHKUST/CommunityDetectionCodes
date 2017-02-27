@@ -8,7 +8,7 @@
 #include <map>
 #include <iostream>
 
-#include "pretty_print.h"
+#include "util/pretty_print.h"
 
 using namespace std;
 

@@ -2,7 +2,7 @@
 // Created by cheyulin on 2/27/17.
 //
 
-#include "random.h"
+#include "util/random.h"
 
 
 double ran2(long *idum) {
