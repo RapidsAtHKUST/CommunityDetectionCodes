@@ -1,7 +1,9 @@
 #if !defined(MUTUAL_INCLUDED)
 #define MUTUAL_INCLUDED
 
-int overlap_grouping(deque <deque<int>> ten, int unique) {        //hrepiguhpueh
+#include "util/metric/mutual.h"
+
+int overlap_grouping(deque<deque<int>> ten, int unique) {        //hrepiguhpueh
     set<int> conta;
     int all = 0;
     for (int i = 0; i < ten.size(); i++) {
@@ -14,7 +16,7 @@ int overlap_grouping(deque <deque<int>> ten, int unique) {        //hrepiguhpueh
     return overlap;
 }
 
-double mutual(deque <deque<int>> en, deque <deque<int>> ten) {
+double mutual(deque<deque<int>> en, deque<deque<int>> ten) {
     // en e ten are two partitions of integer numbers
     int dim;
     {
@@ -35,7 +37,7 @@ double mutual(deque <deque<int>> en, deque <deque<int>> ten) {
         }
         dim = conta.size();
     }
-    deque <deque<double>> N;
+    deque<deque<double>> N;
     deque<double> first;
     first.assign(en.size(), 0);
     for (int i = 0; i < ten.size(); i++)
@@ -89,7 +91,7 @@ double H(deque<double> &p) {
     return (-h);
 }
 
-double H_x_given_y(deque <deque<int>> &en, deque <deque<int>> &ten, int dim) {
+double H_x_given_y(deque<deque<int>> &en, deque<deque<int>> &ten, int dim) {
     // you know y and you want to find x according to a certain index labelling.
     // so, for each x you look for the best y.
     double H_x_y = 0;
@@ -148,7 +150,7 @@ double H_x_given_y(deque <deque<int>> &en, deque <deque<int>> &ten, int dim) {
     return (H_x_y / (en.size()));
 }
 
-double mutual2(deque <deque<int>> en, deque <deque<int>> ten) {
+double mutual2(deque<deque<int>> en, deque<deque<int>> ten) {
     if (en.size() == 0 || ten.size() == 0)
         return 0;
     // en e ten are two partitions of integer numbers
@@ -204,10 +206,10 @@ double mutual2(deque <deque<int>> en, deque <deque<int>> ten) {
     return (0.5 * (2. - H_x_given_y(ten, en, dim) - H_x_given_y(en, ten, dim)));
 }
 
-double H_x_given_y3(deque <deque<int>> &en, deque <deque<int>> &ten, int dim) {
+double H_x_given_y3(deque<deque<int>> &en, deque<deque<int>> &ten, int dim) {
     // you know y and you want to find x according to a certain index labelling.
     // so, for each x you look for the best y.
-    deque <deque<int>> mems;
+    deque<deque<int>> mems;
     deque<int> first;
     for (int i = 0; i < dim; i++)
         mems.push_back(first);
@@ -267,7 +269,7 @@ double H_x_given_y3(deque <deque<int>> &en, deque <deque<int>> &ten, int dim) {
     return (H_x_y / (en.size()));
 }
 
-double mutual3(deque <deque<int>> en, deque <deque<int>> ten) {
+double mutual3(deque<deque<int>> en, deque<deque<int>> ten) {
     if (en.size() == 0 || ten.size() == 0)
         return 0;
     // en e ten are two partitions of integer numbers

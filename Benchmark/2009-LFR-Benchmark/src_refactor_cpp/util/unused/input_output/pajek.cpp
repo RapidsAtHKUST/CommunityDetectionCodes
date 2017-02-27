@@ -1,4 +1,3 @@
-
 int get_partition_from_file_list_pajek(string s, deque <deque<int>> &ten, deque<int> &oldlabels) {
     ten.clear();
     char b[100];

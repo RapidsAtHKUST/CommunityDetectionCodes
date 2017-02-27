@@ -302,4 +302,6 @@ int int_histogram(vector<int> &c, ostream &out);
 
 int int_histogram(deque<int> &c, ostream &out);
 
+int int_histogram(int c, map<int, int> &hist);
+
 #endif
