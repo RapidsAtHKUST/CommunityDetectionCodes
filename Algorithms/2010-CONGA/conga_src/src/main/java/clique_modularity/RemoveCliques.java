@@ -15,14 +15,14 @@ public class RemoveCliques {
     }
 
     public static ArrayList<HashSet<Integer>> removeCliques(ArrayList<HashSet<Integer>> var0, ArrayList var1, boolean[][] var2, TreeSet<ELEMENT> var3) {
-        for(int var4 = 0; var4 < var1.size(); ++var4) {
-            int var5 = ((Integer)var1.get(var4)).intValue();
+        for (int var4 = 0; var4 < var1.size(); ++var4) {
+            int var5 = ((Integer) var1.get(var4)).intValue();
 
             int var6;
-            for(Iterator var7 = ((HashSet)var0.get(var5)).iterator(); var7.hasNext(); var2[var5][var6] = false) {
-                var6 = ((Integer)var7.next()).intValue();
+            for (Iterator var7 = ((HashSet) var0.get(var5)).iterator(); var7.hasNext(); var2[var5][var6] = false) {
+                var6 = ((Integer) var7.next()).intValue();
                 var7.remove();
-                ((HashSet)var0.get(var6)).remove(Integer.valueOf(var5));
+                ((HashSet) var0.get(var6)).remove(Integer.valueOf(var5));
                 var2[var6][var5] = false;
             }
         }
@@ -36,11 +36,11 @@ public class RemoveCliques {
         try {
             PrintStream var6 = new PrintStream(new FileOutputStream(var1));
 
-            for(int var3 = 0; var3 < var5; ++var3) {
-                Iterator var2 = ((HashSet)var0.get(var3)).iterator();
+            for (int var3 = 0; var3 < var5; ++var3) {
+                Iterator var2 = ((HashSet) var0.get(var3)).iterator();
 
-                while(var2.hasNext()) {
-                    int var4 = ((Integer)var2.next()).intValue();
+                while (var2.hasNext()) {
+                    int var4 = ((Integer) var2.next()).intValue();
                     var6.println(var3 + " " + var4);
                 }
             }
@@ -60,12 +60,12 @@ public class RemoveCliques {
             PrintStream var6 = new PrintStream(new FileOutputStream(var5));
             var6.println("p edge " + var4);
 
-            for(int var2 = 0; var2 < var4; ++var2) {
-                Iterator var1 = ((HashSet)var0.get(var2)).iterator();
+            for (int var2 = 0; var2 < var4; ++var2) {
+                Iterator var1 = ((HashSet) var0.get(var2)).iterator();
 
-                while(var1.hasNext()) {
-                    int var3 = ((Integer)var1.next()).intValue();
-                    if(var3 > var2) {
+                while (var1.hasNext()) {
+                    int var3 = ((Integer) var1.next()).intValue();
+                    if (var3 > var2) {
                         var6.println("e " + var2 + " " + var3);
                     }
                 }
@@ -81,11 +81,11 @@ public class RemoveCliques {
     private static void printGraph(ArrayList<HashSet<Integer>> var0) {
         int var4 = var0.size();
 
-        for(int var2 = 0; var2 < var4; ++var2) {
-            Iterator var1 = ((HashSet)var0.get(var2)).iterator();
+        for (int var2 = 0; var2 < var4; ++var2) {
+            Iterator var1 = ((HashSet) var0.get(var2)).iterator();
 
-            while(var1.hasNext()) {
-                int var3 = ((Integer)var1.next()).intValue();
+            while (var1.hasNext()) {
+                int var3 = ((Integer) var1.next()).intValue();
                 System.out.println(var2 + " " + var3);
             }
         }

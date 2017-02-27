@@ -41,7 +41,7 @@ public class MCQ {
     public static HashSet<Integer> mcq(ArrayList<HashSet<Integer>> var0, int var1, int var2) {
         ARRAY2 var3 = convert_V(var1);
         boolean[][] var4 = convert_e(var0);
-        return mcq(var0, var3, var4, var1, var2, (TreeSet)null);
+        return mcq(var0, var3, var4, var1, var2, (TreeSet) null);
     }
 
     public static HashSet<Integer> mcq(ArrayList<HashSet<Integer>> var0, ARRAY2 var1, boolean[][] var2, int var3, int var4, TreeSet<ELEMENT> var5) {
@@ -52,7 +52,7 @@ public class MCQ {
         MCQ(var0, var1, var2, var3, var5);
         HashSet var8 = new HashSet();
 
-        for(int var9 = 0; var9 < QMAX.size; ++var9) {
+        for (int var9 = 0; var9 < QMAX.size; ++var9) {
             var8.add(Integer.valueOf(QMAX.ele[var9]));
         }
 
@@ -67,13 +67,13 @@ public class MCQ {
             BufferedReader var9 = new BufferedReader(new FileReader(var0));
 
             String var6;
-            while((var6 = var9.readLine()) != null) {
+            while ((var6 = var9.readLine()) != null) {
                 var7 = var6.split(" ");
                 int var2 = Integer.parseInt(var7[0]);
                 int var3 = Integer.parseInt(var7[1]);
                 int var4;
                 int var5;
-                if(var2 < var3) {
+                if (var2 < var3) {
                     var4 = var2;
                     var5 = var3;
                 } else {
@@ -81,12 +81,12 @@ public class MCQ {
                     var5 = var2;
                 }
 
-                while(var1.size() <= var4) {
+                while (var1.size() <= var4) {
                     var1.add(new HashSet());
                 }
 
-                ((HashSet)var1.get(var4)).add(Integer.valueOf(var5));
-                if(var5 > var8) {
+                ((HashSet) var1.get(var4)).add(Integer.valueOf(var5));
+                if (var5 > var8) {
                     var8 = var5;
                 }
             }
@@ -106,7 +106,7 @@ public class MCQ {
         var1.size = var0;
         var1.ele = new ELEMENT[var1.size];
 
-        for(int var2 = 0; var2 < var0; var1.ele[var2].vertex = var2++) {
+        for (int var2 = 0; var2 < var0; var1.ele[var2].vertex = var2++) {
             var1.ele[var2] = new ELEMENT();
         }
 
@@ -118,9 +118,9 @@ public class MCQ {
         boolean[][] var2 = new boolean[var1][var1];
 
         int var4;
-        for(int var3 = 0; var3 < var1; ++var3) {
-            for(Iterator var5 = ((HashSet)var0.get(var3)).iterator(); var5.hasNext(); var2[var3][var4] = true) {
-                var4 = ((Integer)var5.next()).intValue();
+        for (int var3 = 0; var3 < var1; ++var3) {
+            for (Iterator var5 = ((HashSet) var0.get(var3)).iterator(); var5.hasNext(); var2[var3][var4] = true) {
+                var4 = ((Integer) var5.next()).intValue();
             }
         }
 
@@ -133,14 +133,14 @@ public class MCQ {
         var1.size = var3;
         t1 = (new Date()).getTime();
         vSort(var1, var4, var0);
-        int var6 = ((HashSet)var0.get(var1.ele[0].vertex)).size();
+        int var6 = ((HashSet) var0.get(var1.ele[0].vertex)).size();
 
         int var5;
-        for(var5 = 0; var5 < var6; ++var5) {
+        for (var5 = 0; var5 < var6; ++var5) {
             var1.ele[var5].degree = var5 + 1;
         }
 
-        for(var5 = var6; var5 < var1.size; ++var5) {
+        for (var5 = var6; var5 < var1.size; ++var5) {
             var1.ele[var5].degree = var6 + 1;
         }
 
@@ -150,30 +150,30 @@ public class MCQ {
     }
 
     private static void vSort(ARRAY2 var0, TreeSet<ELEMENT> var1, ArrayList<HashSet<Integer>> var2) {
-        if(var1 == null) {
+        if (var1 == null) {
             var1 = initVerts(var0, var2, new int[var2.size()]);
         }
 
         int var3 = 0;
 
         ELEMENT var4;
-        for(Iterator var5 = var1.descendingIterator(); var5.hasNext(); var0.ele[var3++].vertex = var4.vertex) {
-            var4 = (ELEMENT)var5.next();
+        for (Iterator var5 = var1.descendingIterator(); var5.hasNext(); var0.ele[var3++].vertex = var4.vertex) {
+            var4 = (ELEMENT) var5.next();
         }
 
     }
 
     public static TreeSet<ELEMENT> initVerts(ARRAY2 var0, ArrayList<HashSet<Integer>> var1, int[] var2) {
-        TreeSet var3 = new TreeSet(new Comparator() {
+        TreeSet<ELEMENT> var3 = new TreeSet<ELEMENT>(new Comparator<ELEMENT>() {
             public int compare(ELEMENT var1, ELEMENT var2) {
-                return var1.vertex == var2.vertex?0:(var1.degree >= var2.degree && (var1.degree != var2.degree || var1.vertex >= var2.vertex)?1:-1);
+                return var1.vertex == var2.vertex ? 0 : (var1.degree >= var2.degree && (var1.degree != var2.degree || var1.vertex >= var2.vertex) ? 1 : -1);
             }
         });
 
-        for(int var5 = 0; var5 < var0.size; ++var5) {
+        for (int var5 = 0; var5 < var0.size; ++var5) {
             ELEMENT var4 = new ELEMENT();
             var4.vertex = var0.ele[var5].vertex;
-            var4.degree = ((HashSet)var1.get(var0.ele[var5].vertex)).size();
+            var4.degree = ((HashSet) var1.get(var0.ele[var5].vertex)).size();
             var3.add(var4);
             var2[var4.vertex] = var4.degree;
         }
@@ -182,22 +182,22 @@ public class MCQ {
     }
 
     private static void EXPAND(ARRAY2 var0, boolean[][] var1, int var2) {
-        for(ARRAY2 var4 = new ARRAY2(); var0.size != 0; --var0.size) {
+        for (ARRAY2 var4 = new ARRAY2(); var0.size != 0; --var0.size) {
             int var3 = var0.ele[var0.size - 1].vertex;
-            if(Q.size + var0.ele[var0.size - 1].degree <= QMAX.size) {
+            if (Q.size + var0.ele[var0.size - 1].degree <= QMAX.size) {
                 return;
             }
 
             Q.ele[Q.size++] = var3;
             var4.ele = new ELEMENT[var0.size];
-            if(CUT2(var3, var0, var4, var1)) {
+            if (CUT2(var3, var0, var4, var1)) {
                 COLOR_SORT(var4, var1, var2);
                 EXPAND(var4, var1, var2);
-            } else if(Q.size > QMAX.size) {
+            } else if (Q.size > QMAX.size) {
                 COPY(QMAX, Q);
             }
 
-            if(QMAX.size >= UPPER_BOUND) {
+            if (QMAX.size >= UPPER_BOUND) {
                 return;
             }
 
@@ -209,8 +209,8 @@ public class MCQ {
     private static boolean CUT2(int var0, ARRAY2 var1, ARRAY2 var2, boolean[][] var3) {
         var2.size = 0;
 
-        for(int var4 = 0; var4 < var1.size - 1; ++var4) {
-            if(var3[var0][var1.ele[var4].vertex]) {
+        for (int var4 = 0; var4 < var1.size - 1; ++var4) {
+            if (var3[var0][var1.ele[var4].vertex]) {
                 var2.ele[var2.size] = new ELEMENT();
                 var2.ele[var2.size].vertex = var1.ele[var4].vertex;
                 ++var2.size;
@@ -231,19 +231,19 @@ public class MCQ {
 
         int var4;
         int var5;
-        for(var4 = 0; var3 < var0.size; ++var3) {
+        for (var4 = 0; var3 < var0.size; ++var3) {
             int var6 = var0.ele[var3].vertex;
             var5 = 1;
 
-            while(true) {
-                if(C[var5] == null) {
+            while (true) {
+                if (C[var5] == null) {
                     C[var5] = new ARRAY_FIX(var2);
                 }
 
-                if(!CUT1(var6, C[var5], var1)) {
-                    if(var5 > var8) {
+                if (!CUT1(var6, C[var5], var1)) {
+                    if (var5 > var8) {
                         var8 = var5;
-                        if(C[var5 + 1] == null) {
+                        if (C[var5 + 1] == null) {
                             C[var5 + 1] = new ARRAY_FIX(var2);
                         }
 
@@ -256,7 +256,7 @@ public class MCQ {
                     int var9 = var10001.size;
                     var10002.size = C[var5].size + 1;
                     var10000[var9] = var0.ele[var3].vertex;
-                    if(var5 < var7) {
+                    if (var5 < var7) {
                         var0.ele[var4++].vertex = var0.ele[var3].vertex;
                     }
                     break;
@@ -266,12 +266,12 @@ public class MCQ {
             }
         }
 
-        if(var7 <= 0) {
+        if (var7 <= 0) {
             var7 = 1;
         }
 
-        for(var5 = var7; var5 <= var8; ++var5) {
-            for(var3 = 0; var3 < C[var5].size; ++var3) {
+        for (var5 = var7; var5 <= var8; ++var5) {
+            for (var3 = 0; var3 < C[var5].size; ++var3) {
                 var0.ele[var4].vertex = C[var5].ele[var3];
                 var0.ele[var4++].degree = var5;
             }
@@ -281,7 +281,7 @@ public class MCQ {
 
     private static boolean CUT1(int var0, ARRAY_FIX var1, boolean[][] var2) {
         int var3;
-        for(var3 = 0; var3 < var1.size && !var2[var0][var1.ele[var3]]; ++var3) {
+        for (var3 = 0; var3 < var1.size && !var2[var0][var1.ele[var3]]; ++var3) {
             ;
         }
 
@@ -289,7 +289,7 @@ public class MCQ {
     }
 
     private static void COPY(ARRAY_FIX var0, ARRAY_FIX var1) {
-        for(int var2 = 0; var2 < var1.size; ++var2) {
+        for (int var2 = 0; var2 < var1.size; ++var2) {
             var0.ele[var2] = var1.ele[var2];
         }
 

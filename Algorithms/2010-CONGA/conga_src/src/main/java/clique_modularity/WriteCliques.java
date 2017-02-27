@@ -19,11 +19,11 @@ public class WriteCliques {
         try {
             PrintStream var6 = new PrintStream(new FileOutputStream(var1));
 
-            for(int var3 = 0; var3 < var5; ++var3) {
-                Iterator var2 = ((HashSet)var0.get(var3)).iterator();
+            for (int var3 = 0; var3 < var5; ++var3) {
+                Iterator var2 = ((HashSet) var0.get(var3)).iterator();
 
-                while(var2.hasNext()) {
-                    int var4 = ((Integer)var2.next()).intValue();
+                while (var2.hasNext()) {
+                    int var4 = ((Integer) var2.next()).intValue();
                     var6.print(var4 + " ");
                 }
 

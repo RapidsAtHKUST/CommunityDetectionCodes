@@ -23,7 +23,7 @@ class Tree {
     }
 
     public void add(Tree var1) {
-        if(this.isLeaf) {
+        if (this.isLeaf) {
             this.left = new Tree(this.set);
         } else {
             this.left = new Tree(this.left, this.right);
