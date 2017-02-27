@@ -13,9 +13,9 @@ A community-detection survey in [Survey](Survey), you can have a look, if intere
 
 ###Synthetic Tool
 
-Content | Detail
---- | ---
-[2009-LFR-Benchmark](Benchmark/2009-LFR-Benchmark) | LFR Benchmark to generate five types of graphs
+Content | Detail | Status
+--- | --- | ---
+[2009-LFR-Benchmark](Benchmark/2009-LFR-Benchmark) | LFR Benchmark to generate five types of graphs | build success except for hierarchical
 
 ###Real-World DataSets(Edge List)
 
