@@ -40,6 +40,7 @@ using namespace std;
 #include "util/combinatorics.h"
 #include "util/histograms.h"
 #include "util/cast.h"
+#include "util/cc.h"
 #include "set_parameters.h"
 
 int deque_int_sum(const deque<int> &a) {
@@ -726,14 +727,6 @@ int build_subgraphs(deque<set<int> > &Ein, deque<set<int> > &Eout, const deque<d
             return -1;
     }
     return 0;
-}
-
-bool they_are_mate(int a, int b, const deque<deque<int> > &member_list) {
-    for (int i = 0; i < member_list[a].size(); i++) {
-        if (binary_search(member_list[b].begin(), member_list[b].end(), member_list[a][i]))
-            return true;
-    }
-    return false;
 }
 
 int compute_var_mate(deque<set<int> > &en_in, const deque<deque<int> > &member_list) {

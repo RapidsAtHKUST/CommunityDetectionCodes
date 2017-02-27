@@ -1,19 +1,8 @@
-
-#include "./standard_include.cpp"
-
+#ifndef unlikely
 #define unlikely -214741
+#endif
 
-#include "set_parameters.cpp"
-
-bool they_are_mate(int a, int b, const deque<deque<int> > &member_list) {
-    for (int i = 0; i < member_list[a].size(); i++) {
-        if (binary_search(member_list[b].begin(), member_list[b].end(), member_list[a][i]))
-            return true;
-    }
-    return false;
-}
-
-#include "cc.cpp"
+#include "binary_benchm.h"
 
 // it computes the sum of a deque<int>
 int deque_int_sum(const deque<int> &a) {
@@ -101,12 +90,13 @@ int change_community_size(deque<int> &seq) {
     return 0;
 }
 
-int build_bipartite_network(deque<deque<int> > &member_matrix, const deque<int> &member_numbers,
+int build_bipartite_network(deque<deque<int>> &member_matrix, const deque<int> &member_numbers,
                             const deque<int> &num_seq) {
-    // this function builds a bipartite network with num_seq and member_numbers which are the degree sequences. in member matrix links of the communities are stored
+    // this function builds a bipartite network with num_seq and member_numbers which are the degree sequences.
+    // in member matrix links of the communities are stored
     // this means member_matrix has num_seq.size() rows and each row has num_seq[i] elements
-    deque<set<int> > en_in;            // this is the Ein of the subgraph
-    deque<set<int> > en_out;        // this is the Eout of the subgraph
+    deque<set<int>> en_in;            // this is the Ein of the subgraph
+    deque<set<int>> en_out;        // this is the Eout of the subgraph
     {
         set<int> first;
         for (int i = 0; i < member_numbers.size(); i++) {
@@ -120,13 +110,14 @@ int build_bipartite_network(deque<deque<int> > &member_matrix, const deque<int> 
         }
     }
     multimap<int, int> degree_node_out;
-    deque<pair<int, int> > degree_node_in;
+    deque<pair<int, int>> degree_node_in;
     for (int i = 0; i < num_seq.size(); i++)
         degree_node_out.insert(make_pair(num_seq[i], i));
     for (int i = 0; i < member_numbers.size(); i++)
         degree_node_in.push_back(make_pair(member_numbers[i], i));
     sort(degree_node_in.begin(), degree_node_in.end());
-    deque<pair<int, int> >::iterator itlast = degree_node_in.end();
+    deque<pair<int, int> >::iterator
+            itlast = degree_node_in.end();
     /*
      for (int i=0; i<degree_node_in.size(); i++)
      cout<<degree_node_in[i].first<<" "<<degree_node_in[i].second<<endl;
@@ -197,7 +188,7 @@ int build_bipartite_network(deque<deque<int> > &member_matrix, const deque<int> 
 }
 
 int internal_degree_and_membership(double mixing_parameter, int overlapping_nodes, int max_mem_num, int num_nodes,
-                                   deque<deque<int> > &member_matrix,
+                                   deque<deque<int>> &member_matrix,
                                    bool excess, bool defect, deque<int> &degree_seq, deque<int> &num_seq,
                                    deque<int> &internal_degree_seq, bool fixed_range, int nmin, int nmax, double tau2) {
     if (num_nodes < overlapping_nodes) {
@@ -424,7 +415,7 @@ int compute_internal_degree_per_node(int d, int m, deque<int> &a) {
  }
  
  */
-int build_subgraph(deque<set<int> > &E, const deque<int> &nodes, const deque<int> &degrees) {
+int build_subgraph(deque<set<int>> &E, const deque<int> &nodes, const deque<int> &degrees) {
     /*
      cout<<"nodes"<<endl;
      prints(nodes);
@@ -441,7 +432,7 @@ int build_subgraph(deque<set<int> > &E, const deque<int> &nodes, const deque<int
     // this function is to build a network with the labels stored in nodes and the degree seq in degrees (correspondence is based on the vectorial index)
     // the only complication is that you don't want the nodes to have neighbors they already have
     // labels will be placed in the end
-    deque<set<int> > en; // this is the E of the subgraph
+    deque<set<int>> en; // this is the E of the subgraph
     {
         set<int> first;
         for (int i = 0; i < nodes.size(); i++)
@@ -508,7 +499,7 @@ int build_subgraph(deque<set<int> > &E, const deque<int> &nodes, const deque<int
                 }
             }
     // now I try to insert the new links into the already done network. If some multiple links come out, I try to rewire them
-    deque<pair<int, int> > multiple_edge;
+    deque<pair<int, int>> multiple_edge;
     for (int i = 0; i < en.size(); i++) {
         for (set<int>::iterator its = en[i].begin(); its != en[i].end(); its++)
             if (i < *its) {
@@ -557,8 +548,8 @@ int build_subgraph(deque<set<int> > &E, const deque<int> &nodes, const deque<int
     return 0;
 }
 
-int build_subgraphs(deque<set<int> > &E, const deque<deque<int> > &member_matrix, deque<deque<int> > &member_list,
-                    deque<deque<int> > &link_list, const deque<int> &internal_degree_seq, const deque<int> &degree_seq,
+int build_subgraphs(deque<set<int>> &E, const deque<deque<int>> &member_matrix, deque<deque<int>> &member_list,
+                    deque<deque<int>> &link_list, const deque<int> &internal_degree_seq, const deque<int> &degree_seq,
                     const bool excess, const bool defect) {
     E.clear();
     member_list.clear();
@@ -648,11 +639,11 @@ int build_subgraphs(deque<set<int> > &E, const deque<deque<int> > &member_matrix
 }
 
 int
-connect_all_the_parts(deque<set<int> > &E, const deque<deque<int> > &member_list, const deque<deque<int> > &link_list) {
+connect_all_the_parts(deque<set<int>> &E, const deque<deque<int>> &member_list, const deque<deque<int>> &link_list) {
     deque<int> degrees;
     for (int i = 0; i < link_list.size(); i++)
         degrees.push_back(link_list[i][link_list[i].size() - 1]);
-    deque<set<int> > en; // this is the en of the subgraph
+    deque<set<int>> en; // this is the en of the subgraph
     {
         set<int> first;
         for (int i = 0; i < member_list.size(); i++)
@@ -790,7 +781,7 @@ connect_all_the_parts(deque<set<int> > &E, const deque<deque<int> > &member_list
     return 0;
 }
 
-int internal_kin(deque<set<int> > &E, const deque<deque<int> > &member_list, int i) {
+int internal_kin(deque<set<int>> &E, const deque<deque<int>> &member_list, int i) {
     int var_mate2 = 0;
     for (set<int>::iterator itss = E[i].begin(); itss != E[i].end(); itss++)
         if (they_are_mate(i, *itss, member_list))
@@ -808,7 +799,7 @@ int internal_kin_only_one(set<int> &E,
     return var_mate2;
 }
 
-int erase_links(deque<set<int> > &E, const deque<deque<int> > &member_list, const bool excess, const bool defect,
+int erase_links(deque<set<int>> &E, const deque<deque<int>> &member_list, const bool excess, const bool defect,
                 const double mixing_parameter) {
     int num_nodes = member_list.size();
     int eras_add_times = 0;
