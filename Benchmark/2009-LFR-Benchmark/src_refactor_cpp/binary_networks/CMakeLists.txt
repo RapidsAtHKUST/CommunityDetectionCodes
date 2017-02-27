@@ -1,2 +1,2 @@
-set(UtilFiles ../util/cast.h ../util/cast.cpp ../util/combinatorics.h ../util/histograms.h ../util/random.h)
-add_executable(lfm_bin_net src/benchm.cpp src/set_parameters.cpp ${UtilFiles})
+set(UtilFiles ../util/cast.cpp ../util/combinatorics.cpp ../util/histograms.cpp ../util/random.cpp)
+add_executable(lfr_bin_net benchm.cpp set_parameters.cpp ${UtilFiles})

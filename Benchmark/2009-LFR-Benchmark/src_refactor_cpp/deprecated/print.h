@@ -32,6 +32,7 @@ void prints(map <uno, due> &sq, ostream &out) {
     }
     out << endl;
 }
+
 template<typename uno, typename due>
 void prints(multimap <uno, due> &sq, ostream &out) {
     typename map<uno, due>::iterator it = sq.begin();
@@ -50,6 +51,7 @@ void prints(Seq &sq, ostream &out) {
 
     out << endl;
 }
+
 template<typename type_>
 void prints(type_ *a, int b) {
     for (int i = 0; i < b; i++)
@@ -77,6 +79,7 @@ void prints(map <uno, due> &sq) {
     }
     cout << endl;
 }
+
 template<typename uno, typename due>
 void prints(multimap <uno, due> &sq) {
     typename map<uno, due>::iterator it = sq.begin();

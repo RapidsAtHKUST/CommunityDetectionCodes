@@ -1,6 +1,17 @@
 #if !defined(HISTOGRAMS_INCLUDED)
 #define HISTOGRAMS_INCLUDED
 
+#include <cmath>
+
+#include <deque>
+#include <vector>
+#include <map>
+#include <iostream>
+
+#include "pretty_print.h"
+
+using namespace std;
+
 // c is the set od data, min is the lower bound, max is the upper one
 template<typename type>
 int log_histogram(deque<type> &c, ostream &out, int number_of_bins) {
@@ -287,34 +298,8 @@ int not_norm_histogram(deque<type> &c, ostream &out, int number_of_bins, double 
     return 0;
 }
 
-int int_histogram(vector<int> &c, ostream &out) {
-    map<int, double> hist;
-    double freq = 1 / double(c.size());
-    for (int i = 0; i < c.size(); i++) {
-        map<int, double>::iterator itf = hist.find(c[i]);
-        if (itf == hist.end())
-            hist.insert(make_pair(c[i], 1.));
-        else
-            itf->second++;
-    }
-    for (map<int, double>::iterator it = hist.begin(); it != hist.end(); it++)
-        it->second = it->second * freq;
-    out << hist;
-}
+int int_histogram(vector<int> &c, ostream &out);
 
-int int_histogram(deque<int> &c, ostream &out) {
-    map<int, double> hist;
-    double freq = 1 / double(c.size());
-    for (int i = 0; i < c.size(); i++) {
-        map<int, double>::iterator itf = hist.find(c[i]);
-        if (itf == hist.end())
-            hist.insert(make_pair(c[i], 1.));
-        else
-            itf->second++;
-    }
-    for (map<int, double>::iterator it = hist.begin(); it != hist.end(); it++)
-        it->second = it->second * freq;
-    out << hist;
-}
+int int_histogram(deque<int> &c, ostream &out);
 
 #endif
