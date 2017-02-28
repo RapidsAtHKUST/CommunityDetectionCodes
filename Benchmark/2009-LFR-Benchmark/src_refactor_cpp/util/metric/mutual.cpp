@@ -3,6 +3,17 @@
 
 #include "util/metric/mutual.h"
 
+double H(double a) {
+    return a <= 0 ? 0 : -a * log(a);
+}
+
+double H(deque<double> &p) {
+    double h = 0;
+    for (auto num :p) { if (num != 0) { h += (num) * log(num) }};
+    return -h;
+}
+
+
 int overlap_grouping(deque<deque<int>> ten, int unique) {        //hrepiguhpueh
     set<int> conta;
     int all = 0;
@@ -76,20 +87,6 @@ double mutual(deque<deque<int>> en, deque<deque<int>> ten) {
     return I;
 }
 
-double H(double a) {
-    if (a <= 0)
-        return 0;
-    else
-        return (-a * log(a));
-}
-
-double H(deque<double> &p) {
-    double h = 0;
-    for (deque<double>::iterator it = p.begin(); it != p.end(); it++)
-        if (*it != 0)
-            h += (*it) * log(*it);
-    return (-h);
-}
 
 double H_x_given_y(deque<deque<int>> &en, deque<deque<int>> &ten, int dim) {
     // you know y and you want to find x according to a certain index labelling.
@@ -109,13 +106,10 @@ double H_x_given_y(deque<deque<int>> &en, deque<deque<int>> &ten, int dim) {
         for (int i = 0; i < ten.size(); i++) {
             double I1 = double(ten[i].size());
             double O1 = (dim - I1);
-            //cout<<"I1 "<<I1<<" O1 "<<O1<<endl;
             p.push_back(I1 / dim);
             p.push_back(O1 / dim);
             double H1_ = H(p);
             p.clear();
-            //prints(ten[i]);
-            //cout<<"H1_: "<<H1_<<"\t";
             deque<int> s(dim);
             double I1_I2 = set_intersection(ten[i].begin(), ten[i].end(), en[j].begin(), en[j].end(), s.begin()) -
                            s.begin();    // common
@@ -145,8 +139,6 @@ double H_x_given_y(deque<deque<int>> &en, deque<deque<int>> &ten, int dim) {
         else
             H_x_y += (diff / H2_);
     }
-    //if (H2==0)
-    //	return 1;
     return (H_x_y / (en.size()));
 }
 
@@ -155,43 +147,20 @@ double mutual2(deque<deque<int>> en, deque<deque<int>> ten) {
         return 0;
     // en e ten are two partitions of integer numbers
     int dim;
-    //printm(ten);
-    //printm(en);
     {
         map<int, int> all;        // node, index 
-        //set <int> ten_;
-        //set <int> en_;
         for (int i = 0; i < ten.size(); i++) {
             for (int j = 0; j < ten[i].size(); j++) {
                 all.insert(make_pair(ten[i][j], all.size()));
-                //ten_.insert(ten[i][j]);
             }
         }
         for (int i = 0; i < en.size(); i++) {
             for (int j = 0; j < en[i].size(); j++) {
                 all.insert(make_pair(en[i][j], all.size()));
-                //en_.insert(en[i][j]);
             }
         }
         dim = all.size();
-        /*
-        for (map<int, int>::iterator its=all.begin(); its!=all.end(); its++) {
-            
-            if(ten_.find(its->first)==ten_.end()) {
-                deque <int> first;
-                first.push_back(its->first);
-                ten.push_back(first);
-            }
-            
-            if(en_.find(its->first)==en_.end()) {
-                deque <int> first;
-                first.push_back(its->first);
-                en.push_back(first);
-            }
-            
-            
-        }
-        */
+
         for (int i = 0; i < ten.size(); i++) {
             for (int j = 0; j < ten[i].size(); j++)
                 ten[i][j] = all[ten[i][j]];
@@ -276,12 +245,10 @@ double mutual3(deque<deque<int>> en, deque<deque<int>> ten) {
     int dim;
     {
         map<int, int> all;        // node, index 
-        //set <int> ten_;
-        //set <int> en_;
+
         for (int i = 0; i < ten.size(); i++) {
             for (int j = 0; j < ten[i].size(); j++) {
                 all.insert(make_pair(ten[i][j], all.size()));
-                //ten_.insert(ten[i][j]);
             }
         }
         for (int i = 0; i < en.size(); i++) {
