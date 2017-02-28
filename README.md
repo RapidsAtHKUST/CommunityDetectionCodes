@@ -24,9 +24,15 @@ Detailed information is in [Datasets](Datasets).
 ##Quality-Evaluation Metrics
 ###Without-Ground-Truth
 
-Evaluation Metric Name | Implementation
---- | ---
-Link-Belonging-Based Modularity | [link_belong_modularity.py](Metrics/metrics/link_belong_modularity.py)
+Evaluation Metric Name | Implementation | Heuristic
+--- | --- | ---
+Link-Belonging-Based Modularity | [link_belong_modularity.py](Metrics/metrics/link_belong_modularity.py) | compare to random graph
+
+###With-Ground-Truth
+
+Evaluation Metric Name | Implementation | Heuristic
+--- | --- | ---
+Overlap-NMI | [overlap_nmi.py](Metrics/metrics/overlap_nmi.py) | info-theory entropy-measure
 
 ##Algorithms
 
