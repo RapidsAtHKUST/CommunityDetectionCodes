@@ -1,7 +1,13 @@
-package conga;//
+package conga.algorithm;//
 // Source code recreated from a .class file by IntelliJ IDEA
 // (powered by Fernflower decompiler)
 //
+
+import conga.CONGA;
+import conga.util.community.BP;
+import conga.util.graph.Split;
+import conga.util.graph.Edge;
+import conga.util.graph.Vertex;
 
 import java.util.ArrayList;
 import java.util.Comparator;
@@ -11,7 +17,7 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.TreeSet;
 
-class Between {
+public class Between {
     public List<HashMap<Integer, BP>> betweenV = new ArrayList();
     public List<PB> pbV = new ArrayList();
     List<HashMap<Integer, Float>> weightsI;
@@ -64,12 +70,12 @@ class Between {
     public void setSize(int var1) {
         if (this.pbV != null) {
             while (this.pbV.size() < var1) {
-                this.pbV.add((Object) null);
+                this.pbV.add(null);
             }
         }
 
         while (this.betweenV.size() < var1) {
-            this.betweenV.add((Object) null);
+            this.betweenV.add(null);
         }
 
     }
@@ -103,7 +109,7 @@ class Between {
     public void splitVertex(int var1, int var2, HashSet<Integer> var3, HashSet<Integer> var4) {
         PB var6 = (PB) this.pbV.get(var1);
         if (var6 != null) {
-            var6.print("About to initialize conga.PB (splitVertex) " + var1);
+            var6.print("About to initialize conga.algorithm.PB (splitVertex) " + var1);
         }
 
         this.deleteVertex(var1);
@@ -213,7 +219,7 @@ class Between {
         float var3 = ((BP) ((HashMap) this.betweenV.get(var1)).get(Integer.valueOf(var2))).oldB;
         ((HashMap) this.betweenV.get(var1)).remove(Integer.valueOf(var2));
         if (((HashMap) this.betweenV.get(var1)).isEmpty()) {
-            this.betweenV.set(var1, (Object) null);
+            this.betweenV.set(var1, null);
         }
 
         boolean var4 = this.edges.remove(new Edge(var1, var2, var3));
@@ -243,7 +249,7 @@ class Between {
 
     private void deleteVertex(int var1) {
         Vertex var2 = ((PB) this.pbV.get(var1)).vertex;
-        this.pbV.set(var1, (Object) null);
+        this.pbV.set(var1, null);
         boolean var3 = this.vertices.remove(var2);
         if (!var3) {
             System.out.println("(deleteVertex) remove failed: " + var1);
@@ -293,22 +299,22 @@ class Between {
                 while (var10.hasNext()) {
                     var6 = ((Integer) var10.next()).intValue();
                     if (!((HashSet) var2.get(var5)).contains(Integer.valueOf(var6))) {
-                        System.out.println("***conga.Edge in between but not in graph: " + var5 + "/" + var6);
+                        System.out.println("***conga.util.graph.Edge in between but not in graph: " + var5 + "/" + var6);
                     }
 
                     if (!this.edges.contains(new Edge(var5, var6, ((BP) ((HashMap) this.betweenV.get(var5)).get(Integer.valueOf(var6))).oldB))) {
-                        System.out.println("***conga.Edge in between but not in treeset: " + var5 + "/" + var6);
+                        System.out.println("***conga.util.graph.Edge in between but not in treeset: " + var5 + "/" + var6);
                     }
                 }
             }
 
             if (this.pbV != null) {
                 if (this.pbV.get(var5) != null && ((HashSet) var2.get(var5)).size() < 4) {
-                    System.out.println("***conga.Vertex in between but not in graph: " + var5);
+                    System.out.println("***conga.util.graph.Vertex in between but not in graph: " + var5);
                 }
 
                 if (this.pbV.get(var5) != null && !this.vertices.contains(((PB) this.pbV.get(var5)).vertex)) {
-                    System.out.println("***conga.Vertex in between but not in treeset: " + var5);
+                    System.out.println("***conga.util.graph.Vertex in between but not in treeset: " + var5);
                 }
             }
         }
@@ -318,7 +324,7 @@ class Between {
             HashSet var9 = (HashSet) var2.get(var5);
             var7 += var9.size();
             if (var9.size() >= 4 && this.pbV != null && this.pbV.get(var5) == null) {
-                System.out.println("***conga.Vertex in graph but not in between: " + var5);
+                System.out.println("***conga.util.graph.Vertex in graph but not in between: " + var5);
             }
 
             var10 = var9.iterator();
@@ -335,7 +341,7 @@ class Between {
                 }
                 while (this.betweenV.get(var5) != null && ((HashMap) this.betweenV.get(var5)).containsKey(Integer.valueOf(var6)));
 
-                System.out.println("***conga.Edge in graph but not in between: " + var5 + "/" + var6);
+                System.out.println("***conga.util.graph.Edge in graph but not in between: " + var5 + "/" + var6);
             }
         }
 
@@ -352,7 +358,7 @@ class Between {
                                 Vertex var4 = (Vertex) var12.next();
                                 var5 = var4.vertex;
                                 if (this.pbV.get(var5) == null) {
-                                    System.out.println("***conga.Vertex in treeset but not in between: " + var5);
+                                    System.out.println("***conga.util.graph.Vertex in treeset but not in between: " + var5);
                                 }
                             }
                         }
@@ -371,7 +377,7 @@ class Between {
             }
             while (this.betweenV.get(var5) != null && ((HashMap) this.betweenV.get(var5)).containsKey(Integer.valueOf(var6)));
 
-            System.out.println("***conga.Edge in treeset but not in between: " + var5 + "/" + var6);
+            System.out.println("***conga.util.graph.Edge in treeset but not in between: " + var5 + "/" + var6);
         }
     }
 

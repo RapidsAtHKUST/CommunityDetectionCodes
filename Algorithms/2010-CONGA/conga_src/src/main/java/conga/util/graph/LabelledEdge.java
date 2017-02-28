@@ -1,9 +1,9 @@
-package conga;//
+package conga.util.graph;//
 // Source code recreated from a .class file by IntelliJ IDEA
 // (powered by Fernflower decompiler)
 //
 
-class LabelledEdge {
+public class LabelledEdge {
     public float label;
     public int value1;
     public int value2;

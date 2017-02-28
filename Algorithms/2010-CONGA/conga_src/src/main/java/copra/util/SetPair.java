@@ -1,11 +1,11 @@
-package copra;//
+package copra.util;//
 // Source code recreated from a .class file by IntelliJ IDEA
 // (powered by Fernflower decompiler)
 //
 
 import java.util.TreeSet;
 
-class SetPair implements Comparable<SetPair> {
+public class SetPair implements Comparable<SetPair> {
     public int id;
     public TreeSet<Integer> set;
 

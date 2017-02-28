@@ -1,9 +1,9 @@
-package conga;//
+package conga.util.benchmark;//
 // Source code recreated from a .class file by IntelliJ IDEA
 // (powered by Fernflower decompiler)
 //
 
-class GResult {
+public class GResult {
     public double minDiameter;
     public double averageDiameter;
     public double maxDiameter;

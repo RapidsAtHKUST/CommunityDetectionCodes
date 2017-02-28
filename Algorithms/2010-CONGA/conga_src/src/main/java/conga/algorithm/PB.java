@@ -1,14 +1,16 @@
-package conga;//
+package conga.algorithm;//
 // Source code recreated from a .class file by IntelliJ IDEA
 // (powered by Fernflower decompiler)
 //
+
+import conga.util.graph.Vertex;
 
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Iterator;
 
-class PB {
+public class PB {
     public HashMap<Integer, Integer> entryOf;
     public int[] vertexOf;
     public float[][] matrix;

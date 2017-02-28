@@ -1,4 +1,4 @@
-package copra;//
+package copra.util.community;//
 // Source code recreated from a .class file by IntelliJ IDEA
 // (powered by Fernflower decompiler)
 //
@@ -11,7 +11,7 @@ import java.util.Random;
 import java.util.TreeMap;
 import java.util.TreeSet;
 
-class ClusterLabel {
+public class ClusterLabel {
     private Map<Integer, Float> label;
     private float weight;
     private float overlap;
@@ -123,7 +123,7 @@ class ClusterLabel {
 
     private void reduce() {
         HashSet var3 = new HashSet();
-        float var4 = -1.0F / 0.0;
+        float var4 = Float.NEGATIVE_INFINITY;
         float var5 = 0.0F;
         float var6 = 1.0F / this.overlap;
         Iterator var2 = this.label.keySet().iterator();

@@ -1,9 +1,9 @@
-package conga;//
+package conga.util;//
 // Source code recreated from a .class file by IntelliJ IDEA
 // (powered by Fernflower decompiler)
 //
 
-class Tree {
+public class Tree {
     public int label;
     public Tree parent;
     public Tree left;

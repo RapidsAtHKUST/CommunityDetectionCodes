@@ -1,13 +1,15 @@
-package conga;//
+package conga.util.community;//
 // Source code recreated from a .class file by IntelliJ IDEA
 // (powered by Fernflower decompiler)
 //
+
+import conga.util.graph.Split;
 
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 
-class Stats {
+public class Stats {
     public boolean clustering = false;
     public int initialGraphSize = 0;
     public int finalGraphSize = 0;

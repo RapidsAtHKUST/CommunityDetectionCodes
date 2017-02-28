@@ -1,13 +1,13 @@
-package conga;//
+package conga.util;//
 // Source code recreated from a .class file by IntelliJ IDEA
 // (powered by Fernflower decompiler)
 //
 
-class Pair {
-    public int value1;
-    public int value2;
+public class StrPair {
+    public String value1;
+    public String value2;
 
-    public Pair(int var1, int var2) {
+    public StrPair(String var1, String var2) {
         this.value1 = var1;
         this.value2 = var2;
     }

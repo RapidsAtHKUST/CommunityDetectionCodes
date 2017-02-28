@@ -1,9 +1,9 @@
-package conga;//
+package conga.util.graph;//
 // Source code recreated from a .class file by IntelliJ IDEA
 // (powered by Fernflower decompiler)
 //
 
-class Edge {
+public class Edge {
     public int vertex1;
     public int vertex2;
     public float betweenness;

@@ -3,6 +3,8 @@ package copra;//
 // (powered by Fernflower decompiler)
 //
 
+import copra.algorithm.COPRA;
+
 import java.io.FileOutputStream;
 import java.io.PrintStream;
 import java.lang.reflect.Array;

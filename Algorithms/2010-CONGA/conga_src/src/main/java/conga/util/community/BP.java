@@ -1,9 +1,9 @@
-package conga;//
+package conga.util.community;//
 // Source code recreated from a .class file by IntelliJ IDEA
 // (powered by Fernflower decompiler)
 //
 
-class BP {
+public class BP {
     public float oldB;
     public float newB;
 

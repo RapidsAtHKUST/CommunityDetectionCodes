@@ -1,11 +1,11 @@
-package conga;//
+package conga.util.graph;//
 // Source code recreated from a .class file by IntelliJ IDEA
 // (powered by Fernflower decompiler)
 //
 
 import java.util.HashSet;
 
-class Split {
+public class Split {
     public HashSet<Integer> value1;
     public HashSet<Integer> value2;
 

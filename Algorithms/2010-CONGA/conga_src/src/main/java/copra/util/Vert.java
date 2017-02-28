@@ -1,9 +1,9 @@
-package copra;//
+package copra.util;//
 // Source code recreated from a .class file by IntelliJ IDEA
 // (powered by Fernflower decompiler)
 //
 
-class Vert implements Comparable<Vert> {
+public class Vert implements Comparable<Vert> {
     public int id;
     public int degree;
 

@@ -1,7 +1,9 @@
-package conga;//
+package conga.algorithm;//
 // Source code recreated from a .class file by IntelliJ IDEA
 // (powered by Fernflower decompiler)
 //
+
+import conga.CONGA;
 
 import java.io.BufferedReader;
 import java.io.File;
@@ -506,7 +508,7 @@ public class CPP {
                     } while(var7.startsWith("%"));
 
                     String[] var8 = var7.split("\t");
-                    if(var8[0].equals("conga.Vertex")) {
+                    if(var8[0].equals("conga.util.graph.Vertex")) {
                         for(var2 = 1; var8[var2].startsWith("u_"); ++var2) {
                             var9.add(new HashMap());
                         }

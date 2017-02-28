@@ -1,9 +1,9 @@
-package copra;//
+package copra.util;//
 // Source code recreated from a .class file by IntelliJ IDEA
 // (powered by Fernflower decompiler)
 //
 
-class LabelPair {
+public class LabelPair {
     public float value;
     public int pos;
 

@@ -1,11 +1,11 @@
-package copra;//
+package copra.util;//
 // Source code recreated from a .class file by IntelliJ IDEA
 // (powered by Fernflower decompiler)
 //
 
 import java.util.Vector;
 
-class VecPair {
+public class VecPair {
     public Vector<String> name;
     public Vector<Double> value;
 
