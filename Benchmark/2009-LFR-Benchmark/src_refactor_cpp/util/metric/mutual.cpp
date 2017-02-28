@@ -9,7 +9,7 @@ double H(double a) {
 
 double H(deque<double> &p) {
     double h = 0;
-    for (auto num :p) { if (num != 0) { h += (num) * log(num) }};
+    for (auto num :p) { if (num != 0) { h += (num) * log(num); }};
     return -h;
 }
 
