@@ -3,6 +3,10 @@
 cmake-build-debug
 *.iml
 
+*.log
+*.aux
+*.gz
+
 #maven build
 target
 
