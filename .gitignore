@@ -1,6 +1,7 @@
 # jetbrains config
 .idea
 cmake-build-debug
+*.iml
 
 #maven build
 target
