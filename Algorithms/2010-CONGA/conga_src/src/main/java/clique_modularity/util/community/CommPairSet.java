@@ -1,4 +1,4 @@
-package clique_modularity;//
+package clique_modularity.util.community;//
 // Source code recreated from a .class file by IntelliJ IDEA
 // (powered by Fernflower decompiler)
 //
@@ -9,7 +9,7 @@ import java.util.HashSet;
 import java.util.Iterator;
 import java.util.TreeSet;
 
-class CommPairSet {
+public class CommPairSet {
     ArrayList<HashSet<CommPair>> added = new ArrayList();
     TreeSet<CommPair> commPairs = new TreeSet<CommPair>(new Comparator<CommPair>() {
         public int compare(CommPair var1, CommPair var2) {

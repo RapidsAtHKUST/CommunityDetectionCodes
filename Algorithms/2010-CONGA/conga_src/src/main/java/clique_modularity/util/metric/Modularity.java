@@ -1,4 +1,4 @@
-package clique_modularity;//
+package clique_modularity.util.metric;//
 // Source code recreated from a .class file by IntelliJ IDEA
 // (powered by Fernflower decompiler)
 //
@@ -12,6 +12,10 @@ import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
 
+import clique_modularity.util.Pair;
+import conga.CONGA;
+
+
 public class Modularity {
     static int maxVertex = 0;
 
@@ -23,7 +27,7 @@ public class Modularity {
         String var2 = var0[1];
         double var3 = modularity(var1, var2);
         System.out.println(var1 + ", " + var2);
-        System.out.println("clique_modularity.Modularity is " + var3);
+        System.out.println("clique_modularity.util.metric.Modularity is " + var3);
     }
 
     public static double modularity(String var0, String var1) {

@@ -1,7 +1,11 @@
-package clique_modularity;//
+package clique_modularity.algorithm;//
 // Source code recreated from a .class file by IntelliJ IDEA
 // (powered by Fernflower decompiler)
 //
+
+import clique_modularity.util.ARRAY2;
+import clique_modularity.util.ARRAY_FIX;
+import clique_modularity.util.graph.ELEMENT;
 
 import java.io.BufferedReader;
 import java.io.FileReader;
@@ -12,7 +16,7 @@ import java.util.HashSet;
 import java.util.Iterator;
 import java.util.TreeSet;
 
-public class MCQ {
+public class MaxClique {
     static ARRAY_FIX QMAX;
     static ARRAY_FIX Q;
     static ARRAY_FIX[] C;
@@ -22,7 +26,7 @@ public class MCQ {
     static long t3 = 0L;
     static long t4 = 0L;
 
-    public MCQ() {
+    public MaxClique() {
     }
 
     public static void main(String[] var0) {

@@ -1,4 +1,4 @@
-package clique_modularity;//
+package clique_modularity.util.metric;//
 // Source code recreated from a .class file by IntelliJ IDEA
 // (powered by Fernflower decompiler)
 //
@@ -23,7 +23,7 @@ public class Omega {
         int var7 = readCount(var2, var5, var3);
         double var8 = evaluateOmega(var1, var2, (long) var3, var6, var7);
         System.out.println(var4 + ", " + var5 + ", size " + var3);
-        System.out.println("clique_modularity.Omega is " + var8);
+        System.out.println("clique_modularity.util.metric.Omega is " + var8);
     }
 
     public static int readCount(Vector<HashMap<Integer, Integer>> var0, String var1, int var2) {

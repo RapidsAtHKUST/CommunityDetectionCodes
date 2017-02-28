@@ -1,7 +1,12 @@
-package clique_modularity;//
+package clique_modularity.algorithm.BK;//
 // Source code recreated from a .class file by IntelliJ IDEA
 // (powered by Fernflower decompiler)
 //
+
+import clique_modularity.util.community.CompleteCliques1;
+import clique_modularity.input_output.ReadEdges;
+import clique_modularity.util.community.RebuildCommunities;
+import clique_modularity.input_output.WriteCliques;
 
 import java.io.FileNotFoundException;
 import java.lang.reflect.Array;
@@ -9,9 +14,8 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashSet;
 import java.util.Iterator;
-import java.util.TreeSet;
 
-public class KJ {
+public class BK {
     private static ArrayList<HashSet<Integer>> resultCliques = new ArrayList();
     public static int cliquesIndex = 0;
     public static long start_time;
@@ -20,7 +24,7 @@ public class KJ {
     public static long cliquesfinding_time;
     public static long rebuildcommunities_time;
 
-    public KJ() {
+    public BK() {
     }
 
     public static void main(String[] var0) throws FileNotFoundException {
@@ -44,47 +48,28 @@ public class KJ {
     }
 
     public static long communityResults(String var0, String var1, int var2, int var3) throws FileNotFoundException {
-        boolean var4 = true;
         start_time = (new Date()).getTime();
-        ArrayList var5 = null;
-        Object var6 = null;
-        RemoveCliques var8 = null;
-        int var11 = 2147483647;
-        ARRAY2 var12 = null;
-        boolean[][] var13 = (boolean[][])null;
-        boolean var14 = true;
-        ReadEdges var7 = new ReadEdges();
-        String var16 = "cliquesNew.txt";
-        var5 = var7.readGraph(var0, var2);
-        var12 = MCQ.convert_V(var2);
-
-        ArrayList var9;
-        for(var13 = MCQ.convert_e(var5); var4; var5 = RemoveCliques.removeCliques(var5, var9, var13, (TreeSet)null)) {
-            HashSet var10 = MCQ.mcq(var5, var12, var13, var2, var11, (TreeSet)null);
-            var11 = var10.size();
-            if(var10.size() < 3) {
-                break;
-            }
-
-            var9 = converseTolist(var10);
-            saveCliques(var9);
-            var8 = new RemoveCliques();
-        }
-
+        ArrayList var4 = null;
+        Object var5 = null;
+        boolean var7 = true;
+        ReadEdges var6 = new ReadEdges();
+        var4 = var6.readGraph(var0, var2);
+        resultCliques = new ArrayList((new BronKerboschCFFast(var4)).getAllMaximalCliques());
+        cliquesIndex = resultCliques.size();
         cliquesfinding_time = (new Date()).getTime();
-        ArrayList var17 = CompleteCliques1.completeCliques1(resultCliques, var2, cliquesIndex, var0);
-        long var18 = (new Date()).getTime();
-        String var20 = "";
-        String var21 = "";
-        var20 = "beforeMerge_KJ.txt";
-        var21 = "mergedCommunities.txt";
-        WriteCliques.saveGraphfile(var17, var20);
-        ArrayList var22 = RebuildCommunities.rebuildCommunities(var3, var2, var17, var0);
+        ArrayList var9 = CompleteCliques1.completeCliques1(resultCliques, var2, cliquesIndex, var0);
+        String var10 = "";
+        String var11 = "";
+        var10 = "beforeMerge_BK.txt";
+        var11 = "mergedCommunities.txt";
+        WriteCliques.saveGraphfile(var9, var10);
+        long var12 = (new Date()).getTime();
+        ArrayList var14 = RebuildCommunities.rebuildCommunities(var3, var2, var9, var0);
         rebuildcommunities_time = (new Date()).getTime();
-        WriteCliques.saveGraphfile(var22, var21);
+        WriteCliques.saveGraphfile(var14, var11);
         resultCliques.clear();
-        var17.clear();
-        var22.clear();
+        var9.clear();
+        var14.clear();
         cliquesIndex = 0;
         end_time = (new Date()).getTime();
         return end_time - start_time;
@@ -102,20 +87,7 @@ public class KJ {
         ++cliquesIndex;
     }
 
-    private static ArrayList converseTolist(HashSet<Integer> var0) {
-        ArrayList var1 = new ArrayList();
-        Iterator var4 = var0.iterator();
-
-        while(var4.hasNext()) {
-            int var3 = ((Integer)var4.next()).intValue();
-            var1.add(Integer.valueOf(var3));
-        }
-
-        return var1;
-    }
-
     private static void printGraph(ArrayList<HashSet<Integer>> var0) {
-        System.out.println("-----Test Experiment1-------");
         int var4 = var0.size();
         System.out.println("ResultSize: " + var4);
 
@@ -130,6 +102,20 @@ public class KJ {
             System.out.println();
         }
 
-        System.out.println("-----------------------------------");
+    }
+
+    private static void calculate(ArrayList<HashSet<Integer>> var0) {
+        int[] var3 = new int[30];
+        int var1 = var0.size();
+
+        int var2;
+        for(var2 = 0; var2 < var1; ++var2) {
+            ++var3[((HashSet)var0.get(var2)).size()];
+        }
+
+        for(var2 = 0; var2 < 30; ++var2) {
+            System.out.println(var2 + " : " + var3[var2]);
+        }
+
     }
 }

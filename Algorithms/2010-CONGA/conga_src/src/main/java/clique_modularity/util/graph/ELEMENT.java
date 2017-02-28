@@ -1,9 +1,9 @@
-package clique_modularity;//
+package clique_modularity.util.graph;//
 // Source code recreated from a .class file by IntelliJ IDEA
 // (powered by Fernflower decompiler)
 //
 
-class ELEMENT {
+public class ELEMENT {
     public int vertex;
     public int degree;
 

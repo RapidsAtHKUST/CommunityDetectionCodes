@@ -1,4 +1,4 @@
-package clique_modularity;//
+package clique_modularity.util.benchmark;//
 // Source code recreated from a .class file by IntelliJ IDEA
 // (powered by Fernflower decompiler)
 //

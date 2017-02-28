@@ -15,7 +15,7 @@ java -cp CM.jar clique_modularity.CM <networkFile> -m <method> -c <nComm>
 
 
 > where <networkFile> is the file containing the network, 
-in "list of edges" format, <method> is the clique-finding algorithm to use ("clique_modularity.BK" or "clique_modularity.KJ"), 
+in "list of edges" format, <method> is the clique-finding algorithm to use ("clique_modularity.algorithm.BK.BK" or "clique_modularity.algorithm.KJ.KJ"), 
 and <nComm> is the number of communities required.
 The program prints the modularity of the solution and outputs the solution to a file named "ClustersOutput.txt".
 

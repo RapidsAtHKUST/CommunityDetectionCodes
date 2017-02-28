@@ -1,11 +1,11 @@
-package clique_modularity;
+package clique_modularity.util;
 
 /**
  * Created by cheyulin on 2/27/17.
  */
 
 
-class ARRAY_FIX {
+public class ARRAY_FIX {
     public int[] ele;
     public int size;
 

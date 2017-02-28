@@ -3,6 +3,13 @@ package clique_modularity;//
 // (powered by Fernflower decompiler)
 //
 
+import clique_modularity.algorithm.BK.BK;
+import clique_modularity.algorithm.KJ.KJ;
+import clique_modularity.util.benchmark.GG;
+import clique_modularity.util.community.CPP;
+import clique_modularity.util.metric.Modularity;
+import clique_modularity.util.metric.Omega;
+
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.util.ArrayList;
@@ -28,9 +35,9 @@ public class CM {
                 String var4 = var0[var6++];
                 if(var4.equals("-m")) {
                     var3 = var0[var6++];
-                    if(!var3.equals("clique_modularity.BK") && !var3.equals("clique_modularity.KJ")) {
-                        System.err.println("Usage: java " + var2 + " [-m clique_modularity.BK or clique_modularity.KJ] [-c #]");
-                        System.err.println("-m mean method: clique_modularity.BK or clique_modularity.KJ");
+                    if(!var3.equals("clique_modularity.algorithm.BK.BK") && !var3.equals("clique_modularity.algorithm.KJ.KJ")) {
+                        System.err.println("Usage: java " + var2 + " [-m clique_modularity.algorithm.BK.BK or clique_modularity.algorithm.KJ.KJ] [-c #]");
+                        System.err.println("-m mean method: clique_modularity.algorithm.BK.BK or clique_modularity.algorithm.KJ.KJ");
                         System.err.println("-c mean the number of communities");
                         System.exit(1);
                     }
@@ -39,8 +46,8 @@ public class CM {
                 }
             }
         } else {
-            System.err.println("Usage: java " + var2 + " [-m clique_modularity.BK or clique_modularity.KJ] [-c #]");
-            System.err.println("-m mean method: clique_modularity.BK or clique_modularity.KJ");
+            System.err.println("Usage: java " + var2 + " [-m clique_modularity.algorithm.BK.BK or clique_modularity.algorithm.KJ.KJ] [-c #]");
+            System.err.println("-m mean method: clique_modularity.algorithm.BK.BK or clique_modularity.algorithm.KJ.KJ");
             System.err.println("-c mean the number of communities");
             System.exit(1);
         }
@@ -58,7 +65,7 @@ public class CM {
         int var10 = CPP.preprocess(var0, var8, var9);
 
         try {
-            if(var1.equals("clique_modularity.BK")) {
+            if(var1.equals("clique_modularity.algorithm.BK.BK")) {
                 BK.communityResults(var8, (String)null, var10, var4);
             } else {
                 KJ.communityResults(var8, (String)null, var10, var4);
@@ -67,10 +74,10 @@ public class CM {
             String var11 = "";
             var5 = "mergedCommunities.txt";
             var11 = "ClustersOutput.txt";
-            if(var1.equals("clique_modularity.BK")) {
-                System.out.println("clique_modularity.CM-clique_modularity.BK Result");
+            if(var1.equals("clique_modularity.algorithm.BK.BK")) {
+                System.out.println("clique_modularity.CM-clique_modularity.algorithm.BK.BK Result");
             } else {
-                System.out.println("clique_modularity.CM-clique_modularity.KJ Result");
+                System.out.println("clique_modularity.CM-clique_modularity.algorithm.KJ.KJ Result");
             }
 
             modularityResult(var8, var5);
@@ -103,11 +110,11 @@ public class CM {
             try {
                 System.out.println("--------------------Generating random graph " + var13 + "--------------------");
                 var19 = GG.gen_benchmark(var0, var1, var2, var3, var5, var7, var9, var10, var15, var14);
-                System.out.println("--------------------clique_modularity.BK algorithm--------------------");
+                System.out.println("--------------------clique_modularity.algorithm.BK.BK algorithm--------------------");
                 BK.communityResults(var16, (String)null, var18, var19);
-                System.out.println("--------------------clique_modularity.KJ algorithm--------------------");
+                System.out.println("--------------------clique_modularity.algorithm.KJ.KJ algorithm--------------------");
                 KJ.communityResults(var16, (String)null, var18, var19);
-                System.out.println("--------------------clique_modularity.Omega Index-------------------");
+                System.out.println("--------------------clique_modularity.util.metric.Omega Index-------------------");
                 var17 = "mergeCommunities.txt";
                 omegaResult(var14, var17, var18);
                 var17 = "MCQresults.txt";
@@ -127,7 +134,7 @@ public class CM {
         double var7 = Omega.evaluateOmega(var3, var4, (long)var2, var5, var6);
         omegaIndex.add(Double.valueOf(var7));
         System.out.println(var0 + ", " + var1 + ", size " + var2);
-        System.out.println("clique_modularity.Omega is " + var7);
+        System.out.println("clique_modularity.util.metric.Omega is " + var7);
     }
 
     private static double omegaBGLL(String var0, String var1, int var2) {
@@ -142,7 +149,7 @@ public class CM {
     private static void modularityResult(String var0, String var1) {
         double var2 = Modularity.modularity(var0, var1);
         modularities.add(Double.valueOf(var2));
-        System.out.println("clique_modularity.Modularity is " + var2);
+        System.out.println("clique_modularity.util.metric.Modularity is " + var2);
     }
 
     private static void printOmega() {
@@ -164,15 +171,15 @@ public class CM {
 
             double var6 = var4 / (double)var0;
             if(var1 == 0) {
-                System.out.println("The clique_modularity.Omega Index of CNM: " + var6);
+                System.out.println("The clique_modularity.util.metric.Omega Index of CNM: " + var6);
             } else if(var1 == 1) {
-                System.out.println("The clique_modularity.Omega Index of PL: " + var6);
+                System.out.println("The clique_modularity.util.metric.Omega Index of PL: " + var6);
             } else if(var1 == 2) {
-                System.out.println("The clique_modularity.Omega Index of WT: " + var6);
+                System.out.println("The clique_modularity.util.metric.Omega Index of WT: " + var6);
             } else if(var1 == 3) {
-                System.out.println("The clique_modularity.Omega Index of clique_modularity.CM-clique_modularity.BK: " + var6);
+                System.out.println("The clique_modularity.util.metric.Omega Index of clique_modularity.CM-clique_modularity.algorithm.BK.BK: " + var6);
             } else if(var1 == 4) {
-                System.out.println("The clique_modularity.Omega Index of clique_modularity.CM-clique_modularity.KJ: " + var6);
+                System.out.println("The clique_modularity.util.metric.Omega Index of clique_modularity.CM-clique_modularity.algorithm.KJ.KJ: " + var6);
             }
         }
 
@@ -189,9 +196,9 @@ public class CM {
 
             double var5 = var3 / (double)var0;
             if(var1 == 0) {
-                System.out.println("The clique_modularity.Omega Index of clique_modularity.CM-clique_modularity.BK: " + var5);
+                System.out.println("The clique_modularity.util.metric.Omega Index of clique_modularity.CM-clique_modularity.algorithm.BK.BK: " + var5);
             } else {
-                System.out.println("The clique_modularity.Omega Index of clique_modularity.CM-clique_modularity.KJ: " + var5);
+                System.out.println("The clique_modularity.util.metric.Omega Index of clique_modularity.CM-clique_modularity.algorithm.KJ.KJ: " + var5);
             }
         }
 

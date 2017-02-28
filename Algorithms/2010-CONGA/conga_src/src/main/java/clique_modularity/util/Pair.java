@@ -1,9 +1,9 @@
-package clique_modularity;//
+package clique_modularity.util;//
 // Source code recreated from a .class file by IntelliJ IDEA
 // (powered by Fernflower decompiler)
 //
 
-class Pair {
+public class Pair {
     public int value1;
     public int value2;
 

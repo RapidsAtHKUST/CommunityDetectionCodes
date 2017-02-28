@@ -1,7 +1,11 @@
-package clique_modularity;//
+package clique_modularity.util.community;//
 // Source code recreated from a .class file by IntelliJ IDEA
 // (powered by Fernflower decompiler)
 //
+
+import clique_modularity.input_output.ReadEdges;
+import clique_modularity.util.Tree;
+import clique_modularity.util.metric.Modularity;
 
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;

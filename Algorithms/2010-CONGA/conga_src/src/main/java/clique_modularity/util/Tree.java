@@ -1,11 +1,11 @@
-package clique_modularity;//
+package clique_modularity.util;//
 // Source code recreated from a .class file by IntelliJ IDEA
 // (powered by Fernflower decompiler)
 //
 
 import java.util.HashSet;
 
-class Tree {
+public class Tree {
     public boolean isLeaf;
     public HashSet<Integer> set;
     public Tree left;

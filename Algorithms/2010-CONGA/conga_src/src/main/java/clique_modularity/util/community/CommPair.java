@@ -1,9 +1,9 @@
-package clique_modularity;//
+package clique_modularity.util.community;//
 // Source code recreated from a .class file by IntelliJ IDEA
 // (powered by Fernflower decompiler)
 //
 
-class CommPair {
+public class CommPair {
     public int comm1;
     public int comm2;
     public double modInc;
