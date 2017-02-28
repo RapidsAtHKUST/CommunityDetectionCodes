@@ -12,7 +12,7 @@ class OverlapNMI:
         return -num * math.log(2, num)
 
     def __init__(self, num_vertices, result_comm_list, ground_truth_comm_list):
-        self.x_comm_lsit = result_comm_list
+        self.x_comm_list = result_comm_list
         self.y_comm_list = ground_truth_comm_list
         self.num_vertices = num_vertices
 
@@ -52,8 +52,8 @@ class OverlapNMI:
                     min_cond_entropy / sum(map(OverlapNMI.entropy, get_single_distribution(comm_x))))
             return np.mean(partial_res_list)
 
-        return 1 - 0.5 * get_cap_x_given_cap_y(self.x_comm_lsit, self.y_comm_list) - 0.5 * get_cap_x_given_cap_y(
-            self.y_comm_list, self.x_comm_lsit)
+        return 1 - 0.5 * get_cap_x_given_cap_y(self.x_comm_list, self.y_comm_list) - 0.5 * get_cap_x_given_cap_y(
+            self.y_comm_list, self.x_comm_list)
 
 
 if __name__ == '__main__':

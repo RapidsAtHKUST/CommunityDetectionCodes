@@ -33,6 +33,8 @@ Link-Belonging-Based Modularity | [link_belong_modularity.py](Metrics/metrics/li
 Evaluation Metric Name | Implementation | Heuristic
 --- | --- | ---
 Overlap-NMI | [overlap_nmi.py](Metrics/metrics/overlap_nmi.py) | info-theory entropy-measure
+Omega-Idx | [omega_idx.py](Metrics/metrics/omega_idx.py) | unadjusted compared to expected
+
 
 ##Algorithms
 
