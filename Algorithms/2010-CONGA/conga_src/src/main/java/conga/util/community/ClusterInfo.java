@@ -13,6 +13,6 @@ public class ClusterInfo {
     public ArrayList<Pair> steps = new ArrayList();
     public ArrayList<Pair> edgesI = new ArrayList();
 
-    ClusterInfo() {
+    public ClusterInfo() {
     }
 }

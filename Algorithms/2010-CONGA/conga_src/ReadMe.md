@@ -34,3 +34,9 @@ It has also been recently extended to handle weighted networks, and fuzzy overla
 > This page provides the COPRA software developed for the paper Finding overlapping communities in networks by label propagation.
 
 - [copra-guide.pdf](../copra-guide.pdf)
+
+##Compilation via MVN
+
+```zsh
+mvn compile
+```

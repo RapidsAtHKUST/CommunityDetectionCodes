@@ -45,7 +45,7 @@ Algorithm | Category | Language | Dependency | Status
 [2009-EAGLE](Algorithms/2009-EAGLE) | seed expansion | c++ | igraph, boost | build success
 [2010-LinkComm](Algorithms/2010-LinkCommunity) | link partition | python|  |
 [2010-iLCD](Algorithms/2010-iLCD) | seed expansion | java | args4j, trove4j | build success
-[2010-CONGA](Algorithms/2010-CONGA) | dynamics | java | | jars available
+[2010-CONGA](Algorithms/2010-CONGA) | dynamics | java | | build success
 [2010-TopGC](Algorithms/2010-TopGC) | stochastic inference | java | | jars available
 [2011-GCE](Algorithms/2011-GCE) | seed expansion | c++ | boost | build success
 [2011-OSLOM](Algorithms/2011-OSLOM-v2) | seed expansion | c++ |  |
