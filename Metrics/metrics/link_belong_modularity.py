@@ -1,6 +1,7 @@
 import networkx as nx
 import numpy as np
 import math
+from util import *
 
 
 class FuncTag:
@@ -99,3 +100,7 @@ class LinkBelongModularity:
                         modularity_val += f_val_matrix[i][j] - null_model_val
         modularity_val /= edge_num
         return modularity_val
+
+
+if __name__ == '__main__':
+    print cal_modularity(get_graph_info('demo_graph.csv'), [[0, 1, 5], [1, 2, 3, 4, 7, 8]])
