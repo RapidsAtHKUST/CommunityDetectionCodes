@@ -799,30 +799,30 @@ def kcliquePercolator(net, k, start, stop, evaluations, reverse=False, weightFun
 
 
 # ---- Main program and parsing arguments ----
+if __name__ == '__main__':
+    helpstring = "Incremental k-clique percolation algorithm.\n"
+    helpstring += "Usage: python kclique.py netname k [start end numberofevaluations] [weight]\n"
+    helpstring += "If only net name and k is specified, the components are returned. If start end and"
+    helpstring += " number of evaluation are specified the community structure will be evaluated many times."
+    helpstring += " The evaluations are made linearly between start and end. If no weigh is defined, the evaluations"
+    helpstring += " are made with respect to edge weights and if intensity is specified as the weight, weighted k-clique "
+    helpstring += "percolation is used and the evaluation are made with respect to cliques.\n"
+    helpstring += "Example: python kclique.py mynet.edg 5 1000 5000 5 intensty\n"
+    helpstring += "This example returns nodes in 5-clique communities when 1000, 2000, 3000, 4000 and 5000 first 5-cliques are"
+    helpstring += " added to the network after sorting them with respect to intensity.\n"
+    helpstring += "Output is given as a list of nodes separated by space and communities separated by line change."
 
-helpstring = "Incremental k-clique percolation algorithm.\n"
-helpstring += "Usage: python kclique.py netname k [start end numberofevaluations] [weight]\n"
-helpstring += "If only net name and k is specified, the components are returned. If start end and"
-helpstring += " number of evaluation are specified the community structure will be evaluated many times."
-helpstring += " The evaluations are made linearly between start and end. If no weigh is defined, the evaluations"
-helpstring += " are made with respect to edge weights and if intensity is specified as the weight, weighted k-clique "
-helpstring += "percolation is used and the evaluation are made with respect to cliques.\n"
-helpstring += "Example: python kclique.py mynet.edg 5 1000 5000 5 intensty\n"
-helpstring += "This example returns nodes in 5-clique communities when 1000, 2000, 3000, 4000 and 5000 first 5-cliques are"
-helpstring += " added to the network after sorting them with respect to intensity.\n"
-helpstring += "Output is given as a list of nodes separated by space and communities separated by line change."
-
-if len(sys.argv) > 2:
-    filename = sys.argv[1]
-    k = int(sys.argv[2])
-    f = open(filename, 'r')
-    net = loadNet_edg(f)
-if len(sys.argv) > 5:
-    start, stop, evaluations = int(sys.argv[3]), int(sys.argv[4]), int(sys.argv[5])
-    weightFunction = None
-if len(sys.argv) == 7:
-    if sys.argv[6] == "intensity":
-        weightFunction = getIntensity
+    if len(sys.argv) > 2:
+        filename = sys.argv[1]
+        k = int(sys.argv[2])
+        f = open(filename, 'r')
+        net = loadNet_edg(f)
+    if len(sys.argv) > 5:
+        start, stop, evaluations = int(sys.argv[3]), int(sys.argv[4]), int(sys.argv[5])
+        weightFunction = None
+    if len(sys.argv) == 7:
+        if sys.argv[6] == "intensity":
+            weightFunction = getIntensity
 
 if len(sys.argv) == 3:
     cs = getKCliqueComponents(net, k)
