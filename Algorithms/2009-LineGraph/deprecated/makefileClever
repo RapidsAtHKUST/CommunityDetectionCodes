@@ -1,0 +1,15 @@
+# taken from http://mrbook.org/tutorials/make/
+CC=g++
+CFLAGS=-c -Wall
+LDFLAGS=-O2
+SOURCES=main.cpp TseGraph.cpp
+OBJECTS=$(SOURCES:.cpp=.o)
+EXECUTABLE=linegraphcreator
+
+all: $(SOURCES) $(EXECUTABLE)
+	
+$(EXECUTABLE): $(OBJECTS)
+	$(CC) $(LDFLAGS) $(OBJECTS) -o $@
+
+.cpp.o:
+	$(CC) $(CFLAGS) $< -o $@

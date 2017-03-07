@@ -1,0 +1,213 @@
+<html>
+    <head>
+        <title>LineGraphCreator</title>
+        <meta http-equiv="Content-Type" content="text/html;charset=iso-8859-1">
+   <meta name="keywords" content="Tim, Evans, Imperial, College, London, UK, graph, network, line graph, C++, code">
+
+    </head>
+    <body>
+
+    <h1>LineGraphCreator</h1>
+    <h4>Version <tt>091222</tt></h4>
+
+This simple C++ code reads in a graph and creates its weighted line graph. These line graphs are defined in
+the paper by T.S.Evans and R.Lambiotte,
+<a href="http://uk.arxiv.org/abs/0903.2181"><em>Line Graphs, Link Partitions and Overlapping Communities</em></a>,
+    <a href="http://link.aps.org/abstract/PRE/v80/e016105">Phys.Rev.E <b>80</b> (2009) 016105</a>
+    <a href="http://arxiv.org/abs/0903.2181"><tt>arXiv:0903.2181</tt></a>.  Please cite this paper and acknowledge use of this code if you use this code.
+    
+<p>A new paper <a href="http://uk.arxiv.org/abs/0912.4389"><em>Edge
+    Partitions and Overlapping Communities in Complex Networks</em></a>,
+    <a href="http://arxiv.org/abs/0912.4389"><tt>arXiv:0912.4389</tt></a> covers in more detail 
+    the case where one is interested in the different line graphs of a weighted graph.
+
+<p>This code been used successfully on an unweighted graph which produced 5.5e8 stubs in its line graph, though a special machine was used for this as it needs more than 4Gb of RAM memory.  On a 4Gb machine a line graph with 4.5e7 stubs was created using this code. 
+
+<p>This version should do all types of graph.  It has been used extensively on input graphs G which are unweighted and undirected.  It has only been lightly tested on weighted but undirected input graphs G.  
+It has not been tested on directed graph input but since the weighted input graphs produce
+directed line graphs some relevant aspects have been tested.  This is based on a java code that has had much more testing. 
+
+<h3>Usage</h3>
+
+To make a line graph type
+<pre>linegraphcreator -i input_file -o output_file [options]</pre>
+where the options are:-
+<table>
+<tr><td><tt>-t n</tt></td><td>create line graph of type number <tt>n</tt>. Default is 2.</tr>
+<tr><td><tt>-w</tt></td>  <td>	read the graph as a weighted one, otherwise it is unweighted.</tr>
+<tr><td><tt>-d</tt></td>  <td>	read the graph as a directed one, otherwise it is undirected.</tr>
+<tr><td><tt>-h</tt></td>  <td>	show this usage message.</tr>
+</table>
+The line graph types are (see <a href="http://arxiv.org/abs/0903.2181">Evans and Lambiotte, 2009</a>)
+<table>
+<tr><td><tt>0</tt></td><td>	Unweighted and no self loops (C of eqn 8)
+<tr><td><tt>1</tt></td><td>	Unweighted with self-loops (tilde{C} of footnote 2)
+<tr><td><tt>2</tt></td><td>	Weighted and no self loops (D of eqn 11)
+<tr><td><tt>3</tt></td><td>	Weighted with self-loops (E of eqn 14)
+</table>
+
+<p>
+For example try
+<pre>linegraphcreator -i input/BowTieinputEL.dat -o BowTieWLGoutputEL.dat -t 2</pre>
+
+<h3>File Formats</h3>
+
+Files have the vertices numbered from 0.
+Each line corresponds to one edge in the graph and
+has two or three entries separated by white space
+(e.g. using spaces, or by using a tab separated format from a spreadsheet).
+The first two entries are the index of the source then target
+vertices at the two ends of an edge.
+The third column is only used if graph is weighted and is the edge weight.
+No extra entries or lines are tolerated.  In particular
+you must specify the input graph to be weighted (<tt>-w</tt>) if the input file has a third column
+or if its unweighted there must not be a third column.
+Note also that the number of vertices created in the graph is one more
+than the largest vertex index in the list.  The vertices of the graph are numbered from 0 to
+this largest index, inclusive. If an index in this range is not listed in
+the input file (i.e. it has no edges) 
+then it is created in the graph as a vertex of degree 0.
+<p>
+Self-loops may be created but it is not clear if the code works for these.
+<p>
+Multiple edges between the same two vertices may also be created but
+again it is not clear if the code will work properly in this case.
+<p>
+The output files are in the ssame format.  The vertices of the line graph 
+are the edges of the original graph and are again numbered from 0 
+in the order of the edges given in the input file for the original graph G.
+<h4>Example One</h4>
+For example the undirected, unweighted Bow Tie diagram (Fig.1 of <a href="http://arxiv.org/abs/0903.2181">Evans and Lambiotte, 2009</a>) is given in the file <tt>input/BowTieinputEL.dat</tt> and is simply
+<pre>
+0 1
+0 2
+1 2
+2 3
+2 4
+3 4
+</pre>
+If you type
+<pre>linegraphcreator -i input/BowTieinputEL.dat -o BowTieWLGoutputEL.dat -t 2</pre>
+this should produce a type 2 line graph D(G) as follows:-
+<pre>
+0	1	1
+0	2	1
+1	2	0.333333
+1	3	0.333333
+1	4	0.333333
+2	3	0.333333
+2	4	0.333333
+3	4	0.333333
+3	5	1
+4	5	1
+</pre>
+where the first two columns are the vertices in the line graph and the last is the weight.  Note that the vertices in the line graph are numbered from 0 in the order of the edges in the input file.  Thus edge (0,1) in the input file for graph G is vertex 0 in the output file for D(G).
+Thus edge (0,1) in the input file for graph G is vertex 0 in the output file for D(G), while edge (3,4) in the input file for graph G is vertex 5 in the output file for D(G).
+
+<h4>Example Two</h4>
+A second example is the weighted undirected Bow Tie diagram given in the file <tt>input/BowTieWinputEL.dat</tt> <pre>
+0 1 1
+0 2 2
+1 2 1
+2 3 1
+2 4 1
+3 4 1
+</pre>
+
+If you type
+<pre>linegraphcreator -i input/BowTieWinputEL.dat -o BowTieW_WLGoutputEL.dat -t 2 -w</pre>
+this it should produce a type 2 line graph D(G) as follows:-
+<pre>
+0	1	1
+1	0	1
+0	2	1
+2	0	1
+1	2	0.333333
+1	3	0.333333
+1	4	0.333333
+2	1	0.5
+2	3	0.25
+2	4	0.25
+3	1	0.5
+3	2	0.25
+3	4	0.25
+4	1	0.5
+4	2	0.25
+4	3	0.25
+3	5	1
+5	3	1
+4	5	1
+5	4	1
+</pre>
+where the first column is the source vertex, the second is the target vertex and the last is the edge weight.  Note that the vertices in the line graph are again numbered from 0 in the order of the edges in the input file.  Thus edge (0,1) in the input file for graph G is vertex 0 in the output file for D(G), while edge (3,4) in the input file for graph G is vertex 5 in the output file for D(G).
+
+<h3>Basic Compiling</h3>
+
+You can try the following:-
+<pre>
+g++ -o linegraphcreator TseGraph.cpp main.cpp
+</pre>
+The <tt>TseGraph.o</tt> and <tt>main.o</tt> files can be deleted afterwards.  The <tt>g++.exe</tt> depends on your compiler, here the standard gnu c++ compiler is used.  Below for the intel compiler on the altix <tt>icpc</tt> is needed.  This produces an executable <tt>linegraphcreator</tt> (on Windows its <tt>linegraphcreator.exe</tt>). This is run by typing <tt>./linegraphcreator</tt> on Unix (simply <tt>linegraphcreator</tt> on Windows). with any options you require.
+
+<p>If you want to get more complicated, try optimising options <tt>-O2</tt>
+<pre>
+g++ -c -O2 -o TseGraph.o TseGraph.cpp
+g++ -c -O2 -o main.o main.cpp
+g++ -o linegraphcreator TseGraph.o main.o
+</pre>
+
+<h3>makefile</h3>
+
+If you have <tt>make</tt> then the following <tt>makefile</tt> might work.  The <tt>makefile</tt> is stored as <tt>makefileTSE</tt> but needs to be renamed to be simply  <tt>makefile</tt>.  Then just move to the directory with the <tt>main.cpp</tt>, <tt>TseGrapgcpp.cpp</tt>, <tt>TseGrapgcpp.h</tt> and <tt>makefile</tt>
+then type <tt>make</tt>.  For information on make try <a href="http://mrbook.org/tutorials/make/">mrbook.org/tutorials/make/</a>.
+<pre>
+CC=g++
+CFLAGS=-c -Wall
+LDFLAGS=-O2
+
+all: linegraphcreator
+
+linegraphcreator: main.o TseGraph.o
+	$(CC) $(LDFLAGS) main.o TseGraph.o -o linegraphcreator
+
+main.o: main.cpp
+	$(CC) $(CFLAGS) main.cpp
+
+factorial.o: factorial.cpp
+	$(CC) $(CFLAGS) TseGraph.cpp
+
+clean:
+	rm -rf *o linegraphcreator
+</pre>
+
+
+<h3>Using on the Imperial altix HPC machine</h3>
+
+To run on the altix first compile using the following: (see <tt>axlgcmake.sh</tt>)
+<pre>
+ module load intel-suite icpc -xP -mcmodel=large -i-dynamic -o linegraphcreator TseGraph.cpp main.cpp
+</pre>
+Next submit a script to run this by using
+<pre>qsub axlgc.sh</pre> making a note of the job number.
+The script should look something like this:
+<pre>
+#!/bin/bash
+#PBS -l walltime=24:00:00
+#PBS -l mem=60Gb
+#PBS -l ncpus=4
+#PBS -m abe
+# Script to run linegraphcreator (C++) on ALTIX
+#
+# compile using
+#module load intel-suite
+#icpc -mcmodel=large -i-dynamic -o linegraphcreator TseGraph.cpp main.cpp
+
+module load intel-suite
+export NAMEROOT=IC090729stempt
+export NAMEEND=inputEL.dat
+cp -v ${HOME}/linegraphcreator/input/${NAMEROOT}${NAMEEND} ${TMPDIR}
+echo Running ${NAMEROOT}
+${HOME}/linegraphcreator/linegraphcreator  -i ${TMPDIR}/${NAMEROOT}${NAMEEND} -o ${TMPDIR}/${NAMEROOT}WLGoutputEL.dat -t 2
+cp -v ${TMPDIR}/${NAMEROOT}WLG* ${HOME}/linegraphcreator/output/
+</pre>
+Note the job number used and check progress using <tt>qstat</tt>.  When finished there will be files called <tt>axlgc.sh.o</tt><em>NNN</em> and <tt>axlgc.sh.e</tt><em>NNN</em> for the standard output and error streams respectively, where <em>NNN</em> is the job number.
