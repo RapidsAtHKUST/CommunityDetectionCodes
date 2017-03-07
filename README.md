@@ -65,7 +65,7 @@ Algorithm | Category | Language | Dependency | Status
 [2013-SVINET](Algorithms/2013-SVINET) | stochastic inference | c++ | | 
 [2013-SeedExpansion](Algorithms/2013-Seed-Set-Expansion) | page-rank | c++, matlab | graclus, matlabgl | 
 [2014-HRGrow](Algorithms/2014-Heat-Kernel) | matrix-exponential | c++, matlab, python | pylibbvg | python okay
-[2015-LEMON](Algorithms/2015-LEMON) | link partition | python | pulp | python okay
+[2015-LEMON](Algorithms/2015-LEMON) | seed expansion | python | pulp | python okay
 
 ##Submodules(Dependencies)
 
