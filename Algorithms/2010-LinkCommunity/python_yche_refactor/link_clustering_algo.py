@@ -65,7 +65,7 @@ class HLC:
         self.edge2cid = {}
         self.cid2nodes, self.cid2edges = {}, {}
         self.orig_cid2edge = {}
-        self.curr_maxcid = 0
+        self.curr_max_cid = 0
         self.linkage = []  # dendrogram
 
         self.D = 0.0  # partition density
@@ -77,7 +77,7 @@ class HLC:
                 self.cid2edges[cid] = {edge}
                 self.orig_cid2edge[cid] = edge
                 self.cid2nodes[cid] = set(edge)
-            self.curr_maxcid = len(self.edges) - 1
+            self.curr_max_cid = len(self.edges) - 1
 
         initialize_edges()  # every edge in its own comm
 
@@ -103,8 +103,8 @@ class HLC:
             cid1, cid2 = cid2, cid1
 
         if dendro_flag:
-            self.curr_maxcid += 1
-            newcid = self.curr_maxcid
+            self.curr_max_cid += 1
+            newcid = self.curr_max_cid
             self.cid2edges[newcid] = self.cid2edges[cid1] | self.cid2edges[cid2]
             self.cid2nodes[newcid] = set()
             for e in chain(self.cid2edges[cid1], self.cid2edges[cid2]):

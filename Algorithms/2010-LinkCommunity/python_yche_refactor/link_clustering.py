@@ -15,21 +15,16 @@ class MyParser(OptionParser):
 if __name__ == '__main__':
     usage = "usage: python %prog [options] filename"
     parser = MyParser(usage)
-    parser.add_option("-d", "--delimiter", dest="delimiter", default="\t",
-                      help="delimiter of input & output files [default: tab]")
     parser.add_option("-t", "--threshold", dest="threshold", type="float", default=None,
                       help="threshold to cut the dendrogram (optional)")
     parser.add_option("-w", "--weighted", dest="is_weighted", action="store_true", default=False,
                       help="is the network weighted?")
     parser.add_option("-r", "--record-dendrogram", dest="dendro_flag", action="store_true",
                       default=False, help="recording the whole dendrogram (optional)")
-
-    (options, args) = parser.parse_args()
+    options, args = parser.parse_args()
     if len(args) != 1:
         parser.error("incorrect number of arguments")
-    delimiter = options.delimiter
-    if delimiter == '\\t':
-        delimiter = '\t'
+
     threshold = options.threshold
     is_weighted = options.is_weighted
     dendro_flag = options.dendro_flag
@@ -38,9 +33,9 @@ if __name__ == '__main__':
     basename = os.path.splitext(args[0])[0]
 
     if is_weighted:
-        adj, edges, ij2wij = read_edge_list_weighted(args[0], delimiter=delimiter)
+        adj, edges, ij2wij = read_edge_list_weighted(args[0])
     else:
-        adj, edges = read_edge_list_unweighted(args[0], delimiter=delimiter)
+        adj, edges = read_edge_list_unweighted(args[0])
 
     if threshold is not None:
         if is_weighted:

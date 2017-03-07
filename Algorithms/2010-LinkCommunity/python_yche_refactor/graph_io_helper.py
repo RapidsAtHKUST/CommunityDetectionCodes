@@ -12,29 +12,27 @@ def get_sorted_edge(a, b):
     return a, b
 
 
-def read_edge_list_unweighted(filename, delimiter=None, node_type=str):
+def read_edge_list_unweighted(filename, node_type=str):
     adj_list_dict = defaultdict(set)
     edges = set()
     with open(filename) as ifs:
-        lines = map(lambda ele: ele.strip().split(delimiter), ifs.readlines())
+        edge_list = map(lambda ele: ele.strip().split(), ifs.readlines())
+        print edge_list
+        edge_list = filter(lambda edge: edge[0] != edge[1], map(lambda edge: map(node_type, edge), edge_list))
 
-        # for line in open(filename, 'U'):
-        #     edge_tuple = line.strip().split(delimiter)
-        #
-        #     ni, nj = node_type(edge_tuple[0]), node_type(edge_tuple[1])
-        #     if ni != nj:
-        #         edges.add(get_sorted_edge(ni, nj))
-        #         adj_list_dict[ni].add(nj)
-        #         adj_list_dict[nj].add(ni)
-        # return dict(adj_list_dict), edges
+        for ni, nj in edge_list:
+            edges.add(get_sorted_edge(ni, nj))
+            adj_list_dict[ni].add(nj)
+            adj_list_dict[nj].add(ni)
+        return dict(adj_list_dict), edges
 
 
-def read_edge_list_weighted(filename, delimiter=None, node_type=str, weight_type=float):
+def read_edge_list_weighted(filename, node_type=str, weight_type=float):
     adj = defaultdict(set)
     edges = set()
     ij2wij = {}
     for line in open(filename, 'U'):
-        L = line.strip().split(delimiter)
+        L = line.strip().split()
         ni, nj, wij = node_type(L[0]), node_type(L[1]), weight_type(L[2])
         if ni != nj:
             ni, nj = get_sorted_edge(ni, nj)
