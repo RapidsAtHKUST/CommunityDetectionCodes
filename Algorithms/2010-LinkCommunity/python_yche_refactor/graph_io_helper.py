@@ -7,9 +7,7 @@ from collections import defaultdict
 
 
 def get_sorted_edge(a, b):
-    if a > b:
-        return b, a
-    return a, b
+    return tuple(sorted((a, b)))
 
 
 def read_edge_list_unweighted(filename, node_type=str):
@@ -17,7 +15,6 @@ def read_edge_list_unweighted(filename, node_type=str):
     edges = set()
     with open(filename) as ifs:
         edge_list = map(lambda ele: ele.strip().split(), ifs.readlines())
-        print edge_list
         edge_list = filter(lambda edge: edge[0] != edge[1], map(lambda edge: map(node_type, edge), edge_list))
 
         for ni, nj in edge_list:

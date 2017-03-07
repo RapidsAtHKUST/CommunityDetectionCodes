@@ -24,7 +24,6 @@ if __name__ == '__main__':
     options, args = parser.parse_args()
     if len(args) != 1:
         parser.error("incorrect number of arguments")
-
     threshold = options.threshold
     is_weighted = options.is_weighted
     dendro_flag = options.dendro_flag
@@ -43,7 +42,7 @@ if __name__ == '__main__':
         else:
             edge2cid, D_thr = HLC(adj, edges).single_linkage(threshold)
         print "# D_thr = %f" % D_thr
-        write_edge2cid(edge2cid, "%s_thrS%f_thrD%f" % (basename, threshold, D_thr), delimiter=delimiter)
+        write_edge2cid(edge2cid, "%s_thrS%f_thrD%f" % (basename, threshold, D_thr))
     else:
         if is_weighted:
             edge2cid, S_max, D_max, list_D = HLC(adj, edges).single_linkage(w=ij2wij)
@@ -60,4 +59,4 @@ if __name__ == '__main__':
             print >> f, s, D
         f.close()
         print "# D_max = %f\n# S_max = %f" % (D_max, S_max)
-        write_edge2cid(edge2cid, "%s_maxS%f_maxD%f" % (basename, S_max, D_max), delimiter=delimiter)
+        write_edge2cid(edge2cid, "%s_maxS%f_maxD%f" % (basename, S_max, D_max))
