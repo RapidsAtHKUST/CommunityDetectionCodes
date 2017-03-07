@@ -10,46 +10,47 @@ from itertools import combinations, chain
 class HLC:
     @staticmethod
     def get_sorted_pair(a, b):
-        return b, a if a > b else a, b
+        return tuple(sorted([a, b]))
 
     @staticmethod
     def sort_edge_pairs_by_similarity(adj_list_dict):
-        def cal_jaccard_non_weighted(left_set, right_set):
+        def cal_jaccard(left_set, right_set):
             return 1.0 * len(left_set & right_set) / len(left_set | right_set)
 
         inc_adj_list_dict = dict((n, adj_list_dict[n] | {n}) for n in adj_list_dict)
         min_heap = []
         for vertex in adj_list_dict:
-            if len(adj_list_dict[vertex]) > 1:
-                for i, j in combinations(adj_list_dict[vertex], 2):
+            for i in xrange(len(adj_list_dict[vertex])):
+                for j in xrange(i + 1, len(adj_list_dict[vertex])):
                     edge_pair = HLC.get_sorted_pair(HLC.get_sorted_pair(i, vertex), HLC.get_sorted_pair(j, vertex))
-                    similarity_ratio = cal_jaccard_non_weighted(inc_adj_list_dict[i], inc_adj_list_dict[j])
+                    similarity_ratio = cal_jaccard(inc_adj_list_dict[i], inc_adj_list_dict[j])
                     heappush(min_heap, (1 - similarity_ratio, edge_pair))
         return [heappop(min_heap) for _ in xrange(len(min_heap))]
 
     @staticmethod
-    def sort_edge_pairs_by_similarity_weighted(adj_dict, edge_weight_dict):
-        inc_adj_list_dict = dict((n, adj_dict[n] | {n}) for n in adj_dict)
+    def sort_edge_pairs_by_similarity_weighted(adj_list_dict, edge_weight_dict):
+        inc_adj_list_dict = dict((n, adj_list_dict[n] | {n}) for n in adj_list_dict)
 
-        def cal_jaccard_weighted(intersect_val, left_val, right_val):
-            return intersect_val / (left_val, right_val - intersect_val)
+        def cal_jaccard(intersect_val, left_val, right_val):
+            return intersect_val / (left_val + right_val - intersect_val)
 
         Aij = copy(edge_weight_dict)
         n2a_sqrd = {}
-        for vertex in adj_dict:
-            Aij[vertex, vertex] = float(sum(edge_weight_dict[HLC.get_sorted_pair(vertex, i)] for i in adj_dict[vertex]))
-            Aij[vertex, vertex] /= len(adj_dict[vertex])
+        for vertex in adj_list_dict:
+            Aij[vertex, vertex] = float(
+                sum(edge_weight_dict[HLC.get_sorted_pair(vertex, i)] for i in adj_list_dict[vertex]))
+            Aij[vertex, vertex] /= len(adj_list_dict[vertex])
             n2a_sqrd[vertex] = sum(Aij[HLC.get_sorted_pair(vertex, i)] ** 2
                                    for i in inc_adj_list_dict[vertex])  # includes (n,n)!
 
         min_heap = []
-        for vertex in adj_dict:
-            if len(adj_dict[vertex]) > 1:
-                for i, j in combinations(adj_dict[vertex], 2):
+        for vertex in adj_list_dict:
+            for i in xrange(len(adj_list_dict[vertex])):
+                for j in xrange(i + 1, len(adj_list_dict[vertex])):
                     edge_pair = HLC.get_sorted_pair(HLC.get_sorted_pair(i, vertex), HLC.get_sorted_pair(j, vertex))
                     ai_dot_aj = float(sum(Aij[HLC.get_sorted_pair(i, x)] * Aij[HLC.get_sorted_pair(j, x)] for x in
                                           inc_adj_list_dict[i] & inc_adj_list_dict[j]))
-                    similarity_ratio = cal_jaccard_weighted(ai_dot_aj, n2a_sqrd[i], n2a_sqrd[j])
+                    similarity_ratio = cal_jaccard(ai_dot_aj, n2a_sqrd[i], n2a_sqrd[j])
                     heappush(min_heap, (1 - similarity_ratio, edge_pair))
         return [heappop(min_heap) for _ in xrange(len(min_heap))]
 
@@ -66,7 +67,7 @@ class HLC:
 
         def initialize_edges():
             for cid, edge in enumerate(self.edges):
-                edge = HLC.get_sorted_pair(*edge)  # just in case
+                edge = HLC.get_sorted_pair(*edge)
                 self.edge2cid[edge] = cid
                 self.cid2edges[cid] = {edge}
                 self.orig_cid2edge[cid] = edge

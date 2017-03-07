@@ -7,7 +7,7 @@ from collections import defaultdict
 
 
 def get_sorted_edge(a, b):
-    return tuple(sorted((a, b)))
+    return tuple(sorted([a, b]))
 
 
 def read_edge_list_unweighted(filename, node_type=str):
@@ -16,11 +16,16 @@ def read_edge_list_unweighted(filename, node_type=str):
     with open(filename) as ifs:
         edge_list = map(lambda ele: ele.strip().split(), ifs.readlines())
         edge_list = filter(lambda edge: edge[0] != edge[1], map(lambda edge: map(node_type, edge), edge_list))
+        print edge_list
 
         for ni, nj in edge_list:
+            print ni, nj
             edges.add(get_sorted_edge(ni, nj))
+            print edges
             adj_list_dict[ni].add(nj)
             adj_list_dict[nj].add(ni)
+        print adj_list_dict
+        print edges
         return dict(adj_list_dict), edges
 
 
