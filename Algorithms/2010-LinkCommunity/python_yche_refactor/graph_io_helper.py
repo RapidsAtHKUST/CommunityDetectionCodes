@@ -15,14 +15,18 @@ def get_sorted_edge(a, b):
 def read_edge_list_unweighted(filename, delimiter=None, node_type=str):
     adj_list_dict = defaultdict(set)
     edges = set()
-    for line in open(filename, 'U'):
-        edge_tuple = line.strip().split(delimiter)
-        ni, nj = node_type(edge_tuple[0]), node_type(edge_tuple[1])
-        if ni != nj:
-            edges.add(get_sorted_edge(ni, nj))
-            adj_list_dict[ni].add(nj)
-            adj_list_dict[nj].add(ni)
-    return dict(adj_list_dict), edges
+    with open(filename) as ifs:
+        lines = map(lambda ele: ele.strip().split(delimiter), ifs.readlines())
+
+        # for line in open(filename, 'U'):
+        #     edge_tuple = line.strip().split(delimiter)
+        #
+        #     ni, nj = node_type(edge_tuple[0]), node_type(edge_tuple[1])
+        #     if ni != nj:
+        #         edges.add(get_sorted_edge(ni, nj))
+        #         adj_list_dict[ni].add(nj)
+        #         adj_list_dict[nj].add(ni)
+        # return dict(adj_list_dict), edges
 
 
 def read_edge_list_weighted(filename, delimiter=None, node_type=str, weight_type=float):
