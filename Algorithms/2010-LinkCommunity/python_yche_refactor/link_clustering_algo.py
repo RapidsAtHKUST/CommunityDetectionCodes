@@ -7,28 +7,13 @@ from itertools import combinations, chain
 
 
 def get_sorted_pair(a, b):
-    if a > b:
-        return b, a
-    else:
-        return a, b
-
-
-def cal_density(edge_num, vertex_num):
-    if vertex_num > 2:
-        return edge_num * (edge_num - vertex_num + 1.0) / ((vertex_num - 2.0) * (vertex_num - 1.0))
-    else:
-        return 0.0
-
-
-def cal_jaccard_non_weighted(left_set, right_set):
-    return 1.0 * len(left_set & right_set) / len(left_set | right_set)
-
-
-def cal_jaccard_weighted(intersect_val, left_val, right_val):
-    return intersect_val / (left_val, right_val - intersect_val)
+    return b, a if a > b else a, b
 
 
 def sort_edge_pairs_by_similarity(adj_list_dict):
+    def cal_jaccard_non_weighted(left_set, right_set):
+        return 1.0 * len(left_set & right_set) / len(left_set | right_set)
+
     inc_adj_list_dict = dict((n, adj_list_dict[n] | {n}) for n in adj_list_dict)
     min_heap = []
     for vertex in adj_list_dict:
@@ -38,11 +23,14 @@ def sort_edge_pairs_by_similarity(adj_list_dict):
                 inc_neighbors_i, inc_neighbors_j = inc_adj_list_dict[i], inc_adj_list_dict[j]
                 similarity_ratio = cal_jaccard_non_weighted(inc_neighbors_i, inc_neighbors_j)
                 heappush(min_heap, (1 - similarity_ratio, edge_pair))
-    return [heappop(min_heap) for i in xrange(len(min_heap))]
+    return [heappop(min_heap) for _ in xrange(len(min_heap))]
 
 
 def sort_edge_pairs_by_similarity_weighted(adj_dict, edge_weight_dict):
     inc_adj_list_dict = dict((n, adj_dict[n] | {n}) for n in adj_dict)
+
+    def cal_jaccard_weighted(intersect_val, left_val, right_val):
+        return intersect_val / (left_val, right_val - intersect_val)
 
     Aij = copy(edge_weight_dict)
     n2a_sqrd = {}
@@ -64,7 +52,7 @@ def sort_edge_pairs_by_similarity_weighted(adj_dict, edge_weight_dict):
 
                 similarity_ratio = cal_jaccard_weighted(ai_dot_aj, n2a_sqrd[i], n2a_sqrd[j])
                 heappush(min_heap, (1 - similarity_ratio, edge_pair))
-    return [heappop(min_heap) for i in xrange(len(min_heap))]
+    return [heappop(min_heap) for _ in xrange(len(min_heap))]
 
 
 # Hierarchical Link Community
@@ -81,23 +69,28 @@ class HLC:
         self.linkage = []  # dendrogram
 
         self.D = 0.0  # partition density
-        self.initialize_edges()  # every edge in its own comm
+
+        def initialize_edges():
+            for cid, edge in enumerate(self.edges):
+                edge = get_sorted_pair(*edge)  # just in case
+                self.edge2cid[edge] = cid
+                self.cid2edges[cid] = {edge}
+                self.orig_cid2edge[cid] = edge
+                self.cid2nodes[cid] = set(edge)
+            self.curr_maxcid = len(self.edges) - 1
+
+        initialize_edges()  # every edge in its own comm
 
         self.list_D = [(1.0, 0.0)]  # list of (S_i,D_i) tuples...
         self.best_D = 0.0
         self.best_S = 1.0  # similarity threshold at self.best_D
         self.best_P = None  # best partition, dict: edge -> cid
 
-    def initialize_edges(self):
-        for cid, edge in enumerate(self.edges):
-            edge = get_sorted_pair(*edge)  # just in case
-            self.edge2cid[edge] = cid
-            self.cid2edges[cid] = {edge}
-            self.orig_cid2edge[cid] = edge
-            self.cid2nodes[cid] = set(edge)
-        self.curr_maxcid = len(self.edges) - 1
-
     def merge_comms(self, edge1, edge2, S, dendro_flag=False):
+        def cal_density(edge_num, vertex_num):
+            return edge_num * (edge_num - vertex_num + 1.0) / (
+                (vertex_num - 2.0) * (vertex_num - 1.0)) if vertex_num > 2 else 0.0
+
         if not edge1 or not edge2:  # We'll get (None, None) at the end of clustering
             return
         cid1, cid2 = self.edge2cid[edge1], self.edge2cid[edge2]
