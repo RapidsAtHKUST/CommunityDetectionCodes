@@ -1,7 +1,7 @@
 """
 An agglomerative k-clique percolation algorithm.
 This script is divided to parts as follows:
-*networking framework: general datastructures for graphs
+*networking framework: general data structures for graphs
 *extra functions for networks: also other helpful functions and classes
 *percolation framework: general classes for edge percolation
 *k-clique percolator: implementation of the sequential k-clique algorithm
@@ -12,7 +12,8 @@ See http://arxiv.org/abs/0805.1449 for an explanation of the algorithm.
 Author: Mikko Kivela (mtkivela at lce.hut.fi)
 Jorkki Hyvonen is the author of the classes Net, Node and SymmNet
 """
-import sys, array, math
+
+import sys
 from operator import mul
 
 
@@ -103,8 +104,8 @@ class Net(object):
 
 class Node(object):
     def __init__(self, net, index):
-        self.net = net;
-        self.index = index;
+        self.net = net
+        self.index = index
 
     def __iter__(self):
         if not self.index in self.net._nodes:
@@ -784,17 +785,18 @@ def kcliquePercolator(net, k, start, stop, evaluations, reverse=False, weightFun
     K-clique percolator. This sorts the edges and combines the phases I-II. See
     helpstring below for explanation of the arguments.
     """
-    if weightFunction == None:  # unweighted clique percolation with thresholding
+    if weightFunction is None:  # unweighted clique percolation with thresholding
         edges = list(net.edges)
         edges.sort(lambda x, y: cmp(x[2], y[2]), reverse=reverse)
         edgesAndEvaluations = EvaluationList(edges)
         edgesAndEvaluations.setLinearEvaluations(start, stop, evaluations)
-        kcliques = kcliquesByEdges(edgesAndEvaluations, k)
+        k_cliques = kcliquesByEdges(edgesAndEvaluations, k)
     else:  # weighted clique percolation
-        kcliques = EvaluationList(kcliquesWeight(net, k, weightFunction), weightFunction=lambda x: getIntensity(x, net))
-        kcliques.setLinearEvaluations(start, stop, evaluations)
+        k_cliques = EvaluationList(kcliquesWeight(net, k, weightFunction),
+                                   weightFunction=lambda x: getIntensity(x, net))
+        k_cliques.setLinearEvaluations(start, stop, evaluations)
 
-    for community in communitiesByKCliques(kcliques):
+    for community in communitiesByKCliques(k_cliques):
         yield community
 
 
@@ -824,12 +826,12 @@ if __name__ == '__main__':
         if sys.argv[6] == "intensity":
             weightFunction = getIntensity
 
-if len(sys.argv) == 3:
-    cs = getKCliqueComponents(net, k)
-    print cs
-elif len(sys.argv) == 6 or len(sys.argv) == 7:
-    for cs in kcliquePercolator(net, k, start, stop, evaluations, weightFunction=weightFunction):
-        print "At threshold: " + str(cs.threshold)
+    if len(sys.argv) == 3:
+        cs = getKCliqueComponents(net, k)
         print cs
-else:
-    print helpstring
+    elif len(sys.argv) == 6 or len(sys.argv) == 7:
+        for cs in kcliquePercolator(net, k, start, stop, evaluations, weightFunction=weightFunction):
+            print "At threshold: " + str(cs.threshold)
+            print cs
+    else:
+        print helpstring
