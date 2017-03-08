@@ -51,7 +51,7 @@ Algorithm | Category | Language | Dependency | Status
 [2008-CPM](Algorithms/2008-CliquePercolation) | clique percolation | c++, python | | 
 [2009-CIS](Algorithms/2009-Connected-Iterative-Scan) | seed expansion | c++ |  | build success
 [2009-EAGLE](Algorithms/2009-EAGLE) | seed expansion | c++ | igraph, boost | build success
-[2010-LinkComm](Algorithms/2010-LinkCommunity) | link partition | python|  |
+[2010-LinkComm](Algorithms/2010-LinkCommunity) | link partition | python| optparse | python okay
 [2010-iLCD](Algorithms/2010-iLCD) | seed expansion | java | args4j, trove4j | build success
 [2010-CONGA](Algorithms/2010-CONGA) | dynamics | java | | build success
 [2010-TopGC](Algorithms/2010-TopGC) | stochastic inference | java | | jars available

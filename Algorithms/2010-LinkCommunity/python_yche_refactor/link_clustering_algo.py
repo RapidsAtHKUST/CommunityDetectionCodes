@@ -20,8 +20,8 @@ class HLC:
         inc_adj_list_dict = dict((n, adj_list_dict[n] | {n}) for n in adj_list_dict)
         min_heap = []
         for vertex in adj_list_dict:
-            for i in xrange(len(adj_list_dict[vertex])):
-                for j in xrange(i + 1, len(adj_list_dict[vertex])):
+            if len(adj_list_dict[vertex]) > 1:
+                for i, j in combinations(adj_list_dict[vertex], 2):
                     edge_pair = HLC.get_sorted_pair(HLC.get_sorted_pair(i, vertex), HLC.get_sorted_pair(j, vertex))
                     similarity_ratio = cal_jaccard(inc_adj_list_dict[i], inc_adj_list_dict[j])
                     heappush(min_heap, (1 - similarity_ratio, edge_pair))
@@ -45,8 +45,8 @@ class HLC:
 
         min_heap = []
         for vertex in adj_list_dict:
-            for i in xrange(len(adj_list_dict[vertex])):
-                for j in xrange(i + 1, len(adj_list_dict[vertex])):
+            if len(adj_list_dict[vertex]) > 1:
+                for i, j in combinations(adj_list_dict[vertex], 2):
                     edge_pair = HLC.get_sorted_pair(HLC.get_sorted_pair(i, vertex), HLC.get_sorted_pair(j, vertex))
                     ai_dot_aj = float(sum(Aij[HLC.get_sorted_pair(i, x)] * Aij[HLC.get_sorted_pair(j, x)] for x in
                                           inc_adj_list_dict[i] & inc_adj_list_dict[j]))
@@ -143,7 +143,7 @@ class HLC:
                     self.best_P = copy(self.edge2cid)  # slow...
                 self.list_D.append((cur_similarity, self.D))
                 prev_similarity = cur_similarity
-            merge_comms(eij_eik[0], eij_eik[1], cur_similarity, dendro_flag)
+            merge_comms(eij_eik[0], eij_eik[1], cur_similarity)
 
         if threshold is not None:
             return self.edge2cid, self.D
