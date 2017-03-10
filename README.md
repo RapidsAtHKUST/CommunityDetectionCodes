@@ -54,7 +54,7 @@ Algorithm | Category | Language | Dependency | Status
 [2010-LinkComm](Algorithms/2010-LinkCommunity) | link partition | python| optparse | python okay
 [2010-iLCD](Algorithms/2010-iLCD) | seed expansion | java | args4j, trove4j | build success
 [2010-CONGA](Algorithms/2010-CONGA) | dynamics | java | | build success
-[2010-TopGC](Algorithms/2010-TopGC) | stochastic inference | java | | jars available
+[2010-TopGC](Algorithms/2010-TopGC) | stochastic inference | java | | build success/ comment something
 [2011-GCE](Algorithms/2011-GCE) | seed expansion | c++ | boost | build success
 [2011-OSLOM](Algorithms/2011-OSLOM-v2) | seed expansion | c++ |  |
 [2011-MOSES](Algorithms/2011-MOSES) | fuzzy detection | c++ | boost | 
