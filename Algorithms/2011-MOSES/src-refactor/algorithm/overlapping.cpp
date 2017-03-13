@@ -1,4 +1,3 @@
-#include "overlapping.hpp"
 /* TODO:
  *   grow seeds from edges, not nodes.
  *   Why are the results changing?
@@ -31,6 +30,8 @@
  *   459: (arbitrary, not random) Tie breaker in seed expansion
  */
 
+#include "overlapping.hpp"
+
 #include <cmath>
 #include <cstring>
 #include <cfloat>
@@ -52,10 +53,10 @@
 #include <boost/unordered_map.hpp>
 #include <boost/unordered_set.hpp>
 
-#include "../util/graph/iterative.hpp"
-#include "../options.hpp"
+#include "util/graph/iterative.hpp"
+#include "util/program_options/options.hpp"
 #include "util/range.hpp"
-#include "grouping.hpp"
+#include "algorithm/grouping.hpp"
 
 using namespace std;
 using namespace std::tr1;

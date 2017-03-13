@@ -10,7 +10,7 @@
 #include <signal.h>
 
 #include "graph_loading.hpp"
-#include "options.hpp"
+#include "util/program_options/options.hpp"
 
 #include <boost/multi_index_container.hpp>
 #include <boost/multi_index/ordered_index.hpp>

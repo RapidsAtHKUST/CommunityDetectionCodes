@@ -1,4 +1,5 @@
 #include <set>
+
 #include <boost/unordered_map.hpp>
 
 #include "util/graph/graph_representation.hpp"

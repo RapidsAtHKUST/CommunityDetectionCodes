@@ -1,4 +1,5 @@
 #include "grouping.hpp"
+
 #include <boost/unordered_set.hpp>
 
 #include "util/range.hpp"

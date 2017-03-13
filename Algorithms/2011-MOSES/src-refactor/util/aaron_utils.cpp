@@ -3,6 +3,7 @@
 #include <ext/stdio_filebuf.h>
 #include <sys/stat.h> // for stat(2)
 
+
 int testForError(FILE *x) { return x == NULL; }
 
 int testForError(int x) { return x == -1; }
