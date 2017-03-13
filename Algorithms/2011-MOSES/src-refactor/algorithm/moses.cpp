@@ -1,11 +1,11 @@
-#include <string.h>
+#include <cstring>
 #include <getopt.h>
 #include <limits>
 
-#include "../util/graph/graph_loading.hpp"
-#include "../util/graph/graph_representation.hpp"
-#include "overlapping.hpp"
-#include "../options.hpp"
+#include "util/graph/graph_loading.hpp"
+#include "util/graph/graph_representation.hpp"
+#include "algorithm/overlapping.hpp"
+#include "options.hpp"
 
 long double option_p_in = 0.9;  // THESE ARE IRRELEVANT NOW
 long double option_p_out = 1e-2;  // THESE ARE IRRELEVANT NOW

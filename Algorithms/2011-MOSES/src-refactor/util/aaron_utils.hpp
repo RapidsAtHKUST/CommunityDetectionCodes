@@ -11,7 +11,7 @@ using namespace std;
 #include <stdlib.h>
 #include <sys/time.h>
 #include <map>
-#include "Range.hpp"
+#include "range.hpp"
 
 typedef long long int64;
 typedef unsigned long long uint64;

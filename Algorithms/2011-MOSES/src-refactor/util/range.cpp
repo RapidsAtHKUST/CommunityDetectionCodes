@@ -1,12 +1,12 @@
-#include "Range.hpp"
+#include "range.hpp"
 
 #include <assert.h>
 
 namespace amd {
 
-std::auto_ptr< Range<std::string> > rangeOverStream(std::istream &_istr, const char * _delims /*= "\n"*/) {
-	Range< std::string > *r = new RangeOverStream(_istr, _delims);
-	return std::auto_ptr< Range<std::string> > (r);
+std::auto_ptr< range<std::string> > rangeOverStream(std::istream &_istr, const char * _delims /*= "\n"*/) {
+	range< std::string > *r = new RangeOverStream(_istr, _delims);
+	return std::auto_ptr< range<std::string> > (r);
 }
 
 void RangeOverStream::nextLine() {

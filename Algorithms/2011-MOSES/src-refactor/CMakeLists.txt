@@ -4,6 +4,7 @@ set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c++14 -O3 -g")
 
 find_package(Boost REQUIRED COMPONENTS)
 include_directories(${Boost_INCLUDE_DIRS})
+include_directories(".")
 
 FIND_PACKAGE(OpenMP REQUIRED)
 if (OPENMP_FOUND)
@@ -14,8 +15,9 @@ if (OPENMP_FOUND)
 endif ()
 
 set(AlgorithmFiles algorithm/moses.cpp algorithm/overlapping.cpp)
-set(GraphUtilFiles util/graph/graph_loading.cpp util/graph/graph_representation.cpp util/graph/grouping.cpp)
-set(OtherUtilFiles util/aaron_utils.cpp util/Range.cpp)
-#set(Others groupStats.cpp)
+set(GraphUtilFiles util/graph/graph_loading.cpp util/graph/graph_representation.cpp algorithm/grouping.cpp)
+set(OtherUtilFiles util/aaron_utils.cpp util/range.cpp)
 set(SourceFiles ${OtherUtilFiles} ${GraphUtilFiles} ${AlgorithmFiles} ${Others})
-add_executable(2011-gce ${SourceFiles} ${Headers})
+
+add_executable(2011-moses ${SourceFiles} ${Headers})
+#add_executable(2011-moses-group-info algorithm/group_status_exec.cpp ${SourceFiles} ${Headers})
