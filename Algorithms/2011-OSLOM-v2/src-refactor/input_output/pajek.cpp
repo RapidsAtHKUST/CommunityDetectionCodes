@@ -3,7 +3,7 @@
 #include <map>
 #include <iostream>
 
-#include "util/input_output/pretty_print.h"
+#include "pretty_print.h"
 
 using namespace std;
 
