@@ -1,4 +1,3 @@
-
 class oslom_module {
 public:
     oslom_module(int a, int b) {

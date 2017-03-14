@@ -1,6 +1,9 @@
+#include <util/collection/module_collection.h>
+#include <util/common/cast.h>
+#include <util/input_output/undir_weighted_tabdeg.h>
+#include <util/graph/louvain/oslom_net_global.h>
 
 int oslom_net_global::try_to_assign_homeless(module_collection &Mcoll, bool anyway) {
-
     Mcoll.put_gaps();
     //if(paras.print_cbs)
     //cout<<"checking homeless nodes "<<endl;
@@ -16,8 +19,7 @@ int oslom_net_global::try_to_assign_homeless(module_collection &Mcoll, bool anyw
     set<int> called;                        // modules connected to homeless nodes
     map<int, set<int> > homel_module;        // maps the homeless node with the modules it's connected to
 
-    for (UI i = 0; i < homel.size(); i++) {
-
+    for (auto i = 0; i < homel.size(); i++) {
         set<int> thish;
         for (int j = 0; j < vertices[homel[i]]->links->size(); j++) {
             int &neigh = vertices[homel[i]]->links->l[j];
@@ -39,8 +41,7 @@ int oslom_net_global::try_to_assign_homeless(module_collection &Mcoll, bool anyw
     }
 
     map<int, deque<int> > to_check;            // module - homeless nodes added to that
-    for (map < int, set < int > > ::iterator itm = homel_module.begin(); itm != homel_module.end();
-    itm++) {
+    for (map<int, set<int> >::iterator itm = homel_module.begin(); itm != homel_module.end(); itm++) {
 
         double cmin = 1.1;
         int belongs_to = -1;
@@ -83,11 +84,11 @@ int oslom_net_global::try_to_assign_homeless(module_collection &Mcoll, bool anyw
 
     // **** try the groups with the homeless //******************
     bool something = false;
-    for (map < int, deque < int > > ::iterator itm = to_check.begin(); itm != to_check.end();
-    itm++) {
+    for (map<int, deque<int> >::iterator itm = to_check.begin(); itm != to_check.end();
+         itm++) {
         deque<int> union_deque = Mcoll.modules[itm->first];
 
-        for (UI i = 0; i < itm->second.size(); i++)
+        for (auto i = 0; i < itm->second.size(); i++)
             union_deque.push_back(itm->second[i]);
 
         if (anyway) {

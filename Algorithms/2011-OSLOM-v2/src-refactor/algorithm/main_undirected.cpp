@@ -29,7 +29,7 @@
 #include "standard_package/standard_include.cpp"
 
 
-#include "algorithm/log_table.h"
+#include "util/log_table.h"
 
 
 double log_fact_table::right_cumulative_function(int k1, int k2, int tm, int x) {
@@ -70,7 +70,7 @@ double log_fact_table::right_cumulative_function(int k1, int k2, int tm, int x) 
 }
 
 
-#include "set_parameters.h"
+#include "util/program_options/set_parameters.h"
 
 log_fact_table LOG_TABLE;
 Parameters paras;
@@ -81,10 +81,10 @@ Parameters paras;
 
 
 #include "util/graph/undirected_network.h"
-#include "algorithm/louvain_oslomnet.h"
-#include "undirected_oslomnet_evaluate.h"
-#include "oslom_net_global.h"
-#include "try_homeless_undir.cpp"
+#include "algorithm/louvain/louvain_oslomnet.h"
+#include "util/graph/louvain/undirected_oslomnet_evaluate.h"
+#include "util/graph/louvain/oslom_net_global.h"
+#include "util/graph/try_homeless_undir.cpp"
 
 #include "algorithm/hierarchies.h"
 

@@ -14,8 +14,7 @@ inline double log_zero(double a) {
 
 
 class oslomnet_evaluate : public oslomnet_louvain {
-	
-	
+
 public:
 	
 	oslomnet_evaluate(deque<deque<int> > & b, deque<deque<pair<int, double> > > & c, deque<int> & d): oslomnet_louvain() { set_graph(b,c,d); set_maxbord(); set_changendi_cum(); };
