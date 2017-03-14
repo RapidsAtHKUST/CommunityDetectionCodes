@@ -4,29 +4,29 @@
 #include <map>
 #include <set>
 #include <deque>
+#include <algorithm>
+#include <iostream>
+#include <fstream>
 
 using namespace std;
 
-#include "wsarray.h"
-
+#include "util/collection/module_collection.h"
+#include "util/collection/wsarray.h"
+#include "util/common/cast.h"
+#include "util/common/combinatorics.h"
+#include "util/common/histograms.h"
 
 class static_network {
-
-
 public:
-
-
     static_network() {};
 
     ~static_network();
-
 
     int draw(string);
 
     int draw_consecutive(string file_name1, string file_name2);
 
     int draw_with_weight_probability(string file_name);
-
 
     void print_id(const deque<int> &a, ostream &);
 
@@ -38,10 +38,8 @@ public:
 
     void deque_id(deque<int> &);
 
-    void set_subgraph(deque<int> &group, deque<deque<int>> &link_per_node, deque<deque<pair<int, double>>
-
-    > &weights_per_node);
-
+    void set_subgraph(deque<int> &group, deque<deque<int>> &link_per_node,
+                      deque<deque<pair<int, double>>> &weights_per_node);
 
     int translate(deque<deque<int>> &);
 
@@ -50,7 +48,6 @@ public:
     void get_id_label(map<int, int> &);
 
     int id_of(int a) { return vertices[a]->id_num; };
-
 
     int size() { return dim; };
 
@@ -64,23 +61,16 @@ public:
 
     int ktot_m(const set<int> &);
 
-
-    void set_graph(map<int, map<int, pair<int, double> >>
-
-                   &A);
+    void set_graph(map<int, map<int, pair<int, double> >> &A);
 
     bool set_graph(string file_name);
 
-    void set_graph(deque<deque<int>> &link_per_node, deque<deque<pair<int, double>>
-
-    > &weights_per_node,
-                   deque<int> &label_rows
-    );
+    void set_graph(deque<deque<int>> &link_per_node, deque<deque<pair<int, double>>> &weights_per_node,
+                   deque<int> &label_rows);
 
     void clear();
 
     void set_proper_weights();
-
 
     void set_connected_components(deque<deque<int>> &);
 
@@ -89,23 +79,14 @@ public:
 
     void same_component(int, set<int> &);
 
-
-    int set_upper_network(map<int, map<int, pair<int, double> >
-
-    > &neigh_weight_f,
-                          module_collection &Mcoll
+    int set_upper_network(map<int, map<int, pair<int, double> > > &neigh_weight_f, module_collection &Mcoll
     );
 
     void print_degree_of_homeless(DI &homel, ostream &outt);
 
-
 protected:
-
-
     class vertex {
-
     public:
-
         vertex(int, int, int);
 
         ~vertex();
@@ -123,23 +104,12 @@ protected:
         int stub_number;                // number of stubs
         wsarray *links;                    // array with label of neighbor, multiple links, sm of the weights towards it
         deque<double> original_weights;
-
     };
-
 
     int dim;                                    // number of nodes
     int oneM;                                    // number of stubs
-
     deque<vertex *> vertices;
-
-
 };
 
-
-
-
 #endif
-
-
-
 

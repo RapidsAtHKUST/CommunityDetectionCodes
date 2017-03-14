@@ -10,8 +10,8 @@
 
 using namespace std;
 
-#include "util/cast.h"
-#include "util/combinatorics.h"
+#include "cast.h"
+#include "combinatorics.h"
 
 bool they_are_mate(int a, int b, const deque<deque<int>> &member_list);
 

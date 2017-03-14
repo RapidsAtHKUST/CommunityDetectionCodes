@@ -76,7 +76,7 @@ log_fact_table LOG_TABLE;
 Parameters paras;
 
 
-#include "algorithm/module_collection.h"
+#include "util/collection/module_collection.h"
 #include "util/input_output/undir_weighted_tabdeg.h"
 
 

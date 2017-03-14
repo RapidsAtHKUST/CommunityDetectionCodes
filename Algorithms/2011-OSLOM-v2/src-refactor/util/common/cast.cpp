@@ -2,7 +2,7 @@
 // Created by cheyulin on 2/26/17.
 //
 
-#include "util/cast.h"
+#include "cast.h"
 
 bool cast_string_to_double(string &b, double &h) {
 // set h= the number written in b[];

@@ -7,7 +7,7 @@
 
 using namespace std;
 
-#include "util/random.h"
+#include "random.h"
 
 template<typename Seq>
 double average_func(Seq &sq) {

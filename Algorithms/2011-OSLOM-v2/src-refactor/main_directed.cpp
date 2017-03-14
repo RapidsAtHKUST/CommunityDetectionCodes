@@ -37,7 +37,7 @@ Parameters paras;
 ofstream fileout;
 
 
-#include "algorithm/module_collection.h"
+#include "util/collection/module_collection.h"
 #include "util/input_output/dir_weighted_tabdeg.h"
 
 #include "algorithm/directed_network.h"

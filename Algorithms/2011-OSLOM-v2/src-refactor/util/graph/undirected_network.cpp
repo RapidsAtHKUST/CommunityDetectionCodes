@@ -105,10 +105,7 @@ void static_network::set_graph(map<int, map<int, pair<int, double> > > &A) {
         link_per_node.push_back(n);
         weights_per_node.push_back(w);
     }
-    /*
-    prints(label_rows);
-    printm(link_per_node);
-    printm(weights_per_node);*/
+
     set_graph(link_per_node, weights_per_node, label_rows);
 }
 
@@ -226,7 +223,6 @@ bool static_network::set_graph(string file_name) {
             double strength_i = 0;
             for (int j = 0; j < vertices[i]->links->size(); j++) {
                 stub_number_i += vertices[i]->links->w[j].first;
-                //cout<<"-> "<<vertices[i]->links->w[j].second<<endl;
                 strength_i += vertices[i]->links->w[j].second;
             }
             vertices[i]->stub_number = stub_number_i;
@@ -241,82 +237,37 @@ bool static_network::set_graph(string file_name) {
     return good_file;
 }
 
-void static_network::set_graph(deque<deque<int>> &link_per_node, deque<deque<pair<int, double>>
-> &weights_per_node,
-                               deque<int> &label_rows
-) {
+void static_network::set_graph(deque<deque<int>> &link_per_node, deque<deque<pair<int, double>>> &weights_per_node,
+                               deque<int> &label_rows) {
     clear();
 // there is no check between label_rows and link per node but they need to have the same labels
 // link_per_node and weights_per_node are the list of links and weights. label_rows[i] is the label corresponding to row i
     map<int, int> newlabels;        // this maps the old labels with the new one
-    for (
-            int i = 0;
-            i <
-            int(label_rows
-                        .
-                                size()
-            ); i++)
-        newlabels.
-                insert(make_pair(label_rows[i], newlabels.size()));
+    for (int i = 0; i < int(label_rows.size()); i++)
+        newlabels.insert(make_pair(label_rows[i], newlabels.size()));
     dim = newlabels.size();
-    for (
-            int i = 0;
-            i < dim;
-            i++)
-        vertices.push_back(new vertex(0, 0, link_per_node[i].
-                size()
-        ));
-    for (map<int, int>::iterator itm = newlabels.begin();
-         itm != newlabels.
-                 end();
-         itm++)
-        vertices[itm->second]->
-                id_num = itm->first;
-    for (
-            int i = 0;
-            i <
-            int(link_per_node
-                        .
-                                size()
-            ); i++) {
-        for (
-                int j = 0;
-                j <
-                int(link_per_node[i]
-                            .
-                                    size()
-                ); j++) {
+    for (int i = 0; i < dim; i++)
+        vertices.push_back(new vertex(0, 0, link_per_node[i].size()));
+    for (map<int, int>::iterator itm = newlabels.begin(); itm != newlabels.end(); itm++)
+        vertices[itm->second]->id_num = itm->first;
+    for (int i = 0; i < int(link_per_node.size()); i++) {
+        for (int j = 0; j < int(link_per_node[i].size()); j++) {
             int new2 = newlabels[link_per_node[i][j]];
-            vertices[i]->links->
-                    push_back(new2, weights_per_node[i][j]
-                    .first, weights_per_node[i][j].second);
+            vertices[i]->links->push_back(new2, weights_per_node[i][j].first, weights_per_node[i][j].second);
         }
     }
     oneM = 0;
-    for (
-            int i = 0;
-            i < dim;
-            i++) {
-        vertices[i]->links->
-                freeze();
+    for (int i = 0; i < dim; i++) {
+        vertices[i]->links->freeze();
         int stub_number_i = 0;
         double strength_i = 0;
-        for (
-                int j = 0;
-                j < vertices[i]->links->
-                        size();
-                j++) {
-            stub_number_i += vertices[i]->links->w[j].
-                    first;
-            strength_i += vertices[i]->links->w[j].
-                    second;
+        for (int j = 0; j < vertices[i]->links->size(); j++) {
+            stub_number_i += vertices[i]->links->w[j].first;
+            strength_i += vertices[i]->links->w[j].second;
         }
-        vertices[i]->
-                stub_number = stub_number_i;
-        vertices[i]->
-                strength = strength_i;
-        oneM +=
-                stub_number_i;
+        vertices[i]->stub_number = stub_number_i;
+        vertices[i]->strength = strength_i;
+        oneM += stub_number_i;
     }
 //draw_consecutive();
 //draw("GIIO");
@@ -408,19 +359,9 @@ void static_network::print_id(const deque<deque<int>> &a, ostream &pout) {
         print_id(a[i], pout);
 }
 
-void static_network::print_id(const deque<set<int>>
-                              &a,
-                              ostream &pout
-) {
-    for (
-            int i = 0;
-            i <
-            int(a
-                        .
-                                size()
-            ); i++)
-        print_id(a[i], pout
-        );
+void static_network::print_id(const deque<set<int>> &a, ostream &pout) {
+    for (int i = 0; i < int(a.size()); i++)
+        print_id(a[i], pout);
 }
 
 int static_network::translate_anyway(deque<deque<int>> &ten) {
@@ -462,59 +403,30 @@ int static_network::translate(deque<deque<int>> &ten) {
     return 0;
 }
 
-void
-static_network::set_subgraph(deque<int> &group, deque<deque<int>> &link_per_node, deque<deque<pair<int, double>>
-> &weights_per_node) {
+void static_network::set_subgraph(deque<int> &group, deque<deque<int>> &link_per_node,
+                                  deque<deque<pair<int, double>>> &weights_per_node) {
 // in this function I'm not using id's... because I want to work with the same labels (don't want to translate)
-    sort(group
-                 .
-                         begin(), group
-                 .
-                         end()
-    );
-    weights_per_node.
-            clear();
+    sort(group.begin(), group.end());
+    weights_per_node.clear();
     link_per_node.
             clear();
-    for (
-            int i = 0;
-            i <
-            int(group
-                        .
-                                size()
-            ); i++) {
+    for (int i = 0; i < int(group.size()); i++) {
         int nodei = group[i];
         deque<int> link_i;
         deque<pair<int, double>> weight_i;
-        for (
-                int j = 0;
-                j < vertices[nodei]->links->
-                        size();
-                j++)
-            if (
-                    binary_search(group
-                                          .
-                                                  begin(), group
-                                          .
-                                                  end(), vertices[nodei]
-                                          ->links->l[j])) {
-                link_i.
-                        push_back(vertices[nodei]
-                                          ->links->l[j]);
+        for (int j = 0; j < vertices[nodei]->links->size(); j++)
+            if (binary_search(group.begin(), group.end(), vertices[nodei]->links->l[j])) {
+                link_i.push_back(vertices[nodei]->links->l[j]);
 //weight_i.push_back(make_pair(vertices[nodei]->links->w[j].first,   vertices[nodei]->original_weights[j]));
                 if (paras.weighted)
-                    weight_i.
-                            push_back(
+                    weight_i.push_back(
                             make_pair(vertices[nodei]->links->w[j].first, vertices[nodei]->original_weights[j]));
                 else
-                    weight_i.
-                            push_back(make_pair(vertices[nodei]->links->w[j].first, 1));
+                    weight_i.push_back(make_pair(vertices[nodei]->links->w[j].first, 1));
 //weight_i.push_back(make_pair(vertices[nodei]->links->w[j].first, vertices[nodei]->links->w[j].second));
             }
-        link_per_node.
-                push_back(link_i);
-        weights_per_node.
-                push_back(weight_i);
+        link_per_node.push_back(link_i);
+        weights_per_node.push_back(weight_i);
     }
 }
 
@@ -689,7 +601,7 @@ int static_network::draw_with_weight_probability(string file_name) {
     b[h] = '\0';
     ofstream graph_out(b);
     if (paras.weighted) {
-        for (UI i = 0; i < vertices.size(); i++)
+        for (auto i = 0; i < vertices.size(); i++)
             for (int j = 0; j < vertices[i]->links->size(); j++)
                 graph_out << vertices[i]->id_num << "\t" << vertices[vertices[i]->links->l[j]]->id_num << "\t"
                           << vertices[i]->original_weights[j] << "\t" << vertices[i]->links->w[j].first << endl;
@@ -699,7 +611,7 @@ int static_network::draw_with_weight_probability(string file_name) {
 
 void static_network::print_degree_of_homeless(DI &homel, ostream &outt) {
     deque<int> degree_of_homeless;
-    for (UI i = 0; i < homel.size(); i++)
+    for (auto i = 0; i < homel.size(); i++)
         degree_of_homeless.push_back(vertices[homel[i]]->stub_number);
     outt << "average degree of homeless nodes: " << average_func(degree_of_homeless) << " dev: "
          << sqrt(variance_func(degree_of_homeless)) << endl;

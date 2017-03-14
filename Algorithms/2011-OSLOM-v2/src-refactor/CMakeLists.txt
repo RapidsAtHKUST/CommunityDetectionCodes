@@ -14,7 +14,11 @@ if (OPENMP_FOUND)
     set(CMAKE_EXE_LINKER_FLAGS "${CMAKE_EXE_LINKER_FLAGS} ${OpenMP_EXE_LINKER_FLAGS}")
 endif ()
 
-set(UtilFiles util/cast.cpp util/combinatorics.cpp util/histograms.cpp util/random.cpp util/cc.cpp util/input_output/tab_degree.cpp util/metric/mutual.cpp)
+set(UtilFiles util/common/cast.cpp util/common/combinatorics.cpp util/common/histograms.cpp util/common/random.cpp util/common/cc.cpp
+        util/input_output/tab_degree.cpp
+        util/metric/mutual.cpp
+        util/graph/undirected_network.cpp
+        util/collection/wsarray.cpp util/collection/module_collection.cpp)
 set(AlgoFiles oslom_net_check_overlap.cpp oslom_net_unions.cpp)
 add_executable(2011-oslom-dir main_body.cpp main_directed.cpp ${AlgoFiles} try_homeless_dir.cpp ${UtilFiles})
 add_executable(2011-oslom-undir main_body.cpp main_undirected.cpp ${AlgoFiles} try_homeless_undir.cpp ${UtilFiles})

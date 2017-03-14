@@ -3,7 +3,7 @@
 
 #include <iostream>
 
-#include "util/cast.h"
+#include "util/common/cast.h"
 #include "algorithm/hierarchies.h"
 #include "oslom_net_global.h"
 
