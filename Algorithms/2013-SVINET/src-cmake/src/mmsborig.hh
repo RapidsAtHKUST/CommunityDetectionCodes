@@ -6,7 +6,7 @@
 #include <unistd.h>
 
 #include "env.hh"
-#include "matrix.hh"
+#include "collection/matrix.hh"
 #include "network.hh"
 
 #include <gsl/gsl_rng.h>

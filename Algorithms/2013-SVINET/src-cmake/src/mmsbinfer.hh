@@ -8,10 +8,10 @@
 #include <stdint.h>
 
 #include "env.hh"
-#include "matrix.hh"
+#include "collection/matrix.hh"
 #include "network.hh"
 #include "thread.hh"
-#include "tsqueue.hh"
+#include "collection/tsqueue.hh"
 
 #include <gsl/gsl_rng.h>
 #include <gsl/gsl_randist.h>

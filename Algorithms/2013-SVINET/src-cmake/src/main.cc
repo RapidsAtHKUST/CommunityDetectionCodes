@@ -9,7 +9,7 @@
 #include "mmsbgen.hh"
 #include "log.hh"
 #include "mmsborig.hh"
-#include "fastqueue.hh"
+#include "collection/fastqueue.hh"
 #include <stdlib.h>
 
 #include <string>

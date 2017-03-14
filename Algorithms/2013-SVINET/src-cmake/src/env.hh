@@ -14,7 +14,7 @@
 #include <map>
 #include <list>
 #include <vector>
-#include "matrix.hh"
+#include "collection/matrix.hh"
 #include "log.hh"
 
 typedef uint8_t yval_t;

@@ -6,7 +6,7 @@
 #include <queue>
 #include <map>
 #include <stdint.h>
-#include "matrix.hh"
+#include "collection/matrix.hh"
 #include "env.hh"
 #include <string.h>
 
