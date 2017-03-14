@@ -62,7 +62,7 @@ Algorithm | Category | Language | Dependency | Status
 [2012-FastCPM](Algorithms/2012-Fast-Clique-Percolation) | clique percolation | python, c++ | networkx |
 [2012-ParCPM](Algorithms/2012-CPMOnSteroids) | clique percolation | c | igraph |  
 [2012-DEMON](Algorithms/2012-DEMON) | seed expansion | python | networkx | python okay
-[2013-SVINET](Algorithms/2013-SVINET) | stochastic inference | c++ | gsl, gslcblas, pthread | build success
+[2013-SVINET](Algorithms/2013-SVINET) | stochastic inference | c++ | gsl, pthread | build success
 [2013-SeedExpansion](Algorithms/2013-Seed-Set-Expansion) | page-rank | c++, matlab | graclus, matlabgl | 
 [2014-HRGrow](Algorithms/2014-Heat-Kernel) | matrix-exponential | c++, matlab, python | pylibbvg | python okay
 [2015-LEMON](Algorithms/2015-LEMON) | seed expansion | python | pulp | python okay
