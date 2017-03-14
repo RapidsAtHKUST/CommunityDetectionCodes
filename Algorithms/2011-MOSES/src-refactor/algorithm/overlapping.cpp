@@ -95,9 +95,9 @@ namespace overlapping {
     void addSeed(Grouping &ging, const set<V> &nodes, bool randomized_p_in) {
         assert(nodes.size() > 0);
         Group *g = ging.newG(randomized_p_in);
-        ForeachContainer(V v, nodes) {
-                    ging.addV(g, v);
-                }
+        for (V v: nodes) {
+            ging.addV(g, v);
+        }
     }
 
 
@@ -317,15 +317,15 @@ namespace overlapping {
         map<size_t, int> group_sizes_of_the_randomized;
         map<size_t, int> group_sizes;
         int64 totalAssignments = 0; // to help calculate average communities per node.
-        ForeachContainer(Group *group, ging.groups) {
-                    DYINGWORDS(group->vs.size() > 0) {
-                        PP(group->vs.size());
-                    }
-                    group_sizes[group->vs.size()]++;
-                    totalAssignments += group->vs.size();
-                    if (group->_randomized_p_in)
-                        group_sizes_of_the_randomized[group->vs.size()]++;
-                }
+        for (Group *group: ging.groups) {
+            DYINGWORDS(group->vs.size() > 0) {
+                PP(group->vs.size());
+            }
+            group_sizes[group->vs.size()]++;
+            totalAssignments += group->vs.size();
+            if (group->_randomized_p_in)
+                group_sizes_of_the_randomized[group->vs.size()]++;
+        }
 
         //Perror("    %zd\n", ging.groups.size());
         Pn("#groups=%zd. %zd nodes, out of %d, are in at least one community. avgs grps/node=%g", ging.groups.size(),
@@ -763,16 +763,16 @@ namespace overlapping {
     template<class N>
     static void save(Grouping &ging, bloomGraph<N> &g) {
         ofstream saveFile(option_overlapping);
-        ForeachContainer(Group *grp, ging.groups) {
-                    bool firstLine = true;
-                    if (flag_save_group_id_in_output)
-                        saveFile << '\"' << grp->_id << "\"\t";
-                    ForeachContainer(V v, grp->vs) {
-                                saveFile << (firstLine ? "" : " ") << g.name(v);
-                                firstLine = false;
-                            }
-                    saveFile << endl;
-                }
+        for (Group *grp: ging.groups) {
+            bool firstLine = true;
+            if (flag_save_group_id_in_output)
+                saveFile << '\"' << grp->_id << "\"\t";
+            for (V v:grp->vs) {
+                saveFile << (firstLine ? "" : " ") << g.name(v);
+                firstLine = false;
+            }
+            saveFile << endl;
+        }
         runMutual();
     }
 
@@ -806,12 +806,12 @@ namespace overlapping {
                 Foreach(V n, ns) {
                             int sharedCommunities = ging.comm_count_per_edge(n, edgeVN_ptr);
                             // TODO: Could prepare the results for addEdge of v<>n
-                            ForeachContainer(Group *grp, ging.vgroups(n)) {
-                                        _seedDeltas.insert(make_pair(grp, DeltaSeed(v, grp->vs.size(),
-                                                                                    ging))).first->second.addEdge(n,
-                                                                                                                  sharedCommunities);
-                                        //_seedDeltas.find(grp)->second.addEdge(n, sharedCommunities);
-                                    }
+                            for (Group *grp: ging.vgroups(n)) {
+                                _seedDeltas.insert(make_pair(grp, DeltaSeed(v, grp->vs.size(),
+                                                                            ging))).first->second.addEdge(n,
+                                                                                                          sharedCommunities);
+                                //_seedDeltas.find(grp)->second.addEdge(n, sharedCommunities);
+                            }
                             ++edgeVN_ptr;
                         }
             }
@@ -852,18 +852,18 @@ namespace overlapping {
                                 assert(*edgeVN_ptr == n);
                                 if (bestGroup.second->vs.count(n)) {
                                     int previous_sharedCommunities = ging.comm_count_per_edge(n, edgeVN_ptr) - 1;
-                                    ForeachContainer(Group *grp, ging.vgroups(n)) {
-                                                SeedDeltasT::iterator grpInSeed = _seedDeltas.find(grp);
-                                                if (grpInSeed != _seedDeltas.end()) {
-                                                    const long double before = grpInSeed->second._deltaTotalentropy();
-                                                    grpInSeed->second.redoEdge(n, previous_sharedCommunities);
-                                                    const long double after = grpInSeed->second._deltaTotalentropy();
-                                                    if (after > before) {
-                                                        Perror("%s:%d _deltaTotalentropy %Lg -> %Lg\n", __FILE__,
-                                                               __LINE__, before, after);
-                                                    }
-                                                }
+                                    for (Group *grp:ging.vgroups(n)) {
+                                        SeedDeltasT::iterator grpInSeed = _seedDeltas.find(grp);
+                                        if (grpInSeed != _seedDeltas.end()) {
+                                            const long double before = grpInSeed->second._deltaTotalentropy();
+                                            grpInSeed->second.redoEdge(n, previous_sharedCommunities);
+                                            const long double after = grpInSeed->second._deltaTotalentropy();
+                                            if (after > before) {
+                                                Perror("%s:%d _deltaTotalentropy %Lg -> %Lg\n", __FILE__,
+                                                       __LINE__, before, after);
                                             }
+                                        }
+                                    }
                                 }
                                 ++edgeVN_ptr;
                             }
@@ -912,46 +912,47 @@ namespace overlapping {
             set_difference(lgrps.begin(), lgrps.end(), rgrps.begin(), rgrps.end(), back_inserter(lonly));
             set_difference(rgrps.begin(), rgrps.end(), lgrps.begin(), lgrps.end(), back_inserter(ronly));
             //Pn("# unmatched %zd,%zd", lonly.size(), ronly.size());
-            ForeachContainer(Group *lg, lonly) {
-                        ForeachContainer(Group *rg, ronly) {
-                                    long double qi = 1.0L - ging._p_in;
-                                    long double qo = 1.0L - ging._p_out;
-                                    //const int64 oldQz = ging.groups.size();
-                                    Group *lg1 = lg;
-                                    Group *rg1 = rg;
-                                    if (lg1 > rg1) swap(lg1, rg1);
-                                    MergesT::key_type key = make_pair(lg1, rg1);
-                                    MergesT::iterator pm = proposed_merges.find(key);
-                                    if (pm == proposed_merges.end()) {
-                                        const int64 s1 = lg1->vs.size();
-                                        const int64 s2 = rg1->vs.size();
-                                        vector<V> Union;
-                                        set_union(lg1->vs.begin(), lg1->vs.end(), rg1->vs.begin(), rg1->vs.end(),
-                                                  back_inserter(Union));
-                                        const int64 N = ging._g.vcount();
-                                        pm = proposed_merges.insert(make_pair(key,
-                                                                              log2l(qi) * 0.5L * (long double) (
-                                                                                      Union.size() *
-                                                                                      (Union.size() - 1) -
-                                                                                      s1 * (s1 - 1) - s2 * (s2 - 1))
-                                                                              // + (  (oldQz)  *log2l(oldQz-1) + log2l(exp(1)) - log2l(oldQz-2-N)       )
-                                                                              // - (  (oldQz+1)*log2l(oldQz  )                 - log2l(oldQz-1-N)       )
-                                                                              + (s1 + s2) *
-                                                                                (log2l(s1 + s2) /*- log2l(N)*/)
-                                                                              - (s1) * (log2l(s1) /*- log2l(N)*/)
-                                                                              - (s2) * (log2l(s2) /*- log2l(N)*/)
-                                                                              +
-                                                                              log2l(N) // one fewer community whose pi has to be encoded
-                                        )).first;
-                                    }
-                                    pm->second +=
-                                            log2l(1.0L - qo * powl(qi, 1 + sharedCommunities))
-                                            - log2l(1.0L - qo * powl(qi, sharedCommunities))
-                                            -
-                                            log2l(qi) // for a given member of the map, each edge will be found exactly once. So here we cancel the affect of assuming it was disconnected
-                                            ;
-                                }
+            for (Group *lg: lonly) {
+                for (Group *rg:ronly) {
+                    long double qi = 1.0L - ging._p_in;
+                    long double qo = 1.0L - ging._p_out;
+                    //const int64 oldQz = ging.groups.size();
+                    Group *lg1 = lg;
+                    Group *rg1 = rg;
+                    if (lg1 > rg1)
+                        swap(lg1, rg1);
+                    MergesT::key_type key = make_pair(lg1, rg1);
+                    MergesT::iterator pm = proposed_merges.find(key);
+                    if (pm == proposed_merges.end()) {
+                        const int64 s1 = lg1->vs.size();
+                        const int64 s2 = rg1->vs.size();
+                        vector<V> Union;
+                        set_union(lg1->vs.begin(), lg1->vs.end(), rg1->vs.begin(), rg1->vs.end(),
+                                  back_inserter(Union));
+                        const int64 N = ging._g.vcount();
+                        pm = proposed_merges.insert(make_pair(key,
+                                                              log2l(qi) * 0.5L * (long double) (
+                                                                      Union.size() *
+                                                                      (Union.size() - 1) -
+                                                                      s1 * (s1 - 1) - s2 * (s2 - 1))
+                                                              // + (  (oldQz)  *log2l(oldQz-1) + log2l(exp(1)) - log2l(oldQz-2-N)       )
+                                                              // - (  (oldQz+1)*log2l(oldQz  )                 - log2l(oldQz-1-N)       )
+                                                              + (s1 + s2) *
+                                                                (log2l(s1 + s2) /*- log2l(N)*/)
+                                                              - (s1) * (log2l(s1) /*- log2l(N)*/)
+                                                              - (s2) * (log2l(s2) /*- log2l(N)*/)
+                                                              +
+                                                              log2l(N) // one fewer community whose pi has to be encoded
+                        )).first;
                     }
+                    pm->second +=
+                            log2l(1.0L - qo * powl(qi, 1 + sharedCommunities))
+                            - log2l(1.0L - qo * powl(qi, sharedCommunities))
+                            -
+                            log2l(qi) // for a given member of the map, each edge will be found exactly once. So here we cancel the affect of assuming it was disconnected
+                            ;
+                }
+            }
 
         }
         for (V e = 0; e <
@@ -975,26 +976,26 @@ namespace overlapping {
             vector<Group *> inter;
             set_intersection(lgrps.begin(), lgrps.end(), rgrps.begin(), rgrps.end(), back_inserter(inter));
             //Pn("# unmatched %zd,%zd", lonly.size(), ronly.size());
-            ForeachContainer(Group *lg, inter) {
-                        ForeachContainer(Group *rg, inter) {
-                                    if (lg < rg) { // no point proposing a merge between a group and itself
-                                        long double qi = 1.0L - ging._p_in;
-                                        long double qo = 1.0L - ging._p_out;
-                                        Group *lg1 = lg;
-                                        Group *rg1 = rg;
-                                        if (lg1 > rg1) swap(lg1, rg1);
-                                        MergesT::key_type key = make_pair(lg1, rg1);
-                                        MergesT::iterator pm = proposed_merges.find(key);
-                                        if (pm != proposed_merges.end())
-                                            pm->second +=
-                                                    log2l(1.0L - qo * powl(qi, sharedCommunities - 1))
-                                                    - log2l(1.0L - qo * powl(qi, sharedCommunities))
-                                                    +
-                                                    log2l(qi) // for a given member of the map, each edge will be found exactly once. So here we cancel the affect of assuming it was disconnected
-                                                    ;
-                                    }
-                                }
+            for (Group *lg: inter) {
+                for (Group *rg: inter) {
+                    if (lg < rg) { // no point proposing a merge between a group and itself
+                        long double qi = 1.0L - ging._p_in;
+                        long double qo = 1.0L - ging._p_out;
+                        Group *lg1 = lg;
+                        Group *rg1 = rg;
+                        if (lg1 > rg1) swap(lg1, rg1);
+                        MergesT::key_type key = make_pair(lg1, rg1);
+                        MergesT::iterator pm = proposed_merges.find(key);
+                        if (pm != proposed_merges.end())
+                            pm->second +=
+                                    log2l(1.0L - qo * powl(qi, sharedCommunities - 1))
+                                    - log2l(1.0L - qo * powl(qi, sharedCommunities))
+                                    +
+                                    log2l(qi) // for a given member of the map, each edge will be found exactly once. So here we cancel the affect of assuming it was disconnected
+                                    ;
                     }
+                }
+            }
 
         }
 
@@ -1014,13 +1015,13 @@ namespace overlapping {
                     Group *r = merge_these.second;
                     const set<V> these_nodes(l->vs); // copy them, so as to iterate properly over them.
                     //P(" "); PP(ging.groups.size());
-                    ForeachContainer(V v, these_nodes) {
-                                if (r->vs.count(v) == 0) {
-                                    ging.addV(r, v);
-                                }
-                                assert(r->vs.count(v) == 1);
-                                //ging.delV(l,v);
-                            }
+                    for (V v: these_nodes) {
+                        if (r->vs.count(v) == 0) {
+                            ging.addV(r, v);
+                        }
+                        assert(r->vs.count(v) == 1);
+                        //ging.delV(l,v);
+                    }
                     //PP(ging.groups.size());
                     already_merged.insert(merge_these.first);
                     already_merged.insert(merge_these.second);
@@ -1040,20 +1041,19 @@ namespace overlapping {
         typedef boost::unordered_map<Group *, long double, hashGroup> DeletionsT;
         DeletionsT proposed_deletions;
         const int64 N = ging._g.vcount();
-        ForeachContainer(Group *grp,
-                         ging.groups) { // preseed with all groups, because we want the groups even that don't have an edge in them!
-                    const int64 sz = grp->vs.size();
-                    //int64 q = ging.groups.size() -1; if (q<=0) q=1;
-                    //const int64 q_= 1 + q;
-                    const long double logNchoosen = logNchoose(N, sz);
-                    proposed_deletions.insert(make_pair(grp,
-                                                        log2l(1.0L - ging._p_in) * (sz * (sz - 1) / 2)
-                                                        + logNchoosen
-                                                        - log2l(N + 1)/*encoding of size of the group*/
-                                                        + log2l(1 + ging.groups.size())/*equivalent groupings*/
-                            //+ (getenv("UseBroken") ? ( (  q_ * (log2l(q_) - log2l(exp(1))) + log2l(N+1) - log2l(N+1-q_)  ) - (  q  * (log2l(q ) - log2l(exp(1))) + log2l(N+1) - log2l(N+1-q )  ) ) : 0)
-                    ));
-                }
+        for (Group *grp:ging.groups) { // preseed with all groups, because we want the groups even that don't have an edge in them!
+            const int64 sz = grp->vs.size();
+            //int64 q = ging.groups.size() -1; if (q<=0) q=1;
+            //const int64 q_= 1 + q;
+            const long double logNchoosen = logNchoose(N, sz);
+            proposed_deletions.insert(make_pair(grp,
+                                                log2l(1.0L - ging._p_in) * (sz * (sz - 1) / 2)
+                                                + logNchoosen
+                                                - log2l(N + 1)/*encoding of size of the group*/
+                                                + log2l(1 + ging.groups.size())/*equivalent groupings*/
+                    //+ (getenv("UseBroken") ? ( (  q_ * (log2l(q_) - log2l(exp(1))) + log2l(N+1) - log2l(N+1-q_)  ) - (  q  * (log2l(q ) - log2l(exp(1))) + log2l(N+1) - log2l(N+1-q )  ) ) : 0)
+            ));
+        }
         for (V e = 0; e <
                       /*100000 */
                       2 * ging._g.ecount(); e++) {
@@ -1075,14 +1075,14 @@ namespace overlapping {
             set_intersection(lgrps.begin(), lgrps.end(), rgrps.begin(), rgrps.end(), back_inserter(sharedComms));
             assert((size_t) sharedCommunities == sharedComms.size());
 
-            ForeachContainer(Group *grp, sharedComms) {
-                        DeletionsT::iterator pm = proposed_deletions.find(grp);
-                        assert(pm != proposed_deletions.end());
-                        pm->second +=
-                                log2l(1.0L - (1.0L - ging._p_out) * powl(1.0L - ging._p_in, sharedCommunities))
-                                - log2l(1.0L - (1.0L - ging._p_out) * powl(1.0L - ging._p_in, sharedCommunities - 1))
-                                - log2l(1.0L - ging._p_in);
-                    }
+            for (Group *grp: sharedComms) {
+                DeletionsT::iterator pm = proposed_deletions.find(grp);
+                assert(pm != proposed_deletions.end());
+                pm->second +=
+                        log2l(1.0L - (1.0L - ging._p_out) * powl(1.0L - ging._p_in, sharedCommunities))
+                        - log2l(1.0L - (1.0L - ging._p_out) * powl(1.0L - ging._p_in, sharedCommunities - 1))
+                        - log2l(1.0L - ging._p_in);
+            }
 
         }
         assert(proposed_deletions.size() <= ging.groups.size()); // maybe some communities didn't have an edge in them
@@ -1100,18 +1100,18 @@ namespace overlapping {
                 deletions_sizes[pm->first->vs.size()]++;
                 { // delete the group
                     set<V> vs = pm->first->vs; // COPY the vertices in
-                    ForeachContainer(V v, vs) {
-                                ging.delV(pm->first, v);
-                            }
+                    for (V v: vs) {
+                        ging.delV(pm->first, v);
+                    }
                     // By now, pm->first will be an invalid pointer, as it will be been delete'd
                 }
             }
         }
         P("deletions_accepted: %d\t", deletions_accepted);
         pair<V, int> delete_size;
-        ForeachContainer(delete_size, deletions_sizes) {
-                    P("%d{%d} ", delete_size.second, delete_size.first);
-                }
+        for (delete_size: deletions_sizes) {
+            P("%d{%d} ", delete_size.second, delete_size.first);
+        }
         P("\n");
         PP(ging.groups.size());
 
@@ -1119,10 +1119,9 @@ namespace overlapping {
         if (SaveScores && option_saveMOSESscores[0]) {
             Pn("Saving the MOSES delta-score for each community as per the --saveMOSESscores option");
             ofstream saveFile(option_saveMOSESscores);
-            ForeachContainer(Group *grp,
-                             ging.groups) { // preseed with all groups, because we want the groups even that don't have an edge in them!
-                        saveFile << proposed_deletions[grp] << '\t' << grp->vs.size() << endl;
-                    }
+            for (Group *grp:ging.groups) { // preseed with all groups, because we want the groups even that don't have an edge in them!
+                saveFile << proposed_deletions[grp] << '\t' << grp->vs.size() << endl;
+            }
         }
     }
 
@@ -1133,11 +1132,11 @@ namespace overlapping {
         logP_XgivenZ += log2l(1.0L - p_o) * (N * (N - 1) / 2 - m);
         logP_XgivenZ += log2l(1.0L - p_i) * (ging._sigma_shared - sigma_shared_Xis1);
         typedef pair<int, V> edge_countT;
-        ForeachContainer(const edge_countT &edge_count, ging.global_edge_counts) {
-                    const int64 s = edge_count.first;
-                    const int64 m_s = edge_count.second;
-                    logP_XgivenZ += log2l(1.0L - (1.0L - p_o) * powl(1.0L - p_i, s)) * m_s;
-                }
+        for (const edge_countT &edge_count: ging.global_edge_counts) {
+            const int64 s = edge_count.first;
+            const int64 m_s = edge_count.second;
+            logP_XgivenZ += log2l(1.0L - (1.0L - p_o) * powl(1.0L - p_i, s)) * m_s;
+        }
         return logP_XgivenZ;
     }
 
@@ -1149,9 +1148,9 @@ namespace overlapping {
         // product of binomial/N+1
         int64 sigma_shared_Xis1 = 0;
         pair<int, V> edge_count;
-        ForeachContainer(edge_count, ging.global_edge_counts) {
-                    sigma_shared_Xis1 += edge_count.first * edge_count.second;
-                }
+        for (edge_count: ging.global_edge_counts) {
+            sigma_shared_Xis1 += edge_count.first * edge_count.second;
+        }
         long double Pxz = P_x_given_z(ging, ging._p_out, ging._p_in, sigma_shared_Xis1);
 
         long double Pz = 0.0;
@@ -1161,14 +1160,15 @@ namespace overlapping {
         }
         // PP(Pz);
         int64 N = ging._g.vcount();
-        ForeachContainer(const Group *grp, ging.groups) {
-                    long double logNchoosen = logNchoose(N, grp->vs.size());
-                    DYINGWORDS(logNchoosen <= 0.0) {
-                        PP(logNchoosen);
-                    }
-                    assert(logNchoosen <= 0.0);
-                    Pz += logNchoosen - log2l(N + 1);
-                }
+
+        for (const Group *grp: ging.groups) {
+            long double logNchoosen = logNchoose(N, grp->vs.size());
+            DYINGWORDS(logNchoosen <= 0.0) {
+                PP(logNchoosen);
+            }
+            assert(logNchoosen <= 0.0);
+            Pz += logNchoosen - log2l(N + 1);
+        }
         // PP(Pxz);
         // PP(Pz);
         // PP(Pxz + Pz);
@@ -1197,9 +1197,9 @@ namespace overlapping {
         const int64 m = ging._g.ecount() / 2L;
         int64 sigma_shared_Xis1 = 0;
         pair<int, V> edge_count;
-        ForeachContainer(edge_count, ging.global_edge_counts) {
-                    sigma_shared_Xis1 += edge_count.first * edge_count.second;
-                }
+        for (edge_count: ging.global_edge_counts) {
+            sigma_shared_Xis1 += edge_count.first * edge_count.second;
+        }
         //PP(sigma_shared_Xis1);
 
         map<long double, pair<long double, long double>, greater<long double> > ALLlogP_XgivenZ;
@@ -1208,23 +1208,23 @@ namespace overlapping {
                 long double logP_XgivenZ = 0.0;
                 logP_XgivenZ += log2l(1.0L - p_o) * (N * (N - 1) / 2 - m);
                 logP_XgivenZ += log2l(1.0L - p_i) * (ging._sigma_shared - sigma_shared_Xis1);
-                ForeachContainer(edge_count, ging.global_edge_counts) {
-                            const int64 s = edge_count.first;
-                            const int64 m_s = edge_count.second;
-                            logP_XgivenZ += log2l(1.0L - (1.0L - p_o) * powl(1.0L - p_i, s)) * m_s;
-                        }
+                for (edge_count: ging.global_edge_counts) {
+                    const int64 s = edge_count.first;
+                    const int64 m_s = edge_count.second;
+                    logP_XgivenZ += log2l(1.0L - (1.0L - p_o) * powl(1.0L - p_i, s)) * m_s;
+                }
                 assert(logP_XgivenZ == P_x_given_z(ging, p_o, p_i, sigma_shared_Xis1));
                 ALLlogP_XgivenZ[logP_XgivenZ] = make_pair(p_i, p_o);
             }
         }
 
         pair<long double, pair<long double, long double> > best;
-        ForeachContainer(best, ALLlogP_XgivenZ) {
-                    Pn("BEST: %Lg,%Lg -> %9.0Lf  ", best.second.first, best.second.second, best.first);
-                    ging._p_in = best.second.first;
-                    ging._p_out = best.second.second;
-                    break;
-                }
+        for (best: ALLlogP_XgivenZ) {
+            Pn("BEST: %Lg,%Lg -> %9.0Lf  ", best.second.first, best.second.second, best.first);
+            ging._p_in = best.second.first;
+            ging._p_out = best.second.second;
+            break;
+        }
     }
 
 } // namespace overlapping
