@@ -57,7 +57,7 @@ Algorithm | Category | Language | Dependency | Status
 [2010-TopGC](Algorithms/2010-TopGC) | stochastic inference | java | | build success
 [2011-GCE](Algorithms/2011-GCE) | seed expansion | c++ | boost | build success
 [2011-OSLOM](Algorithms/2011-OSLOM-v2) | seed expansion | c++ |  |
-[2011-MOSES](Algorithms/2011-MOSES) | fuzzy detection | c++ | boost | 
+[2011-MOSES](Algorithms/2011-MOSES) | fuzzy detection | c++ | boost | build success
 [2011-SLPA](Algorithms/2011-SLPA) | dynamics | c++, java, python | networkx, numpy | build success for java
 [2012-FastCPM](Algorithms/2012-Fast-Clique-Percolation) | clique percolation | python, c++ | networkx |
 [2012-ParCPM](Algorithms/2012-CPMOnSteroids) | clique percolation | c | igraph |  
