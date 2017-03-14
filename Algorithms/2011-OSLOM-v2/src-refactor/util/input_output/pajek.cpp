@@ -1,4 +1,13 @@
-int get_partition_from_file_list_pajek(string s, deque <deque<int>> &ten, deque<int> &oldlabels) {
+#include <util/common/cast.h>
+#include <fstream>
+#include <map>
+#include <iostream>
+
+#include "util/input_output/pretty_print.h"
+
+using namespace std;
+
+int get_partition_from_file_list_pajek(string s, deque<deque<int>> &ten, deque<int> &oldlabels) {
     ten.clear();
     char b[100];
     cast_string_to_char(s, b);
@@ -72,7 +81,7 @@ int pajek_format(string filename, bool directed) {
         string ins;
         while (getline(inb, ins))
             if (ins.size() > 0 && ins[0] != '#') {
-                deque <string> ds;
+                deque<string> ds;
                 separate_strings(ins, ds);
                 int innum1 = cast_int(cast_string_to_double(ds[0]));
                 int innum2 = cast_int(cast_string_to_double(ds[1]));
@@ -88,7 +97,7 @@ int pajek_format(string filename, bool directed) {
             }
     }
     ofstream lout("labels.dat");
-    prints(old_labels, lout);
+    lout << old_labels;
     //system("unixdos network2.dat network.net");
     //system("rm network2.dat");
     return 0;

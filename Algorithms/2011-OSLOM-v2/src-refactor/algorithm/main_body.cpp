@@ -5,7 +5,7 @@
 
 #include "util/common/cast.h"
 #include "algorithm/hierarchies.h"
-#include "util/graph/louvain/oslom_net_global.h"
+#include "util/graph/oslom_net_global.h"
 
 int main(int argc, char *argv[]) {
 

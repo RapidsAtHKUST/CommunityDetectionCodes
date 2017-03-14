@@ -7,8 +7,15 @@
 
 #include "util/common/histograms.h"
 #include "util/common/random.h"
+#include <util/common/deque_numeric.h>
 
 using namespace std;
+
+typedef unsigned int UI;
+typedef deque<double> DD;
+typedef deque<int> DI;
+typedef deque<deque<int> > int_matrix;
+
 
 class module_collection {
     /* all the labels refers to the index in int_matrix modules */

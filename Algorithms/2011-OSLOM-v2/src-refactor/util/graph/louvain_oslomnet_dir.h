@@ -1,3 +1,8 @@
+#include <map>
+#include <deque>
+
+using namespace std;
+
 class oslom_module {
 public:
     oslom_module(int a, int b) {
@@ -62,7 +67,7 @@ public:
 
     ~oslomnet_louvain() {};
 
-    int collect_raw_groups_once(deque <deque<int>> &);
+    int collect_raw_groups_once(deque<deque<int>> &);
 
 private:
     void weighted_favorite_of(const int &node, int &fi, int &kp_in, int &kop_in, int &kp_out, int &kop_out);
@@ -78,7 +83,7 @@ private:
 
     void module_initializing();
 
-    void set_partition_collected(deque <deque<int>> &M);
+    void set_partition_collected(deque<deque<int>> &M);
 
     //int check_all();
     map<int, oslom_module> label_module;
@@ -113,8 +118,8 @@ oslomnet_louvain::unweighted_favorite_of(const int &node, int &fi, int &kp_in, i
         int_histogram(vertex_label[vertices[node]->inlinks->l[j]], M, vertices[node]->inlinks->w[j].first, 0);
     for (int j = 0; j < vertices[node]->outlinks->size(); j++)
         int_histogram(vertex_label[vertices[node]->outlinks->l[j]], M, 0, vertices[node]->outlinks->w[j].first);
-    for (map < int, pair < int, int > > ::iterator itM = M.begin(); itM != M.end();
-    itM++) {
+    for (map<int, pair<int, int> >::iterator itM = M.begin(); itM != M.end();
+         itM++) {
         map_int_om::iterator itOM = label_module.find(itM->first);
         double to_fit;
         if (itM->first != vertex_label[node]) {
@@ -248,9 +253,9 @@ void oslomnet_louvain::single_pass_weighted() {
     }
 }
 
-void oslomnet_louvain::set_partition_collected(deque <deque<int>> &ten2) {
+void oslomnet_louvain::set_partition_collected(deque<deque<int>> &ten2) {
     ten2.clear();
-    deque <deque<int>> M;
+    deque<deque<int>> M;
     // take partition from vertex_label  //******************************
     map<int, int> mems;
     for (int i = 0; i < dim; i++) {
@@ -263,12 +268,12 @@ void oslomnet_louvain::set_partition_collected(deque <deque<int>> &ten2) {
     }
     // check if subgraphs are connected  //******************************
     for (int i = 0; i < int(M.size()); i++) {
-        deque <deque<int>> link_per_node;
-        deque < deque < pair < int, double > > > weights_per_node;
+        deque<deque<int>> link_per_node;
+        deque<deque<pair<int, double> > > weights_per_node;
         set_subgraph(M[i], link_per_node, weights_per_node);
         static_network giovanni;
         giovanni.set_graph(link_per_node, weights_per_node, M[i]);
-        deque <deque<int>> gM;
+        deque<deque<int>> gM;
         giovanni.set_connected_components(gM);
         if (gM.size() == 1)
             ten2.push_back(M[i]);
@@ -281,7 +286,7 @@ void oslomnet_louvain::set_partition_collected(deque <deque<int>> &ten2) {
     }
 }
 
-int oslomnet_louvain::collect_raw_groups_once(deque <deque<int>> &P) {
+int oslomnet_louvain::collect_raw_groups_once(deque<deque<int>> &P) {
     module_initializing();
     int stopper = 0;
     int previous_nodes_changed = dim;

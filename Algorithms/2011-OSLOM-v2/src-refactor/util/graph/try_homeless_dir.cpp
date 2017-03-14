@@ -1,6 +1,6 @@
 
 #include <util/collection/module_collection.h>
-#include "util/graph/louvain/oslom_net_global.h"
+#include "oslom_net_global.h"
 
 int oslom_net_global::try_to_assign_homeless(module_collection &module_coll, bool anyway) {
     map<int, deque<int> > to_check;

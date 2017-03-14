@@ -21,7 +21,7 @@
  *                                                                               *
  * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
 
-#include "util/log_table.h"
+#include "util/common/log_table.h"
 #include "util/program_options/set_parameters.h"
 
 double log_fact_table::right_cumulative_function(int k1, int k2, int tm, int x) {
@@ -38,12 +38,12 @@ ofstream fileout;
 
 
 #include "util/collection/module_collection.h"
-#include "util/input_output/dir_weighted_tabdeg.h"
+#include "dir_weighted_tabdeg.h"
 
 #include "util/graph/directed_network.h"
 #include "algorithm/louvain/louvain_oslomnet_dir.h"
-#include "util/graph/louvain/directed_oslomnet_evaluate.h"
-#include "util/graph/louvain/oslom_net_global.h"
+#include "util/evaluation/directed_oslomnet_evaluate.h"
+#include "util/graph/oslom_net_global.h"
 #include "util/graph/try_homeless_dir.cpp"
 
 #include "algorithm/hierarchies.h"

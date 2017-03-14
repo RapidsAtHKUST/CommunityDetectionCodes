@@ -3,9 +3,10 @@
 #include <iostream>
 #include <fstream>
 
-#include <util/graph/louvain/oslom_net_global.h>
 #include <util/common/cast.h>
+#include <util/common/deque_numeric.h>
 #include <util/collection/module_collection.h>
+#include <util/graph/oslom_net_global.h>
 
 using namespace std;
 
