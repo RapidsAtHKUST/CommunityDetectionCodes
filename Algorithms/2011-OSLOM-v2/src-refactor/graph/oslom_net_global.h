@@ -1,5 +1,6 @@
 #include <graph/undirected/undirected_network.h>
 #include <graph/undirected/undir_weighted_tabdeg.h>
+#include <graph/undirected/undirected_oslomnet_evaluate.h>
 
 class oslom_net_global : public oslomnet_evaluate {
 

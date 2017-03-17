@@ -2,12 +2,15 @@
 #include <map>
 #include <algorithm>
 #include <common/random.h>
+#include <common/log_table.h>
 
 using namespace std;
 
 # define sqrt_two 1.41421356237
 # define num_up_to 5
 # define bisection_precision 1e-2
+
+extern log_fact_table LOG_TABLE;
 
 typedef multimap<double, pair<int, double> > cup_data_struct;
 
