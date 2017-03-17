@@ -17,7 +17,7 @@ namespace cliques {
     typedef int32_t V;
 
 //typedef list<V> list_of_ints;
-    struct list_of_ints : private list<int32_t> {
+    struct list_of_ints : public list<int32_t> {
         size_t sz;
         typedef list<int32_t>::const_iterator const_iterator;
         typedef list<int32_t>::iterator iterator;
