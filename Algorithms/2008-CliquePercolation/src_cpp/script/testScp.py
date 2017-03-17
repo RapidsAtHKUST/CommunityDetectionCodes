@@ -1,8 +1,8 @@
 import os
 
-executable = "./k_clique"
-tempDir = "./"
-testDataDir = "testData/"
+executable = "../k_clique"
+tempDir = "../"
+testDataDir = "../testData/"
 
 
 def listComp(l1, l2):
