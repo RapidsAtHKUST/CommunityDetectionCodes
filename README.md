@@ -75,6 +75,7 @@ Detailed information is in [SubModules](SubModules).
 Submodule | Implementation Language | Detail
 --- | --- | ---
 [igraph](https://github.com/igraph/igraph) | c | also provide python wrapper, graph utilities 
+[matlab-bgl](https://github.com/dgleich/matlab-bgl) | c++, matlab | [matlab implementation with bgl dependency](http://dgleich.github.io/matlab-bgl/)
 [graclus](https://github.com/GraphProcessor/Graclus) | c++ | graph partition algorithm
 [lcelib](https://github.com/CxAalto/lcelib) | c++ | graph utilities by [CxAalto](http://complex.cs.aalto.fi/)
 

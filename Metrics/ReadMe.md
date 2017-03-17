@@ -1,5 +1,6 @@
-#Metrics
-##LinkBelonging Modularity
+# Metrics
+## LinkBelonging Modularity
+
 - input files: [facebook_combined.txt](facebook_combined.txt), [cis_fb.out](cis_fb.out)
 
 - use python 2.7 with `networkx` installed with pip

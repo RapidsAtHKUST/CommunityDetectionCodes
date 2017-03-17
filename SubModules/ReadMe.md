@@ -1,5 +1,5 @@
-#Dependencies
-##Igraph Install
+# Dependencies
+## Igraph Install
 
 - [official link](http://igraph.org/c/#cdown)
 

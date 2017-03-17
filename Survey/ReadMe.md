@@ -1,5 +1,5 @@
-#Community Detection Related Survey
-##Community Detection
+# Community Detection Related Survey
+## Community Detection
 
 content | detail
 --- | ---
@@ -8,19 +8,19 @@ content | detail
 [Community-Detection-New-Findings.md](Community-Detection-New-Findings.md) | some algorithms using probabilistic methods
 [Overlapping-Community-Detection-Codes.md](Overlapping-Community-Detection-Codes.md) | overlapping community detection codes links
 
-##Community Search
+## Community Search
 
 content | detail
 --- | ---
 [Community-Search-Survey.md](Community-Search-Survey.md) | communtiy search algorithms survey
 
-##Social Media Platform Analysis
+## Social Media Platform Analysis
 
 content | detail
 --- | ---
 [Social-Media-Recommendation.md](Social-Media-Recommendation.md) | some information about social network analysis in practice
 
-##Graph Papers
+## Graph Papers
 
 content | detail
 --- | ---

@@ -1,5 +1,5 @@
-#Non-Overlapping Community Detection Codes
-##Algorithms
+# Non-Overlapping Community Detection Codes
+## Algorithms
 
 content | implementation languages
 --- | ---

@@ -1,16 +1,16 @@
-#Data Sets
-##Synthetic-Graph Generation Benchmark
+# Data Sets
+## Synthetic-Graph Generation Benchmark
 - [2009-LFM](2009-LFM-Benchmark), it is the link of lfm-benchmark codes.
 
-##Real-World Graphs
-###Small
+## Real-World Graphs
+### Small
 
 Dataset | Nodes Number | Undirected Edge Number
 --- | --- | --- | ---
 [football_edge_list.txt](Datasets/football_edge_list.txt) | 115 | 613
 [karate_edge_list.txt](Datasets/karate_edge_list.txt) | 34 | 78
 
-###Medium
+### Medium
 
 Dataset |  Nodes Number | Undirected Edge Number
 --- | ---  | ---
@@ -21,7 +21,7 @@ Dataset |  Nodes Number | Undirected Edge Number
 [slashdot0902_edge_list.txt](Datasets/slashdot0902_edge_list.txt)  | 82,168 | 582,533
 [wiki_vote_edge_list.txt](Datasets/wiki_vote_edge_list.txt)  | 7,115 | 100,762
 
-###Large
+### Large
 
 - facebook100, [website link](https://archive.org/details/oxford-2005-facebook-matrix)
 
