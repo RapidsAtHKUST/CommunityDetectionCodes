@@ -1,5 +1,6 @@
-#Community Detection Survey 
-##Introduction
+# Community Detection Survey 
+
+## Introduction
 The repository collects and refactors some overlapping Community detection algorithms. Major content is survey, algorithms' implementations, 
 graph input benchmarks, submodules, scripts.
 
@@ -9,26 +10,26 @@ Some Non-Overlapping Community Detections Algorithms could be found in [NonOverl
 
 A community-detection survey in [Survey](Survey), you can have a look, if interested. 
 
-##Graph Benchmarks
+## Graph Benchmarks
 
-###Synthetic Tool
+### Synthetic Tool
 
 Content | Detail | Status
 --- | --- | ---
 [2009-LFR-Benchmark](Benchmark/2009-LFR-Benchmark) | LFR Benchmark to generate five types of graphs | build success, some files unused
 
-###Real-World DataSets(Edge List)
+### Real-World DataSets(Edge List)
 
 Detailed information is in [Datasets](Datasets).
 
-##Quality-Evaluation Metrics
-###Without-Ground-Truth
+## Quality-Evaluation Metrics
+### Without-Ground-Truth
 
 Evaluation Metric Name | Implementation | Heuristic
 --- | --- | ---
 Link-Belonging-Based Modularity | [link_belong_modularity.py](Metrics/metrics/link_belong_modularity.py) | compare to random graph
 
-###With-Ground-Truth
+### With-Ground-Truth
 
 Evaluation Metric Name | Implementation | Heuristic
 --- | --- | ---
@@ -36,7 +37,7 @@ Overlap-NMI | [overlap_nmi.py](Metrics/metrics/overlap_nmi.py) | info-theory ent
 Omega-Idx | [omega_idx.py](Metrics/metrics/omega_idx.py) | unadjusted compared to expected
 
 
-##Algorithms
+## Algorithms
 
 In each algorithm, there is a `ReadMe.md`, which gives brief introduction of corresponding information of the algorithm and 
 current refactoring status. Category information are extracted, 
@@ -67,7 +68,7 @@ Algorithm | Category | Language | Dependency | Status
 [2014-HRGrow](Algorithms/2014-Heat-Kernel) | matrix-exponential | c++, matlab, python | pylibbvg | python okay
 [2015-LEMON](Algorithms/2015-LEMON) | seed expansion | python | pulp | python okay
 
-##Submodules(Dependencies)
+## Submodules(Dependencies)
 
 Detailed information is in [SubModules](SubModules).
 
@@ -77,9 +78,9 @@ Submodule | Implementation Language | Detail
 [graclus](https://github.com/GraphProcessor/Graclus) | c++ | graph partition algorithm
 [lcelib](https://github.com/CxAalto/lcelib) | c++ | graph utilities by [CxAalto](http://complex.cs.aalto.fi/)
 
-##Scripts
+## Scripts
 
 Some file processing utility python scripts are put in [Scripts](Scripts).
 
-##Attention
+## Attention
 These codes are all research codes, which I found through the internet. Please do not use them in production environment.
