@@ -10,11 +10,11 @@
 
 using namespace std;
 
-#include <util/collection/module_collection.h>
-#include <util/collection/wsarray.h>
-#include <util/common/cast.h>
-#include <util/common/combinatorics.h>
-#include <util/common/histograms.h>
+#include <collection/module_collection.h>
+#include <collection/wsarray.h>
+#include <common/cast.h>
+#include <common/combinatorics.h>
+#include <common/histograms.h>
 
 class static_network {
 public:

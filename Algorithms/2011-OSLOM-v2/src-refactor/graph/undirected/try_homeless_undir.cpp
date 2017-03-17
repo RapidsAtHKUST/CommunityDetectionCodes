@@ -1,7 +1,7 @@
-#include <util/collection/module_collection.h>
-#include <util/common/cast.h>
-#include <algorithm/undir_weighted_tabdeg.h>
-#include <util/graph/oslom_net_global.h>
+#include <collection/module_collection.h>
+#include <common/cast.h>
+#include <graph/undirected/undir_weighted_tabdeg.h>
+#include <graph/oslom_net_global.h>
 
 int oslom_net_global::try_to_assign_homeless(module_collection &Mcoll, bool anyway) {
     Mcoll.put_gaps();

@@ -1,18 +1,8 @@
-#include <deque>
+//
+// Created by cheyulin on 3/17/17.
+//
 
-using namespace std;
-
-class egocentric_net : public oslomnet_louvain {
-public:
-    egocentric_net() : oslomnet_louvain() {};
-
-    ~egocentric_net() {};
-
-    int collect_ego_groups_once(deque<deque<int> > &);
-
-private:
-    int add_this_egomodules(int node, module_collection &Mego);
-};
+#include "egocentric_undir.h"
 
 int egocentric_net::collect_ego_groups_once(int_matrix &E) {
     module_collection Mego(dim);

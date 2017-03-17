@@ -132,8 +132,8 @@ bool write_tp_of_this_level(int level, oslom_net_global &luca, char *directory_c
     /*********   GETTING COVERS  ***********/
     int soft_partitions_written = 0;
     if (level == 0)
-        luca.get_covers(tps, soft_partitions_written,
-                        paras.Or);                    // here we get covers, which are written in file tps -without homeless-
+        luca.get_covers(tps, soft_partitions_written, paras.Or);
+        // here we get covers, which are written in file tps -without homeless-
     else {
         paras.homeless_anyway = false;
         paras.value = false;

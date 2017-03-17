@@ -21,13 +21,13 @@ pair<int, int> static_network::vertex::kplus_m(const deque<int> &a) {
     int ins = 0;
     //double f=0;
     for (auto i = 0; i < a.size(); i++) {
-        pair<int, double> A = inlinks->posweightof(a[i]).second;
+        pair<int, double> &A = inlinks->posweightof(a[i]).second;
         ins += A.first;
     }
     int outs = 0;
     //double f=0;
     for (auto i = 0; i < a.size(); i++) {
-        pair<int, double> A = outlinks->posweightof(a[i]).second;
+        pair<int, double> &A = outlinks->posweightof(a[i]).second;
         outs += A.first;
     }
     return make_pair(ins, outs);
@@ -38,13 +38,13 @@ pair<double, double> static_network::vertex::kplus_w(const deque<int> &a) {
     double ins = 0;
     //double f=0;
     for (auto i = 0; i < a.size(); i++) {
-        pair<int, double> A = inlinks->posweightof(a[i]).second;
+        pair<int, double> &A = inlinks->posweightof(a[i]).second;
         ins += A.second;
     }
     double outs = 0;
     //double f=0;
     for (auto i = 0; i < a.size(); i++) {
-        pair<int, double> A = outlinks->posweightof(a[i]).second;
+        pair<int, double> &A = outlinks->posweightof(a[i]).second;
         //cout<<a[i]<<" -*-*-* "<<A.first<<" "<<A.second<<endl;
         outs += A.second;
     }

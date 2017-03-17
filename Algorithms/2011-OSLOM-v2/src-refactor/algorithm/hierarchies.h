@@ -3,10 +3,10 @@
 #include <iostream>
 #include <fstream>
 
-#include <util/common/cast.h>
-#include <util/common/deque_numeric.h>
-#include <util/collection/module_collection.h>
-#include <util/graph/oslom_net_global.h>
+#include <common/cast.h>
+#include <common/deque_numeric.h>
+#include <collection/module_collection.h>
+#include <graph/oslom_net_global.h>
 
 using namespace std;
 

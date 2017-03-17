@@ -15,14 +15,19 @@ if (OPENMP_FOUND)
 endif ()
 
 set(UtilFiles
-        program_options/set_parameters.cpp
-        util/common/cast.cpp util/common/combinatorics.cpp util/common/histograms.cpp util/common/random.cpp util/common/cc.cpp
-        util/common/deque_numeric.cpp util/common/log_table.cpp
+        program_options/set_parameters.cpp metric/mutual.cpp
         input_output/pretty_print.h input_output/tab_degree.cpp input_output/pajek.cpp input_output/partition.cpp
-        metric/mutual.cpp
-        util/graph/undirected_network.cpp util/graph/directed_network.cpp util/graph/oslom_net_check_overlap.cpp util/graph/oslom_net_unions.cpp
-        util/graph/louvain_oslomnet.cpp
-        util/collection/wsarray.cpp util/collection/module_collection.cpp)
-set(AlgoFiles algorithm/main_body.cpp algorithm/hierarchies.cpp)
-add_executable(2011-oslom-dir algorithm/main_directed.cpp ${AlgoFiles} util/graph/try_homeless_dir.cpp ${UtilFiles} ${AlgoFiles})
-add_executable(2011-oslom-undir algorithm/main_undirected.cpp ${AlgoFiles} util/graph/try_homeless_undir.cpp ${UtilFiles} ${AlgoFiles})
+
+        common/cast.cpp common/combinatorics.cpp common/histograms.cpp common/random.cpp common/cc.cpp
+        common/deque_numeric.cpp common/log_table.cpp
+
+        collection/wsarray.cpp collection/module_collection.cpp
+
+        graph/undirected/undirected_network.cpp graph/directed/directed_network.cpp
+        graph/louvain_oslomnet.cpp graph/undirected/egocentric_undir.cpp graph/undirected/undir_weighted_tabdeg.cpp
+        graph/oslom_net_global.cpp graph/directed/louvain_oslomnet_dir.cpp graph/directed/dir_weighted_tabdeg.cpp
+        graph/directed/directed_oslomnet_evaluate.cpp graph/undirected/undirected_oslomnet_evaluate.cpp)
+
+set(AlgoFiles algorithm/hierarchies.cpp)
+add_executable(2011-oslom-dir algorithm/main_directed.cpp ${AlgoFiles} graph/directed/try_homeless_dir.cpp ${UtilFiles} ${AlgoFiles})
+add_executable(2011-oslom-undir algorithm/main_undirected.cpp ${AlgoFiles} graph/undirected/try_homeless_undir.cpp ${UtilFiles} ${AlgoFiles})

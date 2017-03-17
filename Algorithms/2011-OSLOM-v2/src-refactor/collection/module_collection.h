@@ -5,9 +5,9 @@
 #include <map>
 #include <set>
 
-#include "util/common/histograms.h"
-#include "util/common/random.h"
-#include <util/common/deque_numeric.h>
+#include <common/histograms.h>
+#include <common/random.h>
+#include <common/deque_numeric.h>
 
 using namespace std;
 

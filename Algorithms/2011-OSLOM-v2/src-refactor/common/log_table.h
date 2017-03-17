@@ -2,7 +2,7 @@
 #include <algorithm>
 #include <iostream>
 
-#include "util/common/cast.h"
+#include "cast.h"
 
 using namespace std;
 #define log_table_pr 1e-5
