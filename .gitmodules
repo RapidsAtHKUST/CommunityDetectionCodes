@@ -4,3 +4,9 @@
 [submodule "SubModules/Graclus"]
 	path = SubModules/Graclus
 	url = git@github.com:GraphProcessor/Graclus.git
+[submodule "SubModules/lcelib"]
+	path = SubModules/lcelib
+	url = git@github.com:CxAalto/lcelib.git
+[submodule "SubModules/matlab-bgl"]
+	path = SubModules/matlab-bgl
+	url = git@github.com:dgleich/matlab-bgl.git
