@@ -1,13 +1,16 @@
-#Online Community Search
-##Possible Research Points
+# Online Community Search
+## Possible Research Points
+
 1. Index for dynamic graphs, for faster k-truss, k-core, distance-related, desnse local subgraph queries  
 2. Evaluation and Bechmark for different dense subgraph detection algorithms on parallel platforms
 
-##Researchers
+## Researchers
+
 - **[Jeffrey Xu Yu](http://www.se.cuhk.edu.hk/people/yu.html) (CUHK)**
 - **[James Cheng](http://www.cse.cuhk.edu.hk/~jcheng/) (CUHK)**
 
-##Codes
+## Codes
+
 - k-Truss
     - [Truss-Decomposition](https://github.com/stplaydog/OPTKIT) (from Github)  
 

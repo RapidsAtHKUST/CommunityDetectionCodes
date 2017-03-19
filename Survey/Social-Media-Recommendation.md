@@ -1,5 +1,5 @@
-#Recommendation Related
-##[Sina](http://www.wbrecom.com/?p=4)
+# Recommendation Related
+## [Sina](http://www.wbrecom.com/?p=4)
 1. Social Network(Relation) Based  
 	e.g, follow, phrase  
 	Challenge : Truss identification, weight choice, user quality, multi-weight computation  

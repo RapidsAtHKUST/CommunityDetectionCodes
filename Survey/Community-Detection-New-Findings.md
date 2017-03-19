@@ -1,4 +1,5 @@
-#New Findings About Social Network Analysis (From Statistical Perspective)
+# New Findings About Social Network Analysis (From Statistical Perspective)
+
 1. Static Network Random Generation Mechanism
   - Community Detection  
     Hot topic : stochastic block model,  

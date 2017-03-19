@@ -51,7 +51,7 @@ Algorithm | Category | Language | Dependency | Status
 --- | --- | --- | --- | ---
 [2008-CPM](Algorithms/2008-CliquePercolation) | clique percolation | c++, python | [lcelib](https://github.com/CxAalto/lcelib) | build success
 [2009-CIS](Algorithms/2009-Connected-Iterative-Scan) | seed expansion | c++ |  | build success
-[2009-EAGLE](Algorithms/2009-EAGLE) | seed expansion | c++ | igraph, boost | build success
+[2009-EAGLE](Algorithms/2009-EAGLE) | seed expansion | c++ | [igraph](https://github.com/igraph/igraph), boost | build success
 [2010-LinkComm](Algorithms/2010-LinkCommunity) | link partition | python| optparse | python okay
 [2010-iLCD](Algorithms/2010-iLCD) | seed expansion | java | args4j, trove4j | build success
 [2010-CONGA](Algorithms/2010-CONGA) | dynamics | java | | build success
@@ -61,10 +61,10 @@ Algorithm | Category | Language | Dependency | Status
 [2011-MOSES](Algorithms/2011-MOSES) | fuzzy detection | c++ | boost | build success
 [2011-SLPA](Algorithms/2011-SLPA) | dynamics | c++, java, python | networkx, numpy | build success for java
 [2012-FastCPM](Algorithms/2012-Fast-Clique-Percolation) | clique percolation | python, c++ | networkx | build success
-[2012-ParCPM](Algorithms/2012-CPMOnSteroids) | clique percolation | c | igraph | build success
+[2012-ParCPM](Algorithms/2012-CPMOnSteroids) | clique percolation | c | [igraph](https://github.com/igraph/igraph) | build success
 [2012-DEMON](Algorithms/2012-DEMON) | seed expansion | python | networkx | python okay
 [2013-SVINET](Algorithms/2013-SVINET) | stochastic inference | c++ | gsl, pthread | build success
-[2013-SeedExpansion](Algorithms/2013-Seed-Set-Expansion) | page-rank | c++, matlab | graclus, matlabgl | 
+[2013-SeedExpansion](Algorithms/2013-Seed-Set-Expansion) | page-rank | c++, matlab | graclus, [matlab-bgl](https://github.com/dgleich/matlab-bgl) | 
 [2014-HRGrow](Algorithms/2014-Heat-Kernel) | matrix-exponential | c++, matlab, python | pylibbvg | python okay
 [2015-LEMON](Algorithms/2015-LEMON) | seed expansion | python | pulp | python okay
 

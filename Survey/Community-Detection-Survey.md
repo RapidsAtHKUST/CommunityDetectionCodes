@@ -1,5 +1,7 @@
-#Community Detection Related (Mainly Social Network)
-##Basic Concepts
+# Community Detection Related (Mainly Social Network)
+
+## Basic Concepts
+
 - Non-Overlapping-Empirical-Study, [Community Detection in Social Networks: An Indepth Benchmarking Study with a Procedure Oriented Framework](http://delivery.acm.org/10.1145/2800000/2794370/p998-wang.pdf) (Evaluation Framework, VLDB 2015)  
 - Non-Overlapping-Benchmark, [Exploring the limits of community detection strategies in complex networks](http://www.nature.com/articles/srep02216?message-global=remove&WT.ec_id=SREP-639-20130801) (Summarization(Test on 17 algorithms), Scientific Report 2013)  
 - Non-Overlapping-Benchmark, [Closed benchmarks for network community structure characterization](http://journals.aps.org/pre/pdf/10.1103/PhysRevE.85.026109) (Closed Benchmark(Mention RC benchmark), Physics Review 2012)  
@@ -26,7 +28,7 @@
 	- W/O ground truth : clustering coefficient, strength(intensity of detected communitites), modularity(compares result with a randomized one)  
 	- Evaluation methods: 1) use closed benchmarks, 2) visualize hierarchically clustering results  
 
-##Possible Research Points
+## Possible Research Points
 1. Difference between directed graph and undirected graph
 1. Evaluate prior detection methods(non-overlapping, overlapping, hierarchical) on metric and scalability (**WWW, ASONAM**)
 1. Implement useful algorithms on **GraphX(Scala), PowerGraph(C++), Giraph(Java)** and estimate efficiency and analyze hwo to transparent sequential one into parallel environment (**SC, IPDPS**)  
@@ -36,7 +38,7 @@
 1. Study index technique to help combine several algorithms for social network analysis (**My Imagination**)  
 1. Visulize algorithm execuation procedures(i.e. how community form especially in hierarchical algorithms) (**My Imagination**)  
 
-##Related Researcher
+## Related Researcher
 - **[Mark Newman](http://www-personal.umich.edu/~mejn/) (Michigan, Pioneer)** 
 - **[Andrea Lancichinetti](https://sites.google.com/site/andrealancichinetti/) (Umeå University, LFR Benchmark)**  
 - **[Peter Bickel](http://www.stat.berkeley.edu/~bickel/index.html)	(Berkeley, Spectral Algorithm, Model Selection)**  
@@ -45,10 +47,10 @@
 - **[Jie Tang](http://keg.cs.tsinghua.edu.cn/jietang/) (Tsinghua)**  
 - **[Jianyong Wang](http://dbgroup.cs.tsinghua.edu.cn/wangjy/) (Tsinghua)**  
 
-##Good Survey
+## Good Survey
 - **[Overall Survey](http://lab41.github.io/survey-community-detection/)** (Home Page : http://lab41.github.io/Circulo)  
 
-##Prior Famous Algorithms & Evaluation Benchmark
+## Prior Famous Algorithms & Evaluation Benchmark
 - Reference  
 	- (Refer to [Reihaneh Rabbany](https://scholar.google.com.hk/citations?user=Foh_c-QAAAAJ&hl=zh-CN&oi=ao)'s Github: https://github.com/rabbanyk/CommunityEvaluation)  
 	- (Refer to [Andrea Lancichinetti](https://sites.google.com/site/andrealancichinetti/)'s Implementation)  
@@ -100,7 +102,7 @@
 - Optimization Techniques
 	- 2014, **General Optimization**, *[Stanislav Sobolevsky]*, General optimization technique for high-quality community detection in complex networks  
 
-##Codes
+## Codes
 - Tools
     - General Library
         - **[Some Recommendations From CppReference](http://en.cppreference.com/w/cpp/links/libs)** (Boost.Graph, LEMON, OGDF, NGraph)  

@@ -1,5 +1,5 @@
-#VLDB Graph Summary
-##2013
+# VLDB Graph Summary
+## 2013
 - **Toward a Distance Oracle for Billion-Node Graphs(MSRA,Tsinghua)**  
 Trinity(in-memory, distributed as engine), sketch-based distance oracle(approximate answers), propose landmark selection distributed BFS and answer generation.
 
@@ -42,7 +42,7 @@ Deductive application language(support app using regular stratiification but suf
 - **Phd Seminar(Fast Cartography for Data Explorers)**  
 Answer query with query
 
-##2014
+## 2014
 - **Event Pattern Match over Graph Streams(University of Massachusetts)**  
 Query event pattern match(semantics, on-line algorithms), different from subgraph match(refer to node-neighbor trees method), using DDST(degree-preserving dual simulation with timing constraints), number theoretic signature, coloring algorithms, test data(road, twitter, citation)
 
