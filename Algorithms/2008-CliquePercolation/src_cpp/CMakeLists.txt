@@ -4,6 +4,7 @@ set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c++14 -O3 -g")
 
 find_package(Boost REQUIRED COMPONENTS)
 include_directories(${Boost_INCLUDE_DIRS})
+include_directories("../../../SubModules/")
 
 FIND_PACKAGE(OpenMP REQUIRED)
 if (OPENMP_FOUND)
