@@ -8,7 +8,7 @@
 #include <map>
 #include <iostream>
 
-#include <input_output/pretty_print.h>
+#include <util/input_output/pretty_print.h>
 #include <util/common/combinatorics.h>
 #include <util/common/cast.h>
 

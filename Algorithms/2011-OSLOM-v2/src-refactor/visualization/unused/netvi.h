@@ -3,8 +3,8 @@
 
 #include <util/input_output/partition.h>
 
-#include "hier.h"
-#include "static_network.h"
+#include "visualization/util/hier.h"
+#include "visualization/util/static_network.h"
 
 
 #define UNFF -7412128

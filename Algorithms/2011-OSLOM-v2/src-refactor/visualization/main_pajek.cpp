@@ -31,8 +31,8 @@
 #include <util/common/random.h>
 #include <util/input_output/partition.h>
 
-#include "visual_net.h"
-#include "hier.h"
+#include "visualization/util/visual_net.h"
+#include "visualization/util/hier.h"
 
 using namespace std;
 

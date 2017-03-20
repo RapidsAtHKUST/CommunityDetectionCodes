@@ -23,92 +23,45 @@
  *                                                                               *
  * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *
  */
-
-
 //./a.out -f network.dat
 
-#include "visual_net.h"
-#include "hier.h"
-#include "netvi.h"
-
-
-
+#include "visualization/util/visual_net.h"
+#include "visualization/util/hier.h"
 
 int get_tp_files(string network_file) {
-	
-	string s= network_file + "_oslo_files";
-	string syst= "ls " + s + " > " + s + "_list";
-	cout<<syst<<endl;
-	
-	char b[1000];
-	cast_string_to_char(syst, b);
-	int sy= system(b);
-
-	
-	string f=s + "_list";
-	cast_string_to_char(f, b);
-	
-	ifstream gin(b);
-	int levels=0;
-	while(getline(gin, s)) {
-	
-		if(s.size()>0 && s[0]=='n')
-			levels++;
-		
-	
-	}
-	
-	
-	return levels;
-
-
+    string s = network_file + "_oslo_files";
+    string syst = "ls " + s + " > " + s + "_list";
+    cout << syst << endl;
+    char b[1000];
+    cast_string_to_char(syst, b);
+    int sy = system(b);
+    string f = s + "_list";
+    cast_string_to_char(f, b);
+    ifstream gin(b);
+    int levels = 0;
+    while (getline(gin, s)) {
+        if (s.size() > 0 && s[0] == 'n')
+            levels++;
+    }
+    return levels;
 }
 
-
-
-
-int main(int argc, char * argv[]) {		
-	
-	
-	
-	if(argc<2) {
-	
-	
-		cerr<<argv[0]<<" network_file"<<endl;
-		return -1;
-	}
-	
-	srand_file();
-	
-	int levels = get_tp_files(string(argv[1]));
-	cout<<"levels found: "<<levels<<endl;
-	
-	
-	
-	if(levels==0) {
-		
-		cerr<<"oslo directory not found..."<<endl;
-		return -1;
-	
-	}
-	
-	
-	
-	
-	
-	//return 0;
-	all_levels(levels, string(argv[1]));
-	
-	
-	//netgnu netsail;
-	//netsail.set_networks(levels, string(argv[1]));
-	//netsail.interface();
-	
-		
-	return 0;
-
-
+int main(int argc, char *argv[]) {
+    if (argc < 2) {
+        cerr << argv[0] << " network_file" << endl;
+        return -1;
+    }
+    srand_file();
+    int levels = get_tp_files(string(argv[1]));
+    cout << "levels found: " << levels << endl;
+    if (levels == 0) {
+        cerr << "oslo directory not found..." << endl;
+        return -1;
+    }
+    //return 0;
+    all_levels(levels, string(argv[1]));
+    //netgnu netsail;
+    //netsail.set_networks(levels, string(argv[1]));
+    //netsail.interface();
+    return 0;
 }
-
-
-

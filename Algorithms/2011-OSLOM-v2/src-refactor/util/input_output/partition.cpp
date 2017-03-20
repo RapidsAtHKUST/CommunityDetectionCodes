@@ -43,4 +43,64 @@ int get_partition_from_file_list(string s, deque<deque<int>> &ten) {
     return 0;
 }
 
-#endif
+int get_partition_from_file_tp_format(string S, deque<deque<int> > &M, bool anyway) {
+    // if anyway = true il also takes the homeless
+    M.clear();
+    char b[100];
+    cast_string_to_char(S, b);
+    ifstream inb(b);
+    string st;
+    while (getline(inb, st)) {
+        deque<string> vv;
+        separate_strings(st, vv);
+        if (st.size() > 0 && (vv[0] == "#module" || vv[0] == "#group"))
+            if (cast_string_to_double(vv[5]) < 1 || anyway) {
+                getline(inb, st);
+                deque<int> v;
+                cast_string_to_doubles(st, v);
+                sort(v.begin(), v.end());
+                if (!v.empty())
+                    M.push_back(v);
+            }
+    }
+    return 0;
+}
+
+int get_partition_from_file_tp_format(string S, deque<deque<int> > &M) {
+    M.clear();
+    char b[100];
+    cast_string_to_char(S, b);
+    ifstream inb(b);
+    string st;
+    while (getline(inb, st)) {
+        deque<string> vv;
+        separate_strings(st, vv);
+        if (st.size() > 0 && (vv[0] == "#module" || vv[0] == "#group"))
+            if (cast_string_to_double(vv[5]) < 1) {
+                getline(inb, st);
+                deque<int> v;
+                cast_string_to_doubles(st, v);
+                sort(v.begin(), v.end());
+                if (!v.empty())
+                    M.push_back(v);
+            }
+    }
+    return 0;
+}
+
+int get_partition_from_file(string s, deque<deque<int> > &M, int min) {
+    M.clear();
+    char b[100];
+    cast_string_to_char(s, b);
+    ifstream inb(b);
+    string st;
+    while (getline(inb, st)) {
+        deque<int> v;
+        cast_string_to_doubles(st, v);
+        sort(v.begin(), v.end());
+        if (!v.empty() && v.size() > min)
+            M.push_back(v);
+    }
+    return 0;
+}
+

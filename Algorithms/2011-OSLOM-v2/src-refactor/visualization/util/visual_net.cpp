@@ -151,7 +151,7 @@ double visual_network::draw_gnuplot(map<int, double> &lab_x, map<int, double> &l
         sprintf(b, "set arrow from %f,%f to %f,%f nohead lw %f", labx_h[itm->first], laby_h[itm->first],
                 labx_h[itm->second], laby_h[itm->second],
                 edge_width * log(1 + vertices[itm->first]->links->posweightof(itm->second).second));
-        edge_append.push_back(string(b));
+        edge_append.push_back(std::string(b));
     }
     return 0;
 }
@@ -199,7 +199,7 @@ double visual_network::draw_gnuplot(map<int, double> &lab_x, map<int, double> &l
 }
 
 double visual_network::draw_gnuplot(map<int, double> &lab_x, map<int, double> &lab_y, map<int, double> &lab_r,
-                                    string position_file, string gfile, deque<string> &edge_append) {
+                                    std::string position_file, string gfile, deque<string> &edge_append) {
     map<int, double> labx_h;
     map<int, double> laby_h;
     map<int, double> labr_h;
@@ -263,7 +263,7 @@ double visual_network::relabel(map<int, double> &lab_x, map<int, double> &lab_y,
 }
 
 double visual_network::with_colors(deque<deque<int> > &ten) {
-    deque<string> pajek_colors;
+    vector<string> pajek_colors;
     pajek_colors.push_back("Red");
     pajek_colors.push_back("Green");
     pajek_colors.push_back("Black");

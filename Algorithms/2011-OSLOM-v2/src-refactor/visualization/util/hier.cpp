@@ -1,9 +1,12 @@
 //
 // Created by cheyulin on 3/20/17.
 //
+
 #include "hier.h"
-#include <util/common/cast.h>
+
 #include <fstream>
+
+#include <util/common/cast.h>
 #include <util/common/histograms.h>
 
 int check_position(map<int, double> &lab_x, map<int, double> &lab_y, map<int, double> &lab_r) {
