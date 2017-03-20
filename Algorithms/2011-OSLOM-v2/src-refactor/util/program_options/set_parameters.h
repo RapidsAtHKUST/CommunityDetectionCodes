@@ -1,8 +1,8 @@
 #include <iostream>
 #include <map>
 
-#include <common/cast.h>
-#include <common/random.h>
+#include <util/common/cast.h>
+#include <util/common/random.h>
 
 using namespace std;
 

@@ -9,8 +9,8 @@
 #include <iostream>
 
 #include <input_output/pretty_print.h>
-#include <common/combinatorics.h>
-#include <common/cast.h>
+#include <util/common/combinatorics.h>
+#include <util/common/cast.h>
 
 using namespace std;
 
