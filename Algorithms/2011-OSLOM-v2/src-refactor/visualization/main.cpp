@@ -29,7 +29,7 @@
 
 #include "visual_net.h"
 #include "hier.h"
-//#include "netvi.h"
+#include "netvi.h"
 
 
 
