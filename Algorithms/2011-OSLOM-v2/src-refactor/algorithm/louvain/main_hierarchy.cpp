@@ -15,7 +15,6 @@
 // see readme.txt for more details
 
 #include <stdlib.h>
-#include <stdio.h>
 #include <iostream>
 #include <iomanip>
 #include <fstream>

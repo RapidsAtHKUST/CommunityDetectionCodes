@@ -49,7 +49,7 @@ int main(int argc,char *argv[]){
   int Nnode = 0;
   istringstream ss;
   while(Nnode == 0){ 
-    if(getline(net,line) == NULL){
+    if(!getline(net,line).good()){
       cout << "the network file is not in Pajek format...exiting" << endl;
       exit(-1);
     }
@@ -99,7 +99,7 @@ int main(int argc,char *argv[]){
   int NdoubleLinks = 0;
   map<int,map<int,double> > Links; 
   // Read links in format "from to weight", for example "1 3 2" (all integers) and each undirected link only ones (weight is optional).
-  while(getline(net,line) != NULL){
+  while(getline(net,line).good()){
     ss.clear();
     ss.str(line);
     ss >> buf;

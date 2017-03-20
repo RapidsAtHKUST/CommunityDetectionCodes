@@ -35,16 +35,16 @@ set(VisualUtilFiles
         visualization/position.cpp visualization/hier.cpp visualization/static_network.cpp
         visualization/visual_net.cpp visualization/netvi.cpp)
 
-add_executable(louvain_comm algorithm/louvain/community.cpp algorithm/louvain/graph.cpp algorithm/louvain/graph_binary.cpp algorithm/louvain/main_community.cpp)
-add_executable(louvain_convert algorithm/louvain/community.cpp algorithm/louvain/graph.cpp algorithm/louvain/graph_binary.cpp algorithm/louvain/main_convert.cpp)
-add_executable(louvain_hier algorithm/louvain/community.cpp algorithm/louvain/graph.cpp algorithm/louvain/graph_binary.cpp algorithm/louvain/main_hierarchy.cpp)
+add_executable(louvain_comm algorithm/louvain/community.cpp algorithm/louvain/graph_binary.cpp algorithm/louvain/main_community.cpp)
+add_executable(louvain_convert algorithm/louvain/graph.cpp algorithm/louvain/main_convert.cpp)
+add_executable(louvain_hier algorithm/louvain/main_hierarchy.cpp)
 
 add_executable(infomap_undir algorithm/infomap/undir/Greedy.cc algorithm/infomap/undir/GreedyBase.cc algorithm/infomap/undir/infomap.cc algorithm/infomap/undir/Node.cc)
 add_executable(infomap_dir algorithm/infomap/dir/Greedy.cc algorithm/infomap/dir/GreedyBase.cc algorithm/infomap/dir/infomap.cc algorithm/infomap/dir/Node.cc)
 
-add_executable(2011-oslom-dir algorithm/oslom/main_directed.cpp ${AlgoFiles} graph/directed/try_homeless_dir.cpp ${UtilFiles} ${GraphFiles} ${AlgoFiles})
-add_executable(2011-oslom-undir algorithm/oslom/main_undirected.cpp ${AlgoFiles} graph/undirected/try_homeless_undir.cpp ${UtilFiles} ${GraphFiles} ${AlgoFiles})
+#add_executable(2011-oslom-dir algorithm/oslom/main_directed.cpp ${AlgoFiles} graph/directed/try_homeless_dir.cpp ${UtilFiles} ${GraphFiles} ${AlgoFiles})
+#add_executable(2011-oslom-undir algorithm/oslom/main_undirected.cpp ${AlgoFiles} graph/undirected/try_homeless_undir.cpp ${UtilFiles} ${GraphFiles} ${AlgoFiles})
 
-add_executable(2011-oslom-visual-main visualization/main.cpp ${VisualUtilFiles})
-add_executable(2011-oslom-visual-undir visualization/main_pajek.cpp ${VisualUtilFiles})
-add_executable(2011-oslom-visual-dir visualization/main_pajek_directed.cpp ${VisualUtilFiles})
+#add_executable(2011-oslom-visual-main visualization/main.cpp ${VisualUtilFiles})
+#add_executable(2011-oslom-visual-undir visualization/main_pajek.cpp ${VisualUtilFiles})
+#add_executable(2011-oslom-visual-dir visualization/main_pajek_directed.cpp ${VisualUtilFiles})

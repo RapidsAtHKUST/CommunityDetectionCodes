@@ -17,8 +17,9 @@
 #ifndef GRAPH_H
 #define GRAPH_H
 
-#include <stdlib.h>
-#include <stdio.h>
+#include <cstdlib>
+#include <cstdio>
+
 #include <iostream>
 #include <iomanip>
 #include <fstream>
@@ -33,15 +34,18 @@
 using namespace std;
 
 class Graph {
- public:
-  vector<vector<pair<int,int> > > links;
-  
-  Graph (char *filename, int type);
-  
-  void clean(int type);
-  void renumber(int type);
-  void display(int type);
-  void display_binary(char *filename, int type);
+public:
+    vector<vector<pair<int, int> > > links;
+
+    Graph(char *filename, int type);
+
+    void clean(int type);
+
+    void renumber(int type);
+
+    void display(int type);
+
+    void display_binary(char *filename, int type);
 };
 
 #endif // GRAPH_H

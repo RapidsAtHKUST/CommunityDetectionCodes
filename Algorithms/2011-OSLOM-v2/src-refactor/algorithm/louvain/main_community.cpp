@@ -15,13 +15,7 @@
 // see readme.txt for more details
 
 #include <stdlib.h>
-#include <math.h>
 #include <string>
-#include <iostream> 
-#include <fstream>
-#include <sstream>
-#include <vector>
-#include <algorithm>
 
 #include "graph_binary.h"
 #include "community.h"
