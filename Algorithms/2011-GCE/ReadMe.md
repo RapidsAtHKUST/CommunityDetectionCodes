@@ -1,5 +1,5 @@
-#Greedy Clique Expansion
-##Source Codes
+# Greedy Clique Expansion
+## Source Codes
 
 content | detail
 --- | ---

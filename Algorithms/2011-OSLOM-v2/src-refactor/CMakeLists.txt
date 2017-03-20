@@ -46,5 +46,5 @@ add_executable(2011-oslom-dir algorithm/oslom/main_directed.cpp ${AlgoFiles} gra
 add_executable(2011-oslom-undir algorithm/oslom/main_undirected.cpp ${AlgoFiles} graph/undirected/try_homeless_undir.cpp ${UtilFiles} ${GraphFiles} ${AlgoFiles})
 
 add_executable(2011-oslom-visual-main visualization/main.cpp ${VisualUtilFiles})
-add_executable(2011-oslom-visual-pajek visualization/main_pajek.cpp ${VisualUtilFiles})
+add_executable(2011-oslom-visual-undir visualization/main_pajek.cpp ${VisualUtilFiles})
 add_executable(2011-oslom-visual-dir visualization/main_pajek_directed.cpp ${VisualUtilFiles})

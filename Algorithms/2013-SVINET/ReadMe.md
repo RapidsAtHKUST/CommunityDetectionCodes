@@ -1,5 +1,5 @@
-#SVINET  
-##Dependencies
+# SVINET  
+## Dependencies
 
 pthread has been installed, if you have already have gcc
 
@@ -11,5 +11,5 @@ in fedora, do as follows
 dnf install gsl gsl-devel
 ```
 
-##Links
+## Links
 - [original github repo](https://github.com/premgopalan/svinet)

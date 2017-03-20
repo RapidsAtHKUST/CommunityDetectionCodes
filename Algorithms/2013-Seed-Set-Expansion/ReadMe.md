@@ -1,8 +1,8 @@
-#Seed Set Expansion
+# Seed Set Expansion
 
-##Dependencies
+## Dependencies
 - [matlab-bgl](https://github.com/dgleich/matlab-bgl), bgl matlab wrapper
 - [graclus](https://github.com/iromu/Graclus), a graph partitioning algorithm
 
-##Source Codes
+## Source Codes
 - [src](src)
