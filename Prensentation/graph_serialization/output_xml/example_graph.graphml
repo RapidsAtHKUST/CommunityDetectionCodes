@@ -2,23 +2,10 @@
 <graphml xmlns="http://graphml.graphdrawing.org/xmlns" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://graphml.graphdrawing.org/xmlns http://graphml.graphdrawing.org/xmlns/1.0/graphml.xsd">
   <key attr.name="weight" attr.type="double" for="edge" id="d0" />
   <graph edgedefault="undirected">
-    <node id="0" />
-    <node id="1" />
     <node id="2" />
     <node id="3" />
     <node id="4" />
-    <node id="5" />
     <node id="7" />
-    <node id="8" />
-    <edge source="0" target="1">
-      <data key="d0">3.0</data>
-    </edge>
-    <edge source="0" target="5">
-      <data key="d0">3.0</data>
-    </edge>
-    <edge source="1" target="2">
-      <data key="d0">1.0</data>
-    </edge>
     <edge source="2" target="3">
       <data key="d0">4.0</data>
     </edge>
@@ -27,9 +14,6 @@
     </edge>
     <edge source="3" target="4">
       <data key="d0">4.0</data>
-    </edge>
-    <edge source="4" target="8">
-      <data key="d0">1.0</data>
     </edge>
     <edge source="4" target="7">
       <data key="d0">4.0</data>

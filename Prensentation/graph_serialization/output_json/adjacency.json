@@ -1,0 +1,61 @@
+{
+  "directed": false, 
+  "graph": [], 
+  "nodes": [
+    {
+      "id": 2
+    }, 
+    {
+      "id": 3
+    }, 
+    {
+      "id": 4
+    }, 
+    {
+      "id": 7
+    }
+  ], 
+  "adjacency": [
+    [
+      {
+        "id": 3, 
+        "weight": 4.0
+      }, 
+      {
+        "id": 7, 
+        "weight": 4.0
+      }
+    ], 
+    [
+      {
+        "id": 2, 
+        "weight": 4.0
+      }, 
+      {
+        "id": 4, 
+        "weight": 4.0
+      }
+    ], 
+    [
+      {
+        "id": 3, 
+        "weight": 4.0
+      }, 
+      {
+        "id": 7, 
+        "weight": 4.0
+      }
+    ], 
+    [
+      {
+        "id": 2, 
+        "weight": 4.0
+      }, 
+      {
+        "id": 4, 
+        "weight": 4.0
+      }
+    ]
+  ], 
+  "multigraph": false
+}

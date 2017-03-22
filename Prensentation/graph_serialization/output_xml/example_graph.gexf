@@ -1,0 +1,17 @@
+<?xml version='1.0' encoding='utf-8'?>
+<gexf version="1.1" xmlns="http://www.gexf.net/1.1draft" xmlns:viz="http://www.gexf.net/1.1draft/viz" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.w3.org/2001/XMLSchema-instance">
+  <graph defaultedgetype="undirected" mode="static">
+    <nodes>
+      <node id="2" label="2" />
+      <node id="3" label="3" />
+      <node id="4" label="4" />
+      <node id="7" label="7" />
+    </nodes>
+    <edges>
+      <edge id="0" source="2" target="3" weight="4.0" />
+      <edge id="1" source="2" target="7" weight="4.0" />
+      <edge id="2" source="3" target="4" weight="4.0" />
+      <edge id="3" source="4" target="7" weight="4.0" />
+    </edges>
+  </graph>
+</gexf>
