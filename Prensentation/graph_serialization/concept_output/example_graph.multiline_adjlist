@@ -1,0 +1,19 @@
+#/home/cheyulin/GitRepos/CommunityDetectionCodes/Prensentation/graph_serialization/graph_formats.py
+# GMT Wed Mar 22 03:24:11 2017
+# 
+0 2
+1 {'weight': 3.0}
+5 {'weight': 3.0}
+1 1
+2 {'weight': 1.0}
+2 2
+3 {'weight': 4.0}
+7 {'weight': 4.0}
+3 1
+4 {'weight': 4.0}
+4 2
+8 {'weight': 1.0}
+7 {'weight': 4.0}
+5 0
+7 0
+8 0
