@@ -33,8 +33,7 @@ def try_different_layouts(graph):
     plt.show()
 
 
-if __name__ == '__main__':
-    graph = nx.karate_club_graph()
+def draw_comm_detection_res(graph):
     pos = graphviz_layout(graph)
     color_list = ['r', 'g', 'b', 'y']
     comm_dict, partition = get_comm_dict_and_partition(graph)
@@ -43,7 +42,6 @@ if __name__ == '__main__':
     for comm_id in comm_dict:
         nx.draw_networkx_nodes(graph, pos, nodelist=comm_dict[comm_id],
                                node_color=color_list[comm_id], node_size=500, alpha=0.8)
-
 
     # edges
     def get_edge_dict():
@@ -55,7 +53,6 @@ if __name__ == '__main__':
             if partition[edge[0]] == partition[edge[1]]:
                 edge_dict[partition[edge[0]]].append(edge)
         return edge_dict
-
 
     edge_list_dict = get_edge_dict()
     nx.draw_networkx_edges(graph, pos, width=4.0, alpha=0.5, edge_color='grey')
@@ -69,3 +66,15 @@ if __name__ == '__main__':
     plt.axis('off')
     plt.savefig('./karate_partition.pdf', bbox_inches='tight', pad_inches=0)
     plt.show()
+
+
+if __name__ == '__main__':
+    graph = nx.karate_club_graph()
+
+    nx.draw_circular(graph, with_labels=True, font_size=16, node_size=500, alpha=0.8, width=4, edge_color='grey',
+                     node_color='red')
+    plt.axis('off')
+    plt.savefig('./karate_circular.pdf', bbox_inches='tight', pad_inches=0)
+    plt.show()
+
+    draw_comm_detection_res(graph)
