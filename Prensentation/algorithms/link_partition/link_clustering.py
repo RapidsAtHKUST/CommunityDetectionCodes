@@ -36,6 +36,7 @@ if __name__ == '__main__':
         adj, edges = read_edge_list_unweighted(args[0])
 
     print edges
+    print len(edges)
     if threshold is not None:
         if is_weighted:
             edge2cid, D_thr = HLC(adj, edges).single_linkage(threshold, w=ij2wij)
