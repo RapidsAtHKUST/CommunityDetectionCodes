@@ -30,7 +30,7 @@ unique_ptr<Graph> ConstructGraph(map<int, Vertex> &vertex_dict, map<int, int> &n
         auto edge_flag_pair = add_edge(vertex_dict[my_edge.src_index_], vertex_dict[my_edge.dst_index_], *graph_ptr);
         if (edge_flag_pair.second) {
             edge_weight_map[edge_flag_pair.first] = my_edge.edge_weight_;
-            cout << my_edge;
+//            cout << my_edge;
         }
     }
 
@@ -52,12 +52,13 @@ int main(int argc, char *argv[]) {
     auto start = high_resolution_clock::now();
     auto arr_2d = cis.ExecuteCis();
     auto end = high_resolution_clock::now();
-    cout << "whole execution time:" << duration_cast<milliseconds>(end - start).count() << " ms" << endl;
+    cout << "idx to name dict:" << name_dict << "\n" << endl;
+    cout << "whole execution time:" << duration_cast<milliseconds>(end - start).count() << " ms\n" << endl;
 
     auto name_arr_2d = yche::Map2DArrWithDict(arr_2d, name_dict);
 
-    cout << "idx result:" << arr_2d << endl;
-    cout << "name result:" << name_arr_2d << endl;
-    cout << "comm size:" << name_arr_2d.size() << endl;
+    cout << "idx result:" << arr_2d << "\n" << endl;
+    cout << "name result:" << name_arr_2d << "\n" << endl;
+    cout << "comm size:" << name_arr_2d.size() << "\n" << endl;
     return 0;
 }

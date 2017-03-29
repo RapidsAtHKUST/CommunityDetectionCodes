@@ -273,12 +273,14 @@ namespace yche {
     }
 
     void Cis::MergeCommToGlobal(EntityIdxVec &result_community) {
-        if (overlap_community_vec_.size() == 0) {
+        if (result_community.size() < 3) {
+            return;
+        } else if (overlap_community_vec_.size() == 0) {
             overlap_community_vec_.emplace_back(std::move(result_community));
         } else {
             auto is_insert = true;
             for (auto &community:overlap_community_vec_) {
-                if (GetIntersectRatio(community, result_community) > 1 - DOUBLE_ACCURACY) {
+                if (GetIntersectRatio(community, result_community) > 0.6 - DOUBLE_ACCURACY) {
                     community = GetUnion(community, result_community);
                     is_insert = false;
                     break;
@@ -295,7 +297,11 @@ namespace yche {
             auto partial_comm_members = EntityIdxSet();
             partial_comm_members.emplace(vertex_index_map[vertex]);
             auto result_community = ExpandSeed(partial_comm_members);
+
+            cout << "seed vertex:" << vertex << endl;
+            cout << "intermediate result:" << result_community << endl;
             MergeCommToGlobal(result_community);
+            cout << "current result community:" << overlap_community_vec_ << '\n' << endl;
         }
         return overlap_community_vec_;
     }

@@ -22,7 +22,7 @@ namespace yche {
             while (getline(in_stream, s)) {
                 boost::regex pat("#.*edge_weight.*");
                 boost::smatch matches;
-                cout << s << endl;
+//                cout << s << endl;
                 if (boost::regex_match(s, matches, pat))
                     continue;
 
@@ -38,7 +38,8 @@ namespace yche {
     }
 
     vector<pair<int, int>> ReadEdgeList(string file_name_str) {
-        auto edges_vec = vector<pair<int, int>>();
+        auto edges_vec = vector < pair < int,
+        int >> ();
         auto in_stream = ifstream(file_name_str);
         auto s = string();
         if (!in_stream) {
@@ -48,7 +49,7 @@ namespace yche {
             while (getline(in_stream, s)) {
                 boost::regex pat("#.*");
                 boost::smatch matches;
-                cout << s << endl;
+//                cout << s << endl;
                 if (boost::regex_match(s, matches, pat))
                     continue;
 
