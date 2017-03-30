@@ -34,7 +34,7 @@ def get_cis_info():
     return iteration_dict_list
 
 
-def draw_partitioned_link_graph(graph, iter_info, color_str):
+def draw_local_expansion_graph(graph, iter_info, color_str):
     pos = graphviz_layout(graph)
     nx.draw(graph, pos, width=4.0, alpha=0.5, edge_color='grey',
             node_color='white', node_size=500, with_labels=True)
@@ -48,10 +48,29 @@ def draw_partitioned_link_graph(graph, iter_info, color_str):
     plt.show()
 
 
+def draw_global_result_graph(graph, first_node_list, newly_added_node_list, color_str):
+    pos = graphviz_layout(graph)
+    nx.draw(graph, pos, width=4.0, alpha=0.5, edge_color='grey',
+            node_color='white', node_size=500, with_labels=True)
+
+    nx.draw_networkx_nodes(graph, pos, nodelist=first_node_list, node_size=500, node_color=color_str,
+                           alpha=0.4)
+    nx.draw_networkx_nodes(graph, pos, nodelist=newly_added_node_list, node_size=500, node_color=color_str,
+                           alpha=0.6)
+    plt.axis('off')
+    plt.savefig('cis_global_result_graph.pdf', bbox_inches='tight', pad_inches=0)
+    plt.show()
+
+
 if __name__ == '__main__':
     graph = nx.karate_club_graph()
     iter_info_list = get_cis_info()
     for i in range(2):
         print iter_info_list[i]
-    draw_partitioned_link_graph(graph, iter_info_list[0], 'r')
-    draw_partitioned_link_graph(graph, iter_info_list[1], 'b')
+    iter0_node_list = iter_info_list[0][current_result_community_str][0]
+    iter1_node_list = sorted(set(iter_info_list[1][current_result_community_str][0]) - set(iter0_node_list))
+    print iter0_node_list
+    print iter1_node_list
+    draw_local_expansion_graph(graph, iter_info_list[0], 'r')
+    draw_local_expansion_graph(graph, iter_info_list[1], 'b')
+    draw_global_result_graph(graph, iter0_node_list, iter1_node_list, 'purple')
