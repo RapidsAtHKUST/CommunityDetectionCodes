@@ -55,7 +55,7 @@ Algorithm | Category | Language | Dependency | Status
 [2010-LinkComm](Algorithms/2010-LinkCommunity) | link partition | python| optparse | python okay
 [2010-iLCD](Algorithms/2010-iLCD) | seed expansion | java | args4j, trove4j | build success
 [2010-CONGA](Algorithms/2010-CONGA) | dynamics | java | | build success
-[2010-TopGC](Algorithms/2010-TopGC) | stochastic inference | java | | build success
+[2010-TopGC](Algorithms/2010-TopGC) | statistical inference | java | | build success
 [2011-GCE](Algorithms/2011-GCE) | seed expansion | c++ | boost | build success
 [2011-OSLOM](Algorithms/2011-OSLOM-v2) | seed expansion | c++ |  |
 [2011-MOSES](Algorithms/2011-MOSES) | fuzzy detection | c++ | boost | build success
@@ -63,10 +63,15 @@ Algorithm | Category | Language | Dependency | Status
 [2012-FastCPM](Algorithms/2012-Fast-Clique-Percolation) | clique percolation | python, c++ | networkx | build success
 [2012-ParCPM](Algorithms/2012-CPMOnSteroids) | clique percolation | c | [igraph](https://github.com/igraph/igraph) | build success
 [2012-DEMON](Algorithms/2012-DEMON) | seed expansion | python | networkx | python okay
-[2013-SVINET](Algorithms/2013-SVINET) | stochastic inference | c++ | gsl, pthread | build success
+[2013-SVINET](Algorithms/2013-SVINET) | statistical inference | c++ | gsl, pthread | build success
 [2013-SeedExpansion](Algorithms/2013-Seed-Set-Expansion) | page-rank | c++, matlab | [graclus](https://github.com/GraphProcessor/Graclus), [matlab-bgl](https://github.com/dgleich/matlab-bgl) | 
 [2014-HRGrow](Algorithms/2014-Heat-Kernel) | matrix-exponential | c++, matlab, python | pylibbvg | python okay
 [2015-LEMON](Algorithms/2015-LEMON) | seed expansion | python | pulp | python okay
+
+## Presentation Files
+
+Some files for my survey presentation is in [Presentation](Prensentation), including algorithm visualization scripts, 
+graph serialization related scripts and social network visualization scripts and corresponding figures.
 
 ## Submodules(Dependencies)
 
