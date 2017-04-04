@@ -20,8 +20,18 @@ def draw_label_propagation_graph(graph, comm_dict, number):
     plt.show()
 
 
+def draw_graph(graph):
+    pos = graphviz_layout(graph)
+    nx.draw(graph, pos, width=4.0, alpha=0.5, edge_color='grey',
+            node_color='white', node_size=500, with_labels=True)
+    plt.axis('off')
+    plt.savefig('./origin_graph_before_lp' '.pdf', bbox_inches='tight', pad_inches=0, transparent=True)
+    plt.savefig('./origin_graph_before_lp' '.png', bbox_inches='tight', pad_inches=0, transparent=True)
+
+
 if __name__ == '__main__':
     graph = nx.karate_club_graph()
+    draw_graph(graph)
     with open('disjoint_community.txt') as ifs:
         comm_id_dict_list = map(lambda line: eval(line.strip()), ifs.readlines())
         for comm_id_dict in comm_id_dict_list:
