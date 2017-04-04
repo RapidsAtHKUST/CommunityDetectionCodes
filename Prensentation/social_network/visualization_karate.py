@@ -64,8 +64,8 @@ def draw_comm_detection_res(graph):
     # labels
     nx.draw_networkx_labels(graph, pos, font_size=16)
     plt.axis('off')
-    plt.savefig('./karate_partition.pdf', bbox_inches='tight', pad_inches=0)
-    plt.savefig('./karate_partition.png', bbox_inches='tight', pad_inches=0)
+    plt.savefig('./karate_partition.pdf', bbox_inches='tight', pad_inches=0, transparent=True)
+    plt.savefig('./karate_partition.png', bbox_inches='tight', pad_inches=0, transparent=True)
     plt.show()
 
 
@@ -75,8 +75,8 @@ if __name__ == '__main__':
     nx.draw_circular(graph, with_labels=True, font_size=16, node_size=500, alpha=0.8, width=4, edge_color='grey',
                      node_color='red')
     plt.axis('off')
-    plt.savefig('./karate_circular.pdf', bbox_inches='tight', pad_inches=0)
-    plt.savefig('./karate_circular.png', bbox_inches='tight', pad_inches=0)
+    plt.savefig('./karate_circular.pdf', bbox_inches='tight', pad_inches=0, transparent=True)
+    plt.savefig('./karate_circular.png', bbox_inches='tight', pad_inches=0, transparent=True)
     plt.show()
 
     draw_comm_detection_res(graph)

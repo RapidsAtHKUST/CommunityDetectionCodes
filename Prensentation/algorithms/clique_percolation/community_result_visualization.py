@@ -37,8 +37,8 @@ def draw_comm_detection_res(graph):
     # labels
     nx.draw_networkx_labels(graph, pos, font_size=16)
     plt.axis('off')
-    plt.savefig('./clique_percolation_karate_partition.pdf', bbox_inches='tight', pad_inches=0)
-    plt.savefig('./clique_percolation_karate_partition.png', bbox_inches='tight', pad_inches=0)
+    plt.savefig('./clique_percolation_karate_partition.pdf', bbox_inches='tight', pad_inches=0, transparent=True)
+    plt.savefig('./clique_percolation_karate_partition.png', bbox_inches='tight', pad_inches=0, transparent=True)
     plt.show()
 
 

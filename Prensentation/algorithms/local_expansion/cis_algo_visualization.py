@@ -44,7 +44,9 @@ def draw_local_expansion_graph(graph, iter_info, color_str):
     nx.draw_networkx_nodes(graph, pos, nodelist=[iter_info[seed_vertex_str]], node_size=500, node_color=color_str,
                            alpha=0.6)
     plt.axis('off')
-    plt.savefig('./iter_info' + str(iter_info[iter_num_str]) + '.pdf', bbox_inches='tight', pad_inches=0)
+    plt.savefig('./iter_info' + str(iter_info[iter_num_str]) + '.pdf', bbox_inches='tight', pad_inches=0,transparent=True)
+    plt.savefig('./iter_info' + str(iter_info[iter_num_str]) + '.png', transparent=True, bbox_inches='tight',
+                pad_inches=0)
     plt.show()
 
 
@@ -58,8 +60,8 @@ def draw_global_result_graph(graph, first_node_list, newly_added_node_list, colo
     nx.draw_networkx_nodes(graph, pos, nodelist=newly_added_node_list, node_size=500, node_color=color_str,
                            alpha=0.6)
     plt.axis('off')
-    plt.savefig('cis_global_result_graph.pdf', bbox_inches='tight', pad_inches=0)
-    plt.savefig('cis_global_result_graph.png', bbox_inches='tight', pad_inches=0)
+    plt.savefig('cis_global_result_graph.pdf', bbox_inches='tight', pad_inches=0,transparent=True)
+    plt.savefig('cis_global_result_graph.png', bbox_inches='tight', pad_inches=0, transparent=True)
     plt.show()
 
 

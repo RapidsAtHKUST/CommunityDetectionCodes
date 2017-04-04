@@ -34,8 +34,8 @@ def draw_link_graph(graph):
 
     # nx.draw_networkx_edge_labels(graph, pos,edge_labels=edge_dict, font_size=6)
     plt.axis('off')
-    plt.savefig('./link_graph.pdf', bbox_inches='tight', pad_inches=0)
-    plt.savefig('./link_graph.png', bbox_inches='tight', pad_inches=0)
+    plt.savefig('./link_graph.pdf', bbox_inches='tight', pad_inches=0, transparent=True)
+    plt.savefig('./link_graph.png', bbox_inches='tight', pad_inches=0, transparent=True)
     plt.show()
 
 
@@ -56,8 +56,8 @@ def draw_partitioned_link_graph(graph, comm_list):
 
     # nx.draw_networkx_edge_labels(graph, pos,edge_labels=edge_dict, font_size=6)
     plt.axis('off')
-    plt.savefig('./link_partition_graph.pdf', bbox_inches='tight', pad_inches=0)
-    plt.savefig('./link_partition_graph.png', bbox_inches='tight', pad_inches=0)
+    plt.savefig('./link_partition_graph.pdf', bbox_inches='tight', pad_inches=0, transparent=True)
+    plt.savefig('./link_partition_graph.png', bbox_inches='tight', pad_inches=0, transparent=True)
     plt.show()
 
 

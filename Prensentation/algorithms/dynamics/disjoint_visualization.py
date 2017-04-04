@@ -15,8 +15,8 @@ def draw_label_propagation_graph(graph, comm_dict, number):
         nx.draw_networkx_nodes(graph, pos, nodelist=comm, node_color=color_dict[idx], node_size=500, alpha=0.5)
 
     plt.axis('off')
-    plt.savefig('./label_propagation_iter' + str(number) + '.pdf', bbox_inches='tight', pad_inches=0)
-    plt.savefig('./label_propagation_iter' + str(number) + '.png', bbox_inches='tight', pad_inches=0)
+    plt.savefig('./label_propagation_iter' + str(number) + '.pdf', bbox_inches='tight', pad_inches=0, transparent=True)
+    plt.savefig('./label_propagation_iter' + str(number) + '.png', bbox_inches='tight', pad_inches=0, transparent=True)
     plt.show()
 
 

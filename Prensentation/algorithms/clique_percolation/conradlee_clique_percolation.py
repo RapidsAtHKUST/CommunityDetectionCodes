@@ -55,7 +55,7 @@ def get_percolated_cliques(G, k):
     # nodes
     for comm_id in comm_dict:
         nx.draw_networkx_nodes(percolation_graph, pos, nodelist=comm_dict[comm_id],
-                               node_color=color_list[comm_id], node_size=2000, alpha=0.4, node_shape='h')
+                               node_color=color_list[comm_id], node_size=500, alpha=0.4, node_shape='h')
 
     node_label_dict = {}
     for node in percolation_graph.nodes():
@@ -71,7 +71,9 @@ def get_percolated_cliques(G, k):
 
     plt.axis('off')
     plt.get_current_fig_manager().window.showMaximized()
-    # plt.savefig('./percolation_graph.pdf')
+
+    plt.savefig('./percolation_graph.pdf', bbox_inches='tight', pad_inches=0, transparent=True)
+    plt.savefig('./percolation_graph.png', bbox_inches='tight', pad_inches=0, transparent=True)
     plt.show()
 
 
