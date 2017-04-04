@@ -65,6 +65,7 @@ def draw_comm_detection_res(graph):
     nx.draw_networkx_labels(graph, pos, font_size=16)
     plt.axis('off')
     plt.savefig('./karate_partition.pdf', bbox_inches='tight', pad_inches=0)
+    plt.savefig('./karate_partition.png', bbox_inches='tight', pad_inches=0)
     plt.show()
 
 
@@ -75,6 +76,7 @@ if __name__ == '__main__':
                      node_color='red')
     plt.axis('off')
     plt.savefig('./karate_circular.pdf', bbox_inches='tight', pad_inches=0)
+    plt.savefig('./karate_circular.png', bbox_inches='tight', pad_inches=0)
     plt.show()
 
     draw_comm_detection_res(graph)

@@ -16,6 +16,7 @@ def draw_label_propagation_graph(graph, comm_dict, number):
 
     plt.axis('off')
     plt.savefig('./label_propagation_iter' + str(number) + '.pdf', bbox_inches='tight', pad_inches=0)
+    plt.savefig('./label_propagation_iter' + str(number) + '.png', bbox_inches='tight', pad_inches=0)
     plt.show()
 
 

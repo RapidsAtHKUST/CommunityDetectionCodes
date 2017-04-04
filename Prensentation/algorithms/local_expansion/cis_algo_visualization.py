@@ -59,6 +59,7 @@ def draw_global_result_graph(graph, first_node_list, newly_added_node_list, colo
                            alpha=0.6)
     plt.axis('off')
     plt.savefig('cis_global_result_graph.pdf', bbox_inches='tight', pad_inches=0)
+    plt.savefig('cis_global_result_graph.png', bbox_inches='tight', pad_inches=0)
     plt.show()
 
 
