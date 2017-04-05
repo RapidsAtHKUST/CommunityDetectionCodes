@@ -2,6 +2,7 @@ import networkx as nx
 import matplotlib.pyplot as plt
 from networkx.drawing.nx_agraph import graphviz_layout
 from disjoint_community_detection import *
+import os
 
 
 def traverse_degree(graph):
@@ -11,25 +12,43 @@ def traverse_degree(graph):
 
 
 def try_different_layouts(graph):
-    nx.draw_random(graph, with_labels=True)
+    layout_dir = 'graph_layout'
+    if not os.path.exists(layout_dir):
+        os.mkdir('graph_layout')
+    nx.draw_random(graph, with_labels=True, font_size=16, node_size=500, alpha=0.8, width=4, edge_color='grey')
+    plt.axis('off')
+    plt.savefig(layout_dir + os.sep + 'rand.png', bbox_inches='tight', pad_inches=0, transparent=True)
     plt.show()
 
-    nx.draw_circular(graph, with_labels=True)
+    nx.draw_circular(graph, with_labels=True, font_size=16, node_size=500, alpha=0.8, width=4, edge_color='grey')
+    plt.axis('off')
+    plt.savefig(layout_dir + os.sep + 'circular.png', bbox_inches='tight', pad_inches=0, transparent=True)
     plt.show()
 
-    nx.draw_spectral(graph, with_labels=True)
+    nx.draw_spectral(graph, with_labels=True, font_size=16, node_size=500, alpha=0.8, width=4, edge_color='grey')
+    plt.axis('off')
+    plt.savefig(layout_dir + os.sep + 'spectral.png', bbox_inches='tight', pad_inches=0, transparent=True)
     plt.show()
 
-    nx.draw_networkx(graph, with_labels=True)
+    nx.draw_networkx(graph, with_labels=True, font_size=16, node_size=500, alpha=0.8, width=4, edge_color='grey')
+    plt.axis('off')
+    plt.savefig(layout_dir + os.sep + 'networkx.png', bbox_inches='tight', pad_inches=0, transparent=True)
     plt.show()
 
-    nx.draw(graph, pos=graphviz_layout(graph), with_labels=True)
+    nx.draw(graph, pos=graphviz_layout(graph), with_labels=True, font_size=16, node_size=500, alpha=0.8, width=4,
+            edge_color='grey')
+    plt.axis('off')
+    plt.savefig(layout_dir + os.sep + 'graphviz.png', bbox_inches='tight', pad_inches=0, transparent=True)
     plt.show()
 
-    nx.draw_shell(graph, with_labels=True)
+    nx.draw_shell(graph, with_labels=True, font_size=16, node_size=500, alpha=0.8, width=4, edge_color='grey')
+    plt.axis('off')
+    plt.savefig(layout_dir + os.sep + 'shell.png', bbox_inches='tight', pad_inches=0, transparent=True)
     plt.show()
 
-    nx.draw_spring(graph, with_labels=True)
+    nx.draw_spring(graph, with_labels=True, font_size=16, node_size=500, alpha=0.8, width=4, edge_color='grey')
+    plt.axis('off')
+    plt.savefig(layout_dir + os.sep + 'spring.png', bbox_inches='tight', pad_inches=0, transparent=True)
     plt.show()
 
 
@@ -72,6 +91,7 @@ def draw_comm_detection_res(graph):
 if __name__ == '__main__':
     graph = nx.karate_club_graph()
 
+    try_different_layouts(graph)
     nx.draw_circular(graph, with_labels=True, font_size=16, node_size=500, alpha=0.8, width=4, edge_color='grey',
                      node_color='red')
     plt.axis('off')
