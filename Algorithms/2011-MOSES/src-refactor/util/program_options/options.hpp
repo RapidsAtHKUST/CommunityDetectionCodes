@@ -18,14 +18,14 @@ extern char option_waves[1000];
 extern int flag_HALFMERGES /*= 0*/; // default is the fastest
 extern int flag_MERGES_INTERLEAVED /*= 0*/; // default is the fastest
 extern int flag_MERGES_ATEND /*= 1*/; // default is the fastest
-extern int option_maxDegreeInComm; 
+extern int option_maxDegreeInComm;
 extern int flag_dumpEvery3Iters;
-extern int option_ignoreNlines; 
+extern int option_ignoreNlines;
 extern char option_overlapping[1000];
 extern char option_loadOverlapping[1000];
-extern long double option_p_in; 
-extern long double option_p_out; 
-extern int option_maxDegree; 
+extern long double option_p_in;
+extern long double option_p_out;
+extern int option_maxDegree;
 extern int option_partition_as_partition;
 extern char option_saveMOSESscores[1000];
 extern long option_seed;
