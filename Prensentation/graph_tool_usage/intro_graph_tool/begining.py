@@ -13,7 +13,7 @@ def first_example():
 
 def draw_football():
     g = gt.collection.data["football"]
-    print g.list_properties()
+    print(g.list_properties())
 
     state = gt.minimize_blockmodel_dl(g, deg_corr=False)
     state.draw(pos=g.vp.pos, output="football-sbm-fit.png")
@@ -44,8 +44,8 @@ def draw_lesmis():
     # an arbitrary number of groups in the range [1, N], we transform it
     # into a state with B=N groups (where N-20 will be empty).
 
+    print('num v:', g.num_vertices())
     state = state.copy(B=g.num_vertices())
-
     # Now we run 1,000 sweeps of the MCMC
 
     dS, nmoves = state.mcmc_sweep(niter=1000)
@@ -58,15 +58,17 @@ def draw_lesmis():
     def collect_marginals(s):
         global pv
         pv = s.collect_vertex_marginals(pv)
+        print(pv)
 
     # Now we collect the marginals for exactly 100,000 sweeps
     gt.mcmc_equilibrate(state, force_niter=10000, mcmc_args=dict(niter=10),
                         callback=collect_marginals)
 
+    print(g.vp.pos)
     # Now the node marginals are stored in property map pv. We can
     # visualize them as pie charts on the nodes:
     state.draw(pos=g.vp.pos, vertex_shape="pie", vertex_pie_fractions=pv,
-               edge_gradient=None, output="lesmis-sbm-marginals.png")
+               edge_gradient=None, output="lesmis-sbm-marginals.pdf")
 
 
 if __name__ == '__main__':
