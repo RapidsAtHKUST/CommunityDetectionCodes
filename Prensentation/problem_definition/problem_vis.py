@@ -14,7 +14,7 @@ def vis_input(graph):
 
     nx.draw_networkx_edge_labels(graph, pos, edge_labels=edge_dict, font_size=14, alpha=0.1, font_color='blue')
     plt.axis('off')
-    plt.savefig('./input_graph.png', bbox_inches='tight', pad_inches=0, transparent=True)
+    plt.savefig('./demo_graph.png', bbox_inches='tight', pad_inches=0, transparent=True)
     plt.show()
 
 
