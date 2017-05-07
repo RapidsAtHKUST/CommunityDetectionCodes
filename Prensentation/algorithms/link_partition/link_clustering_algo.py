@@ -143,6 +143,7 @@ class HLC:
                     self.best_P = copy(self.edge2cid)  # slow...
                 self.list_D.append((cur_similarity, self.D))
                 prev_similarity = cur_similarity
+            print eij_eik[0], eij_eik[1], cur_similarity
             merge_comms(eij_eik[0], eij_eik[1], cur_similarity)
 
         if threshold is not None:

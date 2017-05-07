@@ -8,7 +8,7 @@ def get_sorted_pair(a, b):
 
 
 def get_link_graph():
-    graph = nx.karate_club_graph()
+    graph = nx.read_edgelist('../example_edge_list.txt', nodetype=int)
     edges = graph.edges()
 
     new_graph = nx.Graph()
@@ -26,7 +26,9 @@ def get_link_graph():
 
 def draw_link_graph(graph):
     pos = graphviz_layout(graph)
-    nx.draw(graph, pos, width=4.0, alpha=0.5, edge_color='grey', node_size=500, node_shape='h', with_labels=True)
+    # pos = nx.circular_layout(graph)
+    nx.draw(graph, pos, width=4.0, alpha=0.5, edge_color='grey', node_size=2000, node_shape='s', with_labels=True,
+            font_size=20, node_color='w')
 
     edge_dict = {}
     for edge in graph.edges():
@@ -39,16 +41,36 @@ def draw_link_graph(graph):
     plt.show()
 
 
+def draw_link_graph_nodes(graph):
+    pos = graphviz_layout(graph)
+    # pos = nx.circular_layout(graph)
+    nx.draw_networkx_nodes(graph, pos, width=4.0, alpha=0.8, edge_color='grey', node_size=2000, node_shape='s',
+                           with_labels=True, node_color='w')
+    nx.draw_networkx_labels(graph, pos, font_size=20)
+
+    edge_dict = {}
+    for edge in graph.edges():
+        edge_dict[edge] = str(list(set(edge[0]).intersection(set(edge[1]))))
+
+    # nx.draw_networkx_edge_labels(graph, pos,edge_labels=edge_dict, font_size=6)
+    plt.axis('off')
+    plt.savefig('./link_graph_nodes.pdf', bbox_inches='tight', pad_inches=0, transparent=True)
+    plt.savefig('./link_graph_nodes.png', bbox_inches='tight', pad_inches=0, transparent=True)
+    plt.show()
+
+
 def draw_partitioned_link_graph(graph, comm_list):
     pos = graphviz_layout(graph)
-    nx.draw(graph, pos, width=4.0, alpha=0.5, edge_color='grey',
-            node_color='white', node_size=500, node_shape='h', with_labels=True)
+    # pos = nx.circular_layout(graph)
 
-    color_list = ['red', 'green', 'blue', 'yellow', 'pink', 'purple', 'black', 'orange']
+    nx.draw(graph, pos, width=4.0, alpha=0.8, edge_color='grey',
+            node_color='white', node_size=2000, node_shape='s', with_labels=True, font_size=20)
+
+    color_list = ['red', 'green', 'blue', 'purple', 'pink', 'orange', 'black', 'orange']
     for idx, comm in enumerate(comm_list):
         print idx, comm
         nx.draw_networkx_nodes(graph, pos, nodelist=comm, node_color=color_list[idx],
-                               node_size=500, node_shape='h', alpha=0.5)
+                               node_size=2000, node_shape='s', alpha=0.4, font_size=20)
 
     edge_dict = {}
     for edge in graph.edges():
@@ -63,7 +85,7 @@ def draw_partitioned_link_graph(graph, comm_list):
 
 def get_link_partition_res():
     min_size = 3
-    with open('../result/karate_edge_list_maxS0.333333_maxD0.284758.comm2edges.txt') as ifs:
+    with open('../result/example_edge_list_maxS0.250000_maxD0.777778.comm2edges.txt') as ifs:
         comm_list = map(lambda line: line.strip().split(), ifs.readlines())
         filtered_comm_list = filter(lambda comm: len(comm) > min_size, comm_list)
         filtered_comm_list = map(lambda comm: map(lambda edge: tuple(sorted(map(int, edge.split(',')))), comm[1:]),
@@ -88,6 +110,8 @@ if __name__ == '__main__':
     link_graph = get_link_graph()
     link_partition = get_link_partition_res()
     overlap_res = get_overlapping_community_detection_res(link_partition)
+
+    draw_link_graph_nodes(link_graph)
 
     print link_graph.nodes()
     draw_link_graph(link_graph)
