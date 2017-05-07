@@ -156,9 +156,11 @@ namespace yche {
                 if (mutation_type == MutationType::add_neighbor) {
                     UpdateForAddNeighbor(check_vertex, community, expand_entity_dict, shrink_entity_dict,
                                          vertex_index_map, edge_weight_map);
+                    cout << "add neighbor:" << community.member_indices_ << endl;
                 } else {
                     UpdateForRemoveMember(check_vertex, community, shrink_entity_dict, expand_entity_dict,
                                           vertex_index_map, edge_weight_map);
+                    cout << "remove membor:" << community.member_indices_ << endl;
                 }
             }
         }
@@ -233,7 +235,7 @@ namespace yche {
 
         InitializeSeeds(entity_idx_set, community, member_dict, neighbor_dict, vertex_index_map, edge_weight_map);
 
-        auto degree_cmp_obj = [this](auto &left_member, auto &right_member) {
+        auto degree_cmp_obj = [this](auto &left_member, auto &right_member) -> bool {
             return degree(this->vertices_[left_member.entity_index_], *this->graph_ptr_) <
                    degree(this->vertices_[right_member.entity_index_], *this->graph_ptr_);
         };
