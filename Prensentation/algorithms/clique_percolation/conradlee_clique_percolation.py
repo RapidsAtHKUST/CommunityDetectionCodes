@@ -38,7 +38,7 @@ def get_percolated_cliques(G, k):
 
     percolation_graph = get_percolation_graph()
 
-    pos = graphviz_layout(percolation_graph)
+    pos = nx.circular_layout(percolation_graph)
     comm_dict = {}
     # nx.draw(percolation_graph, , with_labels=True, node_size=500)
     #
@@ -55,30 +55,47 @@ def get_percolated_cliques(G, k):
     # nodes
     for comm_id in comm_dict:
         nx.draw_networkx_nodes(percolation_graph, pos, nodelist=comm_dict[comm_id],
-                               node_color=color_list[comm_id], node_size=500, alpha=0.4, node_shape='h')
+                               node_color=color_list[comm_id], node_size=3000, alpha=0.4, node_shape='h', )
 
     node_label_dict = {}
     for node in percolation_graph.nodes():
-        node_label_dict[node] = str(list(node))
-    nx.draw_networkx_labels(percolation_graph, pos, labels=node_label_dict, font_size=15)
+        node_label_dict[node] = str(sorted(list(node)))
+    nx.draw_networkx_labels(percolation_graph, pos, labels=node_label_dict, font_size=20)
 
     edge_label_dict = {}
     for edge in percolation_graph.edges():
         edge_label_dict[edge] = str(list(frozenset.intersection(edge[0], edge[1])))
 
-    nx.draw_networkx_edges(percolation_graph, pos, width=2, edge_color='grey')
-    nx.draw_networkx_edge_labels(percolation_graph, pos, edge_labels=edge_label_dict, font_size=15)
-
     plt.axis('off')
-    plt.get_current_fig_manager().window.showMaximized()
 
     plt.savefig('./percolation_graph.pdf', bbox_inches='tight', pad_inches=0, transparent=True)
     plt.savefig('./percolation_graph.png', bbox_inches='tight', pad_inches=0, transparent=True)
     plt.show()
 
+    def draw_with_edges():
+        for comm_id in comm_dict:
+            nx.draw_networkx_nodes(percolation_graph, pos, nodelist=comm_dict[comm_id],
+                                   node_color=color_list[comm_id], node_size=3000, alpha=0.4, node_shape='h', )
+
+        node_label_dict = {}
+        for node in percolation_graph.nodes():
+            node_label_dict[node] = str(sorted(list(node)))
+        nx.draw_networkx_labels(percolation_graph, pos, labels=node_label_dict, font_size=20)
+
+        nx.draw_networkx_edges(percolation_graph, pos, width=2, edge_color='grey')
+        nx.draw_networkx_edge_labels(percolation_graph, pos, edge_labels=edge_label_dict, font_size=20)
+        plt.axis('off')
+        plt.savefig('./percolation_graph_with_edges.pdf', bbox_inches='tight', pad_inches=0, transparent=True)
+        plt.savefig('./percolation_graph_with_edges.png', bbox_inches='tight', pad_inches=0, transparent=True)
+
+        plt.show()
+
+    draw_with_edges()
+
 
 if __name__ == '__main__':
-    data_graph = nx.karate_club_graph()
+    # data_graph = nx.karate_club_graph()
+    data_graph = nx.read_edgelist('example_edge_list.txt', nodetype=int)
     comm_list = list(get_percolated_cliques(data_graph, 3))
 
     print '\ncomm list:', comm_list
