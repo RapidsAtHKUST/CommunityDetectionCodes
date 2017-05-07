@@ -242,6 +242,7 @@ namespace yche {
             is_change = false;
             MutateStates(MutationType::add_neighbor, community, member_dict, neighbor_dict,
                          degree_cmp_obj, is_change, vertex_index_map, edge_weight_map);
+
             MutateStates(MutationType::remove_member, community, neighbor_dict, member_dict,
                          degree_cmp_obj, is_change, vertex_index_map, edge_weight_map);
             community = SplitAndChoose(community.member_indices_);
