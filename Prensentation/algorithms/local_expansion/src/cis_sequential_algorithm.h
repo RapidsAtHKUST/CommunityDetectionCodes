@@ -66,7 +66,7 @@ namespace yche {
             } else {
                 w_in_ -= member_info.w_in_;
                 w_out_ -= member_info.w_out_;
-                member_indices_.emplace(member_info.entity_index_);
+                member_indices_.erase(member_info.entity_index_);
             }
         }
     };

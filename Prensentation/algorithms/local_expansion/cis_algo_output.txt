@@ -1,0 +1,81 @@
+seed vertex:0
+add neighbor:{1, 0}(1, 3)
+intermediate result:[0, 1]
+current result community:[[0, 1]]
+
+seed vertex:1
+add neighbor:{0, 1}(1, 3)
+intermediate result:[0, 1]
+current result community:[[0, 1]]
+
+seed vertex:2
+add neighbor:{1, 2}(1, 5)
+add neighbor:{0, 1, 2}(2, 6)
+add neighbor:{4, 0, 1, 2}(3, 8)
+add neighbor:{3, 2, 1, 0, 4}(4, 10)
+remove member:{3, 4, 2, 1}(3, 0)
+remove member:{4, 2, 1}(2, -2)
+remove member:{2, 4}(1, 0)
+intermediate result:[2, 4]
+current result community:[[0, 1], [2, 4]]
+
+seed vertex:3
+add neighbor:{4, 3}(1, 5)
+add neighbor:{5, 4, 3}(2, 8)
+add neighbor:{2, 5, 4, 3}(3, 11)
+remove member:{5, 3, 4}(2, -2)
+intermediate result:[3, 4, 5]
+current result community:[[0, 1], [2, 3, 4, 5]]
+
+seed vertex:4
+add neighbor:{3, 4}(1, 5)
+add neighbor:{5, 3, 4}(2, 8)
+add neighbor:{2, 5, 3, 4}(3, 11)
+remove member:{5, 3, 4}(2, -2)
+intermediate result:[3, 4, 5]
+current result community:[[0, 1], [2, 3, 4, 5]]
+
+seed vertex:5
+add neighbor:{7, 5}(1, 5)
+add neighbor:{6, 7, 5}(2, 7)
+add neighbor:{4, 6, 7, 5}(3, 9)
+add neighbor:{3, 5, 7, 6, 4}(4, 11)
+add neighbor:{8, 6, 3, 5, 4, 7}(5, 1)
+remove member:{8, 6, 5, 4, 7}(4, -1)
+remove member:{8, 5, 4, 7}(2, -2)
+remove member:{4, 7, 5}(2, 0)
+remove member:{4, 5}(1, -1)
+intermediate result:[4, 5]
+current result community:[[0, 1], [2, 3, 4, 5]]
+
+seed vertex:6
+add neighbor:{8, 6}(1, 3)
+add neighbor:{7, 8, 6}(2, 4)
+remove member:{8, 6}(1, 0)
+intermediate result:[6, 8]
+current result community:[[0, 1], [2, 3, 4, 5], [6, 8]]
+
+seed vertex:7
+add neighbor:{6, 7}(1, 4)
+add neighbor:{5, 6, 7}(2, 7)
+add neighbor:{8, 6, 7, 5}(3, 1)
+remove member:{8, 6, 7}(2, -2)
+remove member:{6, 8}(1, 0)
+intermediate result:[6, 8]
+current result community:[[0, 1], [2, 3, 4, 5], [6, 8]]
+
+seed vertex:8
+add neighbor:{6, 8}(1, 3)
+intermediate result:[6, 8]
+current result community:[[0, 1], [2, 3, 4, 5], [6, 8]]
+
+idx to name dict:[(0, 1), (1, 2), (2, 3), (3, 4), (4, 5), (5, 6), (6, 7), (7, 8), (8, 9)]
+
+whole execution time:0 ms
+
+idx result:[[0, 1], [2, 3, 4, 5], [6, 8]]
+
+name result:[[1, 2], [3, 4, 5, 6], [7, 9]]
+
+comm size:3
+

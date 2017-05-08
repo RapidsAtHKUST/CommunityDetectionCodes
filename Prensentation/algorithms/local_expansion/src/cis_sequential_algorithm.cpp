@@ -150,17 +150,20 @@ namespace yche {
             if (CalDensity(community) < CalDensity(community, check_member, mutation_type)) {
                 change_flag = true;
                 community.UpdateInfoForMutation(check_member, mutation_type);
+
                 shrink_entity_dict.erase(check_member.entity_index_);
                 auto check_vertex = vertices_[check_member.entity_index_];
                 expand_entity_dict.emplace(check_member.entity_index_, check_member);
                 if (mutation_type == MutationType::add_neighbor) {
                     UpdateForAddNeighbor(check_vertex, community, expand_entity_dict, shrink_entity_dict,
                                          vertex_index_map, edge_weight_map);
-                    cout << "add neighbor:" << community.member_indices_ << endl;
+                    cout << "add neighbor:" << community.member_indices_ << make_pair(community.w_in_, community.w_out_)
+                         << endl;
                 } else {
                     UpdateForRemoveMember(check_vertex, community, shrink_entity_dict, expand_entity_dict,
                                           vertex_index_map, edge_weight_map);
-                    cout << "remove membor:" << community.member_indices_ << endl;
+                    cout << "remove member:" << community.member_indices_
+                         << make_pair(community.w_in_, community.w_out_) << endl;
                 }
             }
         }
@@ -235,6 +238,8 @@ namespace yche {
 
         InitializeSeeds(entity_idx_set, community, member_dict, neighbor_dict, vertex_index_map, edge_weight_map);
 
+
+
         auto degree_cmp_obj = [this](auto &left_member, auto &right_member) -> bool {
             return degree(this->vertices_[left_member.entity_index_], *this->graph_ptr_) <
                    degree(this->vertices_[right_member.entity_index_], *this->graph_ptr_);
@@ -276,14 +281,14 @@ namespace yche {
     }
 
     void Cis::MergeCommToGlobal(EntityIdxVec &result_community) {
-        if (result_community.size() < 3) {
+        if (result_community.size() < 2) {
             return;
         } else if (overlap_community_vec_.size() == 0) {
             overlap_community_vec_.emplace_back(std::move(result_community));
         } else {
             auto is_insert = true;
             for (auto &community:overlap_community_vec_) {
-                if (GetIntersectRatio(community, result_community) > 0.6 - DOUBLE_ACCURACY) {
+                if (GetIntersectRatio(community, result_community) > 0.5 - DOUBLE_ACCURACY) {
                     community = GetUnion(community, result_community);
                     is_insert = false;
                     break;
@@ -299,9 +304,9 @@ namespace yche {
             auto vertex = *vp.first;
             auto partial_comm_members = EntityIdxSet();
             partial_comm_members.emplace(vertex_index_map[vertex]);
+            cout << "seed vertex:" << vertex << endl;
             auto result_community = ExpandSeed(partial_comm_members);
 
-            cout << "seed vertex:" << vertex << endl;
             cout << "intermediate result:" << result_community << endl;
             MergeCommToGlobal(result_community);
             cout << "current result community:" << overlap_community_vec_ << '\n' << endl;
