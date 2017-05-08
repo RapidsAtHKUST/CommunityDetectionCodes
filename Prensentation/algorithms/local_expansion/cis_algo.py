@@ -30,7 +30,8 @@ if __name__ == '__main__':
 
     def expand(seed_set):
         members = seed_set
-        print 'seed:', members
+        print 'seed:', members, nx.subgraph(data_graph, set(
+            flatten(map(lambda mem: nx.neighbors(data_graph, mem), members))) | members).edges()
         is_change = True
         while is_change:
             to_check_neighbors = list(flatten(map(lambda mem: nx.neighbors(data_graph, mem), members)))
@@ -50,7 +51,7 @@ if __name__ == '__main__':
                 if fitness(members - {member}) > fitness(members):
                     is_change = True
                     members.remove(member)
-                    fitness(members)
+                    fitness(members, is_print=True)
                     print 'remove member:', member, members, 'w_in', w_in, 'w_all:', w_all
                     break
         print set(members)
