@@ -22,11 +22,13 @@ if __name__ == '__main__':
 
 
     def print_result(graph, label_name):
-        print ' '.join(map(lambda node: str(node) + ':' + str(graph.node[node][label_name]), graph.nodes()))
+        print dict(zip(graph.nodes(),
+                       map(lambda node: graph.node[node][label_name], graph.nodes())))
+        # print ' '.join(map(lambda node: str(node) + ':' + str(graph.node[node][label_name]), graph.nodes()))
 
 
     def sync_label_propagation():
-        iter_num = 10
+        iter_num = 5
         for node in nx.nodes(g):
             g.node[node]['prev'] = node
             g.node[node]['next'] = None
@@ -42,8 +44,8 @@ if __name__ == '__main__':
 
                 label_list_dict = reverse_dict(label_count_dict)
                 tie_list = label_list_dict[max(list(label_list_dict))]
-                print label_count_dict
-                print tie_list
+                # print label_count_dict
+                # print tie_list
                 g.node[node]['next'] = get_rand_element(tie_list)
 
             for node in nx.nodes(g):
@@ -67,12 +69,13 @@ if __name__ == '__main__':
 
                 label_list_dict = reverse_dict(label_count_dict)
                 tie_list = label_list_dict[max(list(label_list_dict))]
-                print label_count_dict
-                print tie_list
+                # print label_count_dict
+                # print tie_list
                 g.node[node]['label'] = get_rand_element(tie_list)
+                print_result(g, 'label')
 
             print_result(g, 'label')
 
 
-    # sync_label_propagation()
-    async_label_propagation()
+    sync_label_propagation()
+    # async_label_propagation()
