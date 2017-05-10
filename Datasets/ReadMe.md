@@ -5,8 +5,8 @@
 ## Real-World Graphs
 ### Small
 
-Dataset | Nodes Number | Undirected Edge Number
---- | --- | --- | ---
+Dataset | Nodes Number | Undirected Edge Number 
+--- | --- | --- 
 [football_edge_list.txt](Datasets/football_edge_list.txt) | 115 | 613
 [karate_edge_list.txt](Datasets/karate_edge_list.txt) | 34 | 78
 
