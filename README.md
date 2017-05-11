@@ -70,8 +70,10 @@ Algorithm | Category | Language | Dependency | Status
 
 ## Presentation Files
 
+[survey-presentation-slides-yche.pdf](Prensentation/survey-presentation-slides-yche.pdf) is available.
+
 Some files for my survey presentation is in [Presentation](Prensentation), including algorithm visualization scripts, 
-graph serialization related scripts and social network visualization scripts and corresponding figures.
+graph serialization related scripts and social network visualization scripts and corresponding figures. 
 
 ## Submodules(Dependencies)
 

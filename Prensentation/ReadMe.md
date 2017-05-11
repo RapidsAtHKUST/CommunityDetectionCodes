@@ -1,4 +1,8 @@
 # Presentation Related Scripts
+## Slides
+
+- [survey-presentation-slides-yche.pdf](survey-presentation-slides-yche.pdf)
+
 ## Social Network
 
 content | detail
