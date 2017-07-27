@@ -27,6 +27,11 @@ Newly occurring useful links(Websites for downloading)
 * http://networkrepository.com/soc.php
 * http://konect.uni-koblenz.de/
 
+Old links
+
+* http://vlado.fmf.uni-lj.si/pub/networks/data/
+* https://snap.stanford.edu/data/
+
 ## Quality-Evaluation Metrics
 ### Without-Ground-Truth
 
@@ -40,7 +45,6 @@ Evaluation Metric Name | Implementation | Heuristic
 --- | --- | ---
 Overlap-NMI | [overlap_nmi.py](Metrics/metrics/overlap_nmi.py) | info-theory entropy-measure
 Omega-Idx | [omega_idx.py](Metrics/metrics/omega_idx.py) | unadjusted compared to expected
-
 
 ## Algorithms
 
