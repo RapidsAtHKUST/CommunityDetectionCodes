@@ -22,6 +22,11 @@ Content | Detail | Status
 
 Detailed information is in [Datasets](Datasets).
 
+Newly occurring useful links(Websites for downloading)
+
+* http://networkrepository.com/soc.php
+* http://konect.uni-koblenz.de/
+
 ## Quality-Evaluation Metrics
 ### Without-Ground-Truth
 
