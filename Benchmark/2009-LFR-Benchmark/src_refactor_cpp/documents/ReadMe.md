@@ -1,5 +1,5 @@
-#Explanation for Benchmark in 2009
-##Code Description
+# Explanation for Benchmark in 2009
+## Code Description
 - Package 1 includes the code to generate undirected and unweighted graphs with overlapping communities. The extent of the overlap can be tuned by input, and it can be set to zero if one is interested in non-overlapping clusters.  
 
 - Package 2 includes the code to generate undirected  weighted graphs with possibly overlapping communities.  
@@ -14,7 +14,7 @@ The code is written in C++. In each package there is a Readme file where you can
 
 Refer to **[Community Detection Algorithms: A Comparative Analysis]**(https://sites.google.com/site/santofortunato/inthepress2)
 
-##Authors' Three Paper:
+## Authors' Three Paper:
 [1] [Benchmark graphs for testing community detection algorithms](https://sites.google.com/site/santofortunato/benchmark.pdf?attredirects=0)  
 
 [2] [Benchmarks for testing community detection algorithms on directed and weighted graphs with overlapping communities](https://sites.google.com/site/santofortunato/newbenchmarks.pdf?attredirects=0)  

@@ -1,4 +1,4 @@
-#Description
+# Description
 
 There are five types of benchmark graph-input and ground-truth communities generators. The 5th generator 
 gives hierarchical information, while others do not.
@@ -16,7 +16,7 @@ dir name | detail
 [hierarchical_comm_graph](hierarchical_comm_graph) | graph generator, gives hierarchical ground-truth, 5th
 
 
-##Parameters
+## Parameters
 
 - binary graph
 
@@ -48,7 +48,7 @@ dir name | detail
 ./lfr_hierarchical_net -N 10000 -k 20 -maxk 50 -mu2 0.3 -minc 20 -maxc 50 -minC 100 -maxC 1000 -mu1 0.1
 ```
 
-##Outputs
+## Outputs
 
 - first four: community.dat, network.dat, statistics.dat, time_seed.dat
 
