@@ -1,4 +1,14 @@
 # Metrics
+
+## Other NMI Related Work
+
+check https://sites.google.com/site/santofortunato/inthepress2 also.
+
+current folder | origin
+--- | ---
+[MultiplexNMI-Benchmark](MultiplexNMI-Benchmark) | see https://sites.google.com/site/andrealancichinetti/files
+[mutual3](mutual3) | see https://sites.google.com/site/andrealancichinetti/mutual
+
 ## LinkBelonging Modularity
 
 - input files: [facebook_combined.txt](facebook_combined.txt), [cis_fb.out](cis_fb.out)
