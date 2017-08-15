@@ -31,13 +31,13 @@
 #include <iostream>
 #include <deque>
 #include <set>
+#include <chrono>
 
 using namespace std;
 
 #ifdef WITHGPERFTOOLS
 
 #include <gperftools/profiler.h>
-#include <chrono>
 
 #endif
 
