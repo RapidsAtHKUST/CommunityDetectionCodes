@@ -34,6 +34,13 @@
 
 using namespace std;
 
+#ifdef WITHGPERFTOOLS
+
+#include <gperftools/profiler.h>
+#include <chrono>
+
+#endif
+
 #include "../util/pretty_print.h"
 #include "../util/random.h"
 #include "../util/combinatorics.h"
@@ -42,6 +49,7 @@ using namespace std;
 #include "../util/cc.h"
 
 #include "set_parameters.h"
+
 
 // it computes the sum of a deque<int>
 int deque_int_sum(const deque<int> &a) {
@@ -938,7 +946,20 @@ int main(int argc, char *argv[]) {
     erase_file_if_exists("network.dat");
     erase_file_if_exists("community.dat");
     erase_file_if_exists("statistics.dat");
+
+    using namespace std::chrono;
+    auto start = high_resolution_clock::now();
+#ifdef WITHGPERFTOOLS
+    cout << "with google perf start------------\n";
+    ProfilerStart("undir_net.log");
+#endif
     benchmark(p.excess, p.defect, p.num_nodes, p.average_k, p.max_degree, p.tau, p.tau2, p.mixing_parameter,
               p.overlapping_nodes, p.overlap_membership, p.nmin, p.nmax, p.fixed_range, p.clustering_coeff);
+#ifdef WITHGPERFTOOLS
+    cout << "with google perf end--------------\n";
+    ProfilerStop();
+#endif
+    auto end = high_resolution_clock::now();
+    cout << "total time:" << duration_cast<milliseconds>(end - start).count() << " ms\n";
     return 0;
 }

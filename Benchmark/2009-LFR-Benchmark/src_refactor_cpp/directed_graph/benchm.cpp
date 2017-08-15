@@ -32,8 +32,15 @@
 #include <iostream>
 #include <deque>
 #include <set>
+#include <chrono>
 
 using namespace std;
+
+#ifdef WITHGPERFTOOLS
+
+#include <gperftools/profiler.h>
+
+#endif
 
 #include "../util/pretty_print.h"
 #include "../util/random.h"
@@ -1181,7 +1188,7 @@ void erase_file_if_exists(string s) {
 int main(int argc, char *argv[]) {
     srand_file();
     Parameters p;
-    if (set_parameters(argc, argv, p) == false) {
+    if (!set_parameters(argc, argv, p)) {
         if (argc > 1)
             cerr << "Please, look at ReadMe.txt..." << endl;
         return -1;
@@ -1189,7 +1196,20 @@ int main(int argc, char *argv[]) {
     erase_file_if_exists("network.dat");
     erase_file_if_exists("community.dat");
     erase_file_if_exists("statistics.dat");
+
+    using namespace std::chrono;
+    auto start = high_resolution_clock::now();
+#ifdef WITHGPERFTOOLS
+    cout << "with google perf start------------\n";
+        ProfilerStart("undir_net.log");
+#endif
     benchmark(p.excess, p.defect, p.num_nodes, p.average_k, p.max_degree, p.tau, p.tau2, p.mixing_parameter,
               p.overlapping_nodes, p.overlap_membership, p.nmin, p.nmax, p.fixed_range);
+#ifdef WITHGPERFTOOLS
+    cout << "with google perf end--------------\n";
+        ProfilerStop();
+#endif
+    auto end = high_resolution_clock::now();
+    cout << "total time:" << duration_cast<milliseconds>(end - start).count() << " ms\n";
     return 0;
 }

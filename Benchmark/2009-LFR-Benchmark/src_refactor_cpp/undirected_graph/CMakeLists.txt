@@ -1,3 +1,5 @@
 set(UtilFiles ../util/cast.cpp ../util/combinatorics.cpp ../util/histograms.cpp ../util/random.cpp ../util/cc.cpp)
 add_executable(lfr_undir_net benchm.cpp set_parameters.cpp ${UtilFiles})
 target_compile_options(lfr_undir_net PRIVATE -O3 -g)
+#target_compile_definitions(lfr_undir_net PRIVATE WITHGPERFTOOLS=1)
+#target_link_libraries(lfr_undir_net profiler)

@@ -1,1 +1,7 @@
 build
+perf*
+*.callgrind
+community.dat
+statistics.dat
+network.dat
+time_seed.dat
