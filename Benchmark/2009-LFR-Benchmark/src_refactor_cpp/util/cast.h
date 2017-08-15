@@ -1,7 +1,6 @@
 #if !defined(CAST_INCLUDED)
 #define CAST_INCLUDED
 
-#include <cmath>
 #include <string>
 
 using namespace std;

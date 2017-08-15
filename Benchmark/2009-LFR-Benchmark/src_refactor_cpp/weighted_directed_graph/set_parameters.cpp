@@ -1,3 +1,4 @@
+#include <cmath>
 #include "set_parameters.h"
 
 Parameters::Parameters() {

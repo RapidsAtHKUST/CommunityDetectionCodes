@@ -2,6 +2,9 @@
 #define unlikely -214741
 #endif
 
+#include "../util/random.h"
+#include "../util/combinatorics.h"
+
 #include "binary_benchm.h"
 
 // it computes the sum of a deque<int>

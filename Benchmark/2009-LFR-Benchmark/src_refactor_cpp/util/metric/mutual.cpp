@@ -1,7 +1,10 @@
 #if !defined(MUTUAL_INCLUDED)
 #define MUTUAL_INCLUDED
 
-#include "util/metric/mutual.h"
+#include "mutual.h"
+
+#include <set>
+#include <algorithm>
 
 double H(double a) {
     return a <= 0 ? 0 : -a * log(a);

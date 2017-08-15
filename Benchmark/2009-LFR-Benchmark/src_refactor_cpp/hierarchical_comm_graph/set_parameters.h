@@ -14,7 +14,7 @@
 
 using namespace std;
 
-#include "util/cast.h"
+#include "../util/cast.h"
 
 class Parameters {
 public:

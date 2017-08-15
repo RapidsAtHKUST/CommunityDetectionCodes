@@ -3,12 +3,10 @@
 
 #include <cmath>
 
+#include <iostream>
 #include <deque>
 #include <vector>
 #include <map>
-#include <iostream>
-
-#include "util/pretty_print.h"
 
 using namespace std;
 

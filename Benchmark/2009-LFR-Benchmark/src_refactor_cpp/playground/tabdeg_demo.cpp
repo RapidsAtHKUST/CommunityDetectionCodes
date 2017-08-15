@@ -1,4 +1,4 @@
-#include "util/input_output/tab_degree.h"
+#include "../util/input_output/tab_degree.h"
 
 int main() {
     TabDegree C;

@@ -2,7 +2,9 @@
 // Created by cheyulin on 2/27/17.
 //
 
-#include "util/histograms.h"
+#include "histograms.h"
+
+#include "pretty_print.h"
 
 int int_histogram(int c, map<int, int> & hist) {
     map<int, int>::iterator itf=hist.find(c);

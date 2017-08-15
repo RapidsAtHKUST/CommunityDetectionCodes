@@ -5,7 +5,7 @@
 #ifndef INC_2009_LFM_MUTUAL_H
 #define INC_2009_LFM_MUTUAL_H
 
-#include "util/histograms.h"
+#include "../histograms.h"
 
 int overlap_grouping(deque<deque<int>> ten, int unique);
 

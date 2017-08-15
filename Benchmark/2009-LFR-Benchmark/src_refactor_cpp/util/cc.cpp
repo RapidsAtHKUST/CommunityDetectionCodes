@@ -1,4 +1,10 @@
-#include "util/cc.h"
+#include "cc.h"
+
+#include <algorithm>
+#include <iostream>
+
+#include "cast.h"
+#include "combinatorics.h"
 
 bool they_are_mate(int a, int b, const deque<deque<int>> &member_list) {
     for (int i = 0; i < member_list[a].size(); i++) {

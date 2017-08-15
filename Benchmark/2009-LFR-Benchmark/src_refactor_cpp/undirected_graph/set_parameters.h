@@ -9,7 +9,7 @@
 #include <iostream>
 #include <fstream>
 
-#include "util/cast.h"
+#include "../util/cast.h"
 
 #ifndef unlikely
 #define unlikely -214741

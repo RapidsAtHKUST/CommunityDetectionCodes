@@ -19,8 +19,7 @@
 
 using namespace std;
 
-#include "util/cc.h"
-
+#include "../util/cc.h"
 
 int deque_int_sum(const deque<int> &a);
 

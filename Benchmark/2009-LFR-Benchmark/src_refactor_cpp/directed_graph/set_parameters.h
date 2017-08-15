@@ -12,7 +12,8 @@
 #include <fstream>
 #include <deque>
 
-#include <util/cast.h>
+#include "../util/cast.h"
+
 using namespace std;
 
 class Parameters {

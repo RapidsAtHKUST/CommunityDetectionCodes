@@ -1,13 +1,12 @@
 #if !defined(COMBINATORICS_INCLUDED)
 #define COMBINATORICS_INCLUDED
 
-
 #include <deque>
 #include <set>
 
-using namespace std;
+#include "../util/random.h"
 
-#include "util/random.h"
+using namespace std;
 
 template<typename Seq>
 double average_func(Seq &sq) {

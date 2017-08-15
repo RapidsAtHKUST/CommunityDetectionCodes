@@ -19,8 +19,8 @@
 
 using namespace std;
 
-#include "util/random.h"
-#include "util/combinatorics.h"
+#include "../util/random.h"
+#include "../util/combinatorics.h"
 
 #include "set_parameters.h"
 

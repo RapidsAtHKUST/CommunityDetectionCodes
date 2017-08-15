@@ -2,8 +2,12 @@
 // Created by cheyulin on 2/27/17.
 //
 
-#include "util/random.h"
+#include "random.h"
 
+#include <fstream>
+#include <iostream>
+#include <map>
+#include <algorithm>
 
 double ran2(long *idum) {
     int j;

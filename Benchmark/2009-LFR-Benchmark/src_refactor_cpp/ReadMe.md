@@ -9,12 +9,11 @@ dir name | detail
 --- | ---
 [util](util) | some common utilities, io/metric/computation
 [playground](playground) | not so useful, just for tests
-[binary_graph](binary_graph) | binary graph generator, 1st
+[undirected_graph](undirected_graph) | undirected graph generator, 1st
 [directed_graph](directed_graph) | directed graph generator, 2nd
 [weighted_graph](weighted_graph) | undirected weighted graph generator, 3rd
 [weighted_directed_graph](weighted_directed_graph) | directed weighted generator, 4th
 [hierarchical_comm_graph](hierarchical_comm_graph) | graph generator, gives hierarchical ground-truth, 5th
-
 
 ## Parameters
 

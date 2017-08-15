@@ -4,6 +4,10 @@
 
 #include "binary_benchm.h"
 
+#include "../util/random.h"
+#include "../util/combinatorics.h"
+#include "../util/combinatorics.h"
+
 // it computes the sum of a deque<int>
 int deque_int_sum(const deque<int> &a) {
     int s = 0;

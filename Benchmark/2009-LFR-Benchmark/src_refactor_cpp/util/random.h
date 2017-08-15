@@ -1,12 +1,7 @@
 #if !defined(RANDOM_INCLUDED)
 
-#include <fstream>
-#include <iostream>
-#include <deque>
-#include <map>
 #include <set>
-#include <algorithm>
-
+#include <deque>
 
 using namespace std;
 
@@ -32,13 +27,13 @@ double ran4(bool t, long s);
 
 double ran4();
 
-void srand4(void);
+void srand4();
 
 void srand5(int rank);
 
 int irand(int n);
 
-void srand_file(void);
+void srand_file();
 
 int configuration_model(deque<set<int>> &en, deque<int> &degrees);
 

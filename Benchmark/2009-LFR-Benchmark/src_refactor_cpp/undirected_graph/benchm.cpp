@@ -34,12 +34,13 @@
 
 using namespace std;
 
-#include "util/pretty_print.h"
-#include "util/random.h"
-#include "util/combinatorics.h"
-#include "util/histograms.h"
-#include "util/cast.h"
-#include "util/cc.h"
+#include "../util/pretty_print.h"
+#include "../util/random.h"
+#include "../util/combinatorics.h"
+#include "../util/histograms.h"
+#include "../util/cast.h"
+#include "../util/cc.h"
+
 #include "set_parameters.h"
 
 // it computes the sum of a deque<int>
