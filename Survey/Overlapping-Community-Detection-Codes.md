@@ -29,7 +29,7 @@
 
 ## Agent-Based and Dynamical Algorithms
 - [LabelRank & SLPA (J. Xie 2013 2011) c++/java Implementation](https://sites.google.com/site/communitydetectionslpa/home)
-- [COPRA(Label Propogation) (Gregory 2010) java Implementation](http://www.cs.bris.ac.uk/~steve/networks/software/copra.html)
+- [COPRA(Label Propogation) (Gregory 2010) java Implementation](https://gregory.org/research/networks/software/copra.html)
 
 ## Others
 - [BigClam(SNAP) (J. Yang 2012) c++ Implementation](https://github.com/rabbanyk/CommunityEvaluation/tree/master/execs/CM-Overlapping-AGM-SNAP/bigclam)
